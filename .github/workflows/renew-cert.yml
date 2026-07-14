@@ -49,6 +49,7 @@ jobs:
           REDIS_CACHE_PASSWORD=${{ secrets.REDIS_CACHE_PASSWORD }}
           NETBOX_SUPERUSER_PASSWORD=${{ secrets.NETBOX_SUPERUSER_PASSWORD }}
           NETBOX_SUPERUSER_API_TOKEN=${{ secrets.NETBOX_SUPERUSER_API_TOKEN }}
+          API_TOKEN_PEPPER_1=${{ secrets.API_TOKEN_PEPPER_1 }}
           EOF
           chmod 600 ci/docker/.env
 

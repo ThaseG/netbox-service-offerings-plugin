@@ -135,7 +135,15 @@ class PortfolioForm(PrimaryModelForm):
         )
 
     def clean(self):
-        cleaned_data = super().clean()
+        # Deliberately not using super().clean()'s return value: NetBoxModelForm's
+        # own base mixins include CheckLastUpdatedMixin, which returns None
+        # (bare `return`) for any new/unsaved object — a valid, documented
+        # Django pattern (clean() doesn't have to return anything; Django
+        # falls back to self.cleaned_data if it doesn't), but one that
+        # breaks `cleaned_data = super().clean()` for every create form.
+        # self.cleaned_data is always populated by this point regardless.
+        super().clean()
+        cleaned_data = self.cleaned_data
         if not (cleaned_data.get('portfolio_owner_contacts') or cleaned_data.get('portfolio_owner_contact_groups')):
             raise ValidationError('Select at least one Portfolio Owner (a contact or a contact group).')
         if not (cleaned_data.get('portfolio_manager_contacts') or cleaned_data.get('portfolio_manager_contact_groups')):
@@ -189,7 +197,10 @@ class ServiceForm(PrimaryModelForm):
         )
 
     def clean(self):
-        cleaned_data = super().clean()
+        # See PortfolioForm.clean() for why this doesn't use super().clean()'s
+        # return value.
+        super().clean()
+        cleaned_data = self.cleaned_data
         if not (cleaned_data.get('service_owner_contacts') or cleaned_data.get('service_owner_contact_groups')):
             raise ValidationError('Select at least one Service Owner (a contact or a contact group).')
         if not (cleaned_data.get('service_manager_contacts') or cleaned_data.get('service_manager_contact_groups')):
@@ -271,7 +282,10 @@ class ServiceOfferingForm(PrimaryModelForm):
         )
 
     def clean(self):
-        cleaned_data = super().clean()
+        # See PortfolioForm.clean() for why this doesn't use super().clean()'s
+        # return value.
+        super().clean()
+        cleaned_data = self.cleaned_data
         if not (
             cleaned_data.get('service_offering_owner_contacts')
             or cleaned_data.get('service_offering_owner_contact_groups')

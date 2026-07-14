@@ -78,6 +78,12 @@ services:
         condition: service_healthy
     environment:
       SECRET_KEY: ${NETBOX_SECRET_KEY:?NETBOX_SECRET_KEY must be set}
+      # Required for Token.objects.create() to work at all (v2 API tokens
+      # are hashed with this as a pepper) — without it, NetBox raises
+      # ValueError("API_TOKEN_PEPPERS is not defined") the moment any code
+      # (including our own test suite) tries to create a token, not just a
+      # cosmetic startup warning as the log message might suggest.
+      API_TOKEN_PEPPER_1: ${API_TOKEN_PEPPER_1:?API_TOKEN_PEPPER_1 must be set}
       ALLOWED_HOSTS: ${NETBOX_DOMAIN:?NETBOX_DOMAIN must be set} localhost
       CSRF_TRUSTED_ORIGINS: https://${NETBOX_DOMAIN:?NETBOX_DOMAIN must be set}
       DB_HOST: postgres
