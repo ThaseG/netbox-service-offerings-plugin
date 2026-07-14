@@ -14,6 +14,14 @@ class LifecycleAPITestCase(APITestCase):
     """
 
     model = Lifecycle
+    # APITestCase._get_view_namespace() defaults to f'{app_label}-api',
+    # which matches how *core* NetBox apps are mounted directly under
+    # /api/. Plugins are mounted one level deeper (netbox/plugins/urls.py:
+    # /api/plugins/ -> namespace 'plugins-api' -> namespace '<app_label>-api'),
+    # so the default guess resolves to 'csdm-api' when the real registered
+    # namespace is 'plugins-api:csdm-api'. Since view_namespace gets '-api'
+    # appended automatically, 'plugins-api:csdm' here becomes exactly that.
+    view_namespace = 'plugins-api:csdm'
     user_permissions = (
         'csdm.add_lifecycle',
         'csdm.view_lifecycle',
