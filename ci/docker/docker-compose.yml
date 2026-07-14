@@ -98,6 +98,11 @@ services:
       CORS_ORIGIN_ALLOW_ALL: "false"
       GRAPHQL_ENABLED: "true"
       WEBHOOKS_ENABLED: "true"
+      # TEMPORARY diagnostic: prints the actual traceback (DNS failure vs.
+      # connection refused vs. auth rejection) instead of a generic
+      # "Waiting on DB" retry loop. Remove once the DB-connectivity issue
+      # is root-caused.
+      DB_WAIT_DEBUG: "1"
     healthcheck:
       # start_period is generous because the *first* boot against an empty
       # database runs NetBox's full initial migration (hundreds of
