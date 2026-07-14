@@ -73,9 +73,15 @@ jobs:
         # pulled above, using it as the build cache.
         run: docker compose --env-file ci/docker/.env -f ci/docker/docker-compose.yml up -d --remove-orphans --build
 
-      - name: Dump NetBox logs on failure
+      - name: Dump logs on failure
+        # Deliberately dumps every service, not just netbox: NetBox failing
+        # to reach the DB can look identical whether Postgres itself is
+        # unhealthy or Postgres is fine but rejecting NetBox's credentials
+        # (e.g. a rotated POSTGRES_PASSWORD not matching the password baked
+        # into the existing data volume at first init) — only postgres's
+        # own log tells those apart, and pg_isready doesn't check auth.
         if: failure()
-        run: docker compose --env-file ci/docker/.env -f ci/docker/docker-compose.yml logs netbox --tail=300
+        run: docker compose --env-file ci/docker/.env -f ci/docker/docker-compose.yml logs --tail=300
 
       - name: Wait for NetBox to become healthy
         run: |
