@@ -59,8 +59,11 @@ services:
 
   netbox: &netbox
     build:
-      context: .
-      dockerfile: Dockerfile-Plugins
+      # Widened to the repo root (this file lives at ci/docker/) so the
+      # build can COPY in the first-party csdm/ plugin package alongside
+      # the third-party plugins already installed from plugin_requirements.txt.
+      context: ../..
+      dockerfile: ci/docker/Dockerfile-Plugins
       args:
         NETBOX_VERSION: ${NETBOX_VERSION:?NETBOX_VERSION must be set (source versions.sh)}
     image: netbox-service-offerings-plugin/netbox:${NETBOX_VERSION:?NETBOX_VERSION must be set (source versions.sh)}

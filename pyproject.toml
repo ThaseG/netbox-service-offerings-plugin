@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "netbox-csdm"
+version = "0.1.0"
+description = "Business/Technical Service Offerings (CSDM) plugin for NetBox"
+requires-python = ">=3.10"
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Natural Language :: English",
+    "Programming Language :: Python :: 3 :: Only",
+]
+
+[tool.setuptools.packages.find]
+include = ["csdm*"]

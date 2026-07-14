@@ -12,3 +12,9 @@ ci/docker/nginx/certs/*
 
 # Local acme.sh state, if ever run from within the repo checkout
 .acme.sh/
+
+# Python build artifacts (csdm/ plugin package)
+__pycache__/
+*.pyc
+*.egg-info/
+.venv/

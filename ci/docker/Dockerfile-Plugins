@@ -1,13 +1,24 @@
-# Builds the base NetBox image with third-party plugins baked in. Follows
-# the pattern documented at:
+# Builds the base NetBox image with third-party plugins baked in, plus this
+# repo's own first-party "csdm" plugin. Third-party plugin pattern follows:
 # https://github.com/netbox-community/netbox-docker/wiki/Using-Netbox-Plugins
+#
+# Build context is the repo root (see docker-compose.yml's build.context),
+# so paths below are relative to the repo root, not this file's directory.
 ARG NETBOX_VERSION
 FROM netboxcommunity/netbox:${NETBOX_VERSION}
 
-COPY plugin_requirements.txt /opt/netbox/
+COPY ci/docker/plugin_requirements.txt /opt/netbox/
 RUN /usr/local/bin/uv pip install -r /opt/netbox/plugin_requirements.txt
 
-COPY configuration/plugins.py /etc/netbox/config/plugins.py
+# First-party plugin developed in this repo. Installed as a regular
+# (non-editable) package, same as the third-party plugins above — the
+# image is rebuilt from source on every deploy, so there's no need for an
+# editable install.
+COPY pyproject.toml /opt/netbox-plugin-src/pyproject.toml
+COPY csdm /opt/netbox-plugin-src/csdm
+RUN /usr/local/bin/uv pip install /opt/netbox-plugin-src
+
+COPY ci/docker/configuration/plugins.py /etc/netbox/config/plugins.py
 
 # Bake static files (incl. plugin assets) into the image at build time
 # rather than regenerating them on every container start. Dummy
