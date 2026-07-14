@@ -58,7 +58,13 @@ services:
       - netbox
 
   netbox: &netbox
-    image: docker.io/netboxcommunity/netbox:${NETBOX_VERSION:?NETBOX_VERSION must be set (source versions.sh)}
+    build:
+      context: .
+      dockerfile: Dockerfile-Plugins
+      args:
+        NETBOX_VERSION: ${NETBOX_VERSION:?NETBOX_VERSION must be set (source versions.sh)}
+    image: netbox-service-offerings-plugin/netbox:${NETBOX_VERSION:?NETBOX_VERSION must be set (source versions.sh)}
+    pull_policy: build
     restart: unless-stopped
     depends_on:
       postgres:

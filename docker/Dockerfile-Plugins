@@ -1,0 +1,17 @@
+# Builds the base NetBox image with third-party plugins baked in. Follows
+# the pattern documented at:
+# https://github.com/netbox-community/netbox-docker/wiki/Using-Netbox-Plugins
+ARG NETBOX_VERSION
+FROM netboxcommunity/netbox:${NETBOX_VERSION}
+
+COPY plugin_requirements.txt /opt/netbox/
+RUN /usr/local/bin/uv pip install -r /opt/netbox/plugin_requirements.txt
+
+COPY configuration/plugins.py /etc/netbox/config/plugins.py
+
+# Bake static files (incl. plugin assets) into the image at build time
+# rather than regenerating them on every container start. Dummy
+# DEBUG/SECRET_KEY: collectstatic doesn't touch the database or need real
+# secrets, it only needs Django to boot far enough to run.
+RUN DEBUG="true" SECRET_KEY="dummydummydummydummydummydummydummydummydummydummy" \
+    /opt/netbox/venv/bin/python /opt/netbox/netbox/manage.py collectstatic --no-input

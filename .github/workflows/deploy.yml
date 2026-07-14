@@ -37,7 +37,7 @@ jobs:
         env:
           COMPOSE_FILE: ${{ github.workspace }}/docker/docker-compose.yml
 
-      - name: Pull pinned NetBox image
+      - name: Pull pinned NetBox base image
         run: docker pull "netboxcommunity/netbox:${NETBOX_VERSION}"
 
       - name: Issue or reuse TLS certificate
@@ -66,7 +66,10 @@ jobs:
           chmod 600 docker/.env
 
       - name: Deploy stack
-        run: docker compose --env-file docker/.env -f docker/docker-compose.yml up -d --remove-orphans
+        # --build rebuilds docker/Dockerfile-Plugins (NetBox + third-party
+        # plugins from plugin_requirements.txt) on top of the base image
+        # pulled above, using it as the build cache.
+        run: docker compose --env-file docker/.env -f docker/docker-compose.yml up -d --remove-orphans --build
 
       - name: Dump NetBox logs on failure
         if: failure()
