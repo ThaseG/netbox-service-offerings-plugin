@@ -21,6 +21,11 @@ ACME_HOME="${ACME_HOME:-$HOME/.acme.sh}"
 ACME="$ACME_HOME/acme.sh"
 CERT_DIR="${CERT_DIR:-$CI_ROOT/docker/nginx/certs}"
 COMPOSE_FILE="${COMPOSE_FILE:-$CI_ROOT/docker/docker-compose.yml}"
+# docker-compose.yml requires every service's env vars to resolve (via
+# ${VAR:?err} guards) just to *parse* the file, regardless of which
+# subcommand or service is targeted — so the reload callback below needs
+# --env-file too, or it fails the same way `docker compose down` did.
+ENV_FILE="${ENV_FILE:-$CI_ROOT/docker/.env}"
 
 mkdir -p "$CERT_DIR"
 chmod 700 "$CERT_DIR"
@@ -45,7 +50,7 @@ fi
 "$ACME" --install-cert -d "$NETBOX_DOMAIN" --home "$ACME_HOME" \
   --key-file       "$CERT_DIR/privkey.pem" \
   --fullchain-file "$CERT_DIR/fullchain.pem" \
-  --reloadcmd      "docker compose -f '$COMPOSE_FILE' exec -T nginx nginx -s reload || true"
+  --reloadcmd      "docker compose --env-file '$ENV_FILE' -f '$COMPOSE_FILE' exec -T nginx nginx -s reload || true"
 
 chmod 600 "$CERT_DIR/privkey.pem"
 chmod 644 "$CERT_DIR/fullchain.pem"

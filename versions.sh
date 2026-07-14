@@ -9,3 +9,4 @@
 
 # netboxcommunity/netbox image tag: "<netbox-version>-<netbox-docker-build>"
 export NETBOX_VERSION="v4.6.4-5.0.1"
+export CSDM_PLUGIN_VERSION="0.9.1"
