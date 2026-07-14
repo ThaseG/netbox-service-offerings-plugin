@@ -112,7 +112,7 @@ jobs:
 
       - name: Check pyproject.toml / versions.sh version drift
         # Would have caught pyproject.toml drifting to 0.1.0 while
-        # versions.sh moved on to 0.9.1 — exactly the kind of silent
+        # versions.sh moved on to 1.0.0 — exactly the kind of silent
         # mismatch that's easy to introduce and easy to miss by eye.
         run: |
           source versions.sh
