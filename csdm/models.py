@@ -14,6 +14,15 @@ from .choices import TimeUnitChoices
 # accessors would need inventing for every one of them. '+' disables the
 # reverse relation; querying the other direction (e.g. "services with this
 # lifecycle") is still done via Service.objects.filter(lifecycle=...).
+#
+# Every model below also explicitly re-declares the `owner` field it
+# inherits from NetBoxModel's OwnerMixin, again with related_name='+'.
+# OwnerMixin's own definition has no related_name, defaulting to
+# `<model>_set` on users.Owner — which is only unique *within* an app.
+# csdm.Service silently collided with NetBox core's own ipam.Service this
+# way (both wanting `Owner.service_set`), and Django refused to boot until
+# it was fixed. Overriding it here on every model, not just Service,
+# closes off the same failure mode against any future name collision.
 
 __all__ = (
     'Portfolio',
@@ -36,6 +45,8 @@ __all__ = (
 #
 
 class Lifecycle(OrganizationalModel):
+    owner = models.ForeignKey(to='users.Owner', on_delete=models.PROTECT, related_name='+', blank=True, null=True)
+
     class Meta(OrganizationalModel.Meta):
         verbose_name = 'Lifecycle'
         verbose_name_plural = 'Lifecycle Managements'
@@ -48,6 +59,7 @@ class Lifecycle(OrganizationalModel):
 
 
 class SLA(OrganizationalModel):
+    owner = models.ForeignKey(to='users.Owner', on_delete=models.PROTECT, related_name='+', blank=True, null=True)
     sla_definition = models.CharField(
         max_length=500,
         verbose_name='SLA Definition',
@@ -65,6 +77,8 @@ class SLA(OrganizationalModel):
 
 
 class OperationTime(OrganizationalModel):
+    owner = models.ForeignKey(to='users.Owner', on_delete=models.PROTECT, related_name='+', blank=True, null=True)
+
     class Meta(OrganizationalModel.Meta):
         verbose_name = 'Operation Time'
         verbose_name_plural = 'Operation Times'
@@ -77,6 +91,8 @@ class OperationTime(OrganizationalModel):
 
 
 class Availability(OrganizationalModel):
+    owner = models.ForeignKey(to='users.Owner', on_delete=models.PROTECT, related_name='+', blank=True, null=True)
+
     class Meta(OrganizationalModel.Meta):
         verbose_name = 'Availability'
         verbose_name_plural = 'Availabilities'
@@ -89,6 +105,8 @@ class Availability(OrganizationalModel):
 
 
 class Criticality(OrganizationalModel):
+    owner = models.ForeignKey(to='users.Owner', on_delete=models.PROTECT, related_name='+', blank=True, null=True)
+
     class Meta(OrganizationalModel.Meta):
         verbose_name = 'Criticality'
         verbose_name_plural = 'Criticalities'
@@ -101,6 +119,8 @@ class Criticality(OrganizationalModel):
 
 
 class Environment(OrganizationalModel):
+    owner = models.ForeignKey(to='users.Owner', on_delete=models.PROTECT, related_name='+', blank=True, null=True)
+
     class Meta(OrganizationalModel.Meta):
         verbose_name = 'Environment'
         verbose_name_plural = 'Environments'
@@ -113,6 +133,7 @@ class Environment(OrganizationalModel):
 
 
 class MTAT(OrganizationalModel):
+    owner = models.ForeignKey(to='users.Owner', on_delete=models.PROTECT, related_name='+', blank=True, null=True)
     value = models.PositiveIntegerField(
         verbose_name='Value',
     )
@@ -138,6 +159,7 @@ class MTAT(OrganizationalModel):
 #
 
 class Portfolio(PrimaryModel):
+    owner = models.ForeignKey(to='users.Owner', on_delete=models.PROTECT, related_name='+', blank=True, null=True)
     name = models.CharField(max_length=150)
     portfolio_owner_contacts = models.ManyToManyField(
         to=Contact, related_name='+', blank=True, verbose_name='Portfolio Owner (Contacts)',
@@ -168,6 +190,7 @@ class Portfolio(PrimaryModel):
 
 
 class Service(PrimaryModel):
+    owner = models.ForeignKey(to='users.Owner', on_delete=models.PROTECT, related_name='+', blank=True, null=True)
     name = models.CharField(max_length=150)
     service_owner_contacts = models.ManyToManyField(
         to=Contact, related_name='+', blank=True, verbose_name='Service Owner (Contacts)',
@@ -213,6 +236,7 @@ class Service(PrimaryModel):
 
 
 class ServiceOffering(PrimaryModel):
+    owner = models.ForeignKey(to='users.Owner', on_delete=models.PROTECT, related_name='+', blank=True, null=True)
     name = models.CharField(max_length=150)
     contract_number = models.CharField(max_length=100, verbose_name='Contract Number')
     service_offering_owner_contacts = models.ManyToManyField(
@@ -265,6 +289,7 @@ class ServiceOffering(PrimaryModel):
 
 
 class AppService(PrimaryModel):
+    owner = models.ForeignKey(to='users.Owner', on_delete=models.PROTECT, related_name='+', blank=True, null=True)
     name = models.CharField(max_length=150)
     environment = models.ForeignKey(
         to=Environment, on_delete=models.PROTECT, related_name='+', verbose_name='Environment',
@@ -330,6 +355,7 @@ class AppService(PrimaryModel):
 
 
 class TechCI(PrimaryModel):
+    owner = models.ForeignKey(to='users.Owner', on_delete=models.PROTECT, related_name='+', blank=True, null=True)
     name = models.CharField(max_length=150)
     function = models.CharField(max_length=200, verbose_name='CI Function')
     lifecycle = models.ForeignKey(
