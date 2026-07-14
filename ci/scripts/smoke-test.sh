@@ -18,10 +18,16 @@ set -euo pipefail
 
 : "${NETBOX_DOMAIN:?NETBOX_DOMAIN must be set}"
 : "${NETBOX_SUPERUSER_API_TOKEN:?NETBOX_SUPERUSER_API_TOKEN must be set}"
+: "${NETBOX_SUPERUSER_API_KEY:?NETBOX_SUPERUSER_API_KEY must be set}"
 : "${NETBOX_SUPERUSER_PASSWORD:?NETBOX_SUPERUSER_PASSWORD must be set}"
 
 BASE_URL="https://${NETBOX_DOMAIN}"
-API_AUTH_HEADER="Authorization: Token ${NETBOX_SUPERUSER_API_TOKEN}"
+# The superuser's bootstrap token is a v2 token (netbox-docker's
+# super_user.py default), which authenticates completely differently from
+# the classic single-opaque-string v1 scheme: Bearer <TOKEN_PREFIX><key>.<secret>,
+# not "Authorization: Token <value>". TOKEN_PREFIX ('nbt_') is a fixed
+# NetBox constant (users/constants.py), not configurable.
+API_AUTH_HEADER="Authorization: Bearer nbt_${NETBOX_SUPERUSER_API_KEY}.${NETBOX_SUPERUSER_API_TOKEN}"
 COOKIE_JAR="$(mktemp)"
 RESPONSE_FILE="$(mktemp)"
 trap 'rm -f "$COOKIE_JAR" "$RESPONSE_FILE"' EXIT
@@ -32,8 +38,15 @@ fail() {
 }
 
 expect_status() {
-  local description="$1" actual="$2" expected="$3"
+  # Optional 4th arg: path to the response body, echoed on failure so a
+  # rejection reason (DRF's "detail" message, a validation error, etc.)
+  # is visible directly in the CI log instead of just a bare status code.
+  local description="$1" actual="$2" expected="$3" body_file="${4:-}"
   if [ "$actual" != "$expected" ]; then
+    if [ -n "$body_file" ] && [ -s "$body_file" ]; then
+      echo "Response body:" >&2
+      cat "$body_file" >&2
+    fi
     fail "$description — expected HTTP $expected, got $actual"
   fi
   echo "OK: $description ($actual)"
@@ -73,23 +86,23 @@ expect_status "GET /plugins/csdm/portfolios/ (authenticated session)" "$status" 
 status=$(curl -sS -o "$RESPONSE_FILE" -w '%{http_code}' -X POST "$BASE_URL/api/plugins/csdm/lifecycle/" \
   -H "$API_AUTH_HEADER" -H "Content-Type: application/json" \
   -d '{"name": "Smoke Test Lifecycle", "slug": "smoke-test-lifecycle"}')
-expect_status "POST /api/plugins/csdm/lifecycle/" "$status" "201"
+expect_status "POST /api/plugins/csdm/lifecycle/" "$status" "201" "$RESPONSE_FILE"
 lifecycle_id=$(python3 -c "import json; print(json.load(open('$RESPONSE_FILE'))['id'])")
 detail_url="$BASE_URL/api/plugins/csdm/lifecycle/$lifecycle_id/"
 
 status=$(curl -sS -o "$RESPONSE_FILE" -w '%{http_code}' "$detail_url" -H "$API_AUTH_HEADER")
-expect_status "GET $detail_url" "$status" "200"
+expect_status "GET $detail_url" "$status" "200" "$RESPONSE_FILE"
 name=$(python3 -c "import json; print(json.load(open('$RESPONSE_FILE'))['name'])")
 [ "$name" = "Smoke Test Lifecycle" ] || fail "GET returned unexpected name: $name"
 
 status=$(curl -sS -o "$RESPONSE_FILE" -w '%{http_code}' -X PATCH "$detail_url" \
   -H "$API_AUTH_HEADER" -H "Content-Type: application/json" \
   -d '{"description": "Created by ci/scripts/smoke-test.sh"}')
-expect_status "PATCH $detail_url" "$status" "200"
+expect_status "PATCH $detail_url" "$status" "200" "$RESPONSE_FILE"
 description=$(python3 -c "import json; print(json.load(open('$RESPONSE_FILE'))['description'])")
 [ "$description" = "Created by ci/scripts/smoke-test.sh" ] || fail "PATCH did not persist: got '$description'"
 
-status=$(curl -sS -o /dev/null -w '%{http_code}' -X DELETE "$detail_url" -H "$API_AUTH_HEADER")
-expect_status "DELETE $detail_url" "$status" "204"
+status=$(curl -sS -o "$RESPONSE_FILE" -w '%{http_code}' -X DELETE "$detail_url" -H "$API_AUTH_HEADER")
+expect_status "DELETE $detail_url" "$status" "204" "$RESPONSE_FILE"
 
 echo "All smoke tests passed."

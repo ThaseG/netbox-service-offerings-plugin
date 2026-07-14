@@ -101,6 +101,12 @@ services:
       SUPERUSER_EMAIL: ${ACME_EMAIL:?ACME_EMAIL must be set}
       SUPERUSER_PASSWORD: ${NETBOX_SUPERUSER_PASSWORD:?NETBOX_SUPERUSER_PASSWORD must be set}
       SUPERUSER_API_TOKEN: ${NETBOX_SUPERUSER_API_TOKEN:?NETBOX_SUPERUSER_API_TOKEN must be set}
+      # netbox-docker's super_user.py only creates a token for the
+      # bootstrap superuser when *both* SUPERUSER_API_TOKEN and
+      # SUPERUSER_API_KEY are set (v2 tokens need a separate lookup "key"
+      # alongside the secret) — without this, no token is ever created at
+      # all, silently, and every API call authenticates as nobody.
+      SUPERUSER_API_KEY: ${NETBOX_SUPERUSER_API_KEY:?NETBOX_SUPERUSER_API_KEY must be set}
       CORS_ORIGIN_ALLOW_ALL: "false"
       GRAPHQL_ENABLED: "true"
       WEBHOOKS_ENABLED: "true"
