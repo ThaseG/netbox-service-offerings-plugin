@@ -74,8 +74,15 @@ jobs:
 
       - name: Wait for NetBox to become healthy
         run: |
+          # /api/status/ requires authentication under this image's default
+          # LOGIN_REQUIRED=True, so an anonymous request always gets 403 —
+          # that's not a failure, it's NetBox correctly enforcing auth.
+          # Authenticating with the superuser token instead exercises the
+          # full chain (nginx -> TLS -> NetBox -> DB) end to end.
           for i in $(seq 1 30); do
-            if curl -fsS -o /dev/null "https://${{ vars.NETBOX_DOMAIN }}/api/status/"; then
+            if curl -fsS -o /dev/null \
+                 -H "Authorization: Token ${NETBOX_SUPERUSER_API_TOKEN}" \
+                 "https://${{ vars.NETBOX_DOMAIN }}/api/status/"; then
               echo "NetBox is up."
               exit 0
             fi
@@ -85,6 +92,8 @@ jobs:
           echo "NetBox did not become healthy in time" >&2
           docker compose --env-file docker/.env -f docker/docker-compose.yml logs --tail=200
           exit 1
+        env:
+          NETBOX_SUPERUSER_API_TOKEN: ${{ secrets.NETBOX_SUPERUSER_API_TOKEN }}
 
       - name: Remove runtime environment file
         if: always()
