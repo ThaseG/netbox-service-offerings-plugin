@@ -1,0 +1,152 @@
+services:
+  postgres:
+    image: docker.io/postgres:18-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: netbox
+      POSTGRES_USER: netbox
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD must be set}
+    healthcheck:
+      test: pg_isready -q -t 2 -d netbox -U netbox
+      start_period: 20s
+      timeout: 30s
+      interval: 10s
+      retries: 5
+    volumes:
+      - netbox-postgres:/var/lib/postgresql
+    networks:
+      - netbox
+
+  redis:
+    image: docker.io/valkey/valkey:9.0-alpine
+    restart: unless-stopped
+    command:
+      - sh
+      - -c
+      - valkey-server --appendonly yes --requirepass "$$REDIS_PASSWORD"
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD:?REDIS_PASSWORD must be set}
+    healthcheck:
+      test: '[ "$$(valkey-cli --pass "$${REDIS_PASSWORD}" ping)" = "PONG" ]'
+      start_period: 5s
+      timeout: 3s
+      interval: 5s
+      retries: 5
+    volumes:
+      - netbox-redis-data:/data
+    networks:
+      - netbox
+
+  redis-cache:
+    image: docker.io/valkey/valkey:9.0-alpine
+    restart: unless-stopped
+    command:
+      - sh
+      - -c
+      - valkey-server --requirepass "$$REDIS_PASSWORD"
+    environment:
+      REDIS_PASSWORD: ${REDIS_CACHE_PASSWORD:?REDIS_CACHE_PASSWORD must be set}
+    healthcheck:
+      test: '[ "$$(valkey-cli --pass "$${REDIS_PASSWORD}" ping)" = "PONG" ]'
+      start_period: 5s
+      timeout: 3s
+      interval: 5s
+      retries: 5
+    volumes:
+      - netbox-redis-cache-data:/data
+    networks:
+      - netbox
+
+  netbox: &netbox
+    image: docker.io/netboxcommunity/netbox:${NETBOX_VERSION:?NETBOX_VERSION must be set (source versions.sh)}
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      redis-cache:
+        condition: service_healthy
+    environment:
+      SECRET_KEY: ${NETBOX_SECRET_KEY:?NETBOX_SECRET_KEY must be set}
+      ALLOWED_HOSTS: ${NETBOX_DOMAIN:?NETBOX_DOMAIN must be set} localhost
+      CSRF_TRUSTED_ORIGINS: https://${NETBOX_DOMAIN:?NETBOX_DOMAIN must be set}
+      DB_HOST: postgres
+      DB_NAME: netbox
+      DB_USER: netbox
+      DB_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD must be set}
+      REDIS_HOST: redis
+      REDIS_PASSWORD: ${REDIS_PASSWORD:?REDIS_PASSWORD must be set}
+      REDIS_DATABASE: 0
+      REDIS_CACHE_HOST: redis-cache
+      REDIS_CACHE_PASSWORD: ${REDIS_CACHE_PASSWORD:?REDIS_CACHE_PASSWORD must be set}
+      REDIS_CACHE_DATABASE: 1
+      SKIP_SUPERUSER: "false"
+      SUPERUSER_NAME: admin
+      SUPERUSER_EMAIL: ${ACME_EMAIL:?ACME_EMAIL must be set}
+      SUPERUSER_PASSWORD: ${NETBOX_SUPERUSER_PASSWORD:?NETBOX_SUPERUSER_PASSWORD must be set}
+      SUPERUSER_API_TOKEN: ${NETBOX_SUPERUSER_API_TOKEN:?NETBOX_SUPERUSER_API_TOKEN must be set}
+      CORS_ORIGIN_ALLOW_ALL: "false"
+      GRAPHQL_ENABLED: "true"
+      WEBHOOKS_ENABLED: "true"
+    healthcheck:
+      test: curl -f http://localhost:8080/login/ || exit 1
+      start_period: 90s
+      timeout: 3s
+      interval: 15s
+    volumes:
+      - netbox-media-files:/opt/netbox/netbox/media:rw
+      - netbox-reports-files:/opt/netbox/netbox/reports:rw
+      - netbox-scripts-files:/opt/netbox/netbox/scripts:rw
+    networks:
+      - netbox
+
+  netbox-worker:
+    <<: *netbox
+    depends_on:
+      netbox:
+        condition: service_healthy
+    command:
+      - /opt/netbox/venv/bin/python
+      - /opt/netbox/netbox/manage.py
+      - rqworker
+    healthcheck:
+      test: ps -aux | grep -v grep | grep -q rqworker || exit 1
+      start_period: 20s
+      timeout: 3s
+      interval: 15s
+
+  nginx:
+    image: docker.io/nginx:1.27-alpine
+    restart: unless-stopped
+    depends_on:
+      netbox:
+        condition: service_healthy
+    environment:
+      NETBOX_DOMAIN: ${NETBOX_DOMAIN:?NETBOX_DOMAIN must be set}
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/netbox.conf.template:/etc/nginx/templates/netbox.conf.template:ro
+      - ./nginx/certs:/etc/nginx/certs:ro
+    networks:
+      - netbox
+
+networks:
+  netbox:
+    driver: bridge
+
+volumes:
+  netbox-postgres:
+    driver: local
+  netbox-redis-data:
+    driver: local
+  netbox-redis-cache-data:
+    driver: local
+  netbox-media-files:
+    driver: local
+  netbox-reports-files:
+    driver: local
+  netbox-scripts-files:
+    driver: local

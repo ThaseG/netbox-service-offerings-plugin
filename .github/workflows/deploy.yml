@@ -1,0 +1,87 @@
+name: Deploy NetBox
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "docker/**"
+      - "versions.sh"
+      - "scripts/**"
+      - ".github/workflows/deploy.yml"
+  workflow_dispatch: {}
+
+concurrency:
+  group: netbox-deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    # Must run on a self-hosted runner registered on the target server —
+    # this job talks to the local Docker daemon and writes secrets to the
+    # local filesystem, it does not deploy anywhere over the network.
+    # Register the runner with (at least) these labels:
+    #   ./config.sh --labels self-hosted,netbox
+    runs-on: [self-hosted, netbox]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Load pinned versions
+        run: |
+          source versions.sh
+          echo "NETBOX_VERSION=$NETBOX_VERSION" >> "$GITHUB_ENV"
+
+      - name: Pre-clean-up
+        run: scripts/pre-cleanup.sh
+        env:
+          COMPOSE_FILE: ${{ github.workspace }}/docker/docker-compose.yml
+
+      - name: Pull pinned NetBox image
+        run: docker pull "netboxcommunity/netbox:${NETBOX_VERSION}"
+
+      - name: Issue or reuse TLS certificate
+        run: scripts/issue-cert.sh
+        env:
+          NETBOX_DOMAIN: ${{ vars.NETBOX_DOMAIN }}
+          ACME_EMAIL: ${{ vars.ACME_EMAIL }}
+          WS_ApiKey: ${{ secrets.WS_API_KEY }}
+          WS_ApiSecret: ${{ secrets.WS_API_SECRET }}
+          COMPOSE_FILE: ${{ github.workspace }}/docker/docker-compose.yml
+
+      - name: Write runtime environment file
+        run: |
+          umask 077
+          cat > docker/.env <<EOF
+          NETBOX_VERSION=${NETBOX_VERSION}
+          NETBOX_DOMAIN=${{ vars.NETBOX_DOMAIN }}
+          ACME_EMAIL=${{ vars.ACME_EMAIL }}
+          NETBOX_SECRET_KEY=${{ secrets.NETBOX_SECRET_KEY }}
+          POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
+          REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }}
+          REDIS_CACHE_PASSWORD=${{ secrets.REDIS_CACHE_PASSWORD }}
+          NETBOX_SUPERUSER_PASSWORD=${{ secrets.NETBOX_SUPERUSER_PASSWORD }}
+          NETBOX_SUPERUSER_API_TOKEN=${{ secrets.NETBOX_SUPERUSER_API_TOKEN }}
+          EOF
+          chmod 600 docker/.env
+
+      - name: Deploy stack
+        run: docker compose --env-file docker/.env -f docker/docker-compose.yml up -d --remove-orphans
+
+      - name: Wait for NetBox to become healthy
+        run: |
+          for i in $(seq 1 30); do
+            if curl -fsS -o /dev/null "https://${{ vars.NETBOX_DOMAIN }}/api/status/"; then
+              echo "NetBox is up."
+              exit 0
+            fi
+            echo "Waiting for NetBox... ($i/30)"
+            sleep 10
+          done
+          echo "NetBox did not become healthy in time" >&2
+          docker compose --env-file docker/.env -f docker/docker-compose.yml logs --tail=200
+          exit 1
+
+      - name: Remove runtime environment file
+        if: always()
+        run: rm -f docker/.env

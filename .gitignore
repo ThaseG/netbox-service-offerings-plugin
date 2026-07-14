@@ -1,0 +1,14 @@
+data-model.txt
+
+# Runtime secrets / generated environment files — never commit real values
+docker/.env
+.env
+*.env.local
+
+# TLS material issued by acme.sh — reproducible via the deploy pipeline,
+# and a private key has no business being in git history
+docker/nginx/certs/*
+!docker/nginx/certs/.gitkeep
+
+# Local acme.sh state, if ever run from within the repo checkout
+.acme.sh/
