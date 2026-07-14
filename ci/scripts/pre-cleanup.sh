@@ -6,8 +6,9 @@
 # losing the whole NetBox database, so nothing volume-related is pruned.
 set -euo pipefail
 
-REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-COMPOSE_FILE="${COMPOSE_FILE:-$REPO_ROOT/docker/docker-compose.yml}"
+# .. here is ci/ (this script lives in ci/scripts/), not the repo root
+CI_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+COMPOSE_FILE="${COMPOSE_FILE:-$CI_ROOT/docker/docker-compose.yml}"
 
 if [ -f "$COMPOSE_FILE" ]; then
   echo "Stopping current stack (containers only, named volumes preserved)..."

@@ -4,9 +4,9 @@ on:
   push:
     branches: [main]
     paths:
-      - "docker/**"
+      - "ci/docker/**"
       - "versions.sh"
-      - "scripts/**"
+      - "ci/scripts/**"
       - ".github/workflows/deploy.yml"
   workflow_dispatch: {}
 
@@ -33,26 +33,26 @@ jobs:
           echo "NETBOX_VERSION=$NETBOX_VERSION" >> "$GITHUB_ENV"
 
       - name: Pre-clean-up
-        run: scripts/pre-cleanup.sh
+        run: ci/scripts/pre-cleanup.sh
         env:
-          COMPOSE_FILE: ${{ github.workspace }}/docker/docker-compose.yml
+          COMPOSE_FILE: ${{ github.workspace }}/ci/docker/docker-compose.yml
 
       - name: Pull pinned NetBox base image
         run: docker pull "netboxcommunity/netbox:${NETBOX_VERSION}"
 
       - name: Issue or reuse TLS certificate
-        run: scripts/issue-cert.sh
+        run: ci/scripts/issue-cert.sh
         env:
           NETBOX_DOMAIN: ${{ vars.NETBOX_DOMAIN }}
           ACME_EMAIL: ${{ vars.ACME_EMAIL }}
           WS_ApiKey: ${{ secrets.WS_API_KEY }}
           WS_ApiSecret: ${{ secrets.WS_API_SECRET }}
-          COMPOSE_FILE: ${{ github.workspace }}/docker/docker-compose.yml
+          COMPOSE_FILE: ${{ github.workspace }}/ci/docker/docker-compose.yml
 
       - name: Write runtime environment file
         run: |
           umask 077
-          cat > docker/.env <<EOF
+          cat > ci/docker/.env <<EOF
           NETBOX_VERSION=${NETBOX_VERSION}
           NETBOX_DOMAIN=${{ vars.NETBOX_DOMAIN }}
           ACME_EMAIL=${{ vars.ACME_EMAIL }}
@@ -63,17 +63,17 @@ jobs:
           NETBOX_SUPERUSER_PASSWORD=${{ secrets.NETBOX_SUPERUSER_PASSWORD }}
           NETBOX_SUPERUSER_API_TOKEN=${{ secrets.NETBOX_SUPERUSER_API_TOKEN }}
           EOF
-          chmod 600 docker/.env
+          chmod 600 ci/docker/.env
 
       - name: Deploy stack
-        # --build rebuilds docker/Dockerfile-Plugins (NetBox + third-party
+        # --build rebuilds ci/docker/Dockerfile-Plugins (NetBox + third-party
         # plugins from plugin_requirements.txt) on top of the base image
         # pulled above, using it as the build cache.
-        run: docker compose --env-file docker/.env -f docker/docker-compose.yml up -d --remove-orphans --build
+        run: docker compose --env-file ci/docker/.env -f ci/docker/docker-compose.yml up -d --remove-orphans --build
 
       - name: Dump NetBox logs on failure
         if: failure()
-        run: docker compose --env-file docker/.env -f docker/docker-compose.yml logs netbox --tail=300
+        run: docker compose --env-file ci/docker/.env -f ci/docker/docker-compose.yml logs netbox --tail=300
 
       - name: Wait for NetBox to become healthy
         run: |
@@ -96,9 +96,9 @@ jobs:
             sleep 10
           done
           echo "NetBox did not become healthy in time" >&2
-          docker compose --env-file docker/.env -f docker/docker-compose.yml logs --tail=200
+          docker compose --env-file ci/docker/.env -f ci/docker/docker-compose.yml logs --tail=200
           exit 1
 
       - name: Remove runtime environment file
         if: always()
-        run: rm -f docker/.env
+        run: rm -f ci/docker/.env

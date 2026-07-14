@@ -15,11 +15,12 @@ set -euo pipefail
 : "${WS_ApiKey:?WS_ApiKey must be set (Websupport REST API key)}"
 : "${WS_ApiSecret:?WS_ApiSecret must be set (Websupport REST API secret)}"
 
-REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+# .. here is ci/ (this script lives in ci/scripts/), not the repo root
+CI_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 ACME_HOME="${ACME_HOME:-$HOME/.acme.sh}"
 ACME="$ACME_HOME/acme.sh"
-CERT_DIR="${CERT_DIR:-$REPO_ROOT/docker/nginx/certs}"
-COMPOSE_FILE="${COMPOSE_FILE:-$REPO_ROOT/docker/docker-compose.yml}"
+CERT_DIR="${CERT_DIR:-$CI_ROOT/docker/nginx/certs}"
+COMPOSE_FILE="${COMPOSE_FILE:-$CI_ROOT/docker/docker-compose.yml}"
 
 mkdir -p "$CERT_DIR"
 chmod 700 "$CERT_DIR"
