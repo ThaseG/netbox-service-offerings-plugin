@@ -14,13 +14,11 @@
 # environment and replace it.
 import django.db.models.deletion
 import taggit.managers
-from django.db import migrations, models
-
 import utilities.json
+from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
@@ -54,8 +52,11 @@ class Migration(migrations.Migration):
                 (
                     'owner',
                     models.ForeignKey(
-                        blank=True, null=True, on_delete=django.db.models.deletion.PROTECT,
-                        related_name='+', to='users.owner',
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.PROTECT,
+                        related_name='+',
+                        to='users.owner',
                     ),
                 ),
             ],
@@ -84,8 +85,11 @@ class Migration(migrations.Migration):
                 (
                     'owner',
                     models.ForeignKey(
-                        blank=True, null=True, on_delete=django.db.models.deletion.PROTECT,
-                        related_name='+', to='users.owner',
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.PROTECT,
+                        related_name='+',
+                        to='users.owner',
                     ),
                 ),
             ],
@@ -113,8 +117,11 @@ class Migration(migrations.Migration):
                 (
                     'owner',
                     models.ForeignKey(
-                        blank=True, null=True, on_delete=django.db.models.deletion.PROTECT,
-                        related_name='+', to='users.owner',
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.PROTECT,
+                        related_name='+',
+                        to='users.owner',
                     ),
                 ),
             ],
@@ -142,8 +149,11 @@ class Migration(migrations.Migration):
                 (
                     'owner',
                     models.ForeignKey(
-                        blank=True, null=True, on_delete=django.db.models.deletion.PROTECT,
-                        related_name='+', to='users.owner',
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.PROTECT,
+                        related_name='+',
+                        to='users.owner',
                     ),
                 ),
             ],
@@ -171,8 +181,11 @@ class Migration(migrations.Migration):
                 (
                     'owner',
                     models.ForeignKey(
-                        blank=True, null=True, on_delete=django.db.models.deletion.PROTECT,
-                        related_name='+', to='users.owner',
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.PROTECT,
+                        related_name='+',
+                        to='users.owner',
                     ),
                 ),
             ],
@@ -200,8 +213,11 @@ class Migration(migrations.Migration):
                 (
                     'owner',
                     models.ForeignKey(
-                        blank=True, null=True, on_delete=django.db.models.deletion.PROTECT,
-                        related_name='+', to='users.owner',
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.PROTECT,
+                        related_name='+',
+                        to='users.owner',
                     ),
                 ),
             ],
@@ -231,8 +247,11 @@ class Migration(migrations.Migration):
                 (
                     'owner',
                     models.ForeignKey(
-                        blank=True, null=True, on_delete=django.db.models.deletion.PROTECT,
-                        related_name='+', to='users.owner',
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.PROTECT,
+                        related_name='+',
+                        to='users.owner',
                     ),
                 ),
             ],
@@ -242,7 +261,6 @@ class Migration(migrations.Migration):
                 'ordering': ('name',),
             },
         ),
-
         #
         # Core CSDM models
         #
@@ -263,14 +281,19 @@ class Migration(migrations.Migration):
                 (
                     'owner',
                     models.ForeignKey(
-                        blank=True, null=True, on_delete=django.db.models.deletion.PROTECT,
-                        related_name='+', to='users.owner',
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.PROTECT,
+                        related_name='+',
+                        to='users.owner',
                     ),
                 ),
                 (
                     'lifecycle',
                     models.ForeignKey(
-                        on_delete=django.db.models.deletion.PROTECT, related_name='+', to='csdm.lifecycle',
+                        on_delete=django.db.models.deletion.PROTECT,
+                        related_name='+',
+                        to='csdm.lifecycle',
                     ),
                 ),
             ],
@@ -297,14 +320,19 @@ class Migration(migrations.Migration):
                 (
                     'owner',
                     models.ForeignKey(
-                        blank=True, null=True, on_delete=django.db.models.deletion.PROTECT,
-                        related_name='+', to='users.owner',
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.PROTECT,
+                        related_name='+',
+                        to='users.owner',
                     ),
                 ),
                 (
                     'lifecycle',
                     models.ForeignKey(
-                        on_delete=django.db.models.deletion.PROTECT, related_name='+', to='csdm.lifecycle',
+                        on_delete=django.db.models.deletion.PROTECT,
+                        related_name='+',
+                        to='csdm.lifecycle',
                     ),
                 ),
             ],
@@ -332,14 +360,19 @@ class Migration(migrations.Migration):
                 (
                     'owner',
                     models.ForeignKey(
-                        blank=True, null=True, on_delete=django.db.models.deletion.PROTECT,
-                        related_name='+', to='users.owner',
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.PROTECT,
+                        related_name='+',
+                        to='users.owner',
                     ),
                 ),
                 (
                     'lifecycle',
                     models.ForeignKey(
-                        on_delete=django.db.models.deletion.PROTECT, related_name='+', to='csdm.lifecycle',
+                        on_delete=django.db.models.deletion.PROTECT,
+                        related_name='+',
+                        to='csdm.lifecycle',
                     ),
                 ),
             ],
@@ -371,20 +404,27 @@ class Migration(migrations.Migration):
                 (
                     'owner',
                     models.ForeignKey(
-                        blank=True, null=True, on_delete=django.db.models.deletion.PROTECT,
-                        related_name='+', to='users.owner',
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.PROTECT,
+                        related_name='+',
+                        to='users.owner',
                     ),
                 ),
                 (
                     'environment',
                     models.ForeignKey(
-                        on_delete=django.db.models.deletion.PROTECT, related_name='+', to='csdm.environment',
+                        on_delete=django.db.models.deletion.PROTECT,
+                        related_name='+',
+                        to='csdm.environment',
                     ),
                 ),
                 (
                     'lifecycle',
                     models.ForeignKey(
-                        on_delete=django.db.models.deletion.PROTECT, related_name='+', to='csdm.lifecycle',
+                        on_delete=django.db.models.deletion.PROTECT,
+                        related_name='+',
+                        to='csdm.lifecycle',
                     ),
                 ),
             ],
@@ -412,14 +452,19 @@ class Migration(migrations.Migration):
                 (
                     'owner',
                     models.ForeignKey(
-                        blank=True, null=True, on_delete=django.db.models.deletion.PROTECT,
-                        related_name='+', to='users.owner',
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.PROTECT,
+                        related_name='+',
+                        to='users.owner',
                     ),
                 ),
                 (
                     'lifecycle',
                     models.ForeignKey(
-                        on_delete=django.db.models.deletion.PROTECT, related_name='+', to='csdm.lifecycle',
+                        on_delete=django.db.models.deletion.PROTECT,
+                        related_name='+',
+                        to='csdm.lifecycle',
                     ),
                 ),
             ],
@@ -429,12 +474,10 @@ class Migration(migrations.Migration):
                 'ordering': ('name',),
             },
         ),
-
         #
         # Many-to-many fields (added after every involved model exists, to
         # avoid ordering issues from the extensive cross-references below)
         #
-
         # Portfolio
         migrations.AddField(
             model_name='portfolio',
@@ -456,7 +499,6 @@ class Migration(migrations.Migration):
             name='portfolio_manager_contact_groups',
             field=models.ManyToManyField(blank=True, related_name='+', to='tenancy.contactgroup'),
         ),
-
         # Service
         migrations.AddField(
             model_name='service',
@@ -503,7 +545,6 @@ class Migration(migrations.Migration):
             name='ci_function',
             field=models.ManyToManyField(blank=True, related_name='services', to='csdm.techci'),
         ),
-
         # ServiceOffering
         migrations.AddField(
             model_name='serviceoffering',
@@ -560,7 +601,6 @@ class Migration(migrations.Migration):
             name='tenant_group',
             field=models.ManyToManyField(blank=True, related_name='+', to='tenancy.tenantgroup'),
         ),
-
         # AppService
         migrations.AddField(
             model_name='appservice',
@@ -627,7 +667,6 @@ class Migration(migrations.Migration):
             name='tenant_group',
             field=models.ManyToManyField(blank=True, related_name='+', to='tenancy.tenantgroup'),
         ),
-
         # TechCI
         migrations.AddField(
             model_name='techci',

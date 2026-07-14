@@ -4,7 +4,9 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "netbox-csdm"
-version = "0.1.0"
+# Kept in sync with CSDM_PLUGIN_VERSION in versions.sh — the Code-Review
+# stage of ci-cd.yml fails the build if these two drift apart.
+version = "0.9.1"
 description = "Business/Technical Service Offerings (CSDM) plugin for NetBox"
 requires-python = ">=3.10"
 classifiers = [
@@ -16,3 +18,36 @@ classifiers = [
 
 [tool.setuptools.packages.find]
 include = ["csdm*"]
+
+[tool.ruff]
+# Baseline copied from netbox-community/netbox's own pyproject.toml so
+# plugin code style matches upstream conventions. target-version set to
+# py310 (not netbox core's py312) to match this plugin's own
+# requires-python above — ruff shouldn't suggest syntax our stated minimum
+# doesn't support.
+line-length = 120
+indent-width = 4
+respect-gitignore = true
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F"]
+extend-select = [
+    "E1",   # pycodestyle errors: indentation-related
+    "E2",   # pycodestyle errors: whitespace-related
+    "E3",   # pycodestyle errors: blank lines / spacing around definitions
+    "E501", # pycodestyle: line too long (enforced via line-length above)
+    "W",    # pycodestyle warnings
+    "I",    # import sorting (isort-equivalent)
+]
+# E1/E2/E3 need preview mode to take effect at all (matches upstream NetBox's
+# own pyproject.toml, which sets this for the same reason).
+preview = true
+
+[tool.ruff.format]
+# Ruff's formatter defaults to double quotes; both this codebase and NetBox
+# core itself consistently use single quotes, so override to match rather
+# than have `ruff format` fight every file that was already written this way.
+quote-style = "single"
+indent-style = "space"
+line-ending = "lf"

@@ -1,6 +1,5 @@
 import strawberry
 import strawberry_django
-
 from netbox.graphql.types import OrganizationalObjectType, PrimaryObjectType
 
 from . import models
@@ -11,6 +10,7 @@ __all__ = ('schema',)
 #
 # Support / lookup types
 #
+
 
 @strawberry_django.type(models.Lifecycle, fields='__all__', pagination=True)
 class LifecycleType(OrganizationalObjectType):
@@ -50,6 +50,7 @@ class MTATType(OrganizationalObjectType):
 #
 # Core CSDM types
 #
+
 
 @strawberry_django.type(models.Portfolio, fields='__all__', pagination=True)
 class PortfolioType(PrimaryObjectType):

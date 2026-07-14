@@ -1,5 +1,4 @@
 PLUGINS = [
-    "netbox_custom_objects",
     "netbox_topology_views",
     "netbox_lifecycle",
     "netbox_secrets",

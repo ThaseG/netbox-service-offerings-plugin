@@ -1,7 +1,6 @@
-from django.core.exceptions import ValidationError
-
 from dcim.models import Device
-from netbox.forms import NetBoxModelFilterSetForm, NetBoxModelForm, OrganizationalModelForm, PrimaryModelForm
+from django.core.exceptions import ValidationError
+from netbox.forms import NetBoxModelFilterSetForm, OrganizationalModelForm, PrimaryModelForm
 from tenancy.models import Contact, ContactGroup, Tenant, TenantGroup
 from utilities.forms.fields import DynamicModelChoiceField, DynamicModelMultipleChoiceField
 from utilities.forms.rendering import FieldSet
@@ -54,6 +53,7 @@ __all__ = (
 # Support / lookup model forms
 #
 
+
 class LifecycleForm(OrganizationalModelForm):
     class Meta:
         model = Lifecycle
@@ -100,15 +100,18 @@ class MTATForm(OrganizationalModelForm):
 # Core model forms
 #
 
+
 class PortfolioForm(PrimaryModelForm):
     lifecycle = DynamicModelChoiceField(queryset=Lifecycle.objects.all(), required=True)
     portfolio_owner_contacts = DynamicModelMultipleChoiceField(queryset=Contact.objects.all(), required=False)
     portfolio_owner_contact_groups = DynamicModelMultipleChoiceField(
-        queryset=ContactGroup.objects.all(), required=False,
+        queryset=ContactGroup.objects.all(),
+        required=False,
     )
     portfolio_manager_contacts = DynamicModelMultipleChoiceField(queryset=Contact.objects.all(), required=False)
     portfolio_manager_contact_groups = DynamicModelMultipleChoiceField(
-        queryset=ContactGroup.objects.all(), required=False,
+        queryset=ContactGroup.objects.all(),
+        required=False,
     )
 
     fieldsets = (
@@ -120,17 +123,22 @@ class PortfolioForm(PrimaryModelForm):
     class Meta:
         model = Portfolio
         fields = (
-            'name', 'lifecycle', 'portfolio_owner_contacts', 'portfolio_owner_contact_groups',
-            'portfolio_manager_contacts', 'portfolio_manager_contact_groups', 'description', 'tags', 'comments',
+            'name',
+            'lifecycle',
+            'portfolio_owner_contacts',
+            'portfolio_owner_contact_groups',
+            'portfolio_manager_contacts',
+            'portfolio_manager_contact_groups',
+            'description',
+            'tags',
+            'comments',
         )
 
     def clean(self):
         cleaned_data = super().clean()
         if not (cleaned_data.get('portfolio_owner_contacts') or cleaned_data.get('portfolio_owner_contact_groups')):
             raise ValidationError('Select at least one Portfolio Owner (a contact or a contact group).')
-        if not (
-            cleaned_data.get('portfolio_manager_contacts') or cleaned_data.get('portfolio_manager_contact_groups')
-        ):
+        if not (cleaned_data.get('portfolio_manager_contacts') or cleaned_data.get('portfolio_manager_contact_groups')):
             raise ValidationError('Select at least one Portfolio Manager (a contact or a contact group).')
         return cleaned_data
 
@@ -140,11 +148,13 @@ class ServiceForm(PrimaryModelForm):
     service_portfolio = DynamicModelMultipleChoiceField(queryset=Portfolio.objects.all(), required=True)
     service_owner_contacts = DynamicModelMultipleChoiceField(queryset=Contact.objects.all(), required=False)
     service_owner_contact_groups = DynamicModelMultipleChoiceField(
-        queryset=ContactGroup.objects.all(), required=False,
+        queryset=ContactGroup.objects.all(),
+        required=False,
     )
     service_manager_contacts = DynamicModelMultipleChoiceField(queryset=Contact.objects.all(), required=False)
     service_manager_contact_groups = DynamicModelMultipleChoiceField(
-        queryset=ContactGroup.objects.all(), required=False,
+        queryset=ContactGroup.objects.all(),
+        required=False,
     )
     business_unit = DynamicModelMultipleChoiceField(queryset=ContactGroup.objects.all(), required=True)
     support_group = DynamicModelMultipleChoiceField(queryset=ContactGroup.objects.all(), required=True)
@@ -162,9 +172,20 @@ class ServiceForm(PrimaryModelForm):
     class Meta:
         model = Service
         fields = (
-            'name', 'lifecycle', 'service_portfolio', 'service_owner_contacts', 'service_owner_contact_groups',
-            'service_manager_contacts', 'service_manager_contact_groups', 'business_unit', 'support_group',
-            'change_group', 'ci_function', 'description', 'tags', 'comments',
+            'name',
+            'lifecycle',
+            'service_portfolio',
+            'service_owner_contacts',
+            'service_owner_contact_groups',
+            'service_manager_contacts',
+            'service_manager_contact_groups',
+            'business_unit',
+            'support_group',
+            'change_group',
+            'ci_function',
+            'description',
+            'tags',
+            'comments',
         )
 
     def clean(self):
@@ -180,16 +201,20 @@ class ServiceOfferingForm(PrimaryModelForm):
     lifecycle = DynamicModelChoiceField(queryset=Lifecycle.objects.all(), required=True)
     service = DynamicModelMultipleChoiceField(queryset=Service.objects.all(), required=True)
     service_offering_owner_contacts = DynamicModelMultipleChoiceField(
-        queryset=Contact.objects.all(), required=False,
+        queryset=Contact.objects.all(),
+        required=False,
     )
     service_offering_owner_contact_groups = DynamicModelMultipleChoiceField(
-        queryset=ContactGroup.objects.all(), required=False,
+        queryset=ContactGroup.objects.all(),
+        required=False,
     )
     service_offering_manager_contacts = DynamicModelMultipleChoiceField(
-        queryset=Contact.objects.all(), required=False,
+        queryset=Contact.objects.all(),
+        required=False,
     )
     service_offering_manager_contact_groups = DynamicModelMultipleChoiceField(
-        queryset=ContactGroup.objects.all(), required=False,
+        queryset=ContactGroup.objects.all(),
+        required=False,
     )
     business_unit = DynamicModelMultipleChoiceField(queryset=ContactGroup.objects.all(), required=True)
     support_group = DynamicModelMultipleChoiceField(queryset=ContactGroup.objects.all(), required=True)
@@ -200,13 +225,23 @@ class ServiceOfferingForm(PrimaryModelForm):
 
     fieldsets = (
         FieldSet(
-            'name', 'contract_number', 'lifecycle', 'service', 'description', 'tags', name='Service Offering',
+            'name',
+            'contract_number',
+            'lifecycle',
+            'service',
+            'description',
+            'tags',
+            name='Service Offering',
         ),
         FieldSet(
-            'service_offering_owner_contacts', 'service_offering_owner_contact_groups', name='Owner',
+            'service_offering_owner_contacts',
+            'service_offering_owner_contact_groups',
+            name='Owner',
         ),
         FieldSet(
-            'service_offering_manager_contacts', 'service_offering_manager_contact_groups', name='Manager',
+            'service_offering_manager_contacts',
+            'service_offering_manager_contact_groups',
+            name='Manager',
         ),
         FieldSet('business_unit', 'support_group', 'change_group', name='Organization'),
         FieldSet('ci_function', name='Technical CIs'),
@@ -216,10 +251,23 @@ class ServiceOfferingForm(PrimaryModelForm):
     class Meta:
         model = ServiceOffering
         fields = (
-            'name', 'contract_number', 'lifecycle', 'service', 'service_offering_owner_contacts',
-            'service_offering_owner_contact_groups', 'service_offering_manager_contacts',
-            'service_offering_manager_contact_groups', 'business_unit', 'support_group', 'change_group',
-            'ci_function', 'tenant', 'tenant_group', 'description', 'tags', 'comments',
+            'name',
+            'contract_number',
+            'lifecycle',
+            'service',
+            'service_offering_owner_contacts',
+            'service_offering_owner_contact_groups',
+            'service_offering_manager_contacts',
+            'service_offering_manager_contact_groups',
+            'business_unit',
+            'support_group',
+            'change_group',
+            'ci_function',
+            'tenant',
+            'tenant_group',
+            'description',
+            'tags',
+            'comments',
         )
 
     def clean(self):
@@ -256,7 +304,12 @@ class AppServiceForm(PrimaryModelForm):
 
     fieldsets = (
         FieldSet(
-            'name', 'environment', 'lifecycle', 'service_offering', 'description', 'tags',
+            'name',
+            'environment',
+            'lifecycle',
+            'service_offering',
+            'description',
+            'tags',
             name='Application Service',
         ),
         FieldSet('business_unit', 'support_group', 'change_group', 'owned_by', name='Organization'),
@@ -269,10 +322,30 @@ class AppServiceForm(PrimaryModelForm):
     class Meta:
         model = AppService
         fields = (
-            'name', 'environment', 'lifecycle', 'service_offering', 'business_unit', 'support_group',
-            'change_group', 'sla', 'accepted_downtime', 'owned_by', 'operation_time', 'availability', 'mtat',
-            'ttr', 'service_criticality', 'rpo', 'rto', 'bcm', 'ci_function', 'tenant', 'tenant_group',
-            'description', 'tags', 'comments',
+            'name',
+            'environment',
+            'lifecycle',
+            'service_offering',
+            'business_unit',
+            'support_group',
+            'change_group',
+            'sla',
+            'accepted_downtime',
+            'owned_by',
+            'operation_time',
+            'availability',
+            'mtat',
+            'ttr',
+            'service_criticality',
+            'rpo',
+            'rto',
+            'bcm',
+            'ci_function',
+            'tenant',
+            'tenant_group',
+            'description',
+            'tags',
+            'comments',
         )
 
 
@@ -298,8 +371,20 @@ class TechCIForm(PrimaryModelForm):
     class Meta:
         model = TechCI
         fields = (
-            'name', 'function', 'lifecycle', 'business_unit', 'support_group', 'change_group', 'device',
-            'virtual_machine', 'cluster', 'cluster_group', 'tenant', 'tenant_group', 'description', 'tags',
+            'name',
+            'function',
+            'lifecycle',
+            'business_unit',
+            'support_group',
+            'change_group',
+            'device',
+            'virtual_machine',
+            'cluster',
+            'cluster_group',
+            'tenant',
+            'tenant_group',
+            'description',
+            'tags',
             'comments',
         )
 
@@ -307,6 +392,7 @@ class TechCIForm(PrimaryModelForm):
 #
 # Filter forms
 #
+
 
 class LifecycleFilterForm(NetBoxModelFilterSetForm):
     model = Lifecycle
@@ -339,45 +425,63 @@ class MTATFilterForm(NetBoxModelFilterSetForm):
 class PortfolioFilterForm(NetBoxModelFilterSetForm):
     model = Portfolio
     lifecycle_id = DynamicModelMultipleChoiceField(
-        queryset=Lifecycle.objects.all(), required=False, label='Lifecycle',
+        queryset=Lifecycle.objects.all(),
+        required=False,
+        label='Lifecycle',
     )
 
 
 class ServiceFilterForm(NetBoxModelFilterSetForm):
     model = Service
     lifecycle_id = DynamicModelMultipleChoiceField(
-        queryset=Lifecycle.objects.all(), required=False, label='Lifecycle',
+        queryset=Lifecycle.objects.all(),
+        required=False,
+        label='Lifecycle',
     )
     service_portfolio_id = DynamicModelMultipleChoiceField(
-        queryset=Portfolio.objects.all(), required=False, label='Service Portfolio',
+        queryset=Portfolio.objects.all(),
+        required=False,
+        label='Service Portfolio',
     )
 
 
 class ServiceOfferingFilterForm(NetBoxModelFilterSetForm):
     model = ServiceOffering
     lifecycle_id = DynamicModelMultipleChoiceField(
-        queryset=Lifecycle.objects.all(), required=False, label='Lifecycle',
+        queryset=Lifecycle.objects.all(),
+        required=False,
+        label='Lifecycle',
     )
     service_id = DynamicModelMultipleChoiceField(
-        queryset=Service.objects.all(), required=False, label='Service',
+        queryset=Service.objects.all(),
+        required=False,
+        label='Service',
     )
 
 
 class AppServiceFilterForm(NetBoxModelFilterSetForm):
     model = AppService
     lifecycle_id = DynamicModelMultipleChoiceField(
-        queryset=Lifecycle.objects.all(), required=False, label='Lifecycle',
+        queryset=Lifecycle.objects.all(),
+        required=False,
+        label='Lifecycle',
     )
     environment_id = DynamicModelMultipleChoiceField(
-        queryset=Environment.objects.all(), required=False, label='Environment',
+        queryset=Environment.objects.all(),
+        required=False,
+        label='Environment',
     )
     service_offering_id = DynamicModelMultipleChoiceField(
-        queryset=ServiceOffering.objects.all(), required=False, label='Service Offering',
+        queryset=ServiceOffering.objects.all(),
+        required=False,
+        label='Service Offering',
     )
 
 
 class TechCIFilterForm(NetBoxModelFilterSetForm):
     model = TechCI
     lifecycle_id = DynamicModelMultipleChoiceField(
-        queryset=Lifecycle.objects.all(), required=False, label='Lifecycle',
+        queryset=Lifecycle.objects.all(),
+        required=False,
+        label='Lifecycle',
     )

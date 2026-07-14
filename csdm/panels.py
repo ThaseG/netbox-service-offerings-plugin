@@ -1,5 +1,4 @@
 from django.utils.translation import gettext_lazy as _
-
 from netbox.ui import attrs
 from netbox.ui.panels import CommentsPanel, ObjectAttributesPanel, OrganizationalObjectPanel
 
@@ -32,6 +31,7 @@ __all__ = (
 class LookupPanel(OrganizationalObjectPanel):
     """Reused as-is for Lifecycle, OperationTime, Availability, Criticality, Environment
     (identical shape: just name + description + tags)."""
+
     tags = attrs.RelatedObjectListAttr('tags', label=_('Tags'), linkify=True)
 
 
@@ -54,16 +54,24 @@ class PortfolioPanel(ObjectAttributesPanel):
 class PortfolioOwnershipPanel(ObjectAttributesPanel):
     title = _('Ownership')
     portfolio_owner_contacts = attrs.RelatedObjectListAttr(
-        'portfolio_owner_contacts', label=_('Owner (Contacts)'), linkify=True,
+        'portfolio_owner_contacts',
+        label=_('Owner (Contacts)'),
+        linkify=True,
     )
     portfolio_owner_contact_groups = attrs.RelatedObjectListAttr(
-        'portfolio_owner_contact_groups', label=_('Owner (Contact Groups)'), linkify=True,
+        'portfolio_owner_contact_groups',
+        label=_('Owner (Contact Groups)'),
+        linkify=True,
     )
     portfolio_manager_contacts = attrs.RelatedObjectListAttr(
-        'portfolio_manager_contacts', label=_('Manager (Contacts)'), linkify=True,
+        'portfolio_manager_contacts',
+        label=_('Manager (Contacts)'),
+        linkify=True,
     )
     portfolio_manager_contact_groups = attrs.RelatedObjectListAttr(
-        'portfolio_manager_contact_groups', label=_('Manager (Contact Groups)'), linkify=True,
+        'portfolio_manager_contact_groups',
+        label=_('Manager (Contact Groups)'),
+        linkify=True,
     )
 
 
@@ -78,16 +86,24 @@ class ServicePanel(ObjectAttributesPanel):
 class ServiceOwnershipPanel(ObjectAttributesPanel):
     title = _('Ownership')
     service_owner_contacts = attrs.RelatedObjectListAttr(
-        'service_owner_contacts', label=_('Owner (Contacts)'), linkify=True,
+        'service_owner_contacts',
+        label=_('Owner (Contacts)'),
+        linkify=True,
     )
     service_owner_contact_groups = attrs.RelatedObjectListAttr(
-        'service_owner_contact_groups', label=_('Owner (Contact Groups)'), linkify=True,
+        'service_owner_contact_groups',
+        label=_('Owner (Contact Groups)'),
+        linkify=True,
     )
     service_manager_contacts = attrs.RelatedObjectListAttr(
-        'service_manager_contacts', label=_('Manager (Contacts)'), linkify=True,
+        'service_manager_contacts',
+        label=_('Manager (Contacts)'),
+        linkify=True,
     )
     service_manager_contact_groups = attrs.RelatedObjectListAttr(
-        'service_manager_contact_groups', label=_('Manager (Contact Groups)'), linkify=True,
+        'service_manager_contact_groups',
+        label=_('Manager (Contact Groups)'),
+        linkify=True,
     )
 
 
@@ -111,16 +127,24 @@ class ServiceOfferingPanel(ObjectAttributesPanel):
 class ServiceOfferingOwnershipPanel(ObjectAttributesPanel):
     title = _('Ownership')
     service_offering_owner_contacts = attrs.RelatedObjectListAttr(
-        'service_offering_owner_contacts', label=_('Owner (Contacts)'), linkify=True,
+        'service_offering_owner_contacts',
+        label=_('Owner (Contacts)'),
+        linkify=True,
     )
     service_offering_owner_contact_groups = attrs.RelatedObjectListAttr(
-        'service_offering_owner_contact_groups', label=_('Owner (Contact Groups)'), linkify=True,
+        'service_offering_owner_contact_groups',
+        label=_('Owner (Contact Groups)'),
+        linkify=True,
     )
     service_offering_manager_contacts = attrs.RelatedObjectListAttr(
-        'service_offering_manager_contacts', label=_('Manager (Contacts)'), linkify=True,
+        'service_offering_manager_contacts',
+        label=_('Manager (Contacts)'),
+        linkify=True,
     )
     service_offering_manager_contact_groups = attrs.RelatedObjectListAttr(
-        'service_offering_manager_contact_groups', label=_('Manager (Contact Groups)'), linkify=True,
+        'service_offering_manager_contact_groups',
+        label=_('Manager (Contact Groups)'),
+        linkify=True,
     )
 
 
@@ -154,7 +178,9 @@ class AppServiceLevelsPanel(ObjectAttributesPanel):
     availability = attrs.RelatedObjectListAttr('availability', label=_('Availability'), linkify=True)
     mtat = attrs.RelatedObjectListAttr('mtat', label=_('MTAT'), linkify=True)
     service_criticality = attrs.RelatedObjectListAttr(
-        'service_criticality', label=_('Service Criticality'), linkify=True,
+        'service_criticality',
+        label=_('Service Criticality'),
+        linkify=True,
     )
 
 

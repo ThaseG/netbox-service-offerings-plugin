@@ -1,5 +1,4 @@
 import django_tables2 as tables
-
 from netbox.tables import NetBoxTable, columns
 
 from .models import (
@@ -37,6 +36,7 @@ class LookupTable(NetBoxTable):
     """Shared columns for the simple name/description/comments lookup models.
     Each subclass below re-declares `tags` with its own url_name — django-tables2
     fields can't be templated, so this base intentionally leaves it unset."""
+
     name = tables.Column(linkify=True)
     comments = columns.MarkdownColumn()
 
@@ -107,7 +107,16 @@ class PortfolioTable(NetBoxTable):
     class Meta(NetBoxTable.Meta):
         model = Portfolio
         fields = (
-            'pk', 'id', 'name', 'lifecycle', 'description', 'comments', 'tags', 'created', 'last_updated', 'actions',
+            'pk',
+            'id',
+            'name',
+            'lifecycle',
+            'description',
+            'comments',
+            'tags',
+            'created',
+            'last_updated',
+            'actions',
         )
         default_columns = ('pk', 'name', 'lifecycle', 'description')
 
@@ -121,7 +130,16 @@ class ServiceTable(NetBoxTable):
     class Meta(NetBoxTable.Meta):
         model = Service
         fields = (
-            'pk', 'id', 'name', 'lifecycle', 'description', 'comments', 'tags', 'created', 'last_updated', 'actions',
+            'pk',
+            'id',
+            'name',
+            'lifecycle',
+            'description',
+            'comments',
+            'tags',
+            'created',
+            'last_updated',
+            'actions',
         )
         default_columns = ('pk', 'name', 'lifecycle', 'description')
 
@@ -135,8 +153,17 @@ class ServiceOfferingTable(NetBoxTable):
     class Meta(NetBoxTable.Meta):
         model = ServiceOffering
         fields = (
-            'pk', 'id', 'name', 'contract_number', 'lifecycle', 'description', 'comments', 'tags', 'created',
-            'last_updated', 'actions',
+            'pk',
+            'id',
+            'name',
+            'contract_number',
+            'lifecycle',
+            'description',
+            'comments',
+            'tags',
+            'created',
+            'last_updated',
+            'actions',
         )
         default_columns = ('pk', 'name', 'contract_number', 'lifecycle', 'description')
 
@@ -151,8 +178,22 @@ class AppServiceTable(NetBoxTable):
     class Meta(NetBoxTable.Meta):
         model = AppService
         fields = (
-            'pk', 'id', 'name', 'environment', 'lifecycle', 'accepted_downtime', 'ttr', 'rpo', 'rto', 'bcm',
-            'description', 'comments', 'tags', 'created', 'last_updated', 'actions',
+            'pk',
+            'id',
+            'name',
+            'environment',
+            'lifecycle',
+            'accepted_downtime',
+            'ttr',
+            'rpo',
+            'rto',
+            'bcm',
+            'description',
+            'comments',
+            'tags',
+            'created',
+            'last_updated',
+            'actions',
         )
         default_columns = ('pk', 'name', 'environment', 'lifecycle', 'description')
 
@@ -166,7 +207,16 @@ class TechCITable(NetBoxTable):
     class Meta(NetBoxTable.Meta):
         model = TechCI
         fields = (
-            'pk', 'id', 'name', 'function', 'lifecycle', 'description', 'comments', 'tags', 'created',
-            'last_updated', 'actions',
+            'pk',
+            'id',
+            'name',
+            'function',
+            'lifecycle',
+            'description',
+            'comments',
+            'tags',
+            'created',
+            'last_updated',
+            'actions',
         )
         default_columns = ('pk', 'name', 'function', 'lifecycle', 'description')

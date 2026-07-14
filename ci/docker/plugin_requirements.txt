@@ -4,9 +4,6 @@
 # Bump versions in a PR after checking the plugin's compatibility table
 # against the NETBOX_VERSION pinned in versions.sh.
 
-# https://pypi.org/project/netboxlabs-netbox-custom-objects/ — compatible with NetBox 4.5.2-4.6.x
-netboxlabs-netbox-custom-objects==0.6.0
-
 # https://github.com/netbox-community/netbox-topology-views — declares support for NetBox 4.5.x;
 # no hard version gate in the plugin code, so it loads against 4.6.x, but is untested there upstream.
 netbox-topology-views==4.5.1

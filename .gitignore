@@ -4,6 +4,7 @@ data-model.txt
 ci/docker/.env
 .env
 *.env.local
+env.txt
 
 # TLS material issued by acme.sh — reproducible via the deploy pipeline,
 # and a private key has no business being in git history

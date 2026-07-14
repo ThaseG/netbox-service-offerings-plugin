@@ -1,6 +1,5 @@
 import django_filters
 from django.db.models import Q
-
 from netbox.filtersets import NetBoxModelFilterSet
 
 from .models import (
@@ -101,7 +100,9 @@ class MTATFilterSet(NetBoxModelFilterSet):
 
 class PortfolioFilterSet(NetBoxModelFilterSet):
     lifecycle_id = django_filters.ModelMultipleChoiceFilter(
-        field_name='lifecycle', queryset=Lifecycle.objects.all(), label='Lifecycle (ID)',
+        field_name='lifecycle',
+        queryset=Lifecycle.objects.all(),
+        label='Lifecycle (ID)',
     )
 
     class Meta:
@@ -114,10 +115,14 @@ class PortfolioFilterSet(NetBoxModelFilterSet):
 
 class ServiceFilterSet(NetBoxModelFilterSet):
     lifecycle_id = django_filters.ModelMultipleChoiceFilter(
-        field_name='lifecycle', queryset=Lifecycle.objects.all(), label='Lifecycle (ID)',
+        field_name='lifecycle',
+        queryset=Lifecycle.objects.all(),
+        label='Lifecycle (ID)',
     )
     service_portfolio_id = django_filters.ModelMultipleChoiceFilter(
-        field_name='service_portfolio', queryset=Portfolio.objects.all(), label='Service Portfolio (ID)',
+        field_name='service_portfolio',
+        queryset=Portfolio.objects.all(),
+        label='Service Portfolio (ID)',
     )
 
     class Meta:
@@ -130,10 +135,14 @@ class ServiceFilterSet(NetBoxModelFilterSet):
 
 class ServiceOfferingFilterSet(NetBoxModelFilterSet):
     lifecycle_id = django_filters.ModelMultipleChoiceFilter(
-        field_name='lifecycle', queryset=Lifecycle.objects.all(), label='Lifecycle (ID)',
+        field_name='lifecycle',
+        queryset=Lifecycle.objects.all(),
+        label='Lifecycle (ID)',
     )
     service_id = django_filters.ModelMultipleChoiceFilter(
-        field_name='service', queryset=Service.objects.all(), label='Service (ID)',
+        field_name='service',
+        queryset=Service.objects.all(),
+        label='Service (ID)',
     )
 
     class Meta:
@@ -148,13 +157,19 @@ class ServiceOfferingFilterSet(NetBoxModelFilterSet):
 
 class AppServiceFilterSet(NetBoxModelFilterSet):
     lifecycle_id = django_filters.ModelMultipleChoiceFilter(
-        field_name='lifecycle', queryset=Lifecycle.objects.all(), label='Lifecycle (ID)',
+        field_name='lifecycle',
+        queryset=Lifecycle.objects.all(),
+        label='Lifecycle (ID)',
     )
     environment_id = django_filters.ModelMultipleChoiceFilter(
-        field_name='environment', queryset=Environment.objects.all(), label='Environment (ID)',
+        field_name='environment',
+        queryset=Environment.objects.all(),
+        label='Environment (ID)',
     )
     service_offering_id = django_filters.ModelMultipleChoiceFilter(
-        field_name='service_offering', queryset=ServiceOffering.objects.all(), label='Service Offering (ID)',
+        field_name='service_offering',
+        queryset=ServiceOffering.objects.all(),
+        label='Service Offering (ID)',
     )
 
     class Meta:
@@ -167,7 +182,9 @@ class AppServiceFilterSet(NetBoxModelFilterSet):
 
 class TechCIFilterSet(NetBoxModelFilterSet):
     lifecycle_id = django_filters.ModelMultipleChoiceFilter(
-        field_name='lifecycle', queryset=Lifecycle.objects.all(), label='Lifecycle (ID)',
+        field_name='lifecycle',
+        queryset=Lifecycle.objects.all(),
+        label='Lifecycle (ID)',
     )
 
     class Meta:
