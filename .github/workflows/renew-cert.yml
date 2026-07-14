@@ -1,0 +1,36 @@
+name: Renew TLS Certificate
+
+on:
+  schedule:
+    # Runs daily; acme.sh only performs an actual renewal once the
+    # certificate is ~60 days old (its default renewal window, checked
+    # inside scripts/issue-cert.sh). On every other day this is a fast
+    # no-op ("Skip, Next renewal time is ..."), so daily just means the
+    # real renewal happens within 24h of becoming due, well inside the
+    # 30-day margin before the 90-day certificate actually expires.
+    - cron: "0 3 * * *"
+  workflow_dispatch: {}
+
+concurrency:
+  # Shares deploy.yml's concurrency group: both touch docker compose / the
+  # nginx container on the same self-hosted runner, so they must not
+  # overlap. If a deploy is running, the renewal check queues behind it.
+  group: netbox-deploy
+  cancel-in-progress: false
+
+jobs:
+  renew:
+    runs-on: [self-hosted, netbox]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Issue or renew TLS certificate
+        run: scripts/issue-cert.sh
+        env:
+          NETBOX_DOMAIN: ${{ vars.NETBOX_DOMAIN }}
+          ACME_EMAIL: ${{ vars.ACME_EMAIL }}
+          WS_ApiKey: ${{ secrets.WS_API_KEY }}
+          WS_ApiSecret: ${{ secrets.WS_API_SECRET }}
+          COMPOSE_FILE: ${{ github.workspace }}/docker/docker-compose.yml
