@@ -68,6 +68,10 @@ jobs:
       - name: Deploy stack
         run: docker compose --env-file docker/.env -f docker/docker-compose.yml up -d --remove-orphans
 
+      - name: Dump NetBox logs on failure
+        if: failure()
+        run: docker compose --env-file docker/.env -f docker/docker-compose.yml logs netbox --tail=300
+
       - name: Wait for NetBox to become healthy
         run: |
           for i in $(seq 1 30); do

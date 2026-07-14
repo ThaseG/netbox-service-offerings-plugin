@@ -90,10 +90,17 @@ services:
       GRAPHQL_ENABLED: "true"
       WEBHOOKS_ENABLED: "true"
     healthcheck:
+      # start_period is generous because the *first* boot against an empty
+      # database runs NetBox's full initial migration (hundreds of
+      # migrations), which can take several minutes. Failures during
+      # start_period don't count against the unhealthy threshold; on
+      # subsequent boots (schema already migrated) it becomes healthy
+      # almost immediately, well before this window elapses.
       test: curl -f http://localhost:8080/login/ || exit 1
-      start_period: 90s
-      timeout: 3s
+      start_period: 600s
+      timeout: 5s
       interval: 15s
+      retries: 5
     volumes:
       - netbox-media-files:/opt/netbox/netbox/media:rw
       - netbox-reports-files:/opt/netbox/netbox/reports:rw
