@@ -250,6 +250,38 @@ jobs:
       - name: Django test suite (csdm)
         run: docker compose --env-file ci/docker/.env -f ci/docker/docker-compose.yml exec -T netbox python manage.py test csdm
 
+      - name: Sync superuser API token to current secrets
+        # netbox-docker's own bootstrap (super_user.py) only ever creates a
+        # token once, at the moment the admin account itself is first
+        # created; on every later run — including every future deploy — it
+        # silently does nothing, so if NETBOX_SUPERUSER_API_TOKEN/_API_KEY
+        # are ever rotated (or mistyped once by hand, as happened while
+        # setting this up) the stored token silently drifts out of sync
+        # with what's actually configured, and API auth starts failing with
+        # a bare "Invalid v2 token" and no clue why. Re-deriving the token
+        # from the current secrets on every run — reading them directly
+        # from the GitHub Actions secrets context, never hand-typed —
+        # closes that gap for good and makes the step idempotent.
+        run: |
+          docker compose --env-file ci/docker/.env -f ci/docker/docker-compose.yml exec -T \
+            -e SUPERUSER_API_TOKEN="${{ secrets.NETBOX_SUPERUSER_API_TOKEN }}" \
+            -e SUPERUSER_API_KEY="${{ secrets.NETBOX_SUPERUSER_API_KEY }}" \
+            netbox python manage.py shell -c "
+          import os
+          from users.choices import TokenVersionChoices
+          from users.models import Token, User
+
+          user = User.objects.get(username='admin')
+          Token.objects.filter(user=user).delete()
+          Token.objects.create(
+              user=user,
+              token=os.environ['SUPERUSER_API_TOKEN'],
+              version=TokenVersionChoices.V2,
+              key=os.environ['SUPERUSER_API_KEY'],
+          )
+          print('Superuser token synced.')
+          "
+
       - name: Live smoke test (web + API POST/GET/PATCH/DELETE)
         run: ci/scripts/smoke-test.sh
         env:
