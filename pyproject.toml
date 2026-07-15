@@ -19,6 +19,14 @@ classifiers = [
 [tool.setuptools.packages.find]
 include = ["csdm*"]
 
+[tool.setuptools.package-data]
+# setuptools only auto-includes .py files by default; templates (and any
+# future static assets) must be listed explicitly or they're silently
+# dropped from the built wheel, leaving views working in dev (running from
+# the checkout) but raising TemplateDoesNotExist once installed from a
+# built package.
+csdm = ["templates/**/*", "static/**/*"]
+
 [tool.ruff]
 # Baseline copied from netbox-community/netbox's own pyproject.toml so
 # plugin code style matches upstream conventions. target-version set to
