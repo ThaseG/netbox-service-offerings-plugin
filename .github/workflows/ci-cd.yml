@@ -122,7 +122,8 @@ jobs:
               print(tomllib.load(f)['project']['version'])
           ")
           if [ "$PYPROJECT_VERSION" != "$SERVICE_SPECIFICATION_PLUGIN_VERSION" ]; then
-            echo "::error::pyproject.toml version ($PYPROJECT_VERSION) != SERVICE_SPECIFICATION_PLUGIN_VERSION in versions.sh ($SERVICE_SPECIFICATION_PLUGIN_VERSION)"
+            echo "::error::pyproject.toml version ($PYPROJECT_VERSION) != \
+          SERVICE_SPECIFICATION_PLUGIN_VERSION in versions.sh ($SERVICE_SPECIFICATION_PLUGIN_VERSION)"
             exit 1
           fi
           echo "OK: pyproject.toml matches versions.sh ($PYPROJECT_VERSION)"
@@ -248,7 +249,9 @@ jobs:
             python manage.py makemigrations service_specification --check --dry-run
 
       - name: Django test suite (service_specification)
-        run: docker compose --env-file ci/docker/.env -f ci/docker/docker-compose.yml exec -T netbox python manage.py test service_specification
+        run: |
+          docker compose --env-file ci/docker/.env -f ci/docker/docker-compose.yml exec -T netbox \
+            python manage.py test service_specification
 
       - name: Sync superuser API token to current secrets
         # netbox-docker's own bootstrap (super_user.py) only ever creates a

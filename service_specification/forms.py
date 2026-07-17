@@ -118,20 +118,24 @@ class PortfolioForm(PrimaryModelForm):
     portfolio_owner_contact_groups = DynamicModelMultipleChoiceField(
         queryset=ContactGroup.objects.all(),
         required=False,
+        help_text='Required: select at least one Contact or Contact Group.',
     )
     portfolio_owner_contacts = DynamicModelMultipleChoiceField(
         queryset=Contact.objects.all(),
         required=False,
         query_params={'group_id': '$portfolio_owner_contact_groups'},
+        help_text='Required: select at least one Contact or Contact Group.',
     )
     portfolio_manager_contact_groups = DynamicModelMultipleChoiceField(
         queryset=ContactGroup.objects.all(),
         required=False,
+        help_text='Required: select at least one Contact or Contact Group.',
     )
     portfolio_manager_contacts = DynamicModelMultipleChoiceField(
         queryset=Contact.objects.all(),
         required=False,
         query_params={'group_id': '$portfolio_manager_contact_groups'},
+        help_text='Required: select at least one Contact or Contact Group.',
     )
 
     fieldsets = (
@@ -182,15 +186,25 @@ class PortfolioForm(PrimaryModelForm):
 class ServiceForm(PrimaryModelForm):
     lifecycle = DynamicModelChoiceField(queryset=Lifecycle.objects.all(), required=True)
     service_portfolio = DynamicModelMultipleChoiceField(queryset=Portfolio.objects.all(), required=True)
-    service_owner_contacts = DynamicModelMultipleChoiceField(queryset=Contact.objects.all(), required=False)
+    service_owner_contacts = DynamicModelMultipleChoiceField(
+        queryset=Contact.objects.all(),
+        required=False,
+        help_text='Required: select at least one Contact or Contact Group.',
+    )
     service_owner_contact_groups = DynamicModelMultipleChoiceField(
         queryset=ContactGroup.objects.all(),
         required=False,
+        help_text='Required: select at least one Contact or Contact Group.',
     )
-    service_manager_contacts = DynamicModelMultipleChoiceField(queryset=Contact.objects.all(), required=False)
+    service_manager_contacts = DynamicModelMultipleChoiceField(
+        queryset=Contact.objects.all(),
+        required=False,
+        help_text='Required: select at least one Contact or Contact Group.',
+    )
     service_manager_contact_groups = DynamicModelMultipleChoiceField(
         queryset=ContactGroup.objects.all(),
         required=False,
+        help_text='Required: select at least one Contact or Contact Group.',
     )
     business_unit = DynamicModelMultipleChoiceField(queryset=ContactGroup.objects.all(), required=True)
     support_group = DynamicModelMultipleChoiceField(queryset=ContactGroup.objects.all(), required=True)
@@ -242,18 +256,22 @@ class ServiceOfferingForm(PrimaryModelForm):
     service_offering_owner_contacts = DynamicModelMultipleChoiceField(
         queryset=Contact.objects.all(),
         required=False,
+        help_text='Required: select at least one Contact or Contact Group.',
     )
     service_offering_owner_contact_groups = DynamicModelMultipleChoiceField(
         queryset=ContactGroup.objects.all(),
         required=False,
+        help_text='Required: select at least one Contact or Contact Group.',
     )
     service_offering_manager_contacts = DynamicModelMultipleChoiceField(
         queryset=Contact.objects.all(),
         required=False,
+        help_text='Required: select at least one Contact or Contact Group.',
     )
     service_offering_manager_contact_groups = DynamicModelMultipleChoiceField(
         queryset=ContactGroup.objects.all(),
         required=False,
+        help_text='Required: select at least one Contact or Contact Group.',
     )
     business_unit = DynamicModelMultipleChoiceField(queryset=ContactGroup.objects.all(), required=True)
     support_group = DynamicModelMultipleChoiceField(queryset=ContactGroup.objects.all(), required=True)
