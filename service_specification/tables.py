@@ -6,6 +6,7 @@ from .models import (
     SLA,
     AppService,
     Availability,
+    CIFunction,
     Criticality,
     Environment,
     Lifecycle,
@@ -13,7 +14,6 @@ from .models import (
     Portfolio,
     Service,
     ServiceOffering,
-    TechCI,
 )
 
 __all__ = (
@@ -21,7 +21,6 @@ __all__ = (
     'ServiceTable',
     'ServiceOfferingTable',
     'AppServiceTable',
-    'TechCITable',
     'LifecycleTable',
     'SLATable',
     'OperationTimeTable',
@@ -29,6 +28,7 @@ __all__ = (
     'CriticalityTable',
     'EnvironmentTable',
     'MTATTable',
+    'CIFunctionTable',
 )
 
 
@@ -46,14 +46,14 @@ class LookupTable(NetBoxTable):
 
 
 class LifecycleTable(LookupTable):
-    tags = columns.TagColumn(url_name='plugins:csdm:lifecycle_list')
+    tags = columns.TagColumn(url_name='plugins:service_specification:lifecycle_list')
 
     class Meta(LookupTable.Meta):
         model = Lifecycle
 
 
 class SLATable(LookupTable):
-    tags = columns.TagColumn(url_name='plugins:csdm:sla_list')
+    tags = columns.TagColumn(url_name='plugins:service_specification:sla_list')
 
     class Meta(LookupTable.Meta):
         model = SLA
@@ -62,35 +62,35 @@ class SLATable(LookupTable):
 
 
 class OperationTimeTable(LookupTable):
-    tags = columns.TagColumn(url_name='plugins:csdm:operationtime_list')
+    tags = columns.TagColumn(url_name='plugins:service_specification:operationtime_list')
 
     class Meta(LookupTable.Meta):
         model = OperationTime
 
 
 class AvailabilityTable(LookupTable):
-    tags = columns.TagColumn(url_name='plugins:csdm:availability_list')
+    tags = columns.TagColumn(url_name='plugins:service_specification:availability_list')
 
     class Meta(LookupTable.Meta):
         model = Availability
 
 
 class CriticalityTable(LookupTable):
-    tags = columns.TagColumn(url_name='plugins:csdm:criticality_list')
+    tags = columns.TagColumn(url_name='plugins:service_specification:criticality_list')
 
     class Meta(LookupTable.Meta):
         model = Criticality
 
 
 class EnvironmentTable(LookupTable):
-    tags = columns.TagColumn(url_name='plugins:csdm:environment_list')
+    tags = columns.TagColumn(url_name='plugins:service_specification:environment_list')
 
     class Meta(LookupTable.Meta):
         model = Environment
 
 
 class MTATTable(LookupTable):
-    tags = columns.TagColumn(url_name='plugins:csdm:mtat_list')
+    tags = columns.TagColumn(url_name='plugins:service_specification:mtat_list')
 
     class Meta(LookupTable.Meta):
         model = MTAT
@@ -98,11 +98,18 @@ class MTATTable(LookupTable):
         default_columns = ('pk', 'name', 'value', 'unit', 'description')
 
 
+class CIFunctionTable(LookupTable):
+    tags = columns.TagColumn(url_name='plugins:service_specification:cifunction_list')
+
+    class Meta(LookupTable.Meta):
+        model = CIFunction
+
+
 class PortfolioTable(NetBoxTable):
     name = tables.Column(linkify=True)
     lifecycle = tables.Column(linkify=True)
     comments = columns.MarkdownColumn()
-    tags = columns.TagColumn(url_name='plugins:csdm:portfolio_list')
+    tags = columns.TagColumn(url_name='plugins:service_specification:portfolio_list')
 
     class Meta(NetBoxTable.Meta):
         model = Portfolio
@@ -124,8 +131,9 @@ class PortfolioTable(NetBoxTable):
 class ServiceTable(NetBoxTable):
     name = tables.Column(linkify=True)
     lifecycle = tables.Column(linkify=True)
+    ci_function = tables.Column(linkify=True)
     comments = columns.MarkdownColumn()
-    tags = columns.TagColumn(url_name='plugins:csdm:service_list')
+    tags = columns.TagColumn(url_name='plugins:service_specification:service_list')
 
     class Meta(NetBoxTable.Meta):
         model = Service
@@ -134,6 +142,7 @@ class ServiceTable(NetBoxTable):
             'id',
             'name',
             'lifecycle',
+            'ci_function',
             'description',
             'comments',
             'tags',
@@ -141,14 +150,14 @@ class ServiceTable(NetBoxTable):
             'last_updated',
             'actions',
         )
-        default_columns = ('pk', 'name', 'lifecycle', 'description')
+        default_columns = ('pk', 'name', 'lifecycle', 'ci_function', 'description')
 
 
 class ServiceOfferingTable(NetBoxTable):
     name = tables.Column(linkify=True)
     lifecycle = tables.Column(linkify=True)
     comments = columns.MarkdownColumn()
-    tags = columns.TagColumn(url_name='plugins:csdm:serviceoffering_list')
+    tags = columns.TagColumn(url_name='plugins:service_specification:serviceoffering_list')
 
     class Meta(NetBoxTable.Meta):
         model = ServiceOffering
@@ -173,7 +182,7 @@ class AppServiceTable(NetBoxTable):
     environment = tables.Column(linkify=True)
     lifecycle = tables.Column(linkify=True)
     comments = columns.MarkdownColumn()
-    tags = columns.TagColumn(url_name='plugins:csdm:appservice_list')
+    tags = columns.TagColumn(url_name='plugins:service_specification:appservice_list')
 
     class Meta(NetBoxTable.Meta):
         model = AppService
@@ -196,27 +205,3 @@ class AppServiceTable(NetBoxTable):
             'actions',
         )
         default_columns = ('pk', 'name', 'environment', 'lifecycle', 'description')
-
-
-class TechCITable(NetBoxTable):
-    name = tables.Column(linkify=True)
-    lifecycle = tables.Column(linkify=True)
-    comments = columns.MarkdownColumn()
-    tags = columns.TagColumn(url_name='plugins:csdm:techci_list')
-
-    class Meta(NetBoxTable.Meta):
-        model = TechCI
-        fields = (
-            'pk',
-            'id',
-            'name',
-            'function',
-            'lifecycle',
-            'description',
-            'comments',
-            'tags',
-            'created',
-            'last_updated',
-            'actions',
-        )
-        default_columns = ('pk', 'name', 'function', 'lifecycle', 'description')

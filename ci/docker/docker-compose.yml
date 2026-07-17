@@ -60,7 +60,7 @@ services:
   netbox: &netbox
     build:
       # Widened to the repo root (this file lives at ci/docker/) so the
-      # build can COPY in the first-party csdm/ plugin package alongside
+      # build can COPY in the first-party service_specification/ plugin package alongside
       # the third-party plugins already installed from plugin_requirements.txt.
       context: ../..
       dockerfile: ci/docker/Dockerfile-Plugins

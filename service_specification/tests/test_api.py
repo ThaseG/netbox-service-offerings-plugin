@@ -2,7 +2,7 @@ from rest_framework import status
 from utilities.testing import APITestCase
 from utilities.testing.utils import disable_warnings
 
-from csdm.models import Lifecycle
+from service_specification.models import Lifecycle
 
 
 class LifecycleAPITestCase(APITestCase):
@@ -18,15 +18,15 @@ class LifecycleAPITestCase(APITestCase):
     # which matches how *core* NetBox apps are mounted directly under
     # /api/. Plugins are mounted one level deeper (netbox/plugins/urls.py:
     # /api/plugins/ -> namespace 'plugins-api' -> namespace '<app_label>-api'),
-    # so the default guess resolves to 'csdm-api' when the real registered
-    # namespace is 'plugins-api:csdm-api'. Since view_namespace gets '-api'
-    # appended automatically, 'plugins-api:csdm' here becomes exactly that.
-    view_namespace = 'plugins-api:csdm'
+    # so the default guess resolves to 'service_specification-api' when the real registered
+    # namespace is 'plugins-api:service_specification-api'. Since view_namespace gets '-api'
+    # appended automatically, 'plugins-api:service_specification' here becomes exactly that.
+    view_namespace = 'plugins-api:service_specification'
     user_permissions = (
-        'csdm.add_lifecycle',
-        'csdm.view_lifecycle',
-        'csdm.change_lifecycle',
-        'csdm.delete_lifecycle',
+        'service_specification.add_lifecycle',
+        'service_specification.view_lifecycle',
+        'service_specification.change_lifecycle',
+        'service_specification.delete_lifecycle',
     )
 
     def test_post_get_patch_delete(self):
@@ -65,7 +65,7 @@ class LifecycleAPITestCase(APITestCase):
         self.assertFalse(Lifecycle.objects.filter(pk=lifecycle_id).exists())
 
     def test_create_without_permission_is_rejected(self):
-        # Same POST as above, but as a user with no csdm.add_lifecycle
+        # Same POST as above, but as a user with no service_specification.add_lifecycle
         # permission — the base APITestCase.setUp() already grants
         # user_permissions, so this simulates the anonymous/unauthorized
         # case by clearing them first.

@@ -1,5 +1,6 @@
 from django.utils.translation import gettext_lazy as _
 from netbox.ui import attrs
+from netbox.ui.actions import LinkAction
 from netbox.ui.panels import CommentsPanel, ObjectAttributesPanel, OrganizationalObjectPanel
 
 __all__ = (
@@ -20,10 +21,7 @@ __all__ = (
     'AppServiceRecoveryPanel',
     'AppServiceOrganizationPanel',
     'AppServiceCustomerPanel',
-    'TechCIPanel',
-    'TechCIOrganizationPanel',
-    'TechCIInfrastructurePanel',
-    'TechCICustomerPanel',
+    'ServiceSpecificationInfoPanel',
     'CommentsPanel',
 )
 
@@ -46,26 +44,21 @@ class MTATPanel(LookupPanel):
 
 class PortfolioPanel(ObjectAttributesPanel):
     name = attrs.TextAttr('name', label=_('Name'))
-    lifecycle = attrs.RelatedObjectAttr('lifecycle', label=_('Lifecycle Management'), linkify=True)
+    lifecycle = attrs.RelatedObjectAttr('lifecycle', label=_('Service Lifecycle Management'), linkify=True)
     description = attrs.TextAttr('description', label=_('Description'))
     tags = attrs.RelatedObjectListAttr('tags', label=_('Tags'), linkify=True)
 
 
 class PortfolioOwnershipPanel(ObjectAttributesPanel):
     title = _('Ownership')
-    portfolio_owner_contacts = attrs.RelatedObjectListAttr(
-        'portfolio_owner_contacts',
-        label=_('Owner (Contacts)'),
-        linkify=True,
-    )
     portfolio_owner_contact_groups = attrs.RelatedObjectListAttr(
         'portfolio_owner_contact_groups',
         label=_('Owner (Contact Groups)'),
         linkify=True,
     )
-    portfolio_manager_contacts = attrs.RelatedObjectListAttr(
-        'portfolio_manager_contacts',
-        label=_('Manager (Contacts)'),
+    portfolio_owner_contacts = attrs.RelatedObjectListAttr(
+        'portfolio_owner_contacts',
+        label=_('Owner (Contacts)'),
         linkify=True,
     )
     portfolio_manager_contact_groups = attrs.RelatedObjectListAttr(
@@ -73,11 +66,16 @@ class PortfolioOwnershipPanel(ObjectAttributesPanel):
         label=_('Manager (Contact Groups)'),
         linkify=True,
     )
+    portfolio_manager_contacts = attrs.RelatedObjectListAttr(
+        'portfolio_manager_contacts',
+        label=_('Manager (Contacts)'),
+        linkify=True,
+    )
 
 
 class ServicePanel(ObjectAttributesPanel):
     name = attrs.TextAttr('name', label=_('Name'))
-    lifecycle = attrs.RelatedObjectAttr('lifecycle', label=_('Lifecycle Management'), linkify=True)
+    lifecycle = attrs.RelatedObjectAttr('lifecycle', label=_('Service Lifecycle Management'), linkify=True)
     service_portfolio = attrs.RelatedObjectListAttr('service_portfolio', label=_('Service Portfolios'), linkify=True)
     description = attrs.TextAttr('description', label=_('Description'))
     tags = attrs.RelatedObjectListAttr('tags', label=_('Tags'), linkify=True)
@@ -112,13 +110,13 @@ class ServiceOrganizationPanel(ObjectAttributesPanel):
     business_unit = attrs.RelatedObjectListAttr('business_unit', label=_('Business Unit'), linkify=True)
     support_group = attrs.RelatedObjectListAttr('support_group', label=_('Support Group'), linkify=True)
     change_group = attrs.RelatedObjectListAttr('change_group', label=_('Change Group'), linkify=True)
-    ci_function = attrs.RelatedObjectListAttr('ci_function', label=_('Technical CIs'), linkify=True)
+    ci_function = attrs.RelatedObjectAttr('ci_function', label=_('CI Function'), linkify=True)
 
 
 class ServiceOfferingPanel(ObjectAttributesPanel):
     name = attrs.TextAttr('name', label=_('Name'))
     contract_number = attrs.TextAttr('contract_number', label=_('Contract Number'))
-    lifecycle = attrs.RelatedObjectAttr('lifecycle', label=_('Lifecycle Management'), linkify=True)
+    lifecycle = attrs.RelatedObjectAttr('lifecycle', label=_('Service Lifecycle Management'), linkify=True)
     service = attrs.RelatedObjectListAttr('service', label=_('Services'), linkify=True)
     description = attrs.TextAttr('description', label=_('Description'))
     tags = attrs.RelatedObjectListAttr('tags', label=_('Tags'), linkify=True)
@@ -153,7 +151,6 @@ class ServiceOfferingOrganizationPanel(ObjectAttributesPanel):
     business_unit = attrs.RelatedObjectListAttr('business_unit', label=_('Business Unit'), linkify=True)
     support_group = attrs.RelatedObjectListAttr('support_group', label=_('Support Group'), linkify=True)
     change_group = attrs.RelatedObjectListAttr('change_group', label=_('Change Group'), linkify=True)
-    ci_function = attrs.RelatedObjectListAttr('ci_function', label=_('Technical CIs'), linkify=True)
 
 
 class ServiceOfferingCustomerPanel(ObjectAttributesPanel):
@@ -165,7 +162,7 @@ class ServiceOfferingCustomerPanel(ObjectAttributesPanel):
 class AppServiceOverviewPanel(ObjectAttributesPanel):
     name = attrs.TextAttr('name', label=_('Name'))
     environment = attrs.RelatedObjectAttr('environment', label=_('Environment'), linkify=True)
-    lifecycle = attrs.RelatedObjectAttr('lifecycle', label=_('Lifecycle Management'), linkify=True)
+    lifecycle = attrs.RelatedObjectAttr('lifecycle', label=_('Service Lifecycle Management'), linkify=True)
     service_offering = attrs.RelatedObjectListAttr('service_offering', label=_('Service Offerings'), linkify=True)
     description = attrs.TextAttr('description', label=_('Description'))
     tags = attrs.RelatedObjectListAttr('tags', label=_('Tags'), linkify=True)
@@ -190,7 +187,7 @@ class AppServiceRecoveryPanel(ObjectAttributesPanel):
     ttr = attrs.NumericAttr('ttr', label=_('TTR'))
     rpo = attrs.NumericAttr('rpo', label=_('RPO (hours)'))
     rto = attrs.NumericAttr('rto', label=_('RTO (hours)'))
-    bcm = attrs.NumericAttr('bcm', label=_('BCM (hours)'))
+    bcm = attrs.NumericAttr('bcm', label=_('BCM -1'))
 
 
 class AppServiceOrganizationPanel(ObjectAttributesPanel):
@@ -199,7 +196,6 @@ class AppServiceOrganizationPanel(ObjectAttributesPanel):
     support_group = attrs.RelatedObjectListAttr('support_group', label=_('Support Group'), linkify=True)
     change_group = attrs.RelatedObjectListAttr('change_group', label=_('Change Group'), linkify=True)
     owned_by = attrs.RelatedObjectListAttr('owned_by', label=_('Owned by'), linkify=True)
-    ci_function = attrs.RelatedObjectListAttr('ci_function', label=_('Technical CIs'), linkify=True)
 
 
 class AppServiceCustomerPanel(ObjectAttributesPanel):
@@ -208,30 +204,36 @@ class AppServiceCustomerPanel(ObjectAttributesPanel):
     tenant_group = attrs.RelatedObjectListAttr('tenant_group', label=_('Customer Group'), linkify=True)
 
 
-class TechCIPanel(ObjectAttributesPanel):
-    name = attrs.TextAttr('name', label=_('Name'))
-    function = attrs.TextAttr('function', label=_('CI Function'))
-    lifecycle = attrs.RelatedObjectAttr('lifecycle', label=_('Lifecycle Management'), linkify=True)
-    description = attrs.TextAttr('description', label=_('Description'))
-    tags = attrs.RelatedObjectListAttr('tags', label=_('Tags'), linkify=True)
+class ServiceSpecificationInfoPanel(ObjectAttributesPanel):
+    """Shared read-only panel for the Device/VirtualMachine/Cluster/ClusterGroup
+    'Service Specification' tab (see views.py) — the editable fields are
+    identical across all four side-info models, so one panel class covers
+    all of them.
 
+    The instance rendered here may be unsaved (pk=None) — the tab always
+    resolves to either the existing side-info row or a fresh in-memory one
+    bound to the parent object, so the very first visit shows blank fields
+    plus an Edit link rather than a 404.
+    """
 
-class TechCIOrganizationPanel(ObjectAttributesPanel):
-    title = _('Organization')
+    ci_function = attrs.RelatedObjectAttr('ci_function', label=_('CI Function'), linkify=True)
+    lifecycle = attrs.RelatedObjectAttr('lifecycle', label=_('Service Lifecycle Management'), linkify=True)
     business_unit = attrs.RelatedObjectListAttr('business_unit', label=_('Business Unit'), linkify=True)
     support_group = attrs.RelatedObjectListAttr('support_group', label=_('Support Group'), linkify=True)
     change_group = attrs.RelatedObjectListAttr('change_group', label=_('Change Group'), linkify=True)
+    tags = attrs.RelatedObjectListAttr('tags', label=_('Tags'), linkify=True)
 
-
-class TechCIInfrastructurePanel(ObjectAttributesPanel):
-    title = _('Infrastructure')
-    device = attrs.RelatedObjectListAttr('device', label=_('Devices'), linkify=True)
-    virtual_machine = attrs.RelatedObjectListAttr('virtual_machine', label=_('Virtual Machines'), linkify=True)
-    cluster = attrs.RelatedObjectListAttr('cluster', label=_('Clusters'), linkify=True)
-    cluster_group = attrs.RelatedObjectListAttr('cluster_group', label=_('Cluster Groups'), linkify=True)
-
-
-class TechCICustomerPanel(ObjectAttributesPanel):
-    title = _('Customer')
-    tenant = attrs.RelatedObjectListAttr('tenant', label=_('Customer'), linkify=True)
-    tenant_group = attrs.RelatedObjectListAttr('tenant_group', label=_('Customer Group'), linkify=True)
+    def get_context(self, context):
+        ctx = super().get_context(context)
+        instance = ctx.get('object')
+        parent = getattr(instance, 'parent', None)
+        if parent is not None:
+            ctx['actions'] = [
+                LinkAction(
+                    view_name=f'{parent._meta.app_label}:{parent._meta.model_name}_service_specification_edit',
+                    view_kwargs={'pk': parent.pk},
+                    label=_('Edit'),
+                    button_icon='pencil',
+                ),
+            ]
+        return ctx

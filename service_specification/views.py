@@ -1,6 +1,10 @@
+from dcim.models import Device
+from django.shortcuts import get_object_or_404
 from netbox.ui.layout import SimpleLayout
+from netbox.ui.panels import ObjectsTablePanel
 from netbox.views import generic
-from utilities.views import register_model_view
+from utilities.views import ViewTab, register_model_view
+from virtualization.models import Cluster, ClusterGroup, VirtualMachine
 
 from . import filtersets, forms, panels, tables
 from .models import (
@@ -8,14 +12,18 @@ from .models import (
     SLA,
     AppService,
     Availability,
+    CIFunction,
+    ClusterGroupServiceInfo,
+    ClusterServiceInfo,
     Criticality,
+    DeviceServiceInfo,
     Environment,
     Lifecycle,
     OperationTime,
     Portfolio,
     Service,
     ServiceOffering,
-    TechCI,
+    VirtualMachineServiceInfo,
 )
 
 
@@ -72,6 +80,63 @@ def _lookup_layout(panel_cls=panels.LookupPanel):
     return SimpleLayout(left_panels=[panel_cls()], bottom_panels=[panels.CommentsPanel()])
 
 
+def _make_service_info_views(parent_model, info_model, form_cls, fk_name):
+    """Registers a read-only 'Service Specification' tab plus a matching
+    edit view directly on `parent_model`'s own detail page (Device,
+    VirtualMachine, Cluster or ClusterGroup — all core NetBox models).
+
+    Plugins can't add real database fields to NetBox's own models, so
+    `info_model` (see models.py's ServiceSpecificationInfoBase) is a
+    separate table in a OneToOne relationship with `parent_model`.
+
+    The read-only tab's `queryset` is deliberately `parent_model`, not
+    `info_model`: NetBox derives the page's breadcrumbs, title and — via
+    `{% model_view_tabs %}` in generic/object.html — the tab bar itself
+    from `context['object']`, which has to be the Device/VM/Cluster/
+    ClusterGroup being viewed for this to render as a tab on *its* page
+    rather than as a standalone info_model detail page. The actual
+    service-info data is supplied separately via get_extra_context() and
+    rendered through ServiceSpecificationInfoPanel's accessor='service_info',
+    falling back to an unsaved in-memory info_model instance when no row
+    exists yet — so the tab always renders something sensible instead of
+    404ing on first visit, and no row is persisted until the user actually
+    saves the edit form.
+    """
+
+    def _get_info(parent):
+        return info_model.objects.filter(**{fk_name: parent}).first() or info_model(**{fk_name: parent})
+
+    @register_model_view(parent_model, 'service_specification', path='service-specification')
+    class ServiceInfoView(generic.ObjectView):
+        queryset = parent_model.objects.all()
+        template_name = 'service_specification/service_info_tab.html'
+        layout = SimpleLayout(left_panels=[panels.ServiceSpecificationInfoPanel(accessor='service_info')])
+        tab = ViewTab(
+            label='Service Specification',
+            permission=f'service_specification.view_{info_model._meta.model_name}',
+        )
+        actions = ()
+
+        def get_extra_context(self, request, instance):
+            return {'service_info': _get_info(instance)}
+
+    @register_model_view(parent_model, 'service_specification_edit', path='service-specification/edit')
+    class ServiceInfoEditView(generic.ObjectEditView):
+        queryset = info_model.objects.all()
+        form = form_cls
+
+        def get_object(self, **kwargs):
+            parent = get_object_or_404(parent_model.objects.all(), pk=kwargs['pk'])
+            return _get_info(parent)
+
+    ServiceInfoView.__name__ = ServiceInfoView.__qualname__ = f'{parent_model.__name__}ServiceSpecificationView'
+    ServiceInfoEditView.__name__ = ServiceInfoEditView.__qualname__ = (
+        f'{parent_model.__name__}ServiceSpecificationEditView'
+    )
+
+    return ServiceInfoView, ServiceInfoEditView
+
+
 PortfolioListView, PortfolioView, PortfolioEditView, PortfolioDeleteView = _make_views(
     Portfolio,
     filtersets.PortfolioFilterSet,
@@ -105,7 +170,18 @@ ServiceOfferingListView, ServiceOfferingView, ServiceOfferingEditView, ServiceOf
     layout=SimpleLayout(
         left_panels=[panels.ServiceOfferingPanel(), panels.ServiceOfferingOwnershipPanel()],
         right_panels=[panels.ServiceOfferingOrganizationPanel(), panels.ServiceOfferingCustomerPanel()],
-        bottom_panels=[panels.CommentsPanel()],
+        bottom_panels=[
+            # Read-only rollup of the parent Service(s)' own parameters —
+            # editing the relationship still happens on this same
+            # ServiceOffering form via the `service` field; this just saves
+            # a click to see what's on the other end of it.
+            ObjectsTablePanel(
+                model='service_specification.service',
+                title='Parent Services',
+                filters={'id': lambda ctx: list(ctx['object'].service.values_list('pk', flat=True))},
+            ),
+            panels.CommentsPanel(),
+        ],
     ),
 )
 AppServiceListView, AppServiceView, AppServiceEditView, AppServiceDeleteView = _make_views(
@@ -117,19 +193,30 @@ AppServiceListView, AppServiceView, AppServiceEditView, AppServiceDeleteView = _
     layout=SimpleLayout(
         left_panels=[panels.AppServiceOverviewPanel(), panels.AppServiceRecoveryPanel()],
         right_panels=[panels.AppServiceLevelsPanel(), panels.AppServiceOrganizationPanel()],
-        bottom_panels=[panels.AppServiceCustomerPanel(), panels.CommentsPanel()],
-    ),
-)
-TechCIListView, TechCIView, TechCIEditView, TechCIDeleteView = _make_views(
-    TechCI,
-    filtersets.TechCIFilterSet,
-    forms.TechCIFilterForm,
-    tables.TechCITable,
-    forms.TechCIForm,
-    layout=SimpleLayout(
-        left_panels=[panels.TechCIPanel(), panels.TechCIOrganizationPanel()],
-        right_panels=[panels.TechCIInfrastructurePanel(), panels.TechCICustomerPanel()],
-        bottom_panels=[panels.CommentsPanel()],
+        bottom_panels=[
+            panels.AppServiceCustomerPanel(),
+            # Read-only rollups: the Service Offering(s) this app service
+            # realizes, and — one hop further — the Service(s) behind those
+            # offerings. Editing still happens via the `service_offering`
+            # field on this same form.
+            ObjectsTablePanel(
+                model='service_specification.serviceoffering',
+                title='Service Offerings',
+                filters={'id': lambda ctx: list(ctx['object'].service_offering.values_list('pk', flat=True))},
+            ),
+            ObjectsTablePanel(
+                model='service_specification.service',
+                title='Parent Services',
+                filters={
+                    'id': lambda ctx: list(
+                        Service.objects.filter(service_offerings__in=ctx['object'].service_offering.all())
+                        .values_list('pk', flat=True)
+                        .distinct()
+                    )
+                },
+            ),
+            panels.CommentsPanel(),
+        ],
     ),
 )
 LifecycleListView, LifecycleView, LifecycleEditView, LifecycleDeleteView = _make_views(
@@ -187,4 +274,25 @@ MTATListView, MTATView, MTATEditView, MTATDeleteView = _make_views(
     tables.MTATTable,
     forms.MTATForm,
     layout=_lookup_layout(panels.MTATPanel),
+)
+CIFunctionListView, CIFunctionView, CIFunctionEditView, CIFunctionDeleteView = _make_views(
+    CIFunction,
+    filtersets.CIFunctionFilterSet,
+    forms.CIFunctionFilterForm,
+    tables.CIFunctionTable,
+    forms.CIFunctionForm,
+    layout=_lookup_layout(),
+)
+
+DeviceServiceSpecificationView, DeviceServiceSpecificationEditView = _make_service_info_views(
+    Device, DeviceServiceInfo, forms.DeviceServiceInfoForm, 'device'
+)
+VirtualMachineServiceSpecificationView, VirtualMachineServiceSpecificationEditView = _make_service_info_views(
+    VirtualMachine, VirtualMachineServiceInfo, forms.VirtualMachineServiceInfoForm, 'virtual_machine'
+)
+ClusterServiceSpecificationView, ClusterServiceSpecificationEditView = _make_service_info_views(
+    Cluster, ClusterServiceInfo, forms.ClusterServiceInfoForm, 'cluster'
+)
+ClusterGroupServiceSpecificationView, ClusterGroupServiceSpecificationEditView = _make_service_info_views(
+    ClusterGroup, ClusterGroupServiceInfo, forms.ClusterGroupServiceInfoForm, 'cluster_group'
 )

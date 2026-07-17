@@ -2,7 +2,7 @@ PLUGINS = [
     "netbox_topology_views",
     "netbox_lifecycle",
     "netbox_secrets",
-    "csdm",
+    "service_specification",
 ]
 
 PLUGINS_CONFIG = {

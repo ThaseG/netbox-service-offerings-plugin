@@ -1,9 +1,9 @@
 from django.test import TestCase
 from tenancy.models import ContactGroup
 
-from csdm.choices import TimeUnitChoices
-from csdm.forms import PortfolioForm
-from csdm.models import MTAT, Lifecycle, Portfolio
+from service_specification.choices import TimeUnitChoices
+from service_specification.forms import PortfolioForm
+from service_specification.models import MTAT, Lifecycle, Portfolio
 
 
 class LifecycleModelTestCase(TestCase):

@@ -1,6 +1,6 @@
 from netbox.api.viewsets import NetBoxModelViewSet
 
-from csdm import filtersets, models
+from service_specification import filtersets, models
 
 from . import serializers
 
@@ -47,6 +47,12 @@ class MTATViewSet(NetBoxModelViewSet):
     filterset_class = filtersets.MTATFilterSet
 
 
+class CIFunctionViewSet(NetBoxModelViewSet):
+    queryset = models.CIFunction.objects.all()
+    serializer_class = serializers.CIFunctionSerializer
+    filterset_class = filtersets.CIFunctionFilterSet
+
+
 class PortfolioViewSet(NetBoxModelViewSet):
     queryset = models.Portfolio.objects.all()
     serializer_class = serializers.PortfolioSerializer
@@ -69,9 +75,3 @@ class AppServiceViewSet(NetBoxModelViewSet):
     queryset = models.AppService.objects.all()
     serializer_class = serializers.AppServiceSerializer
     filterset_class = filtersets.AppServiceFilterSet
-
-
-class TechCIViewSet(NetBoxModelViewSet):
-    queryset = models.TechCI.objects.all()
-    serializer_class = serializers.TechCISerializer
-    filterset_class = filtersets.TechCIFilterSet

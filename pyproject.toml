@@ -3,11 +3,11 @@ requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "netbox-csdm"
-# Kept in sync with CSDM_PLUGIN_VERSION in versions.sh — the Code-Review
-# stage of ci-cd.yml fails the build if these two drift apart.
-version = "1.0.1"
-description = "Business/Technical Service Offerings (CSDM) plugin for NetBox"
+name = "netbox-service-specification"
+# Kept in sync with SERVICE_SPECIFICATION_PLUGIN_VERSION in versions.sh — the
+# Code-Review stage of ci-cd.yml fails the build if these two drift apart.
+version = "1.0.2"
+description = "Business/Technical Service Offerings (Service Specification) plugin for NetBox"
 requires-python = ">=3.10"
 classifiers = [
     "Development Status :: 3 - Alpha",
@@ -17,7 +17,7 @@ classifiers = [
 ]
 
 [tool.setuptools.packages.find]
-include = ["csdm*"]
+include = ["service_specification*"]
 
 [tool.setuptools.package-data]
 # setuptools only auto-includes .py files by default; templates (and any
@@ -25,7 +25,7 @@ include = ["csdm*"]
 # dropped from the built wheel, leaving views working in dev (running from
 # the checkout) but raising TemplateDoesNotExist once installed from a
 # built package.
-csdm = ["templates/**/*", "static/**/*"]
+service_specification = ["templates/**/*", "static/**/*"]
 
 [tool.ruff]
 # Baseline copied from netbox-community/netbox's own pyproject.toml so

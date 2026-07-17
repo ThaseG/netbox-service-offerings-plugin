@@ -8,5 +8,5 @@
 # Current tag list: https://hub.docker.com/r/netboxcommunity/netbox/tags
 
 # netboxcommunity/netbox image tag: "<netbox-version>-<netbox-docker-build>"
-export NETBOX_VERSION="v4.6.4-5.0.1"
-export CSDM_PLUGIN_VERSION="1.0.1"
+export NETBOX_VERSION="v4.6.5-5.0.2"
+export SERVICE_SPECIFICATION_PLUGIN_VERSION="1.0.2"

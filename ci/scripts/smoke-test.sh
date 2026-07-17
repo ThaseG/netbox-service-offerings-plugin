@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Live end-to-end smoke test against the actually-deployed instance over
-# real HTTPS — deliberately separate from csdm's Django test suite
-# (`manage.py test csdm`, run earlier in the Test stage), which only
+# real HTTPS — deliberately separate from service_specification's Django test suite
+# (`manage.py test service_specification`, run earlier in the Test stage), which only
 # exercises the app in-process and can't see problems in the real
 # nginx -> TLS -> WSGI path (misconfigured proxying, a cert that didn't
 # actually get installed, etc). This script is what would actually notice
@@ -12,7 +12,7 @@
 #           page is reachable only after a real session login (proves
 #           LOGIN_REQUIRED enforcement AND that the UI routes resolve).
 #   - api:  POST -> GET -> PATCH -> DELETE round trip against
-#           /api/plugins/csdm/lifecycle/, ending in DELETE so the showcase
+#           /api/plugins/service-specification/lifecycle/, ending in DELETE so the showcase
 #           instance isn't left with leftover test rows after a pass.
 set -euo pipefail
 
@@ -76,19 +76,19 @@ login_status=$(curl -sS -b "$COOKIE_JAR" -c "$COOKIE_JAR" -o /dev/null -w '%{htt
 # NetBox redirects (302) to the dashboard on a successful session login
 expect_status "POST /login/ (session login)" "$login_status" "302"
 
-status=$(curl -sS -b "$COOKIE_JAR" -o /dev/null -w '%{http_code}' "$BASE_URL/plugins/csdm/portfolios/")
-expect_status "GET /plugins/csdm/portfolios/ (authenticated session)" "$status" "200"
+status=$(curl -sS -b "$COOKIE_JAR" -o /dev/null -w '%{http_code}' "$BASE_URL/plugins/service-specification/portfolios/")
+expect_status "GET /plugins/service-specification/portfolios/ (authenticated session)" "$status" "200"
 
 #
-# API: POST -> GET -> PATCH -> DELETE against /api/plugins/csdm/lifecycle/
+# API: POST -> GET -> PATCH -> DELETE against /api/plugins/service-specification/lifecycle/
 #
 
-status=$(curl -sS -o "$RESPONSE_FILE" -w '%{http_code}' -X POST "$BASE_URL/api/plugins/csdm/lifecycle/" \
+status=$(curl -sS -o "$RESPONSE_FILE" -w '%{http_code}' -X POST "$BASE_URL/api/plugins/service-specification/lifecycle/" \
   -H "$API_AUTH_HEADER" -H "Content-Type: application/json" \
   -d '{"name": "Smoke Test Lifecycle", "slug": "smoke-test-lifecycle"}')
-expect_status "POST /api/plugins/csdm/lifecycle/" "$status" "201" "$RESPONSE_FILE"
+expect_status "POST /api/plugins/service-specification/lifecycle/" "$status" "201" "$RESPONSE_FILE"
 lifecycle_id=$(python3 -c "import json; print(json.load(open('$RESPONSE_FILE'))['id'])")
-detail_url="$BASE_URL/api/plugins/csdm/lifecycle/$lifecycle_id/"
+detail_url="$BASE_URL/api/plugins/service-specification/lifecycle/$lifecycle_id/"
 
 status=$(curl -sS -o "$RESPONSE_FILE" -w '%{http_code}' "$detail_url" -H "$API_AUTH_HEADER")
 expect_status "GET $detail_url" "$status" "200" "$RESPONSE_FILE"

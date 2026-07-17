@@ -1,10 +1,11 @@
 from netbox.api.serializers import NetBoxModelSerializer
 
-from csdm.models import (
+from service_specification.models import (
     MTAT,
     SLA,
     AppService,
     Availability,
+    CIFunction,
     Criticality,
     Environment,
     Lifecycle,
@@ -12,7 +13,6 @@ from csdm.models import (
     Portfolio,
     Service,
     ServiceOffering,
-    TechCI,
 )
 
 __all__ = (
@@ -20,7 +20,6 @@ __all__ = (
     'ServiceSerializer',
     'ServiceOfferingSerializer',
     'AppServiceSerializer',
-    'TechCISerializer',
     'LifecycleSerializer',
     'SLASerializer',
     'OperationTimeSerializer',
@@ -28,6 +27,7 @@ __all__ = (
     'CriticalitySerializer',
     'EnvironmentSerializer',
     'MTATSerializer',
+    'CIFunctionSerializer',
 )
 
 
@@ -80,6 +80,13 @@ class MTATSerializer(NetBoxModelSerializer):
         brief_fields = ('id', 'url', 'display', 'name')
 
 
+class CIFunctionSerializer(NetBoxModelSerializer):
+    class Meta:
+        model = CIFunction
+        fields = '__all__'
+        brief_fields = ('id', 'url', 'display', 'name')
+
+
 class PortfolioSerializer(NetBoxModelSerializer):
     class Meta:
         model = Portfolio
@@ -104,12 +111,5 @@ class ServiceOfferingSerializer(NetBoxModelSerializer):
 class AppServiceSerializer(NetBoxModelSerializer):
     class Meta:
         model = AppService
-        fields = '__all__'
-        brief_fields = ('id', 'url', 'display', 'name')
-
-
-class TechCISerializer(NetBoxModelSerializer):
-    class Meta:
-        model = TechCI
         fields = '__all__'
         brief_fields = ('id', 'url', 'display', 'name')

@@ -9,7 +9,7 @@
 # are omitted from migrations even though they're set in models.py.
 #
 # Verification step before/after first deploy: run
-#   manage.py makemigrations csdm --check --dry-run
+#   manage.py makemigrations service_specification --check --dry-run
 # on a live instance. If it reports drift, regenerate this file from that
 # environment and replace it.
 import django.db.models.deletion
@@ -62,7 +62,7 @@ class Migration(migrations.Migration):
             ],
             options={
                 'verbose_name': 'Lifecycle',
-                'verbose_name_plural': 'Lifecycle Managements',
+                'verbose_name_plural': 'Service Lifecycle Managements',
                 'ordering': ('name',),
             },
         ),
@@ -261,8 +261,40 @@ class Migration(migrations.Migration):
                 'ordering': ('name',),
             },
         ),
+        migrations.CreateModel(
+            name='CIFunction',
+            fields=[
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False)),
+                ('created', models.DateTimeField(auto_now_add=True, null=True)),
+                ('last_updated', models.DateTimeField(auto_now=True, null=True)),
+                (
+                    'custom_field_data',
+                    models.JSONField(blank=True, default=dict, encoder=utilities.json.CustomFieldJSONEncoder),
+                ),
+                ('description', models.CharField(blank=True, max_length=200)),
+                ('comments', models.TextField(blank=True)),
+                ('name', models.CharField(max_length=100, unique=True)),
+                ('slug', models.SlugField(max_length=100, unique=True)),
+                ('tags', taggit.managers.TaggableManager(through='extras.TaggedItem', to='extras.Tag')),
+                (
+                    'owner',
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.PROTECT,
+                        related_name='+',
+                        to='users.owner',
+                    ),
+                ),
+            ],
+            options={
+                'verbose_name': 'CI Function',
+                'verbose_name_plural': 'CI Functions',
+                'ordering': ('name',),
+            },
+        ),
         #
-        # Core CSDM models
+        # Core Service Specification models
         #
         migrations.CreateModel(
             name='Portfolio',
@@ -293,7 +325,7 @@ class Migration(migrations.Migration):
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.PROTECT,
                         related_name='+',
-                        to='csdm.lifecycle',
+                        to='service_specification.lifecycle',
                     ),
                 ),
             ],
@@ -332,7 +364,17 @@ class Migration(migrations.Migration):
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.PROTECT,
                         related_name='+',
-                        to='csdm.lifecycle',
+                        to='service_specification.lifecycle',
+                    ),
+                ),
+                (
+                    'ci_function',
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.PROTECT,
+                        related_name='+',
+                        to='service_specification.cifunction',
                     ),
                 ),
             ],
@@ -372,7 +414,7 @@ class Migration(migrations.Migration):
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.PROTECT,
                         related_name='+',
-                        to='csdm.lifecycle',
+                        to='service_specification.lifecycle',
                     ),
                 ),
             ],
@@ -416,7 +458,7 @@ class Migration(migrations.Migration):
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.PROTECT,
                         related_name='+',
-                        to='csdm.environment',
+                        to='service_specification.environment',
                     ),
                 ),
                 (
@@ -424,7 +466,7 @@ class Migration(migrations.Migration):
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.PROTECT,
                         related_name='+',
-                        to='csdm.lifecycle',
+                        to='service_specification.lifecycle',
                     ),
                 ),
             ],
@@ -434,8 +476,14 @@ class Migration(migrations.Migration):
                 'ordering': ('name',),
             },
         ),
+        #
+        # Service Specification info attached directly to core NetBox
+        # infrastructure objects (see models.py's ServiceSpecificationInfoBase
+        # docstring for why these are separate 1:1 tables rather than fields
+        # added directly to dcim.Device / virtualization.*).
+        #
         migrations.CreateModel(
-            name='TechCI',
+            name='DeviceServiceInfo',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False)),
                 ('created', models.DateTimeField(auto_now_add=True, null=True)),
@@ -444,19 +492,13 @@ class Migration(migrations.Migration):
                     'custom_field_data',
                     models.JSONField(blank=True, default=dict, encoder=utilities.json.CustomFieldJSONEncoder),
                 ),
-                ('description', models.CharField(blank=True, max_length=200)),
-                ('comments', models.TextField(blank=True)),
-                ('name', models.CharField(max_length=150)),
-                ('function', models.CharField(max_length=200)),
                 ('tags', taggit.managers.TaggableManager(through='extras.TaggedItem', to='extras.Tag')),
                 (
-                    'owner',
+                    'ci_function',
                     models.ForeignKey(
-                        blank=True,
-                        null=True,
                         on_delete=django.db.models.deletion.PROTECT,
                         related_name='+',
-                        to='users.owner',
+                        to='service_specification.cifunction',
                     ),
                 ),
                 (
@@ -464,14 +506,144 @@ class Migration(migrations.Migration):
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.PROTECT,
                         related_name='+',
-                        to='csdm.lifecycle',
+                        to='service_specification.lifecycle',
+                    ),
+                ),
+                (
+                    'device',
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name='service_specification_info',
+                        to='dcim.device',
                     ),
                 ),
             ],
             options={
-                'verbose_name': 'Technical CI',
-                'verbose_name_plural': 'Technical CIs',
-                'ordering': ('name',),
+                'verbose_name': 'Device Service Info',
+                'verbose_name_plural': 'Device Service Info',
+            },
+        ),
+        migrations.CreateModel(
+            name='VirtualMachineServiceInfo',
+            fields=[
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False)),
+                ('created', models.DateTimeField(auto_now_add=True, null=True)),
+                ('last_updated', models.DateTimeField(auto_now=True, null=True)),
+                (
+                    'custom_field_data',
+                    models.JSONField(blank=True, default=dict, encoder=utilities.json.CustomFieldJSONEncoder),
+                ),
+                ('tags', taggit.managers.TaggableManager(through='extras.TaggedItem', to='extras.Tag')),
+                (
+                    'ci_function',
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT,
+                        related_name='+',
+                        to='service_specification.cifunction',
+                    ),
+                ),
+                (
+                    'lifecycle',
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT,
+                        related_name='+',
+                        to='service_specification.lifecycle',
+                    ),
+                ),
+                (
+                    'virtual_machine',
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name='service_specification_info',
+                        to='virtualization.virtualmachine',
+                    ),
+                ),
+            ],
+            options={
+                'verbose_name': 'Virtual Machine Service Info',
+                'verbose_name_plural': 'Virtual Machine Service Info',
+            },
+        ),
+        migrations.CreateModel(
+            name='ClusterServiceInfo',
+            fields=[
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False)),
+                ('created', models.DateTimeField(auto_now_add=True, null=True)),
+                ('last_updated', models.DateTimeField(auto_now=True, null=True)),
+                (
+                    'custom_field_data',
+                    models.JSONField(blank=True, default=dict, encoder=utilities.json.CustomFieldJSONEncoder),
+                ),
+                ('tags', taggit.managers.TaggableManager(through='extras.TaggedItem', to='extras.Tag')),
+                (
+                    'ci_function',
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT,
+                        related_name='+',
+                        to='service_specification.cifunction',
+                    ),
+                ),
+                (
+                    'lifecycle',
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT,
+                        related_name='+',
+                        to='service_specification.lifecycle',
+                    ),
+                ),
+                (
+                    'cluster',
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name='service_specification_info',
+                        to='virtualization.cluster',
+                    ),
+                ),
+            ],
+            options={
+                'verbose_name': 'Cluster Service Info',
+                'verbose_name_plural': 'Cluster Service Info',
+            },
+        ),
+        migrations.CreateModel(
+            name='ClusterGroupServiceInfo',
+            fields=[
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False)),
+                ('created', models.DateTimeField(auto_now_add=True, null=True)),
+                ('last_updated', models.DateTimeField(auto_now=True, null=True)),
+                (
+                    'custom_field_data',
+                    models.JSONField(blank=True, default=dict, encoder=utilities.json.CustomFieldJSONEncoder),
+                ),
+                ('tags', taggit.managers.TaggableManager(through='extras.TaggedItem', to='extras.Tag')),
+                (
+                    'ci_function',
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT,
+                        related_name='+',
+                        to='service_specification.cifunction',
+                    ),
+                ),
+                (
+                    'lifecycle',
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT,
+                        related_name='+',
+                        to='service_specification.lifecycle',
+                    ),
+                ),
+                (
+                    'cluster_group',
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name='service_specification_info',
+                        to='virtualization.clustergroup',
+                    ),
+                ),
+            ],
+            options={
+                'verbose_name': 'Cluster Group Service Info',
+                'verbose_name_plural': 'Cluster Group Service Info',
             },
         ),
         #
@@ -523,7 +695,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='service',
             name='service_portfolio',
-            field=models.ManyToManyField(related_name='services', to='csdm.portfolio'),
+            field=models.ManyToManyField(related_name='services', to='service_specification.portfolio'),
         ),
         migrations.AddField(
             model_name='service',
@@ -539,11 +711,6 @@ class Migration(migrations.Migration):
             model_name='service',
             name='change_group',
             field=models.ManyToManyField(related_name='+', to='tenancy.contactgroup'),
-        ),
-        migrations.AddField(
-            model_name='service',
-            name='ci_function',
-            field=models.ManyToManyField(blank=True, related_name='services', to='csdm.techci'),
         ),
         # ServiceOffering
         migrations.AddField(
@@ -569,7 +736,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='serviceoffering',
             name='service',
-            field=models.ManyToManyField(related_name='service_offerings', to='csdm.service'),
+            field=models.ManyToManyField(related_name='service_offerings', to='service_specification.service'),
         ),
         migrations.AddField(
             model_name='serviceoffering',
@@ -588,11 +755,6 @@ class Migration(migrations.Migration):
         ),
         migrations.AddField(
             model_name='serviceoffering',
-            name='ci_function',
-            field=models.ManyToManyField(blank=True, related_name='service_offerings', to='csdm.techci'),
-        ),
-        migrations.AddField(
-            model_name='serviceoffering',
             name='tenant',
             field=models.ManyToManyField(blank=True, related_name='+', to='tenancy.tenant'),
         ),
@@ -605,7 +767,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='appservice',
             name='service_offering',
-            field=models.ManyToManyField(related_name='app_services', to='csdm.serviceoffering'),
+            field=models.ManyToManyField(related_name='app_services', to='service_specification.serviceoffering'),
         ),
         migrations.AddField(
             model_name='appservice',
@@ -625,7 +787,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='appservice',
             name='sla',
-            field=models.ManyToManyField(related_name='+', to='csdm.sla'),
+            field=models.ManyToManyField(related_name='+', to='service_specification.sla'),
         ),
         migrations.AddField(
             model_name='appservice',
@@ -635,27 +797,22 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='appservice',
             name='operation_time',
-            field=models.ManyToManyField(related_name='+', to='csdm.operationtime'),
+            field=models.ManyToManyField(related_name='+', to='service_specification.operationtime'),
         ),
         migrations.AddField(
             model_name='appservice',
             name='availability',
-            field=models.ManyToManyField(related_name='+', to='csdm.availability'),
+            field=models.ManyToManyField(related_name='+', to='service_specification.availability'),
         ),
         migrations.AddField(
             model_name='appservice',
             name='mtat',
-            field=models.ManyToManyField(related_name='+', to='csdm.mtat'),
+            field=models.ManyToManyField(related_name='+', to='service_specification.mtat'),
         ),
         migrations.AddField(
             model_name='appservice',
             name='service_criticality',
-            field=models.ManyToManyField(related_name='+', to='csdm.criticality'),
-        ),
-        migrations.AddField(
-            model_name='appservice',
-            name='ci_function',
-            field=models.ManyToManyField(blank=True, related_name='app_services', to='csdm.techci'),
+            field=models.ManyToManyField(related_name='+', to='service_specification.criticality'),
         ),
         migrations.AddField(
             model_name='appservice',
@@ -667,50 +824,65 @@ class Migration(migrations.Migration):
             name='tenant_group',
             field=models.ManyToManyField(blank=True, related_name='+', to='tenancy.tenantgroup'),
         ),
-        # TechCI
+        # DeviceServiceInfo / VirtualMachineServiceInfo / ClusterServiceInfo / ClusterGroupServiceInfo
         migrations.AddField(
-            model_name='techci',
+            model_name='deviceserviceinfo',
             name='business_unit',
             field=models.ManyToManyField(related_name='+', to='tenancy.contactgroup'),
         ),
         migrations.AddField(
-            model_name='techci',
+            model_name='deviceserviceinfo',
             name='support_group',
             field=models.ManyToManyField(related_name='+', to='tenancy.contactgroup'),
         ),
         migrations.AddField(
-            model_name='techci',
+            model_name='deviceserviceinfo',
             name='change_group',
             field=models.ManyToManyField(related_name='+', to='tenancy.contactgroup'),
         ),
         migrations.AddField(
-            model_name='techci',
-            name='device',
-            field=models.ManyToManyField(blank=True, related_name='+', to='dcim.device'),
+            model_name='virtualmachineserviceinfo',
+            name='business_unit',
+            field=models.ManyToManyField(related_name='+', to='tenancy.contactgroup'),
         ),
         migrations.AddField(
-            model_name='techci',
-            name='virtual_machine',
-            field=models.ManyToManyField(blank=True, related_name='+', to='virtualization.virtualmachine'),
+            model_name='virtualmachineserviceinfo',
+            name='support_group',
+            field=models.ManyToManyField(related_name='+', to='tenancy.contactgroup'),
         ),
         migrations.AddField(
-            model_name='techci',
-            name='cluster',
-            field=models.ManyToManyField(blank=True, related_name='+', to='virtualization.cluster'),
+            model_name='virtualmachineserviceinfo',
+            name='change_group',
+            field=models.ManyToManyField(related_name='+', to='tenancy.contactgroup'),
         ),
         migrations.AddField(
-            model_name='techci',
-            name='cluster_group',
-            field=models.ManyToManyField(blank=True, related_name='+', to='virtualization.clustergroup'),
+            model_name='clusterserviceinfo',
+            name='business_unit',
+            field=models.ManyToManyField(related_name='+', to='tenancy.contactgroup'),
         ),
         migrations.AddField(
-            model_name='techci',
-            name='tenant',
-            field=models.ManyToManyField(blank=True, related_name='+', to='tenancy.tenant'),
+            model_name='clusterserviceinfo',
+            name='support_group',
+            field=models.ManyToManyField(related_name='+', to='tenancy.contactgroup'),
         ),
         migrations.AddField(
-            model_name='techci',
-            name='tenant_group',
-            field=models.ManyToManyField(blank=True, related_name='+', to='tenancy.tenantgroup'),
+            model_name='clusterserviceinfo',
+            name='change_group',
+            field=models.ManyToManyField(related_name='+', to='tenancy.contactgroup'),
+        ),
+        migrations.AddField(
+            model_name='clustergroupserviceinfo',
+            name='business_unit',
+            field=models.ManyToManyField(related_name='+', to='tenancy.contactgroup'),
+        ),
+        migrations.AddField(
+            model_name='clustergroupserviceinfo',
+            name='support_group',
+            field=models.ManyToManyField(related_name='+', to='tenancy.contactgroup'),
+        ),
+        migrations.AddField(
+            model_name='clustergroupserviceinfo',
+            name='change_group',
+            field=models.ManyToManyField(related_name='+', to='tenancy.contactgroup'),
         ),
     ]

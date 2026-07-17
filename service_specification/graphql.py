@@ -47,8 +47,13 @@ class MTATType(OrganizationalObjectType):
     pass
 
 
+@strawberry_django.type(models.CIFunction, fields='__all__', pagination=True)
+class CIFunctionType(OrganizationalObjectType):
+    pass
+
+
 #
-# Core CSDM types
+# Core Service Specification types
 #
 
 
@@ -72,13 +77,8 @@ class AppServiceType(PrimaryObjectType):
     pass
 
 
-@strawberry_django.type(models.TechCI, fields='__all__', pagination=True)
-class TechCIType(PrimaryObjectType):
-    pass
-
-
 @strawberry.type(name='Query')
-class CSDMQuery:
+class ServiceSpecificationQuery:
     portfolio: PortfolioType = strawberry_django.field()
     portfolio_list: list[PortfolioType] = strawberry_django.field()
 
@@ -90,9 +90,6 @@ class CSDMQuery:
 
     app_service: AppServiceType = strawberry_django.field()
     app_service_list: list[AppServiceType] = strawberry_django.field()
-
-    tech_ci: TechCIType = strawberry_django.field()
-    tech_ci_list: list[TechCIType] = strawberry_django.field()
 
     lifecycle: LifecycleType = strawberry_django.field()
     lifecycle_list: list[LifecycleType] = strawberry_django.field()
@@ -115,5 +112,8 @@ class CSDMQuery:
     mtat: MTATType = strawberry_django.field()
     mtat_list: list[MTATType] = strawberry_django.field()
 
+    ci_function: CIFunctionType = strawberry_django.field()
+    ci_function_list: list[CIFunctionType] = strawberry_django.field()
 
-schema = [CSDMQuery]
+
+schema = [ServiceSpecificationQuery]

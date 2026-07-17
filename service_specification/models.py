@@ -1,7 +1,7 @@
 from dcim.models import Device
 from django.db import models
 from django.urls import reverse
-from netbox.models import OrganizationalModel, PrimaryModel
+from netbox.models import NetBoxModel, OrganizationalModel, PrimaryModel
 from tenancy.models import Contact, ContactGroup, Tenant, TenantGroup
 from virtualization.models import Cluster, ClusterGroup, VirtualMachine
 
@@ -18,7 +18,7 @@ from .choices import TimeUnitChoices
 # inherits from NetBoxModel's OwnerMixin, again with related_name='+'.
 # OwnerMixin's own definition has no related_name, defaulting to
 # `<model>_set` on users.Owner — which is only unique *within* an app.
-# csdm.Service silently collided with NetBox core's own ipam.Service this
+# service_specification.Service silently collided with NetBox core's own ipam.Service this
 # way (both wanting `Owner.service_set`), and Django refused to boot until
 # it was fixed. Overriding it here on every model, not just Service,
 # closes off the same failure mode against any future name collision.
@@ -28,7 +28,6 @@ __all__ = (
     'Service',
     'ServiceOffering',
     'AppService',
-    'TechCI',
     'Lifecycle',
     'SLA',
     'OperationTime',
@@ -36,6 +35,11 @@ __all__ = (
     'Criticality',
     'Environment',
     'MTAT',
+    'CIFunction',
+    'DeviceServiceInfo',
+    'VirtualMachineServiceInfo',
+    'ClusterServiceInfo',
+    'ClusterGroupServiceInfo',
 )
 
 
@@ -49,13 +53,13 @@ class Lifecycle(OrganizationalModel):
 
     class Meta(OrganizationalModel.Meta):
         verbose_name = 'Lifecycle'
-        verbose_name_plural = 'Lifecycle Managements'
+        verbose_name_plural = 'Service Lifecycle Managements'
 
     def __str__(self):
         return self.name
 
     def get_absolute_url(self):
-        return reverse(f'plugins:csdm:{self._meta.model_name}', args=[self.pk])
+        return reverse(f'plugins:service_specification:{self._meta.model_name}', args=[self.pk])
 
 
 class SLA(OrganizationalModel):
@@ -73,7 +77,7 @@ class SLA(OrganizationalModel):
         return self.name
 
     def get_absolute_url(self):
-        return reverse(f'plugins:csdm:{self._meta.model_name}', args=[self.pk])
+        return reverse(f'plugins:service_specification:{self._meta.model_name}', args=[self.pk])
 
 
 class OperationTime(OrganizationalModel):
@@ -87,7 +91,7 @@ class OperationTime(OrganizationalModel):
         return self.name
 
     def get_absolute_url(self):
-        return reverse(f'plugins:csdm:{self._meta.model_name}', args=[self.pk])
+        return reverse(f'plugins:service_specification:{self._meta.model_name}', args=[self.pk])
 
 
 class Availability(OrganizationalModel):
@@ -101,7 +105,7 @@ class Availability(OrganizationalModel):
         return self.name
 
     def get_absolute_url(self):
-        return reverse(f'plugins:csdm:{self._meta.model_name}', args=[self.pk])
+        return reverse(f'plugins:service_specification:{self._meta.model_name}', args=[self.pk])
 
 
 class Criticality(OrganizationalModel):
@@ -115,7 +119,7 @@ class Criticality(OrganizationalModel):
         return self.name
 
     def get_absolute_url(self):
-        return reverse(f'plugins:csdm:{self._meta.model_name}', args=[self.pk])
+        return reverse(f'plugins:service_specification:{self._meta.model_name}', args=[self.pk])
 
 
 class Environment(OrganizationalModel):
@@ -129,7 +133,7 @@ class Environment(OrganizationalModel):
         return self.name
 
     def get_absolute_url(self):
-        return reverse(f'plugins:csdm:{self._meta.model_name}', args=[self.pk])
+        return reverse(f'plugins:service_specification:{self._meta.model_name}', args=[self.pk])
 
 
 class MTAT(OrganizationalModel):
@@ -151,11 +155,25 @@ class MTAT(OrganizationalModel):
         return self.name
 
     def get_absolute_url(self):
-        return reverse(f'plugins:csdm:{self._meta.model_name}', args=[self.pk])
+        return reverse(f'plugins:service_specification:{self._meta.model_name}', args=[self.pk])
+
+
+class CIFunction(OrganizationalModel):
+    owner = models.ForeignKey(to='users.Owner', on_delete=models.PROTECT, related_name='+', blank=True, null=True)
+
+    class Meta(OrganizationalModel.Meta):
+        verbose_name = 'CI Function'
+        verbose_name_plural = 'CI Functions'
+
+    def __str__(self):
+        return self.name
+
+    def get_absolute_url(self):
+        return reverse(f'plugins:service_specification:{self._meta.model_name}', args=[self.pk])
 
 
 #
-# Core CSDM models
+# Core Service Specification models
 #
 
 
@@ -190,7 +208,7 @@ class Portfolio(PrimaryModel):
         to=Lifecycle,
         on_delete=models.PROTECT,
         related_name='+',
-        verbose_name='Lifecycle Management',
+        verbose_name='Service Lifecycle Management',
     )
 
     class Meta(PrimaryModel.Meta):
@@ -202,7 +220,7 @@ class Portfolio(PrimaryModel):
         return self.name
 
     def get_absolute_url(self):
-        return reverse(f'plugins:csdm:{self._meta.model_name}', args=[self.pk])
+        return reverse(f'plugins:service_specification:{self._meta.model_name}', args=[self.pk])
 
 
 class Service(PrimaryModel):
@@ -236,7 +254,7 @@ class Service(PrimaryModel):
         to=Lifecycle,
         on_delete=models.PROTECT,
         related_name='+',
-        verbose_name='Lifecycle Management',
+        verbose_name='Service Lifecycle Management',
     )
     service_portfolio = models.ManyToManyField(
         to=Portfolio,
@@ -262,11 +280,13 @@ class Service(PrimaryModel):
         blank=False,
         verbose_name='Change Group',
     )
-    ci_function = models.ManyToManyField(
-        to='csdm.TechCI',
-        related_name='services',
+    ci_function = models.ForeignKey(
+        to=CIFunction,
+        on_delete=models.PROTECT,
+        related_name='+',
         blank=True,
-        verbose_name='Technical CIs',
+        null=True,
+        verbose_name='CI Function',
     )
 
     class Meta(PrimaryModel.Meta):
@@ -278,7 +298,7 @@ class Service(PrimaryModel):
         return self.name
 
     def get_absolute_url(self):
-        return reverse(f'plugins:csdm:{self._meta.model_name}', args=[self.pk])
+        return reverse(f'plugins:service_specification:{self._meta.model_name}', args=[self.pk])
 
 
 class ServiceOffering(PrimaryModel):
@@ -313,7 +333,7 @@ class ServiceOffering(PrimaryModel):
         to=Lifecycle,
         on_delete=models.PROTECT,
         related_name='+',
-        verbose_name='Lifecycle Management',
+        verbose_name='Service Lifecycle Management',
     )
     service = models.ManyToManyField(
         to=Service,
@@ -339,12 +359,6 @@ class ServiceOffering(PrimaryModel):
         blank=False,
         verbose_name='Change Group',
     )
-    ci_function = models.ManyToManyField(
-        to='csdm.TechCI',
-        related_name='service_offerings',
-        blank=True,
-        verbose_name='Technical CIs',
-    )
     tenant = models.ManyToManyField(
         to=Tenant,
         related_name='+',
@@ -367,7 +381,7 @@ class ServiceOffering(PrimaryModel):
         return self.name
 
     def get_absolute_url(self):
-        return reverse(f'plugins:csdm:{self._meta.model_name}', args=[self.pk])
+        return reverse(f'plugins:service_specification:{self._meta.model_name}', args=[self.pk])
 
 
 class AppService(PrimaryModel):
@@ -383,7 +397,7 @@ class AppService(PrimaryModel):
         to=Lifecycle,
         on_delete=models.PROTECT,
         related_name='+',
-        verbose_name='Lifecycle Management',
+        verbose_name='Service Lifecycle Management',
     )
     service_offering = models.ManyToManyField(
         to=ServiceOffering,
@@ -449,13 +463,7 @@ class AppService(PrimaryModel):
     )
     rpo = models.PositiveIntegerField(verbose_name='RPO (hours)')
     rto = models.PositiveIntegerField(verbose_name='RTO (hours)')
-    bcm = models.PositiveIntegerField(verbose_name='BCM (hours)')
-    ci_function = models.ManyToManyField(
-        to='csdm.TechCI',
-        related_name='app_services',
-        blank=True,
-        verbose_name='Technical CIs',
-    )
+    bcm = models.PositiveIntegerField(verbose_name='BCM -1')
     tenant = models.ManyToManyField(
         to=Tenant,
         related_name='+',
@@ -478,81 +486,135 @@ class AppService(PrimaryModel):
         return self.name
 
     def get_absolute_url(self):
-        return reverse(f'plugins:csdm:{self._meta.model_name}', args=[self.pk])
+        return reverse(f'plugins:service_specification:{self._meta.model_name}', args=[self.pk])
 
 
-class TechCI(PrimaryModel):
-    owner = models.ForeignKey(to='users.Owner', on_delete=models.PROTECT, related_name='+', blank=True, null=True)
-    name = models.CharField(max_length=150)
-    function = models.CharField(max_length=200, verbose_name='CI Function')
+#
+# Service Specification info attached directly to core NetBox infrastructure
+# objects (Device, VirtualMachine, Cluster, ClusterGroup). Plugins can't add
+# real database fields to NetBox's own models, so each of these is a
+# separate table in a OneToOne relationship with its core object, surfaced
+# as a "Service Specification" tab on that object's own detail page (see
+# views.py) rather than as a top-level navigable model of its own.
+#
+
+
+class ServiceSpecificationInfoBase(NetBoxModel):
+    ci_function = models.ForeignKey(
+        to=CIFunction,
+        on_delete=models.PROTECT,
+        related_name='+',
+        verbose_name='CI Function',
+    )
     lifecycle = models.ForeignKey(
         to=Lifecycle,
         on_delete=models.PROTECT,
         related_name='+',
-        verbose_name='Lifecycle Management',
+        verbose_name='Service Lifecycle Management',
     )
     business_unit = models.ManyToManyField(
         to=ContactGroup,
         related_name='+',
-        blank=False,
         verbose_name='Business Unit',
     )
     support_group = models.ManyToManyField(
         to=ContactGroup,
         related_name='+',
-        blank=False,
         verbose_name='Support Group',
     )
     change_group = models.ManyToManyField(
         to=ContactGroup,
         related_name='+',
-        blank=False,
         verbose_name='Change Group',
     )
-    device = models.ManyToManyField(
+
+    class Meta:
+        abstract = True
+
+
+class DeviceServiceInfo(ServiceSpecificationInfoBase):
+    device = models.OneToOneField(
         to=Device,
-        related_name='+',
-        blank=True,
-        verbose_name='Devices',
-    )
-    virtual_machine = models.ManyToManyField(
-        to=VirtualMachine,
-        related_name='+',
-        blank=True,
-        verbose_name='Virtual Machines',
-    )
-    cluster = models.ManyToManyField(
-        to=Cluster,
-        related_name='+',
-        blank=True,
-        verbose_name='Clusters',
-    )
-    cluster_group = models.ManyToManyField(
-        to=ClusterGroup,
-        related_name='+',
-        blank=True,
-        verbose_name='Cluster Groups',
-    )
-    tenant = models.ManyToManyField(
-        to=Tenant,
-        related_name='+',
-        blank=True,
-        verbose_name='Customer',
-    )
-    tenant_group = models.ManyToManyField(
-        to=TenantGroup,
-        related_name='+',
-        blank=True,
-        verbose_name='Customer Group',
+        on_delete=models.CASCADE,
+        related_name='service_specification_info',
     )
 
-    class Meta(PrimaryModel.Meta):
-        ordering = ('name',)
-        verbose_name = 'Technical CI'
-        verbose_name_plural = 'Technical CIs'
+    class Meta:
+        verbose_name = 'Device Service Info'
+        verbose_name_plural = 'Device Service Info'
 
     def __str__(self):
-        return self.name
+        return str(self.device)
+
+    @property
+    def parent(self):
+        return self.device
 
     def get_absolute_url(self):
-        return reverse(f'plugins:csdm:{self._meta.model_name}', args=[self.pk])
+        return self.device.get_absolute_url()
+
+
+class VirtualMachineServiceInfo(ServiceSpecificationInfoBase):
+    virtual_machine = models.OneToOneField(
+        to=VirtualMachine,
+        on_delete=models.CASCADE,
+        related_name='service_specification_info',
+    )
+
+    class Meta:
+        verbose_name = 'Virtual Machine Service Info'
+        verbose_name_plural = 'Virtual Machine Service Info'
+
+    def __str__(self):
+        return str(self.virtual_machine)
+
+    @property
+    def parent(self):
+        return self.virtual_machine
+
+    def get_absolute_url(self):
+        return self.virtual_machine.get_absolute_url()
+
+
+class ClusterServiceInfo(ServiceSpecificationInfoBase):
+    cluster = models.OneToOneField(
+        to=Cluster,
+        on_delete=models.CASCADE,
+        related_name='service_specification_info',
+    )
+
+    class Meta:
+        verbose_name = 'Cluster Service Info'
+        verbose_name_plural = 'Cluster Service Info'
+
+    def __str__(self):
+        return str(self.cluster)
+
+    @property
+    def parent(self):
+        return self.cluster
+
+    def get_absolute_url(self):
+        return self.cluster.get_absolute_url()
+
+
+class ClusterGroupServiceInfo(ServiceSpecificationInfoBase):
+    cluster_group = models.OneToOneField(
+        to=ClusterGroup,
+        on_delete=models.CASCADE,
+        related_name='service_specification_info',
+    )
+
+    class Meta:
+        verbose_name = 'Cluster Group Service Info'
+        verbose_name_plural = 'Cluster Group Service Info'
+
+    def __str__(self):
+        return str(self.cluster_group)
+
+    @property
+    def parent(self):
+        return self.cluster_group
+
+    def get_absolute_url(self):
+        return self.cluster_group.get_absolute_url()

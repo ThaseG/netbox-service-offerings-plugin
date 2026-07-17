@@ -7,6 +7,7 @@ from .models import (
     SLA,
     AppService,
     Availability,
+    CIFunction,
     Criticality,
     Environment,
     Lifecycle,
@@ -14,7 +15,6 @@ from .models import (
     Portfolio,
     Service,
     ServiceOffering,
-    TechCI,
 )
 
 __all__ = (
@@ -22,7 +22,6 @@ __all__ = (
     'ServiceFilterSet',
     'ServiceOfferingFilterSet',
     'AppServiceFilterSet',
-    'TechCIFilterSet',
     'LifecycleFilterSet',
     'SLAFilterSet',
     'OperationTimeFilterSet',
@@ -30,6 +29,7 @@ __all__ = (
     'CriticalityFilterSet',
     'EnvironmentFilterSet',
     'MTATFilterSet',
+    'CIFunctionFilterSet',
 )
 
 
@@ -98,6 +98,15 @@ class MTATFilterSet(NetBoxModelFilterSet):
         return queryset.filter(Q(name__icontains=value) | Q(description__icontains=value))
 
 
+class CIFunctionFilterSet(NetBoxModelFilterSet):
+    class Meta:
+        model = CIFunction
+        fields = ('id', 'name', 'slug')
+
+    def search(self, queryset, name, value):
+        return queryset.filter(Q(name__icontains=value) | Q(description__icontains=value))
+
+
 class PortfolioFilterSet(NetBoxModelFilterSet):
     lifecycle_id = django_filters.ModelMultipleChoiceFilter(
         field_name='lifecycle',
@@ -124,10 +133,15 @@ class ServiceFilterSet(NetBoxModelFilterSet):
         queryset=Portfolio.objects.all(),
         label='Service Portfolio (ID)',
     )
+    ci_function_id = django_filters.ModelMultipleChoiceFilter(
+        field_name='ci_function',
+        queryset=CIFunction.objects.all(),
+        label='CI Function (ID)',
+    )
 
     class Meta:
         model = Service
-        fields = ('id', 'name', 'lifecycle_id', 'service_portfolio_id')
+        fields = ('id', 'name', 'lifecycle_id', 'service_portfolio_id', 'ci_function_id')
 
     def search(self, queryset, name, value):
         return queryset.filter(Q(name__icontains=value) | Q(description__icontains=value))
@@ -178,20 +192,3 @@ class AppServiceFilterSet(NetBoxModelFilterSet):
 
     def search(self, queryset, name, value):
         return queryset.filter(Q(name__icontains=value) | Q(description__icontains=value))
-
-
-class TechCIFilterSet(NetBoxModelFilterSet):
-    lifecycle_id = django_filters.ModelMultipleChoiceFilter(
-        field_name='lifecycle',
-        queryset=Lifecycle.objects.all(),
-        label='Lifecycle (ID)',
-    )
-
-    class Meta:
-        model = TechCI
-        fields = ('id', 'name', 'function', 'lifecycle_id')
-
-    def search(self, queryset, name, value):
-        return queryset.filter(
-            Q(name__icontains=value) | Q(description__icontains=value) | Q(function__icontains=value)
-        )

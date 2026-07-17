@@ -6,7 +6,7 @@ on:
     paths:
       - "ci/**"
       - "versions.sh"
-      - "csdm/**"
+      - "service_specification/**"
       - "pyproject.toml"
       - ".github/workflows/ci-cd.yml"
   workflow_dispatch: {}
@@ -90,10 +90,10 @@ jobs:
           pip install --quiet ruff==0.15.17 yamllint==1.35.1
 
       - name: ruff check
-        run: ruff check csdm/
+        run: ruff check service_specification/
 
       - name: ruff format --check
-        run: ruff format --check csdm/
+        run: ruff format --check service_specification/
 
       - name: yamllint
         run: |
@@ -121,8 +121,8 @@ jobs:
           with open('pyproject.toml', 'rb') as f:
               print(tomllib.load(f)['project']['version'])
           ")
-          if [ "$PYPROJECT_VERSION" != "$CSDM_PLUGIN_VERSION" ]; then
-            echo "::error::pyproject.toml version ($PYPROJECT_VERSION) != CSDM_PLUGIN_VERSION in versions.sh ($CSDM_PLUGIN_VERSION)"
+          if [ "$PYPROJECT_VERSION" != "$SERVICE_SPECIFICATION_PLUGIN_VERSION" ]; then
+            echo "::error::pyproject.toml version ($PYPROJECT_VERSION) != SERVICE_SPECIFICATION_PLUGIN_VERSION in versions.sh ($SERVICE_SPECIFICATION_PLUGIN_VERSION)"
             exit 1
           fi
           echo "OK: pyproject.toml matches versions.sh ($PYPROJECT_VERSION)"
@@ -165,7 +165,7 @@ jobs:
       - name: Pull pinned NetBox base image
         run: docker pull "netboxcommunity/netbox:${NETBOX_VERSION}"
 
-      - name: Build image (NetBox + third-party + csdm plugins)
+      - name: Build image (NetBox + third-party + service_specification plugins)
         run: docker compose --env-file ci/docker/.env -f ci/docker/docker-compose.yml build
 
       - name: Remove runtime environment file
@@ -238,17 +238,17 @@ jobs:
 
       - name: Django system check
         # DB-independent — this is the exact check that would have caught
-        # the csdm.Service / ipam.Service owner-field E304 collision
+        # the service_specification.Service / ipam.Service owner-field E304 collision
         # immediately, instead of as a production crash-loop.
         run: docker compose --env-file ci/docker/.env -f ci/docker/docker-compose.yml exec -T netbox python manage.py check
 
       - name: Check for unapplied/undeclared migrations
         run: |
           docker compose --env-file ci/docker/.env -f ci/docker/docker-compose.yml exec -T netbox \
-            python manage.py makemigrations csdm --check --dry-run
+            python manage.py makemigrations service_specification --check --dry-run
 
-      - name: Django test suite (csdm)
-        run: docker compose --env-file ci/docker/.env -f ci/docker/docker-compose.yml exec -T netbox python manage.py test csdm
+      - name: Django test suite (service_specification)
+        run: docker compose --env-file ci/docker/.env -f ci/docker/docker-compose.yml exec -T netbox python manage.py test service_specification
 
       - name: Sync superuser API token to current secrets
         # netbox-docker's own bootstrap (super_user.py) only ever creates a
@@ -317,11 +317,11 @@ jobs:
       - name: Load pinned versions
         run: |
           source versions.sh
-          echo "CSDM_PLUGIN_VERSION=$CSDM_PLUGIN_VERSION" >> "$GITHUB_ENV"
+          echo "SERVICE_SPECIFICATION_PLUGIN_VERSION=$SERVICE_SPECIFICATION_PLUGIN_VERSION" >> "$GITHUB_ENV"
 
       - name: Tag release if not already tagged
         run: |
-          TAG="v${CSDM_PLUGIN_VERSION}"
+          TAG="v${SERVICE_SPECIFICATION_PLUGIN_VERSION}"
           if git tag -l "$TAG" | grep -qx "$TAG"; then
             echo "Tag $TAG already exists — nothing to do."
             exit 0
