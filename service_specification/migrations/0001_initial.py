@@ -8,10 +8,13 @@
 # `choices=` kwargs and `ManyToManyField(blank=False)` (the Django default)
 # are omitted from migrations even though they're set in models.py.
 #
-# Verification step before/after first deploy: run
+# CI's "Check for unapplied/undeclared migrations" step runs
 #   manage.py makemigrations service_specification --check --dry-run
-# on a live instance. If it reports drift, regenerate this file from that
-# environment and replace it.
+# against a live instance on every deploy — if it reports drift, update
+# this file directly (not a new incremental migration) and let CI wipe the
+# database and re-apply it fresh, since ci/scripts/pre-cleanup.sh never
+# leaves an already-migrated instance around for a later migration to need
+# to reconcile with.
 import django.db.models.deletion
 import taggit.managers
 import utilities.json

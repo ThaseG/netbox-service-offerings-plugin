@@ -1,9 +1,13 @@
 #!/usr/bin/env bash
-# Pre-deploy cleanup. Deliberately non-destructive: it stops the running
-# stack and reclaims disk space from stopped containers, dangling images
-# and build cache, but never touches named volumes (Postgres/Redis/media
-# data) or the acme.sh certificate directory. Data loss here would mean
-# losing the whole NetBox database, so nothing volume-related is pruned.
+# Pre-deploy cleanup. Deliberately destructive on the stack's own named
+# volumes (Postgres/Redis/media/reports/scripts — everything declared under
+# `volumes:` in docker-compose.yml): every deploy starts NetBox from a
+# completely empty database, migrated fresh via this repo's own
+# migrations/0001_initial.py. There is never an "already migrated" instance
+# to preserve, which is also why this plugin hand-edits 0001_initial.py in
+# place for schema changes instead of accumulating incremental migrations —
+# see that file's own header comment. (The acme.sh certificate directory is
+# untouched; TLS certs aren't part of the app stack's data.)
 set -euo pipefail
 
 # .. here is ci/ (this script lives in ci/scripts/), not the repo root
@@ -16,7 +20,7 @@ COMPOSE_FILE="${COMPOSE_FILE:-$CI_ROOT/docker/docker-compose.yml}"
 ENV_FILE="${ENV_FILE:-$CI_ROOT/docker/.env}"
 
 if [ -f "$COMPOSE_FILE" ]; then
-  echo "Stopping current stack (containers only, named volumes preserved)..."
+  echo "Stopping current stack and wiping its named volumes (fresh NetBox on next 'up')..."
   compose_args=(-f "$COMPOSE_FILE")
   if [ -f "$ENV_FILE" ]; then
     compose_args=(--env-file "$ENV_FILE" "${compose_args[@]}")
@@ -26,12 +30,12 @@ if [ -f "$COMPOSE_FILE" ]; then
   fi
   # Deliberately don't hard-fail the deploy if this errors (e.g. nothing
   # was running yet) — but DO surface it loudly, since a silently-swallowed
-  # failure here leaves stale containers/networks behind that the next
-  # `up` won't necessarily reconcile with, which is exactly the kind of
-  # thing that produces confusing "container is up but can't reach its
-  # peers" failures downstream.
-  if ! docker compose "${compose_args[@]}" down --remove-orphans; then
-    echo "WARNING: 'docker compose down' failed (see above) — stale containers/networks may remain." >&2
+  # failure here leaves stale containers/networks/volumes behind that the
+  # next `up` won't necessarily reconcile with, which is exactly the kind
+  # of thing that produces confusing "container is up but can't reach its
+  # peers" (or "schema looks half-migrated") failures downstream.
+  if ! docker compose "${compose_args[@]}" down --remove-orphans --volumes; then
+    echo "WARNING: 'docker compose down' failed (see above) — stale containers/networks/volumes may remain." >&2
   fi
 fi
 

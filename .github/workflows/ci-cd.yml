@@ -20,11 +20,13 @@ concurrency:
 jobs:
   #
   # 1. Pre-Clean — tears the whole stack down unconditionally before
-  # anything else runs, guaranteeing every pipeline run starts from a known
-  # clean slate rather than layering on top of whatever the last run left
-  # behind. There is no separate "production" here (the deployed instance
-  # doubles as a manual-test/showcase environment), so taking it down for
-  # the Build+Test duration is an accepted tradeoff, not an oversight.
+  # anything else runs, wiping its named volumes (see
+  # ci/scripts/pre-cleanup.sh) so every pipeline run starts NetBox from a
+  # completely empty database rather than layering on top of whatever the
+  # last run left behind. There is no separate "production" here (the
+  # deployed instance doubles as a manual-test/showcase environment, and
+  # doesn't retain data across deploys), so taking it down — and wiping it —
+  # for the Build+Test duration is an accepted tradeoff, not an oversight.
   #
   pre-clean:
     runs-on: [self-hosted, netbox]
@@ -112,7 +114,7 @@ jobs:
 
       - name: Check pyproject.toml / versions.sh version drift
         # Would have caught pyproject.toml drifting to 0.1.0 while
-        # versions.sh moved on to 1.0.1 — exactly the kind of silent
+        # versions.sh moved on to next version — exactly the kind of silent
         # mismatch that's easy to introduce and easy to miss by eye.
         run: |
           source versions.sh
@@ -174,11 +176,13 @@ jobs:
         run: rm -f ci/docker/.env
 
   #
-  # 4. Test — brings the freshly-built image up for real and runs every
-  # check against it, fast-failing checks first (DB-independent system
-  # check) before the slower ones (Django test suite, live HTTP smoke
-  # test). Deliberately left running on success: it doubles as the
-  # showcase/manual-test instance.
+  # 4. Test — brings the freshly-built image up for real (against the
+  # empty database Pre-Clean just left behind) and runs every check against
+  # it, fast-failing checks first (DB-independent system check) before the
+  # slower ones (Django test suite, live HTTP smoke test). Deliberately left
+  # running on success: it doubles as the showcase/manual-test instance —
+  # starting empty each time, not carrying over data from the previous
+  # deploy.
   #
   test:
     needs: build

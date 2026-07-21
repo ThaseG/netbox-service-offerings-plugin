@@ -116,12 +116,13 @@ services:
       # is root-caused.
       DB_WAIT_DEBUG: "1"
     healthcheck:
-      # start_period is generous because the *first* boot against an empty
-      # database runs NetBox's full initial migration (hundreds of
-      # migrations), which can take several minutes. Failures during
-      # start_period don't count against the unhealthy threshold; on
-      # subsequent boots (schema already migrated) it becomes healthy
-      # almost immediately, well before this window elapses.
+      # start_period is generous because pre-cleanup.sh wipes this stack's
+      # named volumes before every deploy (see that script's own header
+      # comment), so every boot runs against a completely empty database —
+      # NetBox's full initial migration (hundreds of migrations) plus this
+      # plugin's own, which can take several minutes. There's no "warm"
+      # boot case here to be faster than that. Failures during start_period
+      # don't count against the unhealthy threshold.
       test: curl -f http://localhost:8080/login/ || exit 1
       start_period: 600s
       timeout: 5s

@@ -182,7 +182,9 @@ python manage.py test service_specification
 
 [`.github/workflows/ci-cd.yml`](.github/workflows/ci-cd.yml) runs on every push, as five staged jobs:
 
-1. **Pre-Clean** — tears down any previously running stack, guaranteeing a clean slate.
+1. **Pre-Clean** — tears down any previously running stack *and wipes its named volumes*
+   ([`ci/scripts/pre-cleanup.sh`](ci/scripts/pre-cleanup.sh)), so every deploy starts NetBox from a completely
+   empty database.
 2. **Code-Review** — `ruff`, `shellcheck`, `yamllint`, and a check that `pyproject.toml`'s version matches
    `versions.sh`.
 3. **Build** — builds the NetBox + plugins Docker image per `versions.sh`.
@@ -191,7 +193,11 @@ python manage.py test service_specification
 5. **Deploy** — tags the repo `v<SERVICE_SPECIFICATION_PLUGIN_VERSION>` (from `versions.sh`), if that tag doesn't
    already exist.
 
-The instance left running after a successful **Test** stage doubles as a live showcase.
+The instance left running after a successful **Test** stage doubles as a live showcase — but since every deploy
+wipes the database, it starts empty each time and never carries data over from a previous deploy. This is also
+why the plugin's own migration ([`service_specification/migrations/0001_initial.py`](service_specification/migrations/0001_initial.py))
+is hand-edited in place for schema changes rather than accumulating incremental migration files: there's never an
+already-migrated instance whose existing data a later migration would need to preserve.
 
 ## License
 
