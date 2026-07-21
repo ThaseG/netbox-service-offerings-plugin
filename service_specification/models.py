@@ -500,16 +500,28 @@ class AppService(PrimaryModel):
 
 
 class ServiceSpecificationInfoBase(NetBoxModel):
+    # blank=True/null=True (despite being required=True on the form — see
+    # forms.py's _make_service_info_form) so views.py can lazily persist an
+    # empty placeholder row the first time a Device/VM/Cluster/ClusterGroup's
+    # "Service Specification" tab is viewed, before the user has entered
+    # anything: a NOT NULL FK would make that initial save fail outright,
+    # and rendering an *unsaved* instance instead isn't an option either —
+    # Django refuses to query a ManyToManyField (business_unit etc. below)
+    # on an object with no primary key yet.
     ci_function = models.ForeignKey(
         to=CIFunction,
         on_delete=models.PROTECT,
         related_name='+',
+        blank=True,
+        null=True,
         verbose_name='CI Function',
     )
     lifecycle = models.ForeignKey(
         to=Lifecycle,
         on_delete=models.PROTECT,
         related_name='+',
+        blank=True,
+        null=True,
         verbose_name='Service Lifecycle Management',
     )
     business_unit = models.ManyToManyField(

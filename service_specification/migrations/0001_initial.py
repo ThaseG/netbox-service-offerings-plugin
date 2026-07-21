@@ -496,6 +496,8 @@ class Migration(migrations.Migration):
                 (
                     'ci_function',
                     models.ForeignKey(
+                        blank=True,
+                        null=True,
                         on_delete=django.db.models.deletion.PROTECT,
                         related_name='+',
                         to='service_specification.cifunction',
@@ -504,6 +506,8 @@ class Migration(migrations.Migration):
                 (
                     'lifecycle',
                     models.ForeignKey(
+                        blank=True,
+                        null=True,
                         on_delete=django.db.models.deletion.PROTECT,
                         related_name='+',
                         to='service_specification.lifecycle',
@@ -537,6 +541,8 @@ class Migration(migrations.Migration):
                 (
                     'ci_function',
                     models.ForeignKey(
+                        blank=True,
+                        null=True,
                         on_delete=django.db.models.deletion.PROTECT,
                         related_name='+',
                         to='service_specification.cifunction',
@@ -545,6 +551,8 @@ class Migration(migrations.Migration):
                 (
                     'lifecycle',
                     models.ForeignKey(
+                        blank=True,
+                        null=True,
                         on_delete=django.db.models.deletion.PROTECT,
                         related_name='+',
                         to='service_specification.lifecycle',
@@ -578,6 +586,8 @@ class Migration(migrations.Migration):
                 (
                     'ci_function',
                     models.ForeignKey(
+                        blank=True,
+                        null=True,
                         on_delete=django.db.models.deletion.PROTECT,
                         related_name='+',
                         to='service_specification.cifunction',
@@ -586,6 +596,8 @@ class Migration(migrations.Migration):
                 (
                     'lifecycle',
                     models.ForeignKey(
+                        blank=True,
+                        null=True,
                         on_delete=django.db.models.deletion.PROTECT,
                         related_name='+',
                         to='service_specification.lifecycle',
@@ -619,6 +631,8 @@ class Migration(migrations.Migration):
                 (
                     'ci_function',
                     models.ForeignKey(
+                        blank=True,
+                        null=True,
                         on_delete=django.db.models.deletion.PROTECT,
                         related_name='+',
                         to='service_specification.cifunction',
@@ -627,6 +641,8 @@ class Migration(migrations.Migration):
                 (
                     'lifecycle',
                     models.ForeignKey(
+                        blank=True,
+                        null=True,
                         on_delete=django.db.models.deletion.PROTECT,
                         related_name='+',
                         to='service_specification.lifecycle',

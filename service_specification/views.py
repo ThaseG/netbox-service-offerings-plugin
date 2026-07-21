@@ -96,15 +96,21 @@ def _make_service_info_views(parent_model, info_model, form_cls, fk_name):
     ClusterGroup being viewed for this to render as a tab on *its* page
     rather than as a standalone info_model detail page. The actual
     service-info data is supplied separately via get_extra_context() and
-    rendered through ServiceSpecificationInfoPanel's accessor='service_info',
-    falling back to an unsaved in-memory info_model instance when no row
-    exists yet — so the tab always renders something sensible instead of
-    404ing on first visit, and no row is persisted until the user actually
-    saves the edit form.
+    rendered through ServiceSpecificationInfoPanel's accessor='service_info'.
+
+    _get_info() persists an empty placeholder row (get_or_create) the first
+    time it's called for a given parent, rather than handing back an unsaved
+    in-memory instance: the panel reads business_unit/support_group/
+    change_group, all ManyToManyFields, and Django refuses to query an M2M
+    manager on an object with no primary key yet — a plain `info_model()`
+    would 500 as soon as the panel tried to render. ci_function and
+    lifecycle are nullable on ServiceSpecificationInfoBase specifically so
+    this initial save (with nothing filled in) succeeds.
     """
 
     def _get_info(parent):
-        return info_model.objects.filter(**{fk_name: parent}).first() or info_model(**{fk_name: parent})
+        obj, _created = info_model.objects.get_or_create(**{fk_name: parent})
+        return obj
 
     @register_model_view(parent_model, 'service_specification', path='service-specification')
     class ServiceInfoView(generic.ObjectView):
