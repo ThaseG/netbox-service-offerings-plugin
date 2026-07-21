@@ -413,24 +413,39 @@ class AppServiceForm(PrimaryModelForm):
 
 
 def _make_service_info_form(model):
-    class ServiceInfoForm(NetBoxModelForm):
-        ci_function = DynamicModelChoiceField(queryset=CIFunction.objects.all(), required=True)
-        lifecycle = DynamicModelChoiceField(queryset=Lifecycle.objects.all(), required=True)
-        business_unit = DynamicModelMultipleChoiceField(queryset=ContactGroup.objects.all(), required=True)
-        support_group = DynamicModelMultipleChoiceField(queryset=ContactGroup.objects.all(), required=True)
-        change_group = DynamicModelMultipleChoiceField(queryset=ContactGroup.objects.all(), required=True)
-
-        fieldsets = (
-            FieldSet('ci_function', 'lifecycle', 'tags', name='Service Specification'),
-            FieldSet('business_unit', 'support_group', 'change_group', name='Organization'),
-        )
-
-        class Meta:
-            fields = ('ci_function', 'lifecycle', 'business_unit', 'support_group', 'change_group', 'tags')
-
-    ServiceInfoForm.Meta.model = model
-    ServiceInfoForm.__name__ = ServiceInfoForm.__qualname__ = f'{model.__name__}Form'
-    return ServiceInfoForm
+    # Built via type() rather than a nested `class ServiceInfoForm(...):`
+    # statement so Meta.model is present in the class namespace *before*
+    # ModelForm's metaclass runs — it reads Meta.model while the class is
+    # being created to build the form's internal _meta, and never re-reads
+    # it afterward. Assigning `ServiceInfoForm.Meta.model = model` post
+    # hoc (the previous approach here) changes the Meta class's own
+    # attribute but not the already-baked _meta.model, which stayed None;
+    # BaseModelForm.__init__() then raises "ModelForm has no model class
+    # specified." the moment the form is actually instantiated.
+    meta = type(
+        'Meta',
+        (),
+        {
+            'model': model,
+            'fields': ('ci_function', 'lifecycle', 'business_unit', 'support_group', 'change_group', 'tags'),
+        },
+    )
+    return type(
+        f'{model.__name__}Form',
+        (NetBoxModelForm,),
+        {
+            'ci_function': DynamicModelChoiceField(queryset=CIFunction.objects.all(), required=True),
+            'lifecycle': DynamicModelChoiceField(queryset=Lifecycle.objects.all(), required=True),
+            'business_unit': DynamicModelMultipleChoiceField(queryset=ContactGroup.objects.all(), required=True),
+            'support_group': DynamicModelMultipleChoiceField(queryset=ContactGroup.objects.all(), required=True),
+            'change_group': DynamicModelMultipleChoiceField(queryset=ContactGroup.objects.all(), required=True),
+            'fieldsets': (
+                FieldSet('ci_function', 'lifecycle', 'tags', name='Service Specification'),
+                FieldSet('business_unit', 'support_group', 'change_group', name='Organization'),
+            ),
+            'Meta': meta,
+        },
+    )
 
 
 DeviceServiceInfoForm = _make_service_info_form(DeviceServiceInfo)
