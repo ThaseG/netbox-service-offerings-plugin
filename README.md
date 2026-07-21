@@ -166,7 +166,7 @@ Access is controlled by NetBox's standard per-model permissions, e.g. `service_s
 | --- | --- |
 | [`service_specification/`](service_specification/) | The plugin itself — models, REST API, UI views, GraphQL, migrations, tests. |
 | [`ci/docker/`](ci/docker/) | Docker Compose stack + Dockerfile used both for local runs and the CI/CD deploy. |
-| [`ci/scripts/`](ci/scripts/) | Shell scripts used by the CI/CD pipeline (cert issuance, pre-cleanup, smoke tests). |
+| [`ci/scripts/`](ci/scripts/) | Scripts used by the CI/CD pipeline (cert issuance, pre-cleanup, smoke tests, demo data seeding). |
 | [`versions.sh`](versions.sh) | Single source of truth for the pinned NetBox version and the plugin's own release version. |
 | [`pyproject.toml`](pyproject.toml) | Package metadata, plus `ruff` lint/format configuration. |
 
@@ -180,7 +180,7 @@ python manage.py test service_specification
 
 ### CI/CD
 
-[`.github/workflows/ci-cd.yml`](.github/workflows/ci-cd.yml) runs on every push, as five staged jobs:
+[`.github/workflows/ci-cd.yml`](.github/workflows/ci-cd.yml) runs on every push, as six staged jobs:
 
 1. **Pre-Clean** — tears down any previously running stack *and wipes its named volumes*
    ([`ci/scripts/pre-cleanup.sh`](ci/scripts/pre-cleanup.sh)), so every deploy starts NetBox from a completely
@@ -190,7 +190,10 @@ python manage.py test service_specification
 3. **Build** — builds the NetBox + plugins Docker image per `versions.sh`.
 4. **Test** — deploys the stack, runs `manage.py check`, a migration drift check, the Django test suite, and a
    live HTTPS smoke test (session login + a full API POST/GET/PATCH/DELETE round trip).
-5. **Deploy** — tags the repo `v<SERVICE_SPECIFICATION_PLUGIN_VERSION>` (from `versions.sh`), if that tag doesn't
+5. **Test Deployment** — seeds the now-verified instance with demo data (tenant, contacts, sites, devices,
+   clusters, VMs) via the REST API ([`ci/scripts/test-deployment.py`](ci/scripts/test-deployment.py)), so the
+   showcase instance has real objects to look at. A work in progress — see that script's own header comment.
+6. **Deploy** — tags the repo `v<SERVICE_SPECIFICATION_PLUGIN_VERSION>` (from `versions.sh`), if that tag doesn't
    already exist.
 
 The instance left running after a successful **Test** stage doubles as a live showcase — but since every deploy

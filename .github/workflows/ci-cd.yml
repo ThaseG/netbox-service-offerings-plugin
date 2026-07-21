@@ -306,12 +306,34 @@ jobs:
         run: rm -f ci/docker/.env
 
   #
-  # 5. Deploy — the app is already running from Test, so this is purely a
+  # 5. Test Deployment — seeds the now-verified, freshly-migrated instance
+  # with representative demo data (tenant, contacts, sites, devices,
+  # clusters, VMs) via the REST API, so the showcase instance has real
+  # objects to look at and the plugin's own models have something to link
+  # against. Starting point only — see ci/scripts/test-deployment.py's own
+  # header comment for what's still to be layered on top.
+  #
+  test-deployment:
+    needs: test
+    runs-on: [self-hosted, netbox]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Seed demo data
+        run: python3 ci/scripts/test-deployment.py
+        env:
+          NETBOX_DOMAIN: ${{ vars.NETBOX_DOMAIN }}
+          NETBOX_SUPERUSER_API_TOKEN: ${{ secrets.NETBOX_SUPERUSER_API_TOKEN }}
+          NETBOX_SUPERUSER_API_KEY: ${{ secrets.NETBOX_SUPERUSER_API_KEY }}
+
+  #
+  # 6. Deploy — the app is already running from Test, so this is purely a
   # release-tagging step: idempotent (re-running against an already-tagged
   # version is a no-op, not an error).
   #
   deploy:
-    needs: test
+    needs: test-deployment
     runs-on: [self-hosted, netbox]
     permissions:
       contents: write
