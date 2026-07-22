@@ -9,10 +9,10 @@ always runs against an empty instance — no need to worry about existing
 data or idempotency. Run after smoke-test.sh, against the same live HTTPS
 instance and superuser token.
 
-This is a first pass covering core NetBox inventory only (contacts, sites,
-devices, clusters, VMs) — plugin objects (Portfolios, Services, etc.) will
-be layered on top in a later update, per the request that introduced this
-script.
+Covers core NetBox inventory (contacts, sites, devices, clusters, VMs) plus
+the Service Specification plugin's own objects (lookup values, one
+Portfolio/Service, two Service Offerings/Application Services), wired
+together the same way they were originally built by hand through the UI.
 
 Stdlib-only (urllib), matching smoke-test.sh's dependency-free approach —
 no extra `pip install` needed on the runner.
@@ -127,6 +127,10 @@ def create_contact_groups():
 
 def create_contacts(group_ids):
     print('Creating contacts...')
+    # group name -> [contact id, ...], so plugin objects created later can
+    # pick "the" contact for a given role (e.g. contacts_by_group['Service
+    # Owners'][0]) without caring about the numeric ids the API assigned.
+    contacts_by_group = {}
     for index, (first, last, group_name) in enumerate(CONTACTS, start=1):
         email = f'{first.lower()}.{last.lower().replace(chr(39), "")}@coca-cola.example'
         phone = f'+1-555-01{index:02d}'
@@ -141,6 +145,8 @@ def create_contacts(group_ids):
             },
         )
         created('contact', obj)
+        contacts_by_group.setdefault(group_name, []).append(obj['id'])
+    return contacts_by_group
 
 
 #
@@ -311,12 +317,372 @@ def create_clusters(group_id, type_id, site_ids):
 
 def create_virtual_machines(cluster_ids):
     print('Creating virtual machines...')
+    ids = {}
     for site_name, cluster_id in cluster_ids.items():
         site_code = SITE_CODES[site_name].lower()
         for n in (1, 2):
             name = f'{site_code}-app-vm{n:02d}'
             obj = api('POST', 'virtualization/virtual-machines/', {'name': name, 'cluster': cluster_id})
             created('virtual machine', obj)
+            ids[name] = obj['id']
+    return ids
+
+
+def assign_vm_ci_functions(vm_ids, ci_function_id):
+    """Gives every VM created above a 'Service Specification' entry (the
+    tab on its own NetBox detail page) with just CI Function set — the
+    plugin can't add real fields to VirtualMachine directly, so this is a
+    VirtualMachineServiceInfo row in a 1:1 relationship with it. See
+    models.py's ServiceSpecificationInfoBase for why lifecycle and the
+    organization groups are left unset here rather than required.
+    """
+    print('Assigning CI Function to virtual machines...')
+    for name, vm_id in vm_ids.items():
+        obj = api(
+            'POST',
+            'plugins/service-specification/virtual-machine-service-infos/',
+            {'virtual_machine': vm_id, 'ci_function': ci_function_id},
+        )
+        created('virtual machine service info', obj)
+
+
+#
+# Service Specification plugin: Support lookup objects
+#
+
+LIFECYCLES = [
+    (
+        'Draft',
+        'The CI has been created but is still being defined. Information is incomplete and the CI is not yet '
+        'approved for further lifecycle activities.',
+    ),
+    (
+        'Design',
+        'The CI is in the planning or design phase. Architecture, requirements, and specifications are being '
+        'developed.',
+    ),
+    (
+        'Build',
+        'The CI is currently being developed, configured, or implemented and is not yet ready for production use.',
+    ),
+    (
+        'Available',
+        'The CI is ready for deployment or assignment but is not yet actively providing a production service.',
+    ),
+    ('Operational', 'The CI is deployed, fully functional, and actively supporting business or IT services in production.'),
+    (
+        'In Maintenance',
+        'The CI is temporarily undergoing maintenance, upgrades, or repairs. It may have limited or no availability '
+        'during this period.',
+    ),
+    (
+        'End of Support',
+        'Vendor or internal support has ended or has been scheduled to end. The CI may still be operational but '
+        'will no longer receive support, updates, or patches.',
+    ),
+    (
+        'End of Life',
+        'The CI has reached the end of its intended lifecycle and should no longer be used for production. '
+        'Replacement or retirement should be planned or completed.',
+    ),
+    (
+        'Expired',
+        'The CI is no longer valid due to the expiration of its license, certificate, contract, subscription, or '
+        'other time-based entitlement.',
+    ),
+    (
+        'Decommissioned',
+        'The CI has been permanently removed from service and is no longer operational. It is retained in the '
+        'CMDB for historical, audit, or compliance purposes.',
+    ),
+    (
+        'Cancelled',
+        'The CI was planned but the implementation or deployment was cancelled before becoming operational.',
+    ),
+]
+
+# (name, slug, sla_definition)
+SLAS = [
+    ('Change Support', 'change-support', 'Change Support facilitates the implementation of changes to services or systems.'),
+    (
+        'Basic Support',
+        'basic-support',
+        'Basic Support provides foundational assistance for troubleshooting and resolving',
+    ),
+    (
+        'Catch & Dispatch',
+        'catch-dispatch',
+        'This model focuses on the initial handling of incidents or service requests.',
+    ),
+    (
+        'Incident Support',
+        'incident-support',
+        'This SLA model aids with identifying, diagnosing, and resolving incidents.',
+    ),
+    (
+        'Lifecycle package',
+        'lifecycle-package',
+        'This package offers end-to-end support for the entire lifecycle of a service or system.',
+    ),
+    ('Monitoring', 'monitoring', 'Monitoring services track the performance, health, and availability of systems.'),
+    (
+        'On-site service',
+        'on-site-service',
+        'On Site Service provides physical, on-site support for troubleshooting',
+    ),
+]
+
+# (name, slug)
+OPERATION_TIMES = [('24/7', '247'), ('8/5', '85'), ('10/5', '105')]
+AVAILABILITIES = [('99.99%', '99-99'), ('99.50%', '99-50'), ('99.00%', '99-00'), ('98.00%', '98-00'), ('95.00%', '95-00')]
+CRITICALITIES = [
+    ('Not Critical', 'not-critical'),
+    ('Less Critical', 'less-critical'),
+    ('Somewhat Critical', 'somewhat-critical'),
+    ('Most Critical', 'most-critical'),
+]
+ENVIRONMENTS = [
+    ('Production', 'production'),
+    ('Staging', 'staging'),
+    ('Test', 'test'),
+    ('Development', 'development'),
+    ('QA', 'qa'),
+]
+
+# (name, slug, value, unit)
+MTATS = [
+    ('Category A', 'category-a', 12, 'hours'),
+    ('Category B', 'category-b', 24, 'hours'),
+    ('Category C', 'category-c', 32, 'hours'),
+]
+
+CI_FUNCTIONS = [('Managed Exchange Service', 'managed-exchange-service')]
+
+
+def _create_lookup(label, path, items, extra_fields=lambda item: {}, plural=None):
+    """Shared helper for the plugin's simple name/slug(/description) lookup
+    models below — each `items` entry is a tuple starting with (name, slug),
+    with any model-specific fields appended and picked out by extra_fields.
+    """
+    print(f'Creating {plural or f"{label}s"}...')
+    ids = {}
+    for item in items:
+        name, slug = item[0], item[1]
+        payload = {'name': name, 'slug': slug, 'description': name, **extra_fields(item)}
+        obj = api('POST', path, payload)
+        created(label, obj)
+        ids[name] = obj['id']
+    return ids
+
+
+def create_lifecycles():
+    print('Creating lifecycles...')
+    ids = {}
+    for name, description in LIFECYCLES:
+        slug = name.lower().replace(' ', '-')
+        obj = api('POST', 'plugins/service-specification/lifecycles/', {'name': name, 'slug': slug, 'description': description})
+        created('lifecycle', obj)
+        ids[name] = obj['id']
+    return ids
+
+
+def create_slas():
+    print('Creating SLAs...')
+    ids = {}
+    for name, slug, sla_definition in SLAS:
+        obj = api('POST', 'plugins/service-specification/slas/', {'name': name, 'slug': slug, 'sla_definition': sla_definition})
+        created('SLA', obj)
+        ids[name] = obj['id']
+    return ids
+
+
+def create_operation_times():
+    return _create_lookup('operation time', 'plugins/service-specification/operation-times/', OPERATION_TIMES)
+
+
+def create_availabilities():
+    return _create_lookup(
+        'availability', 'plugins/service-specification/availabilities/', AVAILABILITIES, plural='availabilities'
+    )
+
+
+def create_criticalities():
+    return _create_lookup(
+        'criticality', 'plugins/service-specification/criticalities/', CRITICALITIES, plural='criticalities'
+    )
+
+
+def create_environments():
+    return _create_lookup('environment', 'plugins/service-specification/environments/', ENVIRONMENTS)
+
+
+def create_mtats():
+    return _create_lookup(
+        'MTAT',
+        'plugins/service-specification/mtats/',
+        MTATS,
+        extra_fields=lambda item: {'value': item[2], 'unit': item[3]},
+    )
+
+
+def create_ci_functions():
+    return _create_lookup('CI Function', 'plugins/service-specification/ci-functions/', CI_FUNCTIONS)
+
+
+#
+# Service Specification plugin: Portfolio / Service / Service Offerings /
+# Application Services
+#
+
+
+def create_portfolio(lifecycle_ids, group_ids, contacts_by_group):
+    print('Creating portfolio...')
+    obj = api(
+        'POST',
+        'plugins/service-specification/portfolios/',
+        {
+            'name': 'Primary Service Portfolio',
+            'description': 'Primary Service Portfolio',
+            'lifecycle': lifecycle_ids['Operational'],
+            'portfolio_owner_contacts': [contacts_by_group['Portfolio Owners'][0]],
+            'portfolio_owner_contact_groups': [group_ids['Portfolio Owners']],
+            'portfolio_manager_contacts': [contacts_by_group['Portfolio Managers'][0]],
+            'portfolio_manager_contact_groups': [group_ids['Portfolio Managers']],
+        },
+    )
+    created('portfolio', obj)
+    return obj['id']
+
+
+def create_service(lifecycle_ids, ci_function_ids, group_ids, contacts_by_group, portfolio_id):
+    print('Creating service...')
+    obj = api(
+        'POST',
+        'plugins/service-specification/services/',
+        {
+            'name': 'Workspace',
+            'description': 'Workspace services',
+            'lifecycle': lifecycle_ids['Operational'],
+            'ci_function': ci_function_ids['Managed Exchange Service'],
+            'service_owner_contacts': [contacts_by_group['Service Owners'][0]],
+            'service_owner_contact_groups': [group_ids['Service Owners']],
+            'service_manager_contacts': [contacts_by_group['Service Managers'][0]],
+            'service_manager_contact_groups': [group_ids['Service Managers']],
+            'service_portfolio': [portfolio_id],
+            'business_unit': [group_ids['App1 Business Unit']],
+            'support_group': [group_ids['App Support Group']],
+            'change_group': [group_ids['App Change Group']],
+        },
+    )
+    created('service', obj)
+    return obj['id']
+
+
+# (name, contract_number)
+SERVICE_OFFERINGS = [
+    ('Managed Exchange Service High Availability', '12345'),
+    ('Managed Exchange Service Standalone', '54321'),
+]
+
+
+def create_service_offerings(lifecycle_ids, group_ids, contacts_by_group, service_id, tenant_id):
+    print('Creating service offerings...')
+    ids = {}
+    for name, contract_number in SERVICE_OFFERINGS:
+        obj = api(
+            'POST',
+            'plugins/service-specification/service-offerings/',
+            {
+                'name': name,
+                'description': name,
+                'contract_number': contract_number,
+                'lifecycle': lifecycle_ids['Operational'],
+                'service': [service_id],
+                'service_offering_owner_contacts': [contacts_by_group['Service Offering Owners'][0]],
+                'service_offering_owner_contact_groups': [group_ids['Service Offering Owners']],
+                'service_offering_manager_contacts': [contacts_by_group['Service Offering Managers'][0]],
+                'service_offering_manager_contact_groups': [group_ids['Service Offering Managers']],
+                'business_unit': [group_ids['App1 Business Unit']],
+                'support_group': [group_ids['App Support Group']],
+                'change_group': [group_ids['App Change Group']],
+                'tenant': [tenant_id],
+            },
+        )
+        created('service offering', obj)
+        ids[name] = obj['id']
+    return ids
+
+
+# (name, description, offering name, sla name, availability name, accepted_downtime, ttr, rpo, rto, bcm)
+APP_SERVICES = [
+    (
+        'Application Service - Managed Exchange Server High Availability - Prod',
+        'Application Service - Managed Exchange Server High Availability',
+        'Managed Exchange Service High Availability',
+        'Lifecycle package',
+        '99.99%',
+        2,
+        2,
+        4,
+        4,
+        2,
+    ),
+    (
+        'Application Service - Managed Exchange Server Standalone - Prod',
+        '',
+        'Managed Exchange Service Standalone',
+        'Catch & Dispatch',
+        '99.50%',
+        2,
+        2,
+        2,
+        4,
+        2,
+    ),
+]
+
+
+def create_app_services(
+    environment_ids,
+    lifecycle_ids,
+    group_ids,
+    offering_ids,
+    sla_ids,
+    operation_time_ids,
+    availability_ids,
+    mtat_ids,
+    criticality_ids,
+    tenant_id,
+):
+    print('Creating application services...')
+    for name, description, offering_name, sla_name, availability_name, downtime, ttr, rpo, rto, bcm in APP_SERVICES:
+        obj = api(
+            'POST',
+            'plugins/service-specification/app-services/',
+            {
+                'name': name,
+                'description': description,
+                'environment': environment_ids['Production'],
+                'lifecycle': lifecycle_ids['Operational'],
+                'service_offering': [offering_ids[offering_name]],
+                'business_unit': [group_ids['App1 Business Unit']],
+                'support_group': [group_ids['App Support Group']],
+                'change_group': [group_ids['App Change Group']],
+                'sla': [sla_ids[sla_name]],
+                'owned_by': [group_ids['App1 Owner Group']],
+                'operation_time': [operation_time_ids['24/7']],
+                'availability': [availability_ids[availability_name]],
+                'mtat': [mtat_ids['Category A']],
+                'service_criticality': [criticality_ids['Most Critical']],
+                'accepted_downtime': downtime,
+                'ttr': ttr,
+                'rpo': rpo,
+                'rto': rto,
+                'bcm': bcm,
+                'tenant': [tenant_id],
+            },
+        )
+        created('application service', obj)
 
 
 def main():
@@ -327,7 +693,7 @@ def main():
 
     tenant_id = create_tenant()
     group_ids = create_contact_groups()
-    create_contacts(group_ids)
+    contacts_by_group = create_contacts(group_ids)
     site_ids = create_sites(tenant_id)
     manufacturer_ids = create_manufacturers()
     role_ids = create_device_roles()
@@ -336,7 +702,34 @@ def main():
     cluster_group_id = create_cluster_group()
     cluster_type_id = create_cluster_type()
     cluster_ids = create_clusters(cluster_group_id, cluster_type_id, site_ids)
-    create_virtual_machines(cluster_ids)
+    vm_ids = create_virtual_machines(cluster_ids)
+
+    lifecycle_ids = create_lifecycles()
+    sla_ids = create_slas()
+    operation_time_ids = create_operation_times()
+    availability_ids = create_availabilities()
+    criticality_ids = create_criticalities()
+    environment_ids = create_environments()
+    mtat_ids = create_mtats()
+    ci_function_ids = create_ci_functions()
+
+    assign_vm_ci_functions(vm_ids, ci_function_ids['Managed Exchange Service'])
+
+    portfolio_id = create_portfolio(lifecycle_ids, group_ids, contacts_by_group)
+    service_id = create_service(lifecycle_ids, ci_function_ids, group_ids, contacts_by_group, portfolio_id)
+    offering_ids = create_service_offerings(lifecycle_ids, group_ids, contacts_by_group, service_id, tenant_id)
+    create_app_services(
+        environment_ids,
+        lifecycle_ids,
+        group_ids,
+        offering_ids,
+        sla_ids,
+        operation_time_ids,
+        availability_ids,
+        mtat_ids,
+        criticality_ids,
+        tenant_id,
+    )
 
     print('Test deployment data created successfully.')
 

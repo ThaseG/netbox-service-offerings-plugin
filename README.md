@@ -127,15 +127,19 @@ views.
 ### REST API
 
 All models are exposed under `/api/plugins/service-specification/`, following NetBox's usual REST conventions
-(list/detail views, filtering, `?brief=true`, bulk operations). Example — create a `Lifecycle`, then read it back:
+(list/detail views, filtering, `?brief=true`, bulk operations). API endpoint names are deliberately plural and
+match the plugin's own UI paths exactly (e.g. UI `/plugins/service-specification/lifecycles/` <-> API
+`/api/plugins/service-specification/lifecycles/`) — from any page in the plugin's UI, adding `/api` right after
+the hostname takes you straight to the same list in the browsable API, nothing else in the path changes. Example —
+create a `Lifecycle`, then read it back:
 
 ```bash
-curl -X POST https://<netbox-host>/api/plugins/service-specification/lifecycle/ \
+curl -X POST https://<netbox-host>/api/plugins/service-specification/lifecycles/ \
   -H "Authorization: Bearer nbt_<key>.<secret>" \
   -H "Content-Type: application/json" \
   -d '{"name": "Pilot", "slug": "pilot"}'
 
-curl https://<netbox-host>/api/plugins/service-specification/lifecycle/ \
+curl https://<netbox-host>/api/plugins/service-specification/lifecycles/ \
   -H "Authorization: Bearer nbt_<key>.<secret>"
 ```
 

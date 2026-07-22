@@ -1,6 +1,8 @@
 import django_filters
+from dcim.models import Device
 from django.db.models import Q
 from netbox.filtersets import NetBoxModelFilterSet
+from virtualization.models import Cluster, ClusterGroup, VirtualMachine
 
 from .models import (
     MTAT,
@@ -8,13 +10,17 @@ from .models import (
     AppService,
     Availability,
     CIFunction,
+    ClusterGroupServiceInfo,
+    ClusterServiceInfo,
     Criticality,
+    DeviceServiceInfo,
     Environment,
     Lifecycle,
     OperationTime,
     Portfolio,
     Service,
     ServiceOffering,
+    VirtualMachineServiceInfo,
 )
 
 __all__ = (
@@ -30,6 +36,10 @@ __all__ = (
     'EnvironmentFilterSet',
     'MTATFilterSet',
     'CIFunctionFilterSet',
+    'DeviceServiceInfoFilterSet',
+    'VirtualMachineServiceInfoFilterSet',
+    'ClusterServiceInfoFilterSet',
+    'ClusterGroupServiceInfoFilterSet',
 )
 
 
@@ -192,3 +202,91 @@ class AppServiceFilterSet(NetBoxModelFilterSet):
 
     def search(self, queryset, name, value):
         return queryset.filter(Q(name__icontains=value) | Q(description__icontains=value))
+
+
+class DeviceServiceInfoFilterSet(NetBoxModelFilterSet):
+    device_id = django_filters.ModelMultipleChoiceFilter(
+        field_name='device',
+        queryset=Device.objects.all(),
+        label='Device (ID)',
+    )
+    ci_function_id = django_filters.ModelMultipleChoiceFilter(
+        field_name='ci_function',
+        queryset=CIFunction.objects.all(),
+        label='CI Function (ID)',
+    )
+    lifecycle_id = django_filters.ModelMultipleChoiceFilter(
+        field_name='lifecycle',
+        queryset=Lifecycle.objects.all(),
+        label='Lifecycle (ID)',
+    )
+
+    class Meta:
+        model = DeviceServiceInfo
+        fields = ('id', 'device_id', 'ci_function_id', 'lifecycle_id')
+
+
+class VirtualMachineServiceInfoFilterSet(NetBoxModelFilterSet):
+    virtual_machine_id = django_filters.ModelMultipleChoiceFilter(
+        field_name='virtual_machine',
+        queryset=VirtualMachine.objects.all(),
+        label='Virtual machine (ID)',
+    )
+    ci_function_id = django_filters.ModelMultipleChoiceFilter(
+        field_name='ci_function',
+        queryset=CIFunction.objects.all(),
+        label='CI Function (ID)',
+    )
+    lifecycle_id = django_filters.ModelMultipleChoiceFilter(
+        field_name='lifecycle',
+        queryset=Lifecycle.objects.all(),
+        label='Lifecycle (ID)',
+    )
+
+    class Meta:
+        model = VirtualMachineServiceInfo
+        fields = ('id', 'virtual_machine_id', 'ci_function_id', 'lifecycle_id')
+
+
+class ClusterServiceInfoFilterSet(NetBoxModelFilterSet):
+    cluster_id = django_filters.ModelMultipleChoiceFilter(
+        field_name='cluster',
+        queryset=Cluster.objects.all(),
+        label='Cluster (ID)',
+    )
+    ci_function_id = django_filters.ModelMultipleChoiceFilter(
+        field_name='ci_function',
+        queryset=CIFunction.objects.all(),
+        label='CI Function (ID)',
+    )
+    lifecycle_id = django_filters.ModelMultipleChoiceFilter(
+        field_name='lifecycle',
+        queryset=Lifecycle.objects.all(),
+        label='Lifecycle (ID)',
+    )
+
+    class Meta:
+        model = ClusterServiceInfo
+        fields = ('id', 'cluster_id', 'ci_function_id', 'lifecycle_id')
+
+
+class ClusterGroupServiceInfoFilterSet(NetBoxModelFilterSet):
+    cluster_group_id = django_filters.ModelMultipleChoiceFilter(
+        field_name='cluster_group',
+        queryset=ClusterGroup.objects.all(),
+        label='Cluster group (ID)',
+    )
+    ci_function_id = django_filters.ModelMultipleChoiceFilter(
+        field_name='ci_function',
+        queryset=CIFunction.objects.all(),
+        label='CI Function (ID)',
+    )
+    lifecycle_id = django_filters.ModelMultipleChoiceFilter(
+        field_name='lifecycle',
+        queryset=Lifecycle.objects.all(),
+        label='Lifecycle (ID)',
+    )
+
+    class Meta:
+        model = ClusterGroupServiceInfo
+        fields = ('id', 'cluster_group_id', 'ci_function_id', 'lifecycle_id')

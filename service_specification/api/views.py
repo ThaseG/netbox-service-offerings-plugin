@@ -75,3 +75,27 @@ class AppServiceViewSet(NetBoxModelViewSet):
     queryset = models.AppService.objects.all()
     serializer_class = serializers.AppServiceSerializer
     filterset_class = filtersets.AppServiceFilterSet
+
+
+class DeviceServiceInfoViewSet(NetBoxModelViewSet):
+    queryset = models.DeviceServiceInfo.objects.all()
+    serializer_class = serializers.DeviceServiceInfoSerializer
+    filterset_class = filtersets.DeviceServiceInfoFilterSet
+
+
+class VirtualMachineServiceInfoViewSet(NetBoxModelViewSet):
+    queryset = models.VirtualMachineServiceInfo.objects.all()
+    serializer_class = serializers.VirtualMachineServiceInfoSerializer
+    filterset_class = filtersets.VirtualMachineServiceInfoFilterSet
+
+
+class ClusterServiceInfoViewSet(NetBoxModelViewSet):
+    queryset = models.ClusterServiceInfo.objects.all()
+    serializer_class = serializers.ClusterServiceInfoSerializer
+    filterset_class = filtersets.ClusterServiceInfoFilterSet
+
+
+class ClusterGroupServiceInfoViewSet(NetBoxModelViewSet):
+    queryset = models.ClusterGroupServiceInfo.objects.all()
+    serializer_class = serializers.ClusterGroupServiceInfoSerializer
+    filterset_class = filtersets.ClusterGroupServiceInfoFilterSet

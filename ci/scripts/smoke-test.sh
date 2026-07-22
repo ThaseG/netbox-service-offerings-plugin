@@ -12,7 +12,7 @@
 #           page is reachable only after a real session login (proves
 #           LOGIN_REQUIRED enforcement AND that the UI routes resolve).
 #   - api:  POST -> GET -> PATCH -> DELETE round trip against
-#           /api/plugins/service-specification/lifecycle/, ending in DELETE so the showcase
+#           /api/plugins/service-specification/lifecycles/, ending in DELETE so the showcase
 #           instance isn't left with leftover test rows after a pass.
 set -euo pipefail
 
@@ -80,15 +80,15 @@ status=$(curl -sS -b "$COOKIE_JAR" -o /dev/null -w '%{http_code}' "$BASE_URL/plu
 expect_status "GET /plugins/service-specification/portfolios/ (authenticated session)" "$status" "200"
 
 #
-# API: POST -> GET -> PATCH -> DELETE against /api/plugins/service-specification/lifecycle/
+# API: POST -> GET -> PATCH -> DELETE against /api/plugins/service-specification/lifecycles/
 #
 
-status=$(curl -sS -o "$RESPONSE_FILE" -w '%{http_code}' -X POST "$BASE_URL/api/plugins/service-specification/lifecycle/" \
+status=$(curl -sS -o "$RESPONSE_FILE" -w '%{http_code}' -X POST "$BASE_URL/api/plugins/service-specification/lifecycles/" \
   -H "$API_AUTH_HEADER" -H "Content-Type: application/json" \
   -d '{"name": "Smoke Test Lifecycle", "slug": "smoke-test-lifecycle"}')
-expect_status "POST /api/plugins/service-specification/lifecycle/" "$status" "201" "$RESPONSE_FILE"
+expect_status "POST /api/plugins/service-specification/lifecycles/" "$status" "201" "$RESPONSE_FILE"
 lifecycle_id=$(python3 -c "import json; print(json.load(open('$RESPONSE_FILE'))['id'])")
-detail_url="$BASE_URL/api/plugins/service-specification/lifecycle/$lifecycle_id/"
+detail_url="$BASE_URL/api/plugins/service-specification/lifecycles/$lifecycle_id/"
 
 status=$(curl -sS -o "$RESPONSE_FILE" -w '%{http_code}' "$detail_url" -H "$API_AUTH_HEADER")
 expect_status "GET $detail_url" "$status" "200" "$RESPONSE_FILE"

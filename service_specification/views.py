@@ -287,7 +287,71 @@ CIFunctionListView, CIFunctionView, CIFunctionEditView, CIFunctionDeleteView = _
     forms.CIFunctionFilterForm,
     tables.CIFunctionTable,
     forms.CIFunctionForm,
-    layout=_lookup_layout(),
+    layout=SimpleLayout(
+        left_panels=[panels.LookupPanel()],
+        bottom_panels=[
+            # Read-only rollups of everything assigned this CI Function.
+            # Service links to it directly (a plain FK); Devices/VMs/
+            # Clusters/ClusterGroups link via their own
+            # ServiceSpecificationInfo side table (see models.py — plugins
+            # can't add real fields to those core models), so those four
+            # traverse the reverse OneToOne accessor instead.
+            ObjectsTablePanel(
+                model='service_specification.service',
+                title='Services',
+                filters={
+                    'id': lambda ctx: list(
+                        Service.objects.filter(ci_function=ctx['object']).values_list('pk', flat=True)
+                    )
+                },
+            ),
+            ObjectsTablePanel(
+                model='dcim.device',
+                title='Devices',
+                filters={
+                    'id': lambda ctx: list(
+                        Device.objects.filter(service_specification_info__ci_function=ctx['object']).values_list(
+                            'pk', flat=True
+                        )
+                    )
+                },
+            ),
+            ObjectsTablePanel(
+                model='virtualization.virtualmachine',
+                title='Virtual Machines',
+                filters={
+                    'id': lambda ctx: list(
+                        VirtualMachine.objects.filter(
+                            service_specification_info__ci_function=ctx['object']
+                        ).values_list('pk', flat=True)
+                    )
+                },
+            ),
+            ObjectsTablePanel(
+                model='virtualization.cluster',
+                title='Clusters',
+                filters={
+                    'id': lambda ctx: list(
+                        Cluster.objects.filter(service_specification_info__ci_function=ctx['object']).values_list(
+                            'pk', flat=True
+                        )
+                    )
+                },
+            ),
+            ObjectsTablePanel(
+                model='virtualization.clustergroup',
+                title='Cluster Groups',
+                filters={
+                    'id': lambda ctx: list(
+                        ClusterGroup.objects.filter(service_specification_info__ci_function=ctx['object']).values_list(
+                            'pk', flat=True
+                        )
+                    )
+                },
+            ),
+            panels.CommentsPanel(),
+        ],
+    ),
 )
 
 DeviceServiceSpecificationView, DeviceServiceSpecificationEditView = _make_service_info_views(

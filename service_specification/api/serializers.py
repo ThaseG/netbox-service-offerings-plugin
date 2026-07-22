@@ -6,13 +6,17 @@ from service_specification.models import (
     AppService,
     Availability,
     CIFunction,
+    ClusterGroupServiceInfo,
+    ClusterServiceInfo,
     Criticality,
+    DeviceServiceInfo,
     Environment,
     Lifecycle,
     OperationTime,
     Portfolio,
     Service,
     ServiceOffering,
+    VirtualMachineServiceInfo,
 )
 
 __all__ = (
@@ -28,6 +32,10 @@ __all__ = (
     'EnvironmentSerializer',
     'MTATSerializer',
     'CIFunctionSerializer',
+    'DeviceServiceInfoSerializer',
+    'VirtualMachineServiceInfoSerializer',
+    'ClusterServiceInfoSerializer',
+    'ClusterGroupServiceInfoSerializer',
 )
 
 
@@ -113,3 +121,31 @@ class AppServiceSerializer(NetBoxModelSerializer):
         model = AppService
         fields = '__all__'
         brief_fields = ('id', 'url', 'display', 'name')
+
+
+class DeviceServiceInfoSerializer(NetBoxModelSerializer):
+    class Meta:
+        model = DeviceServiceInfo
+        fields = '__all__'
+        brief_fields = ('id', 'url', 'display', 'device')
+
+
+class VirtualMachineServiceInfoSerializer(NetBoxModelSerializer):
+    class Meta:
+        model = VirtualMachineServiceInfo
+        fields = '__all__'
+        brief_fields = ('id', 'url', 'display', 'virtual_machine')
+
+
+class ClusterServiceInfoSerializer(NetBoxModelSerializer):
+    class Meta:
+        model = ClusterServiceInfo
+        fields = '__all__'
+        brief_fields = ('id', 'url', 'display', 'cluster')
+
+
+class ClusterGroupServiceInfoSerializer(NetBoxModelSerializer):
+    class Meta:
+        model = ClusterGroupServiceInfo
+        fields = '__all__'
+        brief_fields = ('id', 'url', 'display', 'cluster_group')
