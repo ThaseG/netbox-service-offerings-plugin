@@ -500,14 +500,19 @@ class AppService(PrimaryModel):
 
 
 class ServiceSpecificationInfoBase(NetBoxModel):
-    # blank=True/null=True (despite being required=True on the form — see
-    # forms.py's _make_service_info_form) so views.py can lazily persist an
-    # empty placeholder row the first time a Device/VM/Cluster/ClusterGroup's
-    # "Service Specification" tab is viewed, before the user has entered
-    # anything: a NOT NULL FK would make that initial save fail outright,
-    # and rendering an *unsaved* instance instead isn't an option either —
-    # Django refuses to query a ManyToManyField (business_unit etc. below)
-    # on an object with no primary key yet.
+    # Every field here is blank=True (despite being required=True on the
+    # form — see forms.py's _make_service_info_form) so a row can be created
+    # or edited with only some fields filled in — e.g. views.py lazily
+    # persisting an empty placeholder row the first time a Device/VM/
+    # Cluster/ClusterGroup's "Service Specification" tab is viewed, or an
+    # automation assigning just a CI Function up front and leaving the rest
+    # for later. Two different mechanisms are involved: ci_function/
+    # lifecycle also need null=True (they're FKs — an unfilled FK is a
+    # NOT NULL DB column otherwise, so even that initial empty save would
+    # fail); business_unit/support_group/change_group are ManyToManyFields,
+    # which are never DB-required regardless of blank, but DRF's serializer
+    # (fields='__all__') still marks a field required=True based on
+    # model-field blank unless it's explicitly True.
     ci_function = models.ForeignKey(
         to=CIFunction,
         on_delete=models.PROTECT,
@@ -527,16 +532,19 @@ class ServiceSpecificationInfoBase(NetBoxModel):
     business_unit = models.ManyToManyField(
         to=ContactGroup,
         related_name='+',
+        blank=True,
         verbose_name='Business Unit',
     )
     support_group = models.ManyToManyField(
         to=ContactGroup,
         related_name='+',
+        blank=True,
         verbose_name='Support Group',
     )
     change_group = models.ManyToManyField(
         to=ContactGroup,
         related_name='+',
+        blank=True,
         verbose_name='Change Group',
     )
 
