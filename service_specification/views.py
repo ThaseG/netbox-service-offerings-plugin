@@ -80,6 +80,23 @@ def _lookup_layout(panel_cls=panels.LookupPanel):
     return SimpleLayout(left_panels=[panel_cls()], bottom_panels=[panels.CommentsPanel()])
 
 
+def _rollup_ids(queryset):
+    """For use in an ObjectsTablePanel's `filters={'id': lambda ctx: ...}`.
+
+    Passing an empty list as the 'id' filter value doesn't filter the
+    rollup table to zero rows — it silently filters to *everything*.
+    dict_to_querydict() (which builds the URL ObjectsTablePanel's table
+    fetches) drops a key entirely when given an empty list, so the
+    resulting URL carries no 'id' param at all, and the underlying list
+    view falls back to its unfiltered default. Falling back to a sentinel
+    PK that can never exist (0 — NetBox's auto-incrementing PKs start at 1)
+    keeps a real, always-present 'id' param, so "nothing matches" reliably
+    renders as an empty table instead of every object of that type.
+    """
+    ids = list(queryset.values_list('pk', flat=True))
+    return ids or [0]
+
+
 def _make_service_info_views(parent_model, info_model, form_cls, fk_name):
     """Registers a read-only 'Service Specification' tab plus a matching
     edit view directly on `parent_model`'s own detail page (Device,
@@ -184,7 +201,7 @@ ServiceOfferingListView, ServiceOfferingView, ServiceOfferingEditView, ServiceOf
             ObjectsTablePanel(
                 model='service_specification.service',
                 title='Parent Services',
-                filters={'id': lambda ctx: list(ctx['object'].service.values_list('pk', flat=True))},
+                filters={'id': lambda ctx: _rollup_ids(ctx['object'].service)},
             ),
             panels.CommentsPanel(),
         ],
@@ -208,16 +225,14 @@ AppServiceListView, AppServiceView, AppServiceEditView, AppServiceDeleteView = _
             ObjectsTablePanel(
                 model='service_specification.serviceoffering',
                 title='Service Offerings',
-                filters={'id': lambda ctx: list(ctx['object'].service_offering.values_list('pk', flat=True))},
+                filters={'id': lambda ctx: _rollup_ids(ctx['object'].service_offering)},
             ),
             ObjectsTablePanel(
                 model='service_specification.service',
                 title='Parent Services',
                 filters={
-                    'id': lambda ctx: list(
-                        Service.objects.filter(service_offerings__in=ctx['object'].service_offering.all())
-                        .values_list('pk', flat=True)
-                        .distinct()
+                    'id': lambda ctx: _rollup_ids(
+                        Service.objects.filter(service_offerings__in=ctx['object'].service_offering.all()).distinct()
                     )
                 },
             ),
@@ -299,20 +314,14 @@ CIFunctionListView, CIFunctionView, CIFunctionEditView, CIFunctionDeleteView = _
             ObjectsTablePanel(
                 model='service_specification.service',
                 title='Services',
-                filters={
-                    'id': lambda ctx: list(
-                        Service.objects.filter(ci_function=ctx['object']).values_list('pk', flat=True)
-                    )
-                },
+                filters={'id': lambda ctx: _rollup_ids(Service.objects.filter(ci_function=ctx['object']))},
             ),
             ObjectsTablePanel(
                 model='dcim.device',
                 title='Devices',
                 filters={
-                    'id': lambda ctx: list(
-                        Device.objects.filter(service_specification_info__ci_function=ctx['object']).values_list(
-                            'pk', flat=True
-                        )
+                    'id': lambda ctx: _rollup_ids(
+                        Device.objects.filter(service_specification_info__ci_function=ctx['object'])
                     )
                 },
             ),
@@ -320,10 +329,8 @@ CIFunctionListView, CIFunctionView, CIFunctionEditView, CIFunctionDeleteView = _
                 model='virtualization.virtualmachine',
                 title='Virtual Machines',
                 filters={
-                    'id': lambda ctx: list(
-                        VirtualMachine.objects.filter(
-                            service_specification_info__ci_function=ctx['object']
-                        ).values_list('pk', flat=True)
+                    'id': lambda ctx: _rollup_ids(
+                        VirtualMachine.objects.filter(service_specification_info__ci_function=ctx['object'])
                     )
                 },
             ),
@@ -331,10 +338,8 @@ CIFunctionListView, CIFunctionView, CIFunctionEditView, CIFunctionDeleteView = _
                 model='virtualization.cluster',
                 title='Clusters',
                 filters={
-                    'id': lambda ctx: list(
-                        Cluster.objects.filter(service_specification_info__ci_function=ctx['object']).values_list(
-                            'pk', flat=True
-                        )
+                    'id': lambda ctx: _rollup_ids(
+                        Cluster.objects.filter(service_specification_info__ci_function=ctx['object'])
                     )
                 },
             ),
@@ -342,10 +347,8 @@ CIFunctionListView, CIFunctionView, CIFunctionEditView, CIFunctionDeleteView = _
                 model='virtualization.clustergroup',
                 title='Cluster Groups',
                 filters={
-                    'id': lambda ctx: list(
-                        ClusterGroup.objects.filter(service_specification_info__ci_function=ctx['object']).values_list(
-                            'pk', flat=True
-                        )
+                    'id': lambda ctx: _rollup_ids(
+                        ClusterGroup.objects.filter(service_specification_info__ci_function=ctx['object'])
                     )
                 },
             ),
