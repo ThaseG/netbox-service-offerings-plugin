@@ -186,12 +186,18 @@ class PortfolioForm(PrimaryModelForm):
 class ServiceForm(PrimaryModelForm):
     lifecycle = DynamicModelChoiceField(queryset=Lifecycle.objects.all(), required=True)
     service_portfolio = DynamicModelMultipleChoiceField(queryset=Portfolio.objects.all(), required=True)
-    service_owner_contacts = DynamicModelMultipleChoiceField(
-        queryset=Contact.objects.all(),
+    service_owner_contact_groups = DynamicModelMultipleChoiceField(
+        queryset=ContactGroup.objects.all(),
         required=False,
         help_text='Required: select at least one Contact or Contact Group.',
     )
-    service_owner_contact_groups = DynamicModelMultipleChoiceField(
+    service_owner_contacts = DynamicModelMultipleChoiceField(
+        queryset=Contact.objects.all(),
+        required=False,
+        query_params={'group_id': '$service_owner_contact_groups'},
+        help_text='Required: select at least one Contact or Contact Group.',
+    )
+    service_manager_contact_groups = DynamicModelMultipleChoiceField(
         queryset=ContactGroup.objects.all(),
         required=False,
         help_text='Required: select at least one Contact or Contact Group.',
@@ -199,11 +205,7 @@ class ServiceForm(PrimaryModelForm):
     service_manager_contacts = DynamicModelMultipleChoiceField(
         queryset=Contact.objects.all(),
         required=False,
-        help_text='Required: select at least one Contact or Contact Group.',
-    )
-    service_manager_contact_groups = DynamicModelMultipleChoiceField(
-        queryset=ContactGroup.objects.all(),
-        required=False,
+        query_params={'group_id': '$service_manager_contact_groups'},
         help_text='Required: select at least one Contact or Contact Group.',
     )
     business_unit = DynamicModelMultipleChoiceField(queryset=ContactGroup.objects.all(), required=True)
@@ -213,8 +215,8 @@ class ServiceForm(PrimaryModelForm):
 
     fieldsets = (
         FieldSet('name', 'lifecycle', 'service_portfolio', 'description', 'tags', name='Service'),
-        FieldSet('service_owner_contacts', 'service_owner_contact_groups', name='Owner'),
-        FieldSet('service_manager_contacts', 'service_manager_contact_groups', name='Manager'),
+        FieldSet('service_owner_contact_groups', 'service_owner_contacts', name='Owner'),
+        FieldSet('service_manager_contact_groups', 'service_manager_contacts', name='Manager'),
         FieldSet('business_unit', 'support_group', 'change_group', name='Organization'),
         FieldSet('ci_function', name='CI Function'),
     )
@@ -225,10 +227,10 @@ class ServiceForm(PrimaryModelForm):
             'name',
             'lifecycle',
             'service_portfolio',
-            'service_owner_contacts',
             'service_owner_contact_groups',
-            'service_manager_contacts',
+            'service_owner_contacts',
             'service_manager_contact_groups',
+            'service_manager_contacts',
             'business_unit',
             'support_group',
             'change_group',
@@ -253,12 +255,18 @@ class ServiceForm(PrimaryModelForm):
 class ServiceOfferingForm(PrimaryModelForm):
     lifecycle = DynamicModelChoiceField(queryset=Lifecycle.objects.all(), required=True)
     service = DynamicModelMultipleChoiceField(queryset=Service.objects.all(), required=True)
-    service_offering_owner_contacts = DynamicModelMultipleChoiceField(
-        queryset=Contact.objects.all(),
+    service_offering_owner_contact_groups = DynamicModelMultipleChoiceField(
+        queryset=ContactGroup.objects.all(),
         required=False,
         help_text='Required: select at least one Contact or Contact Group.',
     )
-    service_offering_owner_contact_groups = DynamicModelMultipleChoiceField(
+    service_offering_owner_contacts = DynamicModelMultipleChoiceField(
+        queryset=Contact.objects.all(),
+        required=False,
+        query_params={'group_id': '$service_offering_owner_contact_groups'},
+        help_text='Required: select at least one Contact or Contact Group.',
+    )
+    service_offering_manager_contact_groups = DynamicModelMultipleChoiceField(
         queryset=ContactGroup.objects.all(),
         required=False,
         help_text='Required: select at least one Contact or Contact Group.',
@@ -266,11 +274,7 @@ class ServiceOfferingForm(PrimaryModelForm):
     service_offering_manager_contacts = DynamicModelMultipleChoiceField(
         queryset=Contact.objects.all(),
         required=False,
-        help_text='Required: select at least one Contact or Contact Group.',
-    )
-    service_offering_manager_contact_groups = DynamicModelMultipleChoiceField(
-        queryset=ContactGroup.objects.all(),
-        required=False,
+        query_params={'group_id': '$service_offering_manager_contact_groups'},
         help_text='Required: select at least one Contact or Contact Group.',
     )
     business_unit = DynamicModelMultipleChoiceField(queryset=ContactGroup.objects.all(), required=True)
@@ -290,13 +294,13 @@ class ServiceOfferingForm(PrimaryModelForm):
             name='Service Offering',
         ),
         FieldSet(
-            'service_offering_owner_contacts',
             'service_offering_owner_contact_groups',
+            'service_offering_owner_contacts',
             name='Owner',
         ),
         FieldSet(
-            'service_offering_manager_contacts',
             'service_offering_manager_contact_groups',
+            'service_offering_manager_contacts',
             name='Manager',
         ),
         FieldSet('business_unit', 'support_group', 'change_group', name='Organization'),
@@ -310,10 +314,10 @@ class ServiceOfferingForm(PrimaryModelForm):
             'contract_number',
             'lifecycle',
             'service',
-            'service_offering_owner_contacts',
             'service_offering_owner_contact_groups',
-            'service_offering_manager_contacts',
+            'service_offering_owner_contacts',
             'service_offering_manager_contact_groups',
+            'service_offering_manager_contacts',
             'business_unit',
             'support_group',
             'change_group',
