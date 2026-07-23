@@ -211,7 +211,7 @@ class ServiceForm(PrimaryModelForm):
     business_unit = DynamicModelMultipleChoiceField(queryset=ContactGroup.objects.all(), required=True)
     support_group = DynamicModelMultipleChoiceField(queryset=ContactGroup.objects.all(), required=True)
     change_group = DynamicModelMultipleChoiceField(queryset=ContactGroup.objects.all(), required=True)
-    ci_function = DynamicModelChoiceField(queryset=CIFunction.objects.all(), required=False)
+    ci_function = DynamicModelChoiceField(queryset=CIFunction.objects.all(), required=False, label='CI Function')
 
     fieldsets = (
         FieldSet('name', 'lifecycle', 'service_portfolio', 'description', 'tags', name='Service'),
@@ -353,7 +353,7 @@ class AppServiceForm(PrimaryModelForm):
     business_unit = DynamicModelMultipleChoiceField(queryset=ContactGroup.objects.all(), required=True)
     support_group = DynamicModelMultipleChoiceField(queryset=ContactGroup.objects.all(), required=True)
     change_group = DynamicModelMultipleChoiceField(queryset=ContactGroup.objects.all(), required=True)
-    sla = DynamicModelMultipleChoiceField(queryset=SLA.objects.all(), required=True)
+    sla = DynamicModelMultipleChoiceField(queryset=SLA.objects.all(), required=True, label='SLA')
     owned_by = DynamicModelMultipleChoiceField(queryset=ContactGroup.objects.all(), required=True)
     operation_time = DynamicModelMultipleChoiceField(queryset=OperationTime.objects.all(), required=True)
     availability = DynamicModelMultipleChoiceField(queryset=Availability.objects.all(), required=True)
@@ -438,7 +438,9 @@ def _make_service_info_form(model):
         f'{model.__name__}Form',
         (NetBoxModelForm,),
         {
-            'ci_function': DynamicModelChoiceField(queryset=CIFunction.objects.all(), required=True),
+            'ci_function': DynamicModelChoiceField(
+                queryset=CIFunction.objects.all(), required=True, label='CI Function'
+            ),
             'lifecycle': DynamicModelChoiceField(queryset=Lifecycle.objects.all(), required=True),
             'business_unit': DynamicModelMultipleChoiceField(queryset=ContactGroup.objects.all(), required=True),
             'support_group': DynamicModelMultipleChoiceField(queryset=ContactGroup.objects.all(), required=True),
