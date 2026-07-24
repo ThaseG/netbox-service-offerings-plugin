@@ -349,12 +349,26 @@ class ServiceOfferingForm(PrimaryModelForm):
 class AppServiceForm(PrimaryModelForm):
     environment = DynamicModelChoiceField(queryset=Environment.objects.all(), required=True)
     lifecycle = DynamicModelChoiceField(queryset=Lifecycle.objects.all(), required=True)
-    service_offering = DynamicModelMultipleChoiceField(queryset=ServiceOffering.objects.all(), required=True)
+    service_offering = DynamicModelChoiceField(queryset=ServiceOffering.objects.all(), required=True)
     business_unit = DynamicModelMultipleChoiceField(queryset=ContactGroup.objects.all(), required=True)
     support_group = DynamicModelMultipleChoiceField(queryset=ContactGroup.objects.all(), required=True)
     change_group = DynamicModelMultipleChoiceField(queryset=ContactGroup.objects.all(), required=True)
     sla = DynamicModelMultipleChoiceField(queryset=SLA.objects.all(), required=True, label='SLA')
-    owned_by = DynamicModelMultipleChoiceField(queryset=ContactGroup.objects.all(), required=True)
+    # Owner is a single choice of *either* a Contact *or* a Contact Group,
+    # not both — see clean() below.
+    owned_by_contact_group = DynamicModelChoiceField(
+        queryset=ContactGroup.objects.all(),
+        required=False,
+        label='Owner (Contact Group)',
+        help_text='Select exactly one: either a Contact or a Contact Group, not both.',
+    )
+    owned_by_contact = DynamicModelChoiceField(
+        queryset=Contact.objects.all(),
+        required=False,
+        query_params={'group_id': '$owned_by_contact_group'},
+        label='Owner (Contact)',
+        help_text='Select exactly one: either a Contact or a Contact Group, not both.',
+    )
     operation_time = DynamicModelMultipleChoiceField(queryset=OperationTime.objects.all(), required=True)
     availability = DynamicModelMultipleChoiceField(queryset=Availability.objects.all(), required=True)
     mtat = DynamicModelMultipleChoiceField(queryset=MTAT.objects.all(), required=True, label='MTAT')
@@ -372,7 +386,14 @@ class AppServiceForm(PrimaryModelForm):
             'tags',
             name='Application Service',
         ),
-        FieldSet('business_unit', 'support_group', 'change_group', 'owned_by', name='Organization'),
+        FieldSet(
+            'business_unit',
+            'support_group',
+            'change_group',
+            'owned_by_contact_group',
+            'owned_by_contact',
+            name='Organization',
+        ),
         FieldSet('sla', 'operation_time', 'availability', 'mtat', 'service_criticality', name='Service Levels'),
         FieldSet('accepted_downtime', 'ttr', 'rpo', 'rto', 'bcm', name='Recovery & Continuity'),
         FieldSet('tenant', 'tenant_group', name='Customer'),
@@ -390,7 +411,8 @@ class AppServiceForm(PrimaryModelForm):
             'change_group',
             'sla',
             'accepted_downtime',
-            'owned_by',
+            'owned_by_contact_group',
+            'owned_by_contact',
             'operation_time',
             'availability',
             'mtat',
@@ -405,6 +427,19 @@ class AppServiceForm(PrimaryModelForm):
             'tags',
             'comments',
         )
+
+    def clean(self):
+        # See PortfolioForm.clean() for why this doesn't use super().clean()'s
+        # return value.
+        super().clean()
+        cleaned_data = self.cleaned_data
+        owned_by_contact = cleaned_data.get('owned_by_contact')
+        owned_by_contact_group = cleaned_data.get('owned_by_contact_group')
+        if not (owned_by_contact or owned_by_contact_group):
+            raise ValidationError('Select an Owner: either a Contact or a Contact Group.')
+        if owned_by_contact and owned_by_contact_group:
+            raise ValidationError('Select only one Owner: either a Contact or a Contact Group, not both.')
+        return cleaned_data
 
 
 #
@@ -504,6 +539,26 @@ class PortfolioFilterForm(NetBoxModelFilterSetForm):
         required=False,
         label='Lifecycle',
     )
+    portfolio_owner_contacts_id = DynamicModelMultipleChoiceField(
+        queryset=Contact.objects.all(),
+        required=False,
+        label='Portfolio Owner (Contact)',
+    )
+    portfolio_owner_contact_groups_id = DynamicModelMultipleChoiceField(
+        queryset=ContactGroup.objects.all(),
+        required=False,
+        label='Portfolio Owner (Contact Group)',
+    )
+    portfolio_manager_contacts_id = DynamicModelMultipleChoiceField(
+        queryset=Contact.objects.all(),
+        required=False,
+        label='Portfolio Manager (Contact)',
+    )
+    portfolio_manager_contact_groups_id = DynamicModelMultipleChoiceField(
+        queryset=ContactGroup.objects.all(),
+        required=False,
+        label='Portfolio Manager (Contact Group)',
+    )
 
 
 class ServiceFilterForm(NetBoxModelFilterSetForm):
@@ -523,6 +578,41 @@ class ServiceFilterForm(NetBoxModelFilterSetForm):
         required=False,
         label='CI Function',
     )
+    service_owner_contacts_id = DynamicModelMultipleChoiceField(
+        queryset=Contact.objects.all(),
+        required=False,
+        label='Service Owner (Contact)',
+    )
+    service_owner_contact_groups_id = DynamicModelMultipleChoiceField(
+        queryset=ContactGroup.objects.all(),
+        required=False,
+        label='Service Owner (Contact Group)',
+    )
+    service_manager_contacts_id = DynamicModelMultipleChoiceField(
+        queryset=Contact.objects.all(),
+        required=False,
+        label='Service Manager (Contact)',
+    )
+    service_manager_contact_groups_id = DynamicModelMultipleChoiceField(
+        queryset=ContactGroup.objects.all(),
+        required=False,
+        label='Service Manager (Contact Group)',
+    )
+    business_unit_id = DynamicModelMultipleChoiceField(
+        queryset=ContactGroup.objects.all(),
+        required=False,
+        label='Business Unit',
+    )
+    support_group_id = DynamicModelMultipleChoiceField(
+        queryset=ContactGroup.objects.all(),
+        required=False,
+        label='Support Group',
+    )
+    change_group_id = DynamicModelMultipleChoiceField(
+        queryset=ContactGroup.objects.all(),
+        required=False,
+        label='Change Group',
+    )
 
 
 class ServiceOfferingFilterForm(NetBoxModelFilterSetForm):
@@ -536,6 +626,51 @@ class ServiceOfferingFilterForm(NetBoxModelFilterSetForm):
         queryset=Service.objects.all(),
         required=False,
         label='Service',
+    )
+    service_offering_owner_contacts_id = DynamicModelMultipleChoiceField(
+        queryset=Contact.objects.all(),
+        required=False,
+        label='Owner (Contact)',
+    )
+    service_offering_owner_contact_groups_id = DynamicModelMultipleChoiceField(
+        queryset=ContactGroup.objects.all(),
+        required=False,
+        label='Owner (Contact Group)',
+    )
+    service_offering_manager_contacts_id = DynamicModelMultipleChoiceField(
+        queryset=Contact.objects.all(),
+        required=False,
+        label='Manager (Contact)',
+    )
+    service_offering_manager_contact_groups_id = DynamicModelMultipleChoiceField(
+        queryset=ContactGroup.objects.all(),
+        required=False,
+        label='Manager (Contact Group)',
+    )
+    business_unit_id = DynamicModelMultipleChoiceField(
+        queryset=ContactGroup.objects.all(),
+        required=False,
+        label='Business Unit',
+    )
+    support_group_id = DynamicModelMultipleChoiceField(
+        queryset=ContactGroup.objects.all(),
+        required=False,
+        label='Support Group',
+    )
+    change_group_id = DynamicModelMultipleChoiceField(
+        queryset=ContactGroup.objects.all(),
+        required=False,
+        label='Change Group',
+    )
+    tenant_id = DynamicModelMultipleChoiceField(
+        queryset=Tenant.objects.all(),
+        required=False,
+        label='Customer',
+    )
+    tenant_group_id = DynamicModelMultipleChoiceField(
+        queryset=TenantGroup.objects.all(),
+        required=False,
+        label='Customer Group',
     )
 
 
@@ -555,4 +690,64 @@ class AppServiceFilterForm(NetBoxModelFilterSetForm):
         queryset=ServiceOffering.objects.all(),
         required=False,
         label='Service Offering',
+    )
+    business_unit_id = DynamicModelMultipleChoiceField(
+        queryset=ContactGroup.objects.all(),
+        required=False,
+        label='Business Unit',
+    )
+    support_group_id = DynamicModelMultipleChoiceField(
+        queryset=ContactGroup.objects.all(),
+        required=False,
+        label='Support Group',
+    )
+    change_group_id = DynamicModelMultipleChoiceField(
+        queryset=ContactGroup.objects.all(),
+        required=False,
+        label='Change Group',
+    )
+    sla_id = DynamicModelMultipleChoiceField(
+        queryset=SLA.objects.all(),
+        required=False,
+        label='SLA',
+    )
+    owned_by_contact_id = DynamicModelMultipleChoiceField(
+        queryset=Contact.objects.all(),
+        required=False,
+        label='Owner (Contact)',
+    )
+    owned_by_contact_group_id = DynamicModelMultipleChoiceField(
+        queryset=ContactGroup.objects.all(),
+        required=False,
+        label='Owner (Contact Group)',
+    )
+    operation_time_id = DynamicModelMultipleChoiceField(
+        queryset=OperationTime.objects.all(),
+        required=False,
+        label='Operation Time',
+    )
+    availability_id = DynamicModelMultipleChoiceField(
+        queryset=Availability.objects.all(),
+        required=False,
+        label='Availability',
+    )
+    mtat_id = DynamicModelMultipleChoiceField(
+        queryset=MTAT.objects.all(),
+        required=False,
+        label='MTAT',
+    )
+    service_criticality_id = DynamicModelMultipleChoiceField(
+        queryset=Criticality.objects.all(),
+        required=False,
+        label='Service Criticality',
+    )
+    tenant_id = DynamicModelMultipleChoiceField(
+        queryset=Tenant.objects.all(),
+        required=False,
+        label='Customer',
+    )
+    tenant_group_id = DynamicModelMultipleChoiceField(
+        queryset=TenantGroup.objects.all(),
+        required=False,
+        label='Customer Group',
     )

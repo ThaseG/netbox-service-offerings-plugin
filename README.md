@@ -22,18 +22,20 @@ Models are organized into two groups, matching the plugin's navigation menu.
 ### Data Model group
 
 A `Portfolio` groups one or more `Service`s; a `Service` is sold to customers as one or more `ServiceOffering`s;
-each `ServiceOffering` is realized by one or more `AppService`s.
+each `ServiceOffering` is realized by one or more `AppService`s, though each `AppService` belongs to exactly one
+`ServiceOffering`.
 
 | Model | Description |
 | --- | --- |
 | **Portfolio** (Service Portfolio) | Top-level grouping of related services. Has an owner and a manager (each a contact and/or contact group) and a `Lifecycle`. |
 | **Service** | A business or technical service. Belongs to one or more portfolios; has owner/manager, business unit, support group and change group (contact groups); optionally linked to a `CIFunction`. |
 | **ServiceOffering** | A specific offering of a service to customers, identified by a contract number. Belongs to one or more services; optionally scoped to a `Tenant`/`TenantGroup`. |
-| **AppService** | An application-level realization of a service offering, carrying operational commitments: accepted downtime, TTR, RPO, RTO, BCM, plus links to `SLA`, `OperationTime`, `Availability`, `Criticality` and `MTAT`. Requires an `Environment`. |
+| **AppService** | An application-level realization of a *single* service offering, carrying operational commitments: accepted downtime, TTR, RPO, RTO, BCM, plus links to `SLA`, `OperationTime`, `Availability`, `Criticality` and `MTAT`. Requires an `Environment`. Owner is a single choice of *either* a Contact *or* a Contact Group (not both). |
 
-A ServiceOffering's detail page also shows a read-only rollup table of its parent Service(s)' own parameters, and
-an AppService's detail page shows read-only rollups of both its Service Offering(s) and the Service(s) behind
-them — for context only; the actual relationships are still edited via the `service` / `service_offering` fields.
+A ServiceOffering's detail page also shows read-only rollup tables of its parent Service(s)' own parameters and
+their `CIFunction`(s); an AppService's detail page shows the same for the Service(s) behind its (single) Service
+Offering — for context only, since `CIFunction` is only ever set on `Service` itself. The actual relationships are
+still edited via the `service` / `service_offering` fields.
 
 ### Support group
 

@@ -472,6 +472,34 @@ class Migration(migrations.Migration):
                         to='service_specification.lifecycle',
                     ),
                 ),
+                (
+                    'service_offering',
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT,
+                        related_name='app_services',
+                        to='service_specification.serviceoffering',
+                    ),
+                ),
+                (
+                    'owned_by_contact',
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.PROTECT,
+                        related_name='+',
+                        to='tenancy.contact',
+                    ),
+                ),
+                (
+                    'owned_by_contact_group',
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.PROTECT,
+                        related_name='+',
+                        to='tenancy.contactgroup',
+                    ),
+                ),
             ],
             options={
                 'verbose_name': 'Application Service',
@@ -785,11 +813,6 @@ class Migration(migrations.Migration):
         # AppService
         migrations.AddField(
             model_name='appservice',
-            name='service_offering',
-            field=models.ManyToManyField(related_name='app_services', to='service_specification.serviceoffering'),
-        ),
-        migrations.AddField(
-            model_name='appservice',
             name='business_unit',
             field=models.ManyToManyField(related_name='+', to='tenancy.contactgroup'),
         ),
@@ -807,11 +830,6 @@ class Migration(migrations.Migration):
             model_name='appservice',
             name='sla',
             field=models.ManyToManyField(related_name='+', to='service_specification.sla'),
-        ),
-        migrations.AddField(
-            model_name='appservice',
-            name='owned_by',
-            field=models.ManyToManyField(related_name='+', to='tenancy.contactgroup'),
         ),
         migrations.AddField(
             model_name='appservice',

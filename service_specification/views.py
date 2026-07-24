@@ -194,14 +194,28 @@ ServiceOfferingListView, ServiceOfferingView, ServiceOfferingEditView, ServiceOf
         left_panels=[panels.ServiceOfferingPanel(), panels.ServiceOfferingOwnershipPanel()],
         right_panels=[panels.ServiceOfferingOrganizationPanel(), panels.ServiceOfferingCustomerPanel()],
         bottom_panels=[
-            # Read-only rollup of the parent Service(s)' own parameters —
-            # editing the relationship still happens on this same
-            # ServiceOffering form via the `service` field; this just saves
-            # a click to see what's on the other end of it.
+            # Read-only rollups of the parent Service(s)' own parameters,
+            # and — one hop further — the CI Function(s) assigned to those
+            # Services. Editing still happens on this same ServiceOffering
+            # form via the `service` field; CI Function itself is only ever
+            # set on Service, not here.
             ObjectsTablePanel(
                 model='service_specification.service',
                 title='Parent Services',
                 filters={'id': lambda ctx: _rollup_ids(ctx['object'].service)},
+            ),
+            ObjectsTablePanel(
+                model='service_specification.cifunction',
+                title='CI Function (from Service)',
+                filters={
+                    'id': lambda ctx: _rollup_ids(
+                        CIFunction.objects.filter(
+                            pk__in=ctx['object']
+                            .service.exclude(ci_function__isnull=True)
+                            .values_list('ci_function', flat=True)
+                        )
+                    )
+                },
             ),
             panels.CommentsPanel(),
         ],
@@ -218,21 +232,27 @@ AppServiceListView, AppServiceView, AppServiceEditView, AppServiceDeleteView = _
         right_panels=[panels.AppServiceLevelsPanel(), panels.AppServiceOrganizationPanel()],
         bottom_panels=[
             panels.AppServiceCustomerPanel(),
-            # Read-only rollups: the Service Offering(s) this app service
-            # realizes, and — one hop further — the Service(s) behind those
-            # offerings. Editing still happens via the `service_offering`
-            # field on this same form.
-            ObjectsTablePanel(
-                model='service_specification.serviceoffering',
-                title='Service Offerings',
-                filters={'id': lambda ctx: _rollup_ids(ctx['object'].service_offering)},
-            ),
+            # Read-only rollups, one hop further than the (single)
+            # `service_offering` field already shown in the overview panel
+            # above: the Service(s) behind that offering, and the CI
+            # Function(s) assigned to those Services. Editing still happens
+            # via the `service_offering` field on this same form — CI
+            # Function itself is only ever set on Service, not here.
             ObjectsTablePanel(
                 model='service_specification.service',
                 title='Parent Services',
+                filters={'id': lambda ctx: _rollup_ids(ctx['object'].service_offering.service.all())},
+            ),
+            ObjectsTablePanel(
+                model='service_specification.cifunction',
+                title='CI Function (from Service)',
                 filters={
                     'id': lambda ctx: _rollup_ids(
-                        Service.objects.filter(service_offerings__in=ctx['object'].service_offering.all()).distinct()
+                        CIFunction.objects.filter(
+                            pk__in=ctx['object']
+                            .service_offering.service.exclude(ci_function__isnull=True)
+                            .values_list('ci_function', flat=True)
+                        )
                     )
                 },
             ),

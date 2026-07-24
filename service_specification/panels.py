@@ -163,7 +163,7 @@ class AppServiceOverviewPanel(ObjectAttributesPanel):
     name = attrs.TextAttr('name', label=_('Name'))
     environment = attrs.RelatedObjectAttr('environment', label=_('Environment'), linkify=True)
     lifecycle = attrs.RelatedObjectAttr('lifecycle', label=_('Service Lifecycle Management'), linkify=True)
-    service_offering = attrs.RelatedObjectListAttr('service_offering', label=_('Service Offerings'), linkify=True)
+    service_offering = attrs.RelatedObjectAttr('service_offering', label=_('Service Offering'), linkify=True)
     description = attrs.TextAttr('description', label=_('Description'))
     tags = attrs.RelatedObjectListAttr('tags', label=_('Tags'), linkify=True)
 
@@ -195,7 +195,10 @@ class AppServiceOrganizationPanel(ObjectAttributesPanel):
     business_unit = attrs.RelatedObjectListAttr('business_unit', label=_('Business Unit'), linkify=True)
     support_group = attrs.RelatedObjectListAttr('support_group', label=_('Support Group'), linkify=True)
     change_group = attrs.RelatedObjectListAttr('change_group', label=_('Change Group'), linkify=True)
-    owned_by = attrs.RelatedObjectListAttr('owned_by', label=_('Owned by'), linkify=True)
+    owned_by_contact_group = attrs.RelatedObjectAttr(
+        'owned_by_contact_group', label=_('Owner (Contact Group)'), linkify=True
+    )
+    owned_by_contact = attrs.RelatedObjectAttr('owned_by_contact', label=_('Owner (Contact)'), linkify=True)
 
 
 class AppServiceCustomerPanel(ObjectAttributesPanel):

@@ -181,6 +181,7 @@ class AppServiceTable(NetBoxTable):
     name = tables.Column(linkify=True)
     environment = tables.Column(linkify=True)
     lifecycle = tables.Column(linkify=True)
+    service_offering = tables.Column(linkify=True)
     comments = columns.MarkdownColumn()
     tags = columns.TagColumn(url_name='plugins:service_specification:appservice_list')
 
@@ -192,6 +193,7 @@ class AppServiceTable(NetBoxTable):
             'name',
             'environment',
             'lifecycle',
+            'service_offering',
             'accepted_downtime',
             'ttr',
             'rpo',
@@ -204,4 +206,4 @@ class AppServiceTable(NetBoxTable):
             'last_updated',
             'actions',
         )
-        default_columns = ('pk', 'name', 'environment', 'lifecycle', 'description')
+        default_columns = ('pk', 'name', 'environment', 'lifecycle', 'service_offering', 'description')

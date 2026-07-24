@@ -399,11 +399,11 @@ class AppService(PrimaryModel):
         related_name='+',
         verbose_name='Service Lifecycle Management',
     )
-    service_offering = models.ManyToManyField(
+    service_offering = models.ForeignKey(
         to=ServiceOffering,
+        on_delete=models.PROTECT,
         related_name='app_services',
-        blank=False,
-        verbose_name='Service Offerings',
+        verbose_name='Service Offering',
     )
     business_unit = models.ManyToManyField(
         to=ContactGroup,
@@ -430,11 +430,27 @@ class AppService(PrimaryModel):
         verbose_name='SLAs',
     )
     accepted_downtime = models.PositiveIntegerField(verbose_name='Accepted Downtime (hours)')
-    owned_by = models.ManyToManyField(
-        to=ContactGroup,
+    # Owner is a single choice of *either* a Contact *or* a Contact Group,
+    # not both — see AppServiceForm.clean() for the "exactly one" rule.
+    # Modeled as two plain nullable FKs rather than a single polymorphic
+    # (GenericForeignKey) field: much simpler to query/filter/serialize,
+    # and a natural fit for a form with two independent single-select
+    # dropdowns where exactly one is expected to be filled in.
+    owned_by_contact = models.ForeignKey(
+        to=Contact,
+        on_delete=models.PROTECT,
         related_name='+',
-        blank=False,
-        verbose_name='Owned by',
+        blank=True,
+        null=True,
+        verbose_name='Owner (Contact)',
+    )
+    owned_by_contact_group = models.ForeignKey(
+        to=ContactGroup,
+        on_delete=models.PROTECT,
+        related_name='+',
+        blank=True,
+        null=True,
+        verbose_name='Owner (Contact Group)',
     )
     operation_time = models.ManyToManyField(
         to=OperationTime,
