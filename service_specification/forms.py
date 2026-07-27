@@ -64,6 +64,20 @@ class LifecycleForm(OrganizationalModelForm):
     class Meta:
         model = Lifecycle
         fields = ('name', 'slug', 'description', 'tags', 'comments')
+        help_texts = {
+            'name': (
+                'Standard lifecycle statuses: Draft (created but still being defined, not yet approved); '
+                'Design (planning/design phase); Build (being developed or configured, not yet ready for '
+                'production); Available (ready for deployment, not yet actively in production); Operational '
+                '(deployed and actively supporting business/IT services); In Maintenance (temporarily '
+                'undergoing maintenance, upgrades, or repairs); End of Support (support has ended or is '
+                'scheduled to end, though it may still be operational); End of Life (reached the end of its '
+                'intended lifecycle, should no longer be used for production); Expired (no longer valid due '
+                'to expiration of a license, certificate, contract, or subscription); Decommissioned '
+                '(permanently removed from service, retained for audit purposes); Cancelled (planned but '
+                'never deployed).'
+            ),
+        }
 
 
 class SLAForm(OrganizationalModelForm):
@@ -114,28 +128,44 @@ class CIFunctionForm(OrganizationalModelForm):
 
 
 class PortfolioForm(PrimaryModelForm):
-    lifecycle = DynamicModelChoiceField(queryset=Lifecycle.objects.all(), required=True)
+    lifecycle = DynamicModelChoiceField(
+        queryset=Lifecycle.objects.all(),
+        required=True,
+        help_text='Current phase of the portfolio (e.g., Draft, Operational). Use the standard lifecycle status list.',
+    )
     portfolio_owner_contact_groups = DynamicModelMultipleChoiceField(
         queryset=ContactGroup.objects.all(),
         required=False,
-        help_text='Required: select at least one Contact or Contact Group.',
+        help_text=(
+            "Executive accountable for the portfolio's strategic content. This is a senior leadership role. "
+            'Required: select at least one Contact or Contact Group.'
+        ),
     )
     portfolio_owner_contacts = DynamicModelMultipleChoiceField(
         queryset=Contact.objects.all(),
         required=False,
         query_params={'group_id': '$portfolio_owner_contact_groups'},
-        help_text='Required: select at least one Contact or Contact Group.',
+        help_text=(
+            "Executive accountable for the portfolio's strategic content. This is a senior leadership role. "
+            'Required: select at least one Contact or Contact Group.'
+        ),
     )
     portfolio_manager_contact_groups = DynamicModelMultipleChoiceField(
         queryset=ContactGroup.objects.all(),
         required=False,
-        help_text='Required: select at least one Contact or Contact Group.',
+        help_text=(
+            'Operational manager handling daily portfolio oversight and updates. Acts as the primary point of '
+            'contact. Required: select at least one Contact or Contact Group.'
+        ),
     )
     portfolio_manager_contacts = DynamicModelMultipleChoiceField(
         queryset=Contact.objects.all(),
         required=False,
         query_params={'group_id': '$portfolio_manager_contact_groups'},
-        help_text='Required: select at least one Contact or Contact Group.',
+        help_text=(
+            'Operational manager handling daily portfolio oversight and updates. Acts as the primary point of '
+            'contact. Required: select at least one Contact or Contact Group.'
+        ),
     )
 
     fieldsets = (
@@ -165,6 +195,10 @@ class PortfolioForm(PrimaryModelForm):
             'tags',
             'comments',
         )
+        help_texts = {
+            'name': 'Unique identifier for the portfolio. Keep it concise and business-meaningful.',
+            'description': "Brief summary of the portfolio's scope and purpose. Aim for one to two sentences.",
+        }
 
     def clean(self):
         # Deliberately not using super().clean()'s return value: NetBoxModelForm's
@@ -184,34 +218,80 @@ class PortfolioForm(PrimaryModelForm):
 
 
 class ServiceForm(PrimaryModelForm):
-    lifecycle = DynamicModelChoiceField(queryset=Lifecycle.objects.all(), required=True)
-    service_portfolio = DynamicModelMultipleChoiceField(queryset=Portfolio.objects.all(), required=True)
+    lifecycle = DynamicModelChoiceField(
+        queryset=Lifecycle.objects.all(),
+        required=True,
+        help_text='Current lifecycle state of the service (e.g., Operational, Retired). Use the standard status list.',
+    )
+    service_portfolio = DynamicModelMultipleChoiceField(
+        queryset=Portfolio.objects.all(),
+        required=True,
+        help_text=(
+            'Reference to the parent portfolio that contains this service. Links the service to its strategic '
+            'context.'
+        ),
+    )
     service_owner_contact_groups = DynamicModelMultipleChoiceField(
         queryset=ContactGroup.objects.all(),
         required=False,
-        help_text='Required: select at least one Contact or Contact Group.',
+        help_text=(
+            'Business stakeholder accountable for overall service outcomes and value. Has decision authority. '
+            'Required: select at least one Contact or Contact Group.'
+        ),
     )
     service_owner_contacts = DynamicModelMultipleChoiceField(
         queryset=Contact.objects.all(),
         required=False,
         query_params={'group_id': '$service_owner_contact_groups'},
-        help_text='Required: select at least one Contact or Contact Group.',
+        help_text=(
+            'Business stakeholder accountable for overall service outcomes and value. Has decision authority. '
+            'Required: select at least one Contact or Contact Group.'
+        ),
     )
     service_manager_contact_groups = DynamicModelMultipleChoiceField(
         queryset=ContactGroup.objects.all(),
         required=False,
-        help_text='Required: select at least one Contact or Contact Group.',
+        help_text=(
+            'Operational lead responsible for day-to-day service delivery and performance. Manages the support '
+            'teams. Required: select at least one Contact or Contact Group.'
+        ),
     )
     service_manager_contacts = DynamicModelMultipleChoiceField(
         queryset=Contact.objects.all(),
         required=False,
         query_params={'group_id': '$service_manager_contact_groups'},
-        help_text='Required: select at least one Contact or Contact Group.',
+        help_text=(
+            'Operational lead responsible for day-to-day service delivery and performance. Manages the support '
+            'teams. Required: select at least one Contact or Contact Group.'
+        ),
     )
-    business_unit = DynamicModelMultipleChoiceField(queryset=ContactGroup.objects.all(), required=True)
-    support_group = DynamicModelMultipleChoiceField(queryset=ContactGroup.objects.all(), required=True)
-    change_group = DynamicModelMultipleChoiceField(queryset=ContactGroup.objects.all(), required=True)
-    ci_function = DynamicModelChoiceField(queryset=CIFunction.objects.all(), required=False, label='CI Function')
+    business_unit = DynamicModelMultipleChoiceField(
+        queryset=ContactGroup.objects.all(),
+        required=True,
+        help_text='Organizational unit that consumes or funds the service. Helps with cost and ownership tracking.',
+    )
+    support_group = DynamicModelMultipleChoiceField(
+        queryset=ContactGroup.objects.all(),
+        required=True,
+        help_text='Team assigned to handle incidents, requests, and user issues. Typically a helpdesk or L2/L3 team.',
+    )
+    change_group = DynamicModelMultipleChoiceField(
+        queryset=ContactGroup.objects.all(),
+        required=True,
+        help_text=(
+            'Team responsible for reviewing and executing changes for this service. Ensures proper change '
+            'control.'
+        ),
+    )
+    ci_function = DynamicModelChoiceField(
+        queryset=CIFunction.objects.all(),
+        required=False,
+        label='CI Function',
+        help_text=(
+            'Primary capability or role this service provides (e.g., identity management). Describes what it '
+            'does technically.'
+        ),
+    )
 
     fieldsets = (
         FieldSet('name', 'lifecycle', 'service_portfolio', 'description', 'tags', name='Service'),
@@ -239,6 +319,13 @@ class ServiceForm(PrimaryModelForm):
             'tags',
             'comments',
         )
+        help_texts = {
+            'name': 'Unique identifier for the service. Should be clear and recognizable to stakeholders.',
+            'description': (
+                "Concise statement of the service's primary function. Keep it to one or two business-friendly "
+                'lines.'
+            ),
+        }
 
     def clean(self):
         # See PortfolioForm.clean() for why this doesn't use super().clean()'s
@@ -253,34 +340,79 @@ class ServiceForm(PrimaryModelForm):
 
 
 class ServiceOfferingForm(PrimaryModelForm):
-    lifecycle = DynamicModelChoiceField(queryset=Lifecycle.objects.all(), required=True)
-    service = DynamicModelMultipleChoiceField(queryset=Service.objects.all(), required=True)
+    lifecycle = DynamicModelChoiceField(
+        queryset=Lifecycle.objects.all(),
+        required=True,
+        help_text='Current phase of the offering (e.g., Available, End of Life). Follows the standard lifecycle list.',
+    )
+    service = DynamicModelMultipleChoiceField(
+        queryset=Service.objects.all(),
+        required=True,
+        help_text='The core service on which this offering is based. Establishes the hierarchical relationship.',
+    )
     service_offering_owner_contact_groups = DynamicModelMultipleChoiceField(
         queryset=ContactGroup.objects.all(),
         required=False,
-        help_text='Required: select at least one Contact or Contact Group.',
+        help_text=(
+            "Business owner accountable for the offering's success and lifecycle. Has budget or P&L "
+            'responsibility. Required: select at least one Contact or Contact Group.'
+        ),
     )
     service_offering_owner_contacts = DynamicModelMultipleChoiceField(
         queryset=Contact.objects.all(),
         required=False,
         query_params={'group_id': '$service_offering_owner_contact_groups'},
-        help_text='Required: select at least one Contact or Contact Group.',
+        help_text=(
+            "Business owner accountable for the offering's success and lifecycle. Has budget or P&L "
+            'responsibility. Required: select at least one Contact or Contact Group.'
+        ),
     )
     service_offering_manager_contact_groups = DynamicModelMultipleChoiceField(
         queryset=ContactGroup.objects.all(),
         required=False,
-        help_text='Required: select at least one Contact or Contact Group.',
+        help_text=(
+            "Operational manager who runs the offering's daily activities. Coordinates delivery and "
+            'improvements. Required: select at least one Contact or Contact Group.'
+        ),
     )
     service_offering_manager_contacts = DynamicModelMultipleChoiceField(
         queryset=Contact.objects.all(),
         required=False,
         query_params={'group_id': '$service_offering_manager_contact_groups'},
-        help_text='Required: select at least one Contact or Contact Group.',
+        help_text=(
+            "Operational manager who runs the offering's daily activities. Coordinates delivery and "
+            'improvements. Required: select at least one Contact or Contact Group.'
+        ),
     )
-    business_unit = DynamicModelMultipleChoiceField(queryset=ContactGroup.objects.all(), required=True)
-    support_group = DynamicModelMultipleChoiceField(queryset=ContactGroup.objects.all(), required=True)
-    change_group = DynamicModelMultipleChoiceField(queryset=ContactGroup.objects.all(), required=True)
-    tenant = DynamicModelMultipleChoiceField(queryset=Tenant.objects.all(), required=False)
+    business_unit = DynamicModelMultipleChoiceField(
+        queryset=ContactGroup.objects.all(),
+        required=True,
+        help_text=(
+            'Unit that owns, funds, or is responsible for this offering. Aids in financial and organizational '
+            'alignment.'
+        ),
+    )
+    support_group = DynamicModelMultipleChoiceField(
+        queryset=ContactGroup.objects.all(),
+        required=True,
+        help_text=(
+            "Team delivering support specifically for this offering. May differ from the parent service's "
+            'support group.'
+        ),
+    )
+    change_group = DynamicModelMultipleChoiceField(
+        queryset=ContactGroup.objects.all(),
+        required=True,
+        help_text="Team handling changes to this offering's configuration or content. Ensures change traceability.",
+    )
+    tenant = DynamicModelMultipleChoiceField(
+        queryset=Tenant.objects.all(),
+        required=False,
+        help_text=(
+            'External or internal customer entity that subscribes to this offering. Links to the Foundation '
+            'Information Form.'
+        ),
+    )
     tenant_group = DynamicModelMultipleChoiceField(queryset=TenantGroup.objects.all(), required=False)
 
     fieldsets = (
@@ -327,6 +459,20 @@ class ServiceOfferingForm(PrimaryModelForm):
             'tags',
             'comments',
         )
+        help_texts = {
+            'name': (
+                'Distinct name for the offering (e.g., Premium Support, Basic Plan). Differentiates it from '
+                'other offerings.'
+            ),
+            'contract_number': (
+                'Reference to the legal or commercial agreement governing this offering. Use the actual '
+                'contract ID.'
+            ),
+            'description': (
+                'Summary of what the offering includes in terms of features or service levels. Keep it '
+                'customer-friendly.'
+            ),
+        }
 
     def clean(self):
         # See PortfolioForm.clean() for why this doesn't use super().clean()'s
@@ -347,12 +493,41 @@ class ServiceOfferingForm(PrimaryModelForm):
 
 
 class AppServiceForm(PrimaryModelForm):
-    environment = DynamicModelChoiceField(queryset=Environment.objects.all(), required=True)
-    lifecycle = DynamicModelChoiceField(queryset=Lifecycle.objects.all(), required=True)
-    service_offering = DynamicModelChoiceField(queryset=ServiceOffering.objects.all(), required=True)
-    business_unit = DynamicModelMultipleChoiceField(queryset=ContactGroup.objects.all(), required=True)
-    support_group = DynamicModelMultipleChoiceField(queryset=ContactGroup.objects.all(), required=True)
-    change_group = DynamicModelMultipleChoiceField(queryset=ContactGroup.objects.all(), required=True)
+    environment = DynamicModelChoiceField(
+        queryset=Environment.objects.all(),
+        required=True,
+        help_text='Deployment context (e.g., Development, Test, Production). Critical for operational management.',
+    )
+    lifecycle = DynamicModelChoiceField(
+        queryset=Lifecycle.objects.all(),
+        required=True,
+        help_text='Current phase (e.g., Build, Operational, Decommissioned). Use the standard status list.',
+    )
+    service_offering = DynamicModelChoiceField(
+        queryset=ServiceOffering.objects.all(),
+        required=True,
+        help_text=(
+            'Parent offering that this application service supports or enables. Links to commercial agreements.'
+        ),
+    )
+    business_unit = DynamicModelMultipleChoiceField(
+        queryset=ContactGroup.objects.all(),
+        required=True,
+        help_text='Unit that owns or primarily uses the application. Helps with budgeting and governance.',
+    )
+    support_group = DynamicModelMultipleChoiceField(
+        queryset=ContactGroup.objects.all(),
+        required=True,
+        help_text=(
+            'Team providing application-level support (e.g., App Support). Distinguish from infrastructure '
+            'support.'
+        ),
+    )
+    change_group = DynamicModelMultipleChoiceField(
+        queryset=ContactGroup.objects.all(),
+        required=True,
+        help_text='Team managing application changes and releases. Coordinates deployment and testing.',
+    )
     sla = DynamicModelMultipleChoiceField(queryset=SLA.objects.all(), required=True, label='SLA')
     # Owner is a single choice of *either* a Contact *or* a Contact Group,
     # not both — see clean() below.
@@ -360,20 +535,59 @@ class AppServiceForm(PrimaryModelForm):
         queryset=ContactGroup.objects.all(),
         required=False,
         label='Owner (Contact Group)',
-        help_text='Select exactly one: either a Contact or a Contact Group, not both.',
+        help_text=(
+            'Person or team accountable for meeting the SLA targets. This is a managerial role. '
+            'Select exactly one: either a Contact or a Contact Group, not both.'
+        ),
     )
     owned_by_contact = DynamicModelChoiceField(
         queryset=Contact.objects.all(),
         required=False,
         query_params={'group_id': '$owned_by_contact_group'},
         label='Owner (Contact)',
-        help_text='Select exactly one: either a Contact or a Contact Group, not both.',
+        help_text=(
+            'Person or team accountable for meeting the SLA targets. This is a managerial role. '
+            'Select exactly one: either a Contact or a Contact Group, not both.'
+        ),
     )
-    operation_time = DynamicModelMultipleChoiceField(queryset=OperationTime.objects.all(), required=True)
-    availability = DynamicModelMultipleChoiceField(queryset=Availability.objects.all(), required=True)
-    mtat = DynamicModelMultipleChoiceField(queryset=MTAT.objects.all(), required=True, label='MTAT')
-    service_criticality = DynamicModelMultipleChoiceField(queryset=Criticality.objects.all(), required=True)
-    tenant = DynamicModelMultipleChoiceField(queryset=Tenant.objects.all(), required=False)
+    operation_time = DynamicModelMultipleChoiceField(
+        queryset=OperationTime.objects.all(),
+        required=True,
+        help_text=(
+            'Hours during which the service is measured (e.g., 24x7, 08:00-18:00 weekdays). Defines the '
+            'measurement window.'
+        ),
+    )
+    availability = DynamicModelMultipleChoiceField(
+        queryset=Availability.objects.all(),
+        required=True,
+        help_text='Target uptime percentage (e.g., 99.9%). Calculated from the operation time.',
+    )
+    mtat = DynamicModelMultipleChoiceField(
+        queryset=MTAT.objects.all(),
+        required=True,
+        label='MTAT',
+        help_text=(
+            'Mean Time to Acknowledge - target response time from incident creation to first response. '
+            'Measured in minutes.'
+        ),
+    )
+    service_criticality = DynamicModelMultipleChoiceField(
+        queryset=Criticality.objects.all(),
+        required=True,
+        help_text=(
+            'Priority level indicating business impact (e.g., Critical, High, Medium, Low). Drives response '
+            'urgency.'
+        ),
+    )
+    tenant = DynamicModelMultipleChoiceField(
+        queryset=Tenant.objects.all(),
+        required=False,
+        help_text=(
+            'Primary user group, tenant, or business entity that uses this application. Maps to customer '
+            'records.'
+        ),
+    )
     tenant_group = DynamicModelMultipleChoiceField(queryset=TenantGroup.objects.all(), required=False)
 
     fieldsets = (
@@ -427,6 +641,27 @@ class AppServiceForm(PrimaryModelForm):
             'tags',
             'comments',
         )
+        help_texts = {
+            'name': 'Unique application service identifier. Use a recognizable application name or code.',
+            'description': 'Purpose of the application service in business terms. Explain what it does for the user.',
+            'accepted_downtime': (
+                'Maximum allowable planned downtime within a given period (e.g., per month). Expressed in hours '
+                'or minutes.'
+            ),
+            'ttr': 'Mean Time to Restore - target resolution or recovery time. Measured in hours or minutes.',
+            'rpo': (
+                'Recovery Point Objective - maximum tolerable data loss, measured in hours. Defines backup '
+                'frequency needs.'
+            ),
+            'rto': (
+                'Recovery Time Objective - maximum tolerable downtime, measured in hours. Defines recovery '
+                'speed target.'
+            ),
+            'bcm': (
+                'Business Continuity Management tier-1 recovery time target. Represents the first recovery '
+                'milestone.'
+            ),
+        }
 
     def clean(self):
         # See PortfolioForm.clean() for why this doesn't use super().clean()'s
@@ -474,12 +709,31 @@ def _make_service_info_form(model):
         (NetBoxModelForm,),
         {
             'ci_function': DynamicModelChoiceField(
-                queryset=CIFunction.objects.all(), required=True, label='CI Function'
+                queryset=CIFunction.objects.all(),
+                required=True,
+                label='CI Function',
+                help_text='Technical capability provided (e.g., storage, compute, networking). Clarifies what it does.',
             ),
-            'lifecycle': DynamicModelChoiceField(queryset=Lifecycle.objects.all(), required=True),
-            'business_unit': DynamicModelMultipleChoiceField(queryset=ContactGroup.objects.all(), required=True),
-            'support_group': DynamicModelMultipleChoiceField(queryset=ContactGroup.objects.all(), required=True),
-            'change_group': DynamicModelMultipleChoiceField(queryset=ContactGroup.objects.all(), required=True),
+            'lifecycle': DynamicModelChoiceField(
+                queryset=Lifecycle.objects.all(),
+                required=True,
+                help_text='Current state (e.g., Operational, End of Support). Follows the standard lifecycle.',
+            ),
+            'business_unit': DynamicModelMultipleChoiceField(
+                queryset=ContactGroup.objects.all(),
+                required=True,
+                help_text='Unit that owns or funds this technical component. Helps with cost allocation.',
+            ),
+            'support_group': DynamicModelMultipleChoiceField(
+                queryset=ContactGroup.objects.all(),
+                required=True,
+                help_text='Team maintaining the component (e.g., Server Team, DBA). Handles incidents and maintenance.',
+            ),
+            'change_group': DynamicModelMultipleChoiceField(
+                queryset=ContactGroup.objects.all(),
+                required=True,
+                help_text='Team executing changes on this CI (e.g., patching, upgrades). Ensures change compliance.',
+            ),
             'fieldsets': (
                 FieldSet('ci_function', 'lifecycle', 'tags', name='Service Specification'),
                 FieldSet('business_unit', 'support_group', 'change_group', name='Organization'),
