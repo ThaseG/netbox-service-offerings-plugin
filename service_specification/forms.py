@@ -227,8 +227,7 @@ class ServiceForm(PrimaryModelForm):
         queryset=Portfolio.objects.all(),
         required=True,
         help_text=(
-            'Reference to the parent portfolio that contains this service. Links the service to its strategic '
-            'context.'
+            'Reference to the parent portfolio that contains this service. Links the service to its strategic context.'
         ),
     )
     service_owner_contact_groups = DynamicModelMultipleChoiceField(
@@ -279,8 +278,7 @@ class ServiceForm(PrimaryModelForm):
         queryset=ContactGroup.objects.all(),
         required=True,
         help_text=(
-            'Team responsible for reviewing and executing changes for this service. Ensures proper change '
-            'control.'
+            'Team responsible for reviewing and executing changes for this service. Ensures proper change control.'
         ),
     )
     ci_function = DynamicModelChoiceField(
@@ -322,8 +320,7 @@ class ServiceForm(PrimaryModelForm):
         help_texts = {
             'name': 'Unique identifier for the service. Should be clear and recognizable to stakeholders.',
             'description': (
-                "Concise statement of the service's primary function. Keep it to one or two business-friendly "
-                'lines.'
+                "Concise statement of the service's primary function. Keep it to one or two business-friendly lines."
             ),
         }
 
@@ -465,8 +462,7 @@ class ServiceOfferingForm(PrimaryModelForm):
                 'other offerings.'
             ),
             'contract_number': (
-                'Reference to the legal or commercial agreement governing this offering. Use the actual '
-                'contract ID.'
+                'Reference to the legal or commercial agreement governing this offering. Use the actual contract ID.'
             ),
             'description': (
                 'Summary of what the offering includes in terms of features or service levels. Keep it '
@@ -519,8 +515,7 @@ class AppServiceForm(PrimaryModelForm):
         queryset=ContactGroup.objects.all(),
         required=True,
         help_text=(
-            'Team providing application-level support (e.g., App Support). Distinguish from infrastructure '
-            'support.'
+            'Team providing application-level support (e.g., App Support). Distinguish from infrastructure support.'
         ),
     )
     change_group = DynamicModelMultipleChoiceField(
@@ -576,16 +571,14 @@ class AppServiceForm(PrimaryModelForm):
         queryset=Criticality.objects.all(),
         required=True,
         help_text=(
-            'Priority level indicating business impact (e.g., Critical, High, Medium, Low). Drives response '
-            'urgency.'
+            'Priority level indicating business impact (e.g., Critical, High, Medium, Low). Drives response urgency.'
         ),
     )
     tenant = DynamicModelMultipleChoiceField(
         queryset=Tenant.objects.all(),
         required=False,
         help_text=(
-            'Primary user group, tenant, or business entity that uses this application. Maps to customer '
-            'records.'
+            'Primary user group, tenant, or business entity that uses this application. Maps to customer records.'
         ),
     )
     tenant_group = DynamicModelMultipleChoiceField(queryset=TenantGroup.objects.all(), required=False)
@@ -658,8 +651,7 @@ class AppServiceForm(PrimaryModelForm):
                 'speed target.'
             ),
             'bcm': (
-                'Business Continuity Management tier-1 recovery time target. Represents the first recovery '
-                'milestone.'
+                'Business Continuity Management tier-1 recovery time target. Represents the first recovery milestone.'
             ),
         }
 
