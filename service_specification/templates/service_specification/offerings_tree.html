@@ -6,18 +6,77 @@
 
 {% block content %}
   <style>
-    .offerings-tree details { margin-left: 1.25rem; margin-bottom: 0.25rem; }
-    .offerings-tree > details { margin-left: 0; }
-    .offerings-tree summary { cursor: pointer; padding: 0.15rem 0; }
-    .offerings-tree summary a { margin-left: 0.35rem; }
-    .offerings-tree .node-type {
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 0.03em;
-      color: var(--tblr-secondary, #6c7a91);
-      margin-right: 0.4rem;
+    /* Classic pure-CSS org-chart: each level is a <ul>/<li>, cells laid out
+       as a table row so ::before/::after can draw the connecting lines —
+       no JS graph library, deliberately (see plan discussion). Wrapped in
+       an overflow-x scroller since wide trees (many siblings) can't wrap
+       onto a second line the way this technique works. */
+    .org-tree-wrapper { overflow-x: auto; padding: 1.5rem 0.5rem; }
+
+    .org-tree, .org-tree ul, .org-tree li {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      position: relative;
     }
-    .offerings-tree .ci-leaf { margin-left: 1.25rem; padding: 0.15rem 0; }
+    .org-tree { display: table; margin: 0 auto; }
+    .org-tree ul { display: table; table-layout: fixed; width: 100%; }
+
+    .org-tree li {
+      display: table-cell;
+      text-align: center;
+      vertical-align: top;
+      padding: 2rem 0.75rem 0;
+    }
+
+    /* Horizontal line across the top of a cell, connecting it to its
+       siblings; trimmed at the outer edges so it only spans between the
+       first and last sibling, not off into empty space. */
+    .org-tree li::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      border-top: 1px solid var(--tblr-border-color, #8c98a8);
+    }
+    .org-tree li:first-child::before { left: 50%; }
+    .org-tree li:last-child::before { right: 50%; }
+    .org-tree li:only-child::before { display: none; }
+    .org-tree > li::before { border-top: none; }
+
+    /* Vertical stub from that horizontal line down into the node itself. */
+    .org-tree li::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      width: 0;
+      height: 2rem;
+      border-left: 1px solid var(--tblr-border-color, #8c98a8);
+    }
+    .org-tree > li::after { border-left: none; }
+
+    .org-node {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      border-radius: 0.375rem;
+      padding: 0.35rem 0.75rem;
+      font-size: 0.875rem;
+      white-space: nowrap;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+    }
+    .org-node a { color: inherit; text-decoration: none; font-weight: 500; }
+    .org-node a:hover { text-decoration: underline; }
+    .org-node i { font-size: 1rem; }
+
+    .org-leaf-empty {
+      display: inline-block;
+      padding: 0.35rem 0.75rem;
+      font-size: 0.8rem;
+      font-style: italic;
+    }
   </style>
 
   <div class="row mb-3">
@@ -37,50 +96,82 @@
   </div>
 
   <div class="card">
-    <div class="card-body offerings-tree">
+    <div class="card-body">
       {% if portfolios %}
-        {% for portfolio, services in portfolios %}
-          <details open>
-            <summary>
-              <span class="node-type">{% trans "Portfolio" %}</span>
-              <a href="{{ portfolio.get_absolute_url }}">{{ portfolio }}</a>
-            </summary>
-            {% for service, offerings in services %}
-              <details open>
-                <summary>
-                  <span class="node-type">{% trans "Service" %}</span>
-                  <a href="{{ service.get_absolute_url }}">{{ service }}</a>
-                </summary>
-                {% for offering, app_service, technical_cis in offerings %}
-                  <details open>
-                    <summary>
-                      <span class="node-type">{% trans "Service Offering" %}</span>
-                      <a href="{{ offering.get_absolute_url }}">{{ offering }}</a>
-                    </summary>
-                    {% if app_service %}
-                      <details open>
-                        <summary>
-                          <span class="node-type">{% trans "Application Service" %}</span>
-                          <a href="{{ app_service.get_absolute_url }}">{{ app_service }}</a>
-                        </summary>
-                        {% for ci, ci_type in technical_cis %}
-                          <div class="ci-leaf">
-                            <span class="node-type">{{ ci_type }}</span>
-                            <a href="{{ ci.get_absolute_url }}">{{ ci }}</a>
-                          </div>
-                        {% empty %}
-                          <div class="ci-leaf text-muted">{% trans "No Technical CIs assigned." %}</div>
-                        {% endfor %}
-                      </details>
-                    {% else %}
-                      <div class="ci-leaf text-muted">{% trans "No Application Service assigned." %}</div>
-                    {% endif %}
-                  </details>
-                {% endfor %}
-              </details>
+        <div class="org-tree-wrapper">
+          <ul class="org-tree">
+            {% for portfolio, services in portfolios %}
+              <li>
+                <span class="org-node bg-blue-lt">
+                  <i class="mdi mdi-folder-open-outline" aria-hidden="true"></i>
+                  <a href="{{ portfolio.get_absolute_url }}">{{ portfolio }}</a>
+                </span>
+                {% if services %}
+                  <ul>
+                    {% for service, offerings in services %}
+                      <li>
+                        <span class="org-node bg-green-lt">
+                          <i class="mdi mdi-cog-outline" aria-hidden="true"></i>
+                          <a href="{{ service.get_absolute_url }}">{{ service }}</a>
+                        </span>
+                        {% if offerings %}
+                          <ul>
+                            {% for offering, app_service, technical_cis in offerings %}
+                              <li>
+                                <span class="org-node bg-orange-lt">
+                                  <i class="mdi mdi-package-variant-closed" aria-hidden="true"></i>
+                                  <a href="{{ offering.get_absolute_url }}">{{ offering }}</a>
+                                </span>
+                                {% if app_service %}
+                                  <ul>
+                                    <li>
+                                      <span class="org-node bg-purple-lt">
+                                        <i class="mdi mdi-application-cog-outline" aria-hidden="true"></i>
+                                        <a href="{{ app_service.get_absolute_url }}">{{ app_service }}</a>
+                                      </span>
+                                      {% if technical_cis %}
+                                        <ul>
+                                          {% for ci, ci_type, ci_icon in technical_cis %}
+                                            <li>
+                                              <span class="org-node bg-teal-lt">
+                                                <i class="mdi {{ ci_icon }}" aria-hidden="true"></i>
+                                                <a href="{{ ci.get_absolute_url }}">{{ ci }}</a>
+                                              </span>
+                                            </li>
+                                          {% endfor %}
+                                        </ul>
+                                      {% else %}
+                                        <ul>
+                                          <li>
+                                            <span class="org-leaf-empty text-muted">
+                                              {% trans "No Technical CIs assigned." %}
+                                            </span>
+                                          </li>
+                                        </ul>
+                                      {% endif %}
+                                    </li>
+                                  </ul>
+                                {% else %}
+                                  <ul>
+                                    <li>
+                                      <span class="org-leaf-empty text-muted">
+                                        {% trans "No Application Service assigned." %}
+                                      </span>
+                                    </li>
+                                  </ul>
+                                {% endif %}
+                              </li>
+                            {% endfor %}
+                          </ul>
+                        {% endif %}
+                      </li>
+                    {% endfor %}
+                  </ul>
+                {% endif %}
+              </li>
             {% endfor %}
-          </details>
-        {% endfor %}
+          </ul>
+        </div>
       {% else %}
         <p class="text-muted mb-0">{% trans "No matching Service Portfolios found." %}</p>
       {% endif %}

@@ -500,20 +500,31 @@ class OfferingsTreeView(TemplateView):
         # If any Technical CI filter is set, only that type/instance is
         # shown for this AppService — the other three types are omitted
         # entirely rather than shown unfiltered alongside it.
+        # (type label, mdi icon class) per Technical CI kind, for the tree
+        # template's org-chart node styling.
         ci_filter_active = any((device, virtual_machine, cluster, cluster_group))
         cis = []
         if not ci_filter_active or device:
             qs = Device.objects.filter(service_specification_info__application_services=app_service)
-            cis += [(obj, 'Device') for obj in (qs.filter(pk=device.pk) if device else qs)]
+            cis += [(obj, 'Device', 'mdi-server') for obj in (qs.filter(pk=device.pk) if device else qs)]
         if not ci_filter_active or virtual_machine:
             qs = VirtualMachine.objects.filter(service_specification_info__application_services=app_service)
-            cis += [(obj, 'Virtual Machine') for obj in (qs.filter(pk=virtual_machine.pk) if virtual_machine else qs)]
+            cis += [
+                (obj, 'Virtual Machine', 'mdi-monitor')
+                for obj in (qs.filter(pk=virtual_machine.pk) if virtual_machine else qs)
+            ]
         if not ci_filter_active or cluster:
             qs = Cluster.objects.filter(service_specification_info__application_services=app_service)
-            cis += [(obj, 'Cluster') for obj in (qs.filter(pk=cluster.pk) if cluster else qs)]
+            cis += [
+                (obj, 'Cluster', 'mdi-hexagon-multiple-outline')
+                for obj in (qs.filter(pk=cluster.pk) if cluster else qs)
+            ]
         if not ci_filter_active or cluster_group:
             qs = ClusterGroup.objects.filter(service_specification_info__application_services=app_service)
-            cis += [(obj, 'Cluster Group') for obj in (qs.filter(pk=cluster_group.pk) if cluster_group else qs)]
+            cis += [
+                (obj, 'Cluster Group', 'mdi-hexagon-multiple')
+                for obj in (qs.filter(pk=cluster_group.pk) if cluster_group else qs)
+            ]
         return cis
 
     def _build_tree(self, filters):
