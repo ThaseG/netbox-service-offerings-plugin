@@ -298,8 +298,25 @@ jobs:
           NETBOX_SUPERUSER_PASSWORD: ${{ secrets.NETBOX_SUPERUSER_PASSWORD }}
 
       - name: Dump logs on failure
+        # Grouped and netbox/netbox-worker called out first: when "Deploy
+        # stack" itself fails (container unhealthy before it ever serves
+        # traffic), the actual Django traceback is almost always in the
+        # netbox container's own log, easy to miss buried in combined
+        # multi-service output ordered by timestamp instead.
         if: failure()
-        run: docker compose --env-file ci/docker/.env -f ci/docker/docker-compose.yml logs --tail=300
+        run: |
+          echo "::group::Container status"
+          docker compose --env-file ci/docker/.env -f ci/docker/docker-compose.yml ps -a
+          echo "::endgroup::"
+          echo "::group::netbox logs"
+          docker compose --env-file ci/docker/.env -f ci/docker/docker-compose.yml logs netbox --tail=500
+          echo "::endgroup::"
+          echo "::group::netbox-worker logs"
+          docker compose --env-file ci/docker/.env -f ci/docker/docker-compose.yml logs netbox-worker --tail=200
+          echo "::endgroup::"
+          echo "::group::All services (combined, for anything else)"
+          docker compose --env-file ci/docker/.env -f ci/docker/docker-compose.yml logs --tail=300
+          echo "::endgroup::"
 
       - name: Remove runtime environment file
         if: always()
