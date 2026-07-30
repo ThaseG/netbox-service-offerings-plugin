@@ -328,20 +328,22 @@ def create_virtual_machines(cluster_ids):
     return ids
 
 
-def assign_vm_ci_functions(vm_ids, ci_function_id):
+def assign_vm_application_services(vm_ids, app_service_id):
     """Gives every VM created above a 'Service Specification' entry (the
-    tab on its own NetBox detail page) with just CI Function set — the
-    plugin can't add real fields to VirtualMachine directly, so this is a
-    VirtualMachineServiceInfo row in a 1:1 relationship with it. See
+    tab on its own NetBox detail page) with just Application Services set —
+    the plugin can't add real fields to VirtualMachine directly, so this is
+    a VirtualMachineServiceInfo row in a 1:1 relationship with it. See
     models.py's ServiceSpecificationInfoBase for why lifecycle and the
-    organization groups are left unset here rather than required.
+    organization groups are left unset here rather than required. CI
+    Function isn't set directly here either — it's derived read-only from
+    the assigned Application Service(s)' Service Offering -> Service.
     """
-    print('Assigning CI Function to virtual machines...')
+    print('Assigning Application Services to virtual machines...')
     for name, vm_id in vm_ids.items():
         obj = api(
             'POST',
             'plugins/service-specification/virtual-machine-service-infos/',
-            {'virtual_machine': vm_id, 'ci_function': ci_function_id},
+            {'virtual_machine': vm_id, 'application_services': [app_service_id]},
         )
         created('virtual machine service info', obj)
 
@@ -652,9 +654,12 @@ def create_app_services(
     availability_ids,
     mtat_ids,
     criticality_ids,
-    tenant_id,
 ):
+    # Customer isn't set here: it's set once, on the parent Service
+    # Offering (see create_service_offerings()), and shown read-only on
+    # the Application Service's own page.
     print('Creating application services...')
+    ids = {}
     for name, description, offering_name, sla_name, availability_name, downtime, ttr, rpo, rto, bcm in APP_SERVICES:
         obj = api(
             'POST',
@@ -679,10 +684,11 @@ def create_app_services(
                 'rpo': rpo,
                 'rto': rto,
                 'bcm': bcm,
-                'tenant': [tenant_id],
             },
         )
         created('application service', obj)
+        ids[name] = obj['id']
+    return ids
 
 
 def main():
@@ -713,12 +719,10 @@ def main():
     mtat_ids = create_mtats()
     ci_function_ids = create_ci_functions()
 
-    assign_vm_ci_functions(vm_ids, ci_function_ids['Managed Exchange Service'])
-
     portfolio_id = create_portfolio(lifecycle_ids, group_ids, contacts_by_group)
     service_id = create_service(lifecycle_ids, ci_function_ids, group_ids, contacts_by_group, portfolio_id)
     offering_ids = create_service_offerings(lifecycle_ids, group_ids, contacts_by_group, service_id, tenant_id)
-    create_app_services(
+    app_service_ids = create_app_services(
         environment_ids,
         lifecycle_ids,
         group_ids,
@@ -728,7 +732,10 @@ def main():
         availability_ids,
         mtat_ids,
         criticality_ids,
-        tenant_id,
+    )
+
+    assign_vm_application_services(
+        vm_ids, app_service_ids['Application Service - Managed Exchange Server High Availability - Prod']
     )
 
     print('Test deployment data created successfully.')

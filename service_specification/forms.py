@@ -1,4 +1,5 @@
 from django.core.exceptions import ValidationError
+from django.db.models import Q
 from netbox.forms import NetBoxModelFilterSetForm, NetBoxModelForm, OrganizationalModelForm, PrimaryModelForm
 from tenancy.models import Contact, ContactGroup, Tenant, TenantGroup
 from utilities.forms.fields import DynamicModelChoiceField, DynamicModelMultipleChoiceField
@@ -502,8 +503,10 @@ class AppServiceForm(PrimaryModelForm):
     service_offering = DynamicModelChoiceField(
         queryset=ServiceOffering.objects.all(),
         required=True,
+        query_params={'unassigned': 'true'},
         help_text=(
-            'Parent offering that this application service supports or enables. Links to commercial agreements.'
+            'Parent offering that this application service supports or enables. Links to commercial agreements. '
+            'A Service Offering can back only one Application Service.'
         ),
     )
     business_unit = DynamicModelMultipleChoiceField(
@@ -574,15 +577,6 @@ class AppServiceForm(PrimaryModelForm):
             'Priority level indicating business impact (e.g., Critical, High, Medium, Low). Drives response urgency.'
         ),
     )
-    tenant = DynamicModelMultipleChoiceField(
-        queryset=Tenant.objects.all(),
-        required=False,
-        help_text=(
-            'Primary user group, tenant, or business entity that uses this application. Maps to customer records.'
-        ),
-    )
-    tenant_group = DynamicModelMultipleChoiceField(queryset=TenantGroup.objects.all(), required=False)
-
     fieldsets = (
         FieldSet(
             'name',
@@ -603,7 +597,6 @@ class AppServiceForm(PrimaryModelForm):
         ),
         FieldSet('sla', 'operation_time', 'availability', 'mtat', 'service_criticality', name='Service Levels'),
         FieldSet('accepted_downtime', 'ttr', 'rpo', 'rto', 'bcm', name='Recovery & Continuity'),
-        FieldSet('tenant', 'tenant_group', name='Customer'),
     )
 
     class Meta:
@@ -628,8 +621,6 @@ class AppServiceForm(PrimaryModelForm):
             'rpo',
             'rto',
             'bcm',
-            'tenant',
-            'tenant_group',
             'description',
             'tags',
             'comments',
@@ -654,6 +645,18 @@ class AppServiceForm(PrimaryModelForm):
                 'Business Continuity Management tier-1 recovery time target. Represents the first recovery milestone.'
             ),
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # A ServiceOffering backs at most one AppService (see models.py's
+        # OneToOneField). query_params={'unassigned': 'true'} above already
+        # keeps the live dropdown from suggesting already-claimed offerings;
+        # this restricts the field's own queryset the same way so validation
+        # (and any non-JS rendering) enforces the same rule — while still
+        # allowing an existing AppService to keep its own current offering.
+        self.fields['service_offering'].queryset = ServiceOffering.objects.filter(
+            Q(app_service__isnull=True) | Q(pk=self.instance.service_offering_id)
+        )
 
     def clean(self):
         # See PortfolioForm.clean() for why this doesn't use super().clean()'s
@@ -693,18 +696,25 @@ def _make_service_info_form(model):
         (),
         {
             'model': model,
-            'fields': ('ci_function', 'lifecycle', 'business_unit', 'support_group', 'change_group', 'tags'),
+            'fields': (
+                'application_services',
+                'lifecycle',
+                'business_unit',
+                'support_group',
+                'change_group',
+                'tags',
+            ),
         },
     )
     return type(
         f'{model.__name__}Form',
         (NetBoxModelForm,),
         {
-            'ci_function': DynamicModelChoiceField(
-                queryset=CIFunction.objects.all(),
+            'application_services': DynamicModelMultipleChoiceField(
+                queryset=AppService.objects.all(),
                 required=True,
-                label='CI Function',
-                help_text='Technical capability provided (e.g., storage, compute, networking). Clarifies what it does.',
+                label='Application Services',
+                help_text='Application Service(s) this technical component supports. Used to derive its CI Function.',
             ),
             'lifecycle': DynamicModelChoiceField(
                 queryset=Lifecycle.objects.all(),
@@ -727,7 +737,7 @@ def _make_service_info_form(model):
                 help_text='Team executing changes on this CI (e.g., patching, upgrades). Ensures change compliance.',
             ),
             'fieldsets': (
-                FieldSet('ci_function', 'lifecycle', 'tags', name='Service Specification'),
+                FieldSet('application_services', 'lifecycle', 'tags', name='Service Specification'),
                 FieldSet('business_unit', 'support_group', 'change_group', name='Organization'),
             ),
             'Meta': meta,

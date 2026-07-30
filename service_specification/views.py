@@ -133,7 +133,28 @@ def _make_service_info_views(parent_model, info_model, form_cls, fk_name):
     class ServiceInfoView(generic.ObjectView):
         queryset = parent_model.objects.all()
         template_name = 'service_specification/service_info_tab.html'
-        layout = SimpleLayout(left_panels=[panels.ServiceSpecificationInfoPanel(accessor='service_info')])
+        layout = SimpleLayout(
+            left_panels=[panels.ServiceSpecificationInfoPanel(accessor='service_info')],
+            bottom_panels=[
+                # Read-only rollup: CI Function isn't set directly on this
+                # side table any more (see models.py) — it's derived from
+                # whichever AppService(s) `application_services` links to,
+                # one hop further via each one's Service Offering -> Service.
+                ObjectsTablePanel(
+                    model='service_specification.cifunction',
+                    title='CI Function (from Application Services)',
+                    filters={
+                        'id': lambda ctx: _rollup_ids(
+                            CIFunction.objects.filter(
+                                pk__in=_get_info(ctx['object']).application_services.values_list(
+                                    'service_offering__service__ci_function', flat=True
+                                )
+                            )
+                        )
+                    },
+                ),
+            ],
+        )
         tab = ViewTab(
             label='Service Specification',
             permission=f'service_specification.view_{info_model._meta.model_name}',
@@ -231,13 +252,24 @@ AppServiceListView, AppServiceView, AppServiceEditView, AppServiceDeleteView = _
         left_panels=[panels.AppServiceOverviewPanel(), panels.AppServiceRecoveryPanel()],
         right_panels=[panels.AppServiceLevelsPanel(), panels.AppServiceOrganizationPanel()],
         bottom_panels=[
-            panels.AppServiceCustomerPanel(),
             # Read-only rollups, one hop further than the (single)
             # `service_offering` field already shown in the overview panel
-            # above: the Service(s) behind that offering, and the CI
-            # Function(s) assigned to those Services. Editing still happens
-            # via the `service_offering` field on this same form — CI
-            # Function itself is only ever set on Service, not here.
+            # above: the Customer(s) and Service(s) behind that offering,
+            # and — one hop further still — the CI Function(s) assigned to
+            # those Services. Editing still happens via the
+            # `service_offering` field on this same form — Customer is only
+            # ever set on Service Offering, and CI Function only on
+            # Service, not here.
+            ObjectsTablePanel(
+                model='tenancy.tenant',
+                title='Customer (from Service Offering)',
+                filters={'id': lambda ctx: _rollup_ids(ctx['object'].service_offering.tenant.all())},
+            ),
+            ObjectsTablePanel(
+                model='tenancy.tenantgroup',
+                title='Customer Group (from Service Offering)',
+                filters={'id': lambda ctx: _rollup_ids(ctx['object'].service_offering.tenant_group.all())},
+            ),
             ObjectsTablePanel(
                 model='service_specification.service',
                 title='Parent Services',
@@ -326,11 +358,15 @@ CIFunctionListView, CIFunctionView, CIFunctionEditView, CIFunctionDeleteView = _
         left_panels=[panels.LookupPanel()],
         bottom_panels=[
             # Read-only rollups of everything assigned this CI Function.
-            # Service links to it directly (a plain FK); Devices/VMs/
-            # Clusters/ClusterGroups link via their own
-            # ServiceSpecificationInfo side table (see models.py — plugins
-            # can't add real fields to those core models), so those four
-            # traverse the reverse OneToOne accessor instead.
+            # Service links to it directly (a plain FK). Devices/VMs/
+            # Clusters/ClusterGroups have no direct CI Function of their
+            # own any more — it's derived from whichever AppService(s)
+            # their own ServiceSpecificationInfo side table (see models.py
+            # — plugins can't add real fields to those core models) links
+            # to, so those four traverse: reverse OneToOne accessor ->
+            # application_services (M2M) -> service_offering ->
+            # service (M2M) -> ci_function. .distinct() guards against
+            # duplicate rows from that multi-hop M2M traversal.
             ObjectsTablePanel(
                 model='service_specification.service',
                 title='Services',
@@ -341,7 +377,11 @@ CIFunctionListView, CIFunctionView, CIFunctionEditView, CIFunctionDeleteView = _
                 title='Devices',
                 filters={
                     'id': lambda ctx: _rollup_ids(
-                        Device.objects.filter(service_specification_info__ci_function=ctx['object'])
+                        Device.objects.filter(
+                            service_specification_info__application_services__service_offering__service__ci_function=ctx[
+                                'object'
+                            ]
+                        ).distinct()
                     )
                 },
             ),
@@ -350,7 +390,11 @@ CIFunctionListView, CIFunctionView, CIFunctionEditView, CIFunctionDeleteView = _
                 title='Virtual Machines',
                 filters={
                     'id': lambda ctx: _rollup_ids(
-                        VirtualMachine.objects.filter(service_specification_info__ci_function=ctx['object'])
+                        VirtualMachine.objects.filter(
+                            service_specification_info__application_services__service_offering__service__ci_function=ctx[
+                                'object'
+                            ]
+                        ).distinct()
                     )
                 },
             ),
@@ -359,7 +403,11 @@ CIFunctionListView, CIFunctionView, CIFunctionEditView, CIFunctionDeleteView = _
                 title='Clusters',
                 filters={
                     'id': lambda ctx: _rollup_ids(
-                        Cluster.objects.filter(service_specification_info__ci_function=ctx['object'])
+                        Cluster.objects.filter(
+                            service_specification_info__application_services__service_offering__service__ci_function=ctx[
+                                'object'
+                            ]
+                        ).distinct()
                     )
                 },
             ),
@@ -368,7 +416,11 @@ CIFunctionListView, CIFunctionView, CIFunctionEditView, CIFunctionDeleteView = _
                 title='Cluster Groups',
                 filters={
                     'id': lambda ctx: _rollup_ids(
-                        ClusterGroup.objects.filter(service_specification_info__ci_function=ctx['object'])
+                        ClusterGroup.objects.filter(
+                            service_specification_info__application_services__service_offering__service__ci_function=ctx[
+                                'object'
+                            ]
+                        ).distinct()
                     )
                 },
             ),

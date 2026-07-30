@@ -290,6 +290,11 @@ class ServiceOfferingFilterSet(NetBoxModelFilterSet):
         queryset=TenantGroup.objects.all(),
         label='Customer Group (ID)',
     )
+    unassigned = django_filters.BooleanFilter(
+        field_name='app_service',
+        lookup_expr='isnull',
+        label='Not yet assigned to an Application Service',
+    )
 
     class Meta:
         model = ServiceOffering
@@ -308,6 +313,7 @@ class ServiceOfferingFilterSet(NetBoxModelFilterSet):
             'change_group_id',
             'tenant_id',
             'tenant_group_id',
+            'unassigned',
         )
 
     def search(self, queryset, name, value):
@@ -382,16 +388,6 @@ class AppServiceFilterSet(NetBoxModelFilterSet):
         queryset=Criticality.objects.all(),
         label='Service Criticality (ID)',
     )
-    tenant_id = django_filters.ModelMultipleChoiceFilter(
-        field_name='tenant',
-        queryset=Tenant.objects.all(),
-        label='Customer (ID)',
-    )
-    tenant_group_id = django_filters.ModelMultipleChoiceFilter(
-        field_name='tenant_group',
-        queryset=TenantGroup.objects.all(),
-        label='Customer Group (ID)',
-    )
 
     class Meta:
         model = AppService
@@ -411,8 +407,6 @@ class AppServiceFilterSet(NetBoxModelFilterSet):
             'availability_id',
             'mtat_id',
             'service_criticality_id',
-            'tenant_id',
-            'tenant_group_id',
         )
 
     def search(self, queryset, name, value):
@@ -425,10 +419,10 @@ class DeviceServiceInfoFilterSet(NetBoxModelFilterSet):
         queryset=Device.objects.all(),
         label='Device (ID)',
     )
-    ci_function_id = django_filters.ModelMultipleChoiceFilter(
-        field_name='ci_function',
-        queryset=CIFunction.objects.all(),
-        label='CI Function (ID)',
+    application_services_id = django_filters.ModelMultipleChoiceFilter(
+        field_name='application_services',
+        queryset=AppService.objects.all(),
+        label='Application Service (ID)',
     )
     lifecycle_id = django_filters.ModelMultipleChoiceFilter(
         field_name='lifecycle',
@@ -456,7 +450,7 @@ class DeviceServiceInfoFilterSet(NetBoxModelFilterSet):
         fields = (
             'id',
             'device_id',
-            'ci_function_id',
+            'application_services_id',
             'lifecycle_id',
             'business_unit_id',
             'support_group_id',
@@ -470,10 +464,10 @@ class VirtualMachineServiceInfoFilterSet(NetBoxModelFilterSet):
         queryset=VirtualMachine.objects.all(),
         label='Virtual machine (ID)',
     )
-    ci_function_id = django_filters.ModelMultipleChoiceFilter(
-        field_name='ci_function',
-        queryset=CIFunction.objects.all(),
-        label='CI Function (ID)',
+    application_services_id = django_filters.ModelMultipleChoiceFilter(
+        field_name='application_services',
+        queryset=AppService.objects.all(),
+        label='Application Service (ID)',
     )
     lifecycle_id = django_filters.ModelMultipleChoiceFilter(
         field_name='lifecycle',
@@ -501,7 +495,7 @@ class VirtualMachineServiceInfoFilterSet(NetBoxModelFilterSet):
         fields = (
             'id',
             'virtual_machine_id',
-            'ci_function_id',
+            'application_services_id',
             'lifecycle_id',
             'business_unit_id',
             'support_group_id',
@@ -515,10 +509,10 @@ class ClusterServiceInfoFilterSet(NetBoxModelFilterSet):
         queryset=Cluster.objects.all(),
         label='Cluster (ID)',
     )
-    ci_function_id = django_filters.ModelMultipleChoiceFilter(
-        field_name='ci_function',
-        queryset=CIFunction.objects.all(),
-        label='CI Function (ID)',
+    application_services_id = django_filters.ModelMultipleChoiceFilter(
+        field_name='application_services',
+        queryset=AppService.objects.all(),
+        label='Application Service (ID)',
     )
     lifecycle_id = django_filters.ModelMultipleChoiceFilter(
         field_name='lifecycle',
@@ -546,7 +540,7 @@ class ClusterServiceInfoFilterSet(NetBoxModelFilterSet):
         fields = (
             'id',
             'cluster_id',
-            'ci_function_id',
+            'application_services_id',
             'lifecycle_id',
             'business_unit_id',
             'support_group_id',
@@ -560,10 +554,10 @@ class ClusterGroupServiceInfoFilterSet(NetBoxModelFilterSet):
         queryset=ClusterGroup.objects.all(),
         label='Cluster group (ID)',
     )
-    ci_function_id = django_filters.ModelMultipleChoiceFilter(
-        field_name='ci_function',
-        queryset=CIFunction.objects.all(),
-        label='CI Function (ID)',
+    application_services_id = django_filters.ModelMultipleChoiceFilter(
+        field_name='application_services',
+        queryset=AppService.objects.all(),
+        label='Application Service (ID)',
     )
     lifecycle_id = django_filters.ModelMultipleChoiceFilter(
         field_name='lifecycle',
@@ -591,7 +585,7 @@ class ClusterGroupServiceInfoFilterSet(NetBoxModelFilterSet):
         fields = (
             'id',
             'cluster_group_id',
-            'ci_function_id',
+            'application_services_id',
             'lifecycle_id',
             'business_unit_id',
             'support_group_id',

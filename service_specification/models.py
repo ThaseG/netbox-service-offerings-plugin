@@ -399,10 +399,14 @@ class AppService(PrimaryModel):
         related_name='+',
         verbose_name='Service Lifecycle Management',
     )
-    service_offering = models.ForeignKey(
+    # A ServiceOffering backs at most one AppService — enforced here (not
+    # just filtered out of the form's dropdown) so it can't be bypassed via
+    # the REST API/GraphQL either. See AppServiceForm for the matching
+    # dropdown filter.
+    service_offering = models.OneToOneField(
         to=ServiceOffering,
         on_delete=models.PROTECT,
-        related_name='app_services',
+        related_name='app_service',
         verbose_name='Service Offering',
     )
     business_unit = models.ManyToManyField(
@@ -480,18 +484,9 @@ class AppService(PrimaryModel):
     rpo = models.PositiveIntegerField(verbose_name='RPO (hours)')
     rto = models.PositiveIntegerField(verbose_name='RTO (hours)')
     bcm = models.PositiveIntegerField(verbose_name='BCM -1')
-    tenant = models.ManyToManyField(
-        to=Tenant,
-        related_name='+',
-        blank=True,
-        verbose_name='Customer',
-    )
-    tenant_group = models.ManyToManyField(
-        to=TenantGroup,
-        related_name='+',
-        blank=True,
-        verbose_name='Customer Group',
-    )
+    # No tenant/tenant_group here: Customer is set once, on the parent
+    # ServiceOffering, and shown read-only on this object's detail page
+    # (see views.py's AppService layout) rather than duplicated here.
 
     class Meta(PrimaryModel.Meta):
         ordering = ('name',)
@@ -521,21 +516,24 @@ class ServiceSpecificationInfoBase(NetBoxModel):
     # or edited with only some fields filled in — e.g. views.py lazily
     # persisting an empty placeholder row the first time a Device/VM/
     # Cluster/ClusterGroup's "Service Specification" tab is viewed, or an
-    # automation assigning just a CI Function up front and leaving the rest
-    # for later. Two different mechanisms are involved: ci_function/
-    # lifecycle also need null=True (they're FKs — an unfilled FK is a
-    # NOT NULL DB column otherwise, so even that initial empty save would
-    # fail); business_unit/support_group/change_group are ManyToManyFields,
-    # which are never DB-required regardless of blank, but DRF's serializer
-    # (fields='__all__') still marks a field required=True based on
-    # model-field blank unless it's explicitly True.
-    ci_function = models.ForeignKey(
-        to=CIFunction,
-        on_delete=models.PROTECT,
+    # automation assigning just Business Unit up front and leaving the rest
+    # for later. lifecycle also needs null=True (it's an FK — an unfilled FK
+    # is a NOT NULL DB column otherwise, so even that initial empty save
+    # would fail); application_services/business_unit/support_group/
+    # change_group are ManyToManyFields, which are never DB-required
+    # regardless of blank, but DRF's serializer (fields='__all__') still
+    # marks a field required=True based on model-field blank unless it's
+    # explicitly True.
+    #
+    # There's no direct CI Function field: it's derived read-only from
+    # whichever AppService(s) this component supports (AppService ->
+    # ServiceOffering -> Service -> CIFunction — see views.py's
+    # _make_service_info_views rollup panel), rather than set directly here.
+    application_services = models.ManyToManyField(
+        to=AppService,
         related_name='+',
         blank=True,
-        null=True,
-        verbose_name='CI Function',
+        verbose_name='Application Services',
     )
     lifecycle = models.ForeignKey(
         to=Lifecycle,

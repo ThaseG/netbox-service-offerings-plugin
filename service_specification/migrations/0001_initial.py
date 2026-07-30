@@ -473,10 +473,12 @@ class Migration(migrations.Migration):
                     ),
                 ),
                 (
+                    # A ServiceOffering backs at most one AppService (see
+                    # models.py) — OneToOneField, not ForeignKey.
                     'service_offering',
-                    models.ForeignKey(
+                    models.OneToOneField(
                         on_delete=django.db.models.deletion.PROTECT,
-                        related_name='app_services',
+                        related_name='app_service',
                         to='service_specification.serviceoffering',
                     ),
                 ),
@@ -525,16 +527,6 @@ class Migration(migrations.Migration):
                 ),
                 ('tags', taggit.managers.TaggableManager(through='extras.TaggedItem', to='extras.Tag')),
                 (
-                    'ci_function',
-                    models.ForeignKey(
-                        blank=True,
-                        null=True,
-                        on_delete=django.db.models.deletion.PROTECT,
-                        related_name='+',
-                        to='service_specification.cifunction',
-                    ),
-                ),
-                (
                     'lifecycle',
                     models.ForeignKey(
                         blank=True,
@@ -569,16 +561,6 @@ class Migration(migrations.Migration):
                     models.JSONField(blank=True, default=dict, encoder=utilities.json.CustomFieldJSONEncoder),
                 ),
                 ('tags', taggit.managers.TaggableManager(through='extras.TaggedItem', to='extras.Tag')),
-                (
-                    'ci_function',
-                    models.ForeignKey(
-                        blank=True,
-                        null=True,
-                        on_delete=django.db.models.deletion.PROTECT,
-                        related_name='+',
-                        to='service_specification.cifunction',
-                    ),
-                ),
                 (
                     'lifecycle',
                     models.ForeignKey(
@@ -615,16 +597,6 @@ class Migration(migrations.Migration):
                 ),
                 ('tags', taggit.managers.TaggableManager(through='extras.TaggedItem', to='extras.Tag')),
                 (
-                    'ci_function',
-                    models.ForeignKey(
-                        blank=True,
-                        null=True,
-                        on_delete=django.db.models.deletion.PROTECT,
-                        related_name='+',
-                        to='service_specification.cifunction',
-                    ),
-                ),
-                (
                     'lifecycle',
                     models.ForeignKey(
                         blank=True,
@@ -659,16 +631,6 @@ class Migration(migrations.Migration):
                     models.JSONField(blank=True, default=dict, encoder=utilities.json.CustomFieldJSONEncoder),
                 ),
                 ('tags', taggit.managers.TaggableManager(through='extras.TaggedItem', to='extras.Tag')),
-                (
-                    'ci_function',
-                    models.ForeignKey(
-                        blank=True,
-                        null=True,
-                        on_delete=django.db.models.deletion.PROTECT,
-                        related_name='+',
-                        to='service_specification.cifunction',
-                    ),
-                ),
                 (
                     'lifecycle',
                     models.ForeignKey(
@@ -851,19 +813,16 @@ class Migration(migrations.Migration):
             name='service_criticality',
             field=models.ManyToManyField(related_name='+', to='service_specification.criticality'),
         ),
-        migrations.AddField(
-            model_name='appservice',
-            name='tenant',
-            field=models.ManyToManyField(blank=True, related_name='+', to='tenancy.tenant'),
-        ),
-        migrations.AddField(
-            model_name='appservice',
-            name='tenant_group',
-            field=models.ManyToManyField(blank=True, related_name='+', to='tenancy.tenantgroup'),
-        ),
+        # No tenant/tenant_group here: Customer is set once, on the parent
+        # ServiceOffering (see AppService.Meta comment in models.py).
         # DeviceServiceInfo / VirtualMachineServiceInfo / ClusterServiceInfo / ClusterGroupServiceInfo
         migrations.AddField(
             model_name='deviceserviceinfo',
+            name='application_services',
+            field=models.ManyToManyField(blank=True, related_name='+', to='service_specification.appservice'),
+        ),
+        migrations.AddField(
+            model_name='deviceserviceinfo',
             name='business_unit',
             field=models.ManyToManyField(blank=True, related_name='+', to='tenancy.contactgroup'),
         ),
@@ -879,6 +838,11 @@ class Migration(migrations.Migration):
         ),
         migrations.AddField(
             model_name='virtualmachineserviceinfo',
+            name='application_services',
+            field=models.ManyToManyField(blank=True, related_name='+', to='service_specification.appservice'),
+        ),
+        migrations.AddField(
+            model_name='virtualmachineserviceinfo',
             name='business_unit',
             field=models.ManyToManyField(blank=True, related_name='+', to='tenancy.contactgroup'),
         ),
@@ -894,6 +858,11 @@ class Migration(migrations.Migration):
         ),
         migrations.AddField(
             model_name='clusterserviceinfo',
+            name='application_services',
+            field=models.ManyToManyField(blank=True, related_name='+', to='service_specification.appservice'),
+        ),
+        migrations.AddField(
+            model_name='clusterserviceinfo',
             name='business_unit',
             field=models.ManyToManyField(blank=True, related_name='+', to='tenancy.contactgroup'),
         ),
@@ -906,6 +875,11 @@ class Migration(migrations.Migration):
             model_name='clusterserviceinfo',
             name='change_group',
             field=models.ManyToManyField(blank=True, related_name='+', to='tenancy.contactgroup'),
+        ),
+        migrations.AddField(
+            model_name='clustergroupserviceinfo',
+            name='application_services',
+            field=models.ManyToManyField(blank=True, related_name='+', to='service_specification.appservice'),
         ),
         migrations.AddField(
             model_name='clustergroupserviceinfo',

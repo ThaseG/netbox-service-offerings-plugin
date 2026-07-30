@@ -22,20 +22,20 @@ Models are organized into two groups, matching the plugin's navigation menu.
 ### Data Model group
 
 A `Portfolio` groups one or more `Service`s; a `Service` is sold to customers as one or more `ServiceOffering`s;
-each `ServiceOffering` is realized by one or more `AppService`s, though each `AppService` belongs to exactly one
-`ServiceOffering`.
+each `ServiceOffering` is realized by at most one `AppService` (enforced as a one-to-one relationship), and each
+`AppService` belongs to exactly one `ServiceOffering`.
 
 | Model | Description |
 | --- | --- |
 | **Portfolio** (Service Portfolio) | Top-level grouping of related services. Has an owner and a manager (each a contact and/or contact group) and a `Lifecycle`. |
 | **Service** | A business or technical service. Belongs to one or more portfolios; has owner/manager, business unit, support group and change group (contact groups); optionally linked to a `CIFunction`. |
 | **ServiceOffering** | A specific offering of a service to customers, identified by a contract number. Belongs to one or more services; optionally scoped to a `Tenant`/`TenantGroup`. |
-| **AppService** | An application-level realization of a *single* service offering, carrying operational commitments: accepted downtime, TTR, RPO, RTO, BCM, plus links to `SLA`, `OperationTime`, `Availability`, `Criticality` and `MTAT`. Requires an `Environment`. Owner is a single choice of *either* a Contact *or* a Contact Group (not both). |
+| **AppService** | An application-level realization of a *single* service offering (one-to-one — a Service Offering can back only one Application Service), carrying operational commitments: accepted downtime, TTR, RPO, RTO, BCM, plus links to `SLA`, `OperationTime`, `Availability`, `Criticality` and `MTAT`. Requires an `Environment`. Owner is a single choice of *either* a Contact *or* a Contact Group (not both). Has no Customer fields of its own — Customer is set once, on its Service Offering. |
 
 A ServiceOffering's detail page also shows read-only rollup tables of its parent Service(s)' own parameters and
-their `CIFunction`(s); an AppService's detail page shows the same for the Service(s) behind its (single) Service
-Offering — for context only, since `CIFunction` is only ever set on `Service` itself. The actual relationships are
-still edited via the `service` / `service_offering` fields.
+their `CIFunction`(s); an AppService's detail page shows the same, plus its (single) Service Offering's Customer
+(`Tenant`/`TenantGroup`) — for context only, since Customer is only ever set on `ServiceOffering` and `CIFunction`
+only on `Service` itself. The actual relationships are still edited via the `service` / `service_offering` fields.
 
 ### Support group
 
@@ -51,7 +51,7 @@ tags and comments (plus a couple of extra fields noted below):
 | **Criticality** | — | AppService (as `service_criticality`) |
 | **Environment** | — | AppService |
 | **MTAT** | `value` (integer), `unit` (Seconds/Minutes/Hours/Days/Weeks/Months/Years) | AppService |
-| **CIFunction** | — | Service, and Device/VirtualMachine/Cluster/ClusterGroup (see below) |
+| **CIFunction** | — | Service |
 
 All models support NetBox's standard object features: tags, comments (Markdown), custom fields, custom links,
 change logging, journaling and bookmarks.
@@ -62,10 +62,11 @@ change logging, journaling and bookmarks.
 fields to them directly. Instead, each gets a **Service Specification** tab on its own detail page (`/dcim/devices/
 <id>/service-specification/` and the virtualization equivalents), backed by a plugin-owned side table
 (`DeviceServiceInfo`, `VirtualMachineServiceInfo`, `ClusterServiceInfo`, `ClusterGroupServiceInfo`) in a one-to-one
-relationship with the core object. Each carries a `CIFunction`, a `Lifecycle`, and Business Unit/Support Group/
-Change Group (contact groups only, no individual contacts). The tab is read-only; an **Edit** button opens the
-matching form. These side tables aren't separately listed in the plugin's own navigation menu or REST API — they're
-reached only through the core object's tab.
+relationship with the core object. Each carries a multi-select of `AppService`(s) it supports, a `Lifecycle`, and
+Business Unit/Support Group/Change Group (contact groups only, no individual contacts). There's no direct
+`CIFunction` field — it's shown read-only, derived from the linked Application Service(s)' Service Offering ->
+Service. The tab is read-only; an **Edit** button opens the matching form. These side tables aren't separately
+listed in the plugin's own navigation menu or REST API — they're reached only through the core object's tab.
 
 ## Compatibility
 

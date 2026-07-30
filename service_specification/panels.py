@@ -20,7 +20,6 @@ __all__ = (
     'AppServiceLevelsPanel',
     'AppServiceRecoveryPanel',
     'AppServiceOrganizationPanel',
-    'AppServiceCustomerPanel',
     'ServiceSpecificationInfoPanel',
     'CommentsPanel',
 )
@@ -201,12 +200,6 @@ class AppServiceOrganizationPanel(ObjectAttributesPanel):
     owned_by_contact = attrs.RelatedObjectAttr('owned_by_contact', label=_('Owner (Contact)'), linkify=True)
 
 
-class AppServiceCustomerPanel(ObjectAttributesPanel):
-    title = _('Customer')
-    tenant = attrs.RelatedObjectListAttr('tenant', label=_('Customer'), linkify=True)
-    tenant_group = attrs.RelatedObjectListAttr('tenant_group', label=_('Customer Group'), linkify=True)
-
-
 class ServiceSpecificationInfoPanel(ObjectAttributesPanel):
     """Shared read-only panel for the Device/VirtualMachine/Cluster/ClusterGroup
     'Service Specification' tab (see views.py) — the editable fields are
@@ -219,7 +212,9 @@ class ServiceSpecificationInfoPanel(ObjectAttributesPanel):
     plus an Edit link rather than a 404.
     """
 
-    ci_function = attrs.RelatedObjectAttr('ci_function', label=_('CI Function'), linkify=True)
+    application_services = attrs.RelatedObjectListAttr(
+        'application_services', label=_('Application Services'), linkify=True
+    )
     lifecycle = attrs.RelatedObjectAttr('lifecycle', label=_('Service Lifecycle Management'), linkify=True)
     business_unit = attrs.RelatedObjectListAttr('business_unit', label=_('Business Unit'), linkify=True)
     support_group = attrs.RelatedObjectListAttr('support_group', label=_('Support Group'), linkify=True)
