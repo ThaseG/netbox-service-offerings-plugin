@@ -1,9 +1,12 @@
+from dcim.models import Device
+from django import forms
 from django.core.exceptions import ValidationError
 from django.db.models import Q
 from netbox.forms import NetBoxModelFilterSetForm, NetBoxModelForm, OrganizationalModelForm, PrimaryModelForm
 from tenancy.models import Contact, ContactGroup, Tenant, TenantGroup
 from utilities.forms.fields import DynamicModelChoiceField, DynamicModelMultipleChoiceField
 from utilities.forms.rendering import FieldSet
+from virtualization.models import Cluster, ClusterGroup, VirtualMachine
 
 from .models import (
     MTAT,
@@ -53,6 +56,7 @@ __all__ = (
     'EnvironmentFilterForm',
     'MTATFilterForm',
     'CIFunctionFilterForm',
+    'OfferingsTreeFilterForm',
 )
 
 
@@ -1007,3 +1011,35 @@ class AppServiceFilterForm(NetBoxModelFilterSetForm):
         required=False,
         label='Customer Group',
     )
+
+
+#
+# Report forms
+#
+
+
+class OfferingsTreeFilterForm(forms.Form):
+    """Filters for the read-only Portfolio -> Service -> Service Offering ->
+    Application Service -> Technical CI tree (views.OfferingsTreeView). Not
+    a ModelForm/FilterSet — this drives a hand-built tree, not a table.
+
+    Every field is optional; picking one narrows the tree to whatever
+    branch(es) it belongs to while still showing the full ancestor path
+    down to it, rather than hiding everything else in isolation. There's no
+    single combined "Technical CI" field: NetBox's DynamicModelChoiceField
+    is bound to one model's API endpoint each, so a Device/VM/Cluster/
+    Cluster Group picker can't be one literal dropdown — these four fields
+    are grouped under one "Technical CI" heading in the template instead.
+    """
+
+    tenant = DynamicModelChoiceField(queryset=Tenant.objects.all(), required=False)
+    portfolio = DynamicModelChoiceField(queryset=Portfolio.objects.all(), required=False, label='Service Portfolio')
+    service = DynamicModelChoiceField(queryset=Service.objects.all(), required=False)
+    service_offering = DynamicModelChoiceField(queryset=ServiceOffering.objects.all(), required=False)
+    app_service = DynamicModelChoiceField(
+        queryset=AppService.objects.all(), required=False, label='Application Service'
+    )
+    device = DynamicModelChoiceField(queryset=Device.objects.all(), required=False)
+    virtual_machine = DynamicModelChoiceField(queryset=VirtualMachine.objects.all(), required=False)
+    cluster = DynamicModelChoiceField(queryset=Cluster.objects.all(), required=False)
+    cluster_group = DynamicModelChoiceField(queryset=ClusterGroup.objects.all(), required=False)

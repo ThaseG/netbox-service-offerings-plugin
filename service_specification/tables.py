@@ -1,5 +1,8 @@
 import django_tables2 as tables
+from django.db.models import Q
+from django.utils.html import format_html_join
 from netbox.tables import NetBoxTable, columns
+from tenancy.models import Tenant
 
 from .models import (
     MTAT,
@@ -29,6 +32,7 @@ __all__ = (
     'EnvironmentTable',
     'MTATTable',
     'CIFunctionTable',
+    'TenantReportTable',
 )
 
 
@@ -207,3 +211,47 @@ class AppServiceTable(NetBoxTable):
             'actions',
         )
         default_columns = ('pk', 'name', 'environment', 'lifecycle', 'service_offering', 'description')
+
+
+#
+# Report tables
+#
+
+
+class TenantReportTable(NetBoxTable):
+    """Read-only rollup of every Tenant (views.TenantReportView) — Tenant is
+    a core NetBox model, so this isn't in Meta.fields/model the way every
+    other table here is; 'contacts' and 'related_service_offerings' aren't
+    real fields on Tenant at all (see the render_* methods below), so they
+    can't be declared via Meta either. actions/pk/id are intentionally left
+    out: this table has no edit/delete/bulk actions to offer.
+    """
+
+    name = tables.Column(linkify=True)
+    group = tables.Column(linkify=True, verbose_name='Tenant Group')
+    sites = columns.ManyToManyColumn(linkify_item=True)
+    contacts = tables.Column(empty_values=(), orderable=False)
+    related_service_offerings = tables.Column(
+        empty_values=(), orderable=False, verbose_name='Related Service Offerings'
+    )
+
+    class Meta(NetBoxTable.Meta):
+        model = Tenant
+        fields = ('name', 'group', 'sites', 'contacts', 'related_service_offerings')
+        default_columns = ('name', 'group', 'sites', 'contacts', 'related_service_offerings')
+
+    def render_contacts(self, record):
+        contacts = [assignment.contact for assignment in record.get_contacts()]
+        return format_html_join(', ', '<a href="{}">{}</a>', ((c.get_absolute_url(), c.name) for c in contacts))
+
+    def render_related_service_offerings(self, record):
+        # Q(tenant_group=None) would match every offering with *no*
+        # tenant_group set (Django translates field=None to __isnull=True),
+        # not just ones tied to this specific ungrouped tenant — so the
+        # tenant_group half of the filter only gets added when there
+        # actually is a group to match against.
+        filters = Q(tenant=record)
+        if record.group_id:
+            filters |= Q(tenant_group=record.group_id)
+        offerings = ServiceOffering.objects.filter(filters).distinct()
+        return format_html_join(', ', '<a href="{}">{}</a>', ((o.get_absolute_url(), o.name) for o in offerings))

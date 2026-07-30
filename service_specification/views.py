@@ -1,8 +1,13 @@
 from dcim.models import Device
+from django.db.models import Q
 from django.shortcuts import get_object_or_404
+from django.views.generic import TemplateView
 from netbox.ui.layout import SimpleLayout
 from netbox.ui.panels import ObjectsTablePanel
 from netbox.views import generic
+from tenancy.filtersets import TenantFilterSet
+from tenancy.forms import TenantFilterForm
+from tenancy.models import Tenant
 from utilities.views import ViewTab, register_model_view
 from virtualization.models import Cluster, ClusterGroup, VirtualMachine
 
@@ -441,3 +446,131 @@ ClusterServiceSpecificationView, ClusterServiceSpecificationEditView = _make_ser
 ClusterGroupServiceSpecificationView, ClusterGroupServiceSpecificationEditView = _make_service_info_views(
     ClusterGroup, ClusterGroupServiceInfo, forms.ClusterGroupServiceInfoForm, 'cluster_group'
 )
+
+
+#
+# Reports — neither of these is registered via register_model_view: Tenant
+# is a core NetBox model already fully registered by NetBox itself
+# (reusing that same registry here would collide with NetBox's own Tenant
+# views), and the tree isn't tied to any single model's CRUD lifecycle at
+# all. Both are wired directly to plain paths in urls.py instead.
+#
+
+
+class TenantReportView(generic.ObjectListView):
+    """Read-only rollup of every Tenant, reached from the plugin's own
+    'Reports' menu (see navigation.py).
+    """
+
+    queryset = Tenant.objects.select_related('group').prefetch_related('sites', 'tags')
+    filterset = TenantFilterSet
+    filterset_form = TenantFilterForm
+    table = tables.TenantReportTable
+    actions = ()
+
+
+class OfferingsTreeView(TemplateView):
+    """Read-only Portfolio -> Service -> Service Offering -> Application
+    Service -> Technical CI tree, reached from the plugin's own 'Reports'
+    menu (see navigation.py).
+    """
+
+    template_name = 'service_specification/offerings_tree.html'
+
+    def get(self, request, *args, **kwargs):
+        form = forms.OfferingsTreeFilterForm(request.GET or None)
+        filters = form.cleaned_data if form.is_valid() else {}
+        return self.render_to_response({'filter_form': form, 'portfolios': self._build_tree(filters)})
+
+    @staticmethod
+    def _filter_offerings_by_tenant(queryset, tenant):
+        if not tenant:
+            return queryset
+        # Q(tenant_group=None) would match every offering with *no* group
+        # set (Django translates field=None to __isnull=True), not just
+        # ones tied to this specific ungrouped tenant — so the
+        # tenant_group half only gets added when there's a group to match.
+        offering_filter = Q(tenant=tenant)
+        if tenant.group_id:
+            offering_filter |= Q(tenant_group=tenant.group_id)
+        return queryset.filter(offering_filter)
+
+    @staticmethod
+    def _technical_cis_for(app_service, device, virtual_machine, cluster, cluster_group):
+        # If any Technical CI filter is set, only that type/instance is
+        # shown for this AppService — the other three types are omitted
+        # entirely rather than shown unfiltered alongside it.
+        ci_filter_active = any((device, virtual_machine, cluster, cluster_group))
+        cis = []
+        if not ci_filter_active or device:
+            qs = Device.objects.filter(service_specification_info__application_services=app_service)
+            cis += [(obj, 'Device') for obj in (qs.filter(pk=device.pk) if device else qs)]
+        if not ci_filter_active or virtual_machine:
+            qs = VirtualMachine.objects.filter(service_specification_info__application_services=app_service)
+            cis += [(obj, 'Virtual Machine') for obj in (qs.filter(pk=virtual_machine.pk) if virtual_machine else qs)]
+        if not ci_filter_active or cluster:
+            qs = Cluster.objects.filter(service_specification_info__application_services=app_service)
+            cis += [(obj, 'Cluster') for obj in (qs.filter(pk=cluster.pk) if cluster else qs)]
+        if not ci_filter_active or cluster_group:
+            qs = ClusterGroup.objects.filter(service_specification_info__application_services=app_service)
+            cis += [(obj, 'Cluster Group') for obj in (qs.filter(pk=cluster_group.pk) if cluster_group else qs)]
+        return cis
+
+    def _build_tree(self, filters):
+        portfolio = filters.get('portfolio')
+        service = filters.get('service')
+        service_offering = filters.get('service_offering')
+        app_service = filters.get('app_service')
+        tenant = filters.get('tenant')
+        device = filters.get('device')
+        virtual_machine = filters.get('virtual_machine')
+        cluster = filters.get('cluster')
+        cluster_group = filters.get('cluster_group')
+        ci_filter_active = any((device, virtual_machine, cluster, cluster_group))
+
+        portfolios_qs = Portfolio.objects.all()
+        if portfolio:
+            portfolios_qs = portfolios_qs.filter(pk=portfolio.pk)
+
+        tree = []
+        for portfolio_obj in portfolios_qs:
+            services_qs = portfolio_obj.services.all()
+            if service:
+                services_qs = services_qs.filter(pk=service.pk)
+
+            service_nodes = []
+            for service_obj in services_qs:
+                offerings_qs = service_obj.service_offerings.all()
+                if service_offering:
+                    offerings_qs = offerings_qs.filter(pk=service_offering.pk)
+                offerings_qs = self._filter_offerings_by_tenant(offerings_qs, tenant)
+
+                offering_nodes = []
+                for offering_obj in offerings_qs:
+                    # Reverse OneToOneField accessor: raises <Model>.DoesNotExist
+                    # when unset, but Django deliberately makes that exception
+                    # also an AttributeError so getattr()'s default kicks in.
+                    linked_app_service = getattr(offering_obj, 'app_service', None)
+                    if app_service and (linked_app_service is None or linked_app_service.pk != app_service.pk):
+                        continue
+
+                    if linked_app_service is None:
+                        if ci_filter_active:
+                            continue
+                        offering_nodes.append((offering_obj, None, []))
+                        continue
+
+                    technical_cis = self._technical_cis_for(
+                        linked_app_service, device, virtual_machine, cluster, cluster_group
+                    )
+                    if ci_filter_active and not technical_cis:
+                        continue
+                    offering_nodes.append((offering_obj, linked_app_service, technical_cis))
+
+                if offering_nodes:
+                    service_nodes.append((service_obj, offering_nodes))
+
+            if service_nodes:
+                tree.append((portfolio_obj, service_nodes))
+
+        return tree

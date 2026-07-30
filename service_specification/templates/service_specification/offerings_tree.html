@@ -1,0 +1,89 @@
+{% extends 'generic/_base.html' %}
+{% load form_helpers %}
+{% load i18n %}
+
+{% block title %}{% trans "Service Offering Tree" %}{% endblock %}
+
+{% block content %}
+  <style>
+    .offerings-tree details { margin-left: 1.25rem; margin-bottom: 0.25rem; }
+    .offerings-tree > details { margin-left: 0; }
+    .offerings-tree summary { cursor: pointer; padding: 0.15rem 0; }
+    .offerings-tree summary a { margin-left: 0.35rem; }
+    .offerings-tree .node-type {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      color: var(--tblr-secondary, #6c7a91);
+      margin-right: 0.4rem;
+    }
+    .offerings-tree .ci-leaf { margin-left: 1.25rem; padding: 0.15rem 0; }
+  </style>
+
+  <div class="row mb-3">
+    <div class="col col-md-10 col-lg-8">
+      <form method="get" class="form form-horizontal">
+        {% render_form filter_form %}
+        <div class="text-end">
+          <button type="submit" class="btn btn-primary">
+            <span class="mdi mdi-filter" aria-hidden="true"></span> {% trans "Filter" %}
+          </button>
+          <a href="{% url 'plugins:service_specification:offerings_tree' %}" class="btn btn-outline-secondary">
+            {% trans "Clear" %}
+          </a>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-body offerings-tree">
+      {% if portfolios %}
+        {% for portfolio, services in portfolios %}
+          <details open>
+            <summary>
+              <span class="node-type">{% trans "Portfolio" %}</span>
+              <a href="{{ portfolio.get_absolute_url }}">{{ portfolio }}</a>
+            </summary>
+            {% for service, offerings in services %}
+              <details open>
+                <summary>
+                  <span class="node-type">{% trans "Service" %}</span>
+                  <a href="{{ service.get_absolute_url }}">{{ service }}</a>
+                </summary>
+                {% for offering, app_service, technical_cis in offerings %}
+                  <details open>
+                    <summary>
+                      <span class="node-type">{% trans "Service Offering" %}</span>
+                      <a href="{{ offering.get_absolute_url }}">{{ offering }}</a>
+                    </summary>
+                    {% if app_service %}
+                      <details open>
+                        <summary>
+                          <span class="node-type">{% trans "Application Service" %}</span>
+                          <a href="{{ app_service.get_absolute_url }}">{{ app_service }}</a>
+                        </summary>
+                        {% for ci, ci_type in technical_cis %}
+                          <div class="ci-leaf">
+                            <span class="node-type">{{ ci_type }}</span>
+                            <a href="{{ ci.get_absolute_url }}">{{ ci }}</a>
+                          </div>
+                        {% empty %}
+                          <div class="ci-leaf text-muted">{% trans "No Technical CIs assigned." %}</div>
+                        {% endfor %}
+                      </details>
+                    {% else %}
+                      <div class="ci-leaf text-muted">{% trans "No Application Service assigned." %}</div>
+                    {% endif %}
+                  </details>
+                {% endfor %}
+              </details>
+            {% endfor %}
+          </details>
+        {% endfor %}
+      {% else %}
+        <p class="text-muted mb-0">{% trans "No matching Service Portfolios found." %}</p>
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}

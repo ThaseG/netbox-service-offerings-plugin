@@ -19,6 +19,17 @@ def _item(model_name, link_text):
     )
 
 
+def _report_item(url_name, link_text):
+    # Reports are read-only (no backing model, nothing to add/edit/delete),
+    # so unlike _item() above there's no PluginMenuButton and no
+    # model-specific permission — any authenticated user who can reach the
+    # plugin can view them, the same as the data they're derived from.
+    return PluginMenuItem(
+        link=f'plugins:service_specification:{url_name}',
+        link_text=link_text,
+    )
+
+
 data_model_items = (
     _item('portfolio', 'Service Portfolios'),
     _item('service', 'Services'),
@@ -37,11 +48,17 @@ support_items = (
     _item('cifunction', 'CI Functions'),
 )
 
+reports_items = (
+    _report_item('tenant_report', 'Table'),
+    _report_item('offerings_tree', 'Visual'),
+)
+
 menu = PluginMenu(
     label='Service Specification',
     icon_class='mdi mdi-briefcase-outline',
     groups=(
         ('Data Model', data_model_items),
         ('Support', support_items),
+        ('Reports', reports_items),
     ),
 )
