@@ -14,7 +14,11 @@ __all__ = ('schema',)
 
 @strawberry_django.type(models.Lifecycle, fields='__all__', pagination=True)
 class LifecycleType(OrganizationalObjectType):
-    pass
+    # Explicit override, exactly like NetBox core's own TagType does for
+    # Tag.color: strawberry-django's auto field-type resolution doesn't
+    # recognize utilities.fields.ColorField (a CharField subclass) and
+    # raises NotImplementedError building the schema without this.
+    color: str
 
 
 @strawberry_django.type(models.SLA, fields='__all__', pagination=True)
