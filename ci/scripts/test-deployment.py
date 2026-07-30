@@ -641,8 +641,8 @@ def create_service_offerings(lifecycle_ids, group_ids, contacts_by_group, servic
 # (name, description, offering name, sla name, availability name, accepted_downtime, ttr, rpo, rto, bcm)
 APP_SERVICES = [
     (
-        'Application Service - Managed Exchange Server High Availability - Prod',
-        'Application Service - Managed Exchange Server High Availability',
+        'Managed Exchange Server High Availability - Prod',
+        'Managed Exchange Server High Availability',
         'Managed Exchange Service High Availability',
         'Lifecycle package',
         '99.99%',
@@ -653,7 +653,7 @@ APP_SERVICES = [
         2,
     ),
     (
-        'Application Service - Managed Exchange Server Standalone - Prod',
+        'Managed Exchange Server Standalone - Prod',
         '',
         'Managed Exchange Service Standalone',
         'Catch & Dispatch',
@@ -758,7 +758,7 @@ def main():
     )
 
     assign_vm_application_services(
-        vm_ids, app_service_ids['Application Service - Managed Exchange Server High Availability - Prod']
+        vm_ids, app_service_ids['Managed Exchange Server High Availability - Prod']
     )
 
     print('Test deployment data created successfully.')
