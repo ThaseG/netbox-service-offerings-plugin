@@ -1,8 +1,10 @@
 from dcim.models import Device
 from django.db import models
 from django.urls import reverse
+from netbox.choices import ColorChoices
 from netbox.models import NetBoxModel, OrganizationalModel, PrimaryModel
 from tenancy.models import Contact, ContactGroup, Tenant, TenantGroup
+from utilities.fields import ColorField
 from virtualization.models import Cluster, ClusterGroup, VirtualMachine
 
 from .choices import TimeUnitChoices
@@ -50,6 +52,7 @@ __all__ = (
 
 class Lifecycle(OrganizationalModel):
     owner = models.ForeignKey(to='users.Owner', on_delete=models.PROTECT, related_name='+', blank=True, null=True)
+    color = ColorField(default=ColorChoices.COLOR_GREY, verbose_name='Color')
 
     class Meta(OrganizationalModel.Meta):
         verbose_name = 'Lifecycle'

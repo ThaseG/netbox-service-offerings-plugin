@@ -17,6 +17,7 @@
 # to reconcile with.
 import django.db.models.deletion
 import taggit.managers
+import utilities.fields
 import utilities.json
 from django.db import migrations, models
 
@@ -52,6 +53,7 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(max_length=100, unique=True)),
                 ('slug', models.SlugField(max_length=100, unique=True)),
                 ('tags', taggit.managers.TaggableManager(through='extras.TaggedItem', to='extras.Tag')),
+                ('color', utilities.fields.ColorField(default='9e9e9e', max_length=6)),
                 (
                     'owner',
                     models.ForeignKey(

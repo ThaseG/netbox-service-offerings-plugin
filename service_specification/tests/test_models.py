@@ -1,4 +1,5 @@
 from django.test import TestCase
+from netbox.choices import ColorChoices
 from tenancy.models import ContactGroup
 
 from service_specification.choices import TimeUnitChoices
@@ -11,6 +12,16 @@ class LifecycleModelTestCase(TestCase):
         lifecycle = Lifecycle.objects.create(name='Live', slug='live')
         self.assertEqual(str(lifecycle), 'Live')
         self.assertIn(f'/{lifecycle.pk}/', lifecycle.get_absolute_url())
+
+    def test_color_defaults_to_grey_and_can_be_overridden(self):
+        # Regression coverage for the color field added so lifecycle
+        # statuses can be shown as colored labels throughout the plugin's
+        # tables (see tables.py's ColoredLabelColumn usage).
+        default = Lifecycle.objects.create(name='Live', slug='live')
+        self.assertEqual(default.color, ColorChoices.COLOR_GREY)
+
+        available = Lifecycle.objects.create(name='Available', slug='available', color=ColorChoices.COLOR_GREEN)
+        self.assertEqual(available.color, ColorChoices.COLOR_GREEN)
 
 
 class MTATModelTestCase(TestCase):

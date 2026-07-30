@@ -1,5 +1,6 @@
+from dataclasses import dataclass
+
 from dcim.models import Device
-from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView
 from netbox.ui.layout import SimpleLayout
@@ -30,6 +31,7 @@ from .models import (
     ServiceOffering,
     VirtualMachineServiceInfo,
 )
+from .utils import tenant_offering_filter
 
 
 def _make_views(model, filterset_cls, filterset_form_cls, table_cls, form_cls, layout):
@@ -457,9 +459,32 @@ ClusterGroupServiceSpecificationView, ClusterGroupServiceSpecificationEditView =
 #
 
 
+@dataclass
+class _TenantOfferingRow:
+    """One row of TenantReportView's table: a Tenant paired with one of its
+    related Service Offerings (or None, if it has none — the tenant still
+    gets a row rather than being dropped from the report)."""
+
+    tenant: Tenant
+    service_offering: ServiceOffering | None = None
+
+    @property
+    def application_service(self):
+        # A ServiceOffering backs at most one AppService (OneToOneField —
+        # see models.py). Reverse accessor raises <Model>.DoesNotExist when
+        # unset, but Django deliberately makes that exception also an
+        # AttributeError so getattr()'s default kicks in.
+        if self.service_offering is None:
+            return None
+        return getattr(self.service_offering, 'app_service', None)
+
+
 class TenantReportView(generic.ObjectListView):
     """Read-only rollup of every Tenant, reached from the plugin's own
-    'Reports' menu (see navigation.py).
+    'Reports' menu (see navigation.py). One table row per (Tenant, Service
+    Offering) pair: get_table() expands each filtered Tenant into its
+    related offerings (see utils.tenant_offering_filter) before handing
+    rows to TenantReportTable.
     """
 
     queryset = Tenant.objects.select_related('group').prefetch_related('sites', 'tags')
@@ -467,6 +492,24 @@ class TenantReportView(generic.ObjectListView):
     filterset_form = TenantFilterForm
     table = tables.TenantReportTable
     actions = ()
+
+    def get_table(self, data, request, bulk_actions=True):
+        return super().get_table(self._expand_rows(data), request, bulk_actions)
+
+    @staticmethod
+    def _expand_rows(tenants):
+        rows = []
+        for tenant in tenants:
+            offerings = list(
+                ServiceOffering.objects.filter(tenant_offering_filter(tenant))
+                .distinct()
+                .select_related('lifecycle', 'app_service')
+            )
+            if offerings:
+                rows.extend(_TenantOfferingRow(tenant=tenant, service_offering=offering) for offering in offerings)
+            else:
+                rows.append(_TenantOfferingRow(tenant=tenant))
+        return rows
 
 
 class OfferingsTreeView(TemplateView):
@@ -486,14 +529,7 @@ class OfferingsTreeView(TemplateView):
     def _filter_offerings_by_tenant(queryset, tenant):
         if not tenant:
             return queryset
-        # Q(tenant_group=None) would match every offering with *no* group
-        # set (Django translates field=None to __isnull=True), not just
-        # ones tied to this specific ungrouped tenant — so the
-        # tenant_group half only gets added when there's a group to match.
-        offering_filter = Q(tenant=tenant)
-        if tenant.group_id:
-            offering_filter |= Q(tenant_group=tenant.group_id)
-        return queryset.filter(offering_filter)
+        return queryset.filter(tenant_offering_filter(tenant))
 
     @staticmethod
     def _technical_cis_for(app_service, device, virtual_machine, cluster, cluster_group):

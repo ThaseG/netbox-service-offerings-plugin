@@ -352,54 +352,73 @@ def assign_vm_application_services(vm_ids, app_service_id):
 # Service Specification plugin: Support lookup objects
 #
 
+# (name, description, color) — color is an RRGGBB hex string (Lifecycle.color,
+# see models.py). Roughly traffic-light-ordered: neutral/planning colors for
+# the earliest stages, green for the healthy/in-service stages (Available is
+# required to be green), warming through orange/red as a CI winds down, and
+# grey/brown for its archived end states.
 LIFECYCLES = [
     (
         'Draft',
         'The CI has been created but is still being defined. Information is incomplete and the CI is not yet '
         'approved for further lifecycle activities.',
+        '9e9e9e',
     ),
     (
         'Design',
         'The CI is in the planning or design phase. Architecture, requirements, and specifications are being '
         'developed.',
+        '2196f3',
     ),
     (
         'Build',
         'The CI is currently being developed, configured, or implemented and is not yet ready for production use.',
+        'ffc107',
     ),
     (
         'Available',
         'The CI is ready for deployment or assignment but is not yet actively providing a production service.',
+        '4caf50',
     ),
-    ('Operational', 'The CI is deployed, fully functional, and actively supporting business or IT services in production.'),
+    (
+        'Operational',
+        'The CI is deployed, fully functional, and actively supporting business or IT services in production.',
+        '2f6a31',
+    ),
     (
         'In Maintenance',
         'The CI is temporarily undergoing maintenance, upgrades, or repairs. It may have limited or no availability '
         'during this period.',
+        'ff9800',
     ),
     (
         'End of Support',
         'Vendor or internal support has ended or has been scheduled to end. The CI may still be operational but '
         'will no longer receive support, updates, or patches.',
+        'ff5722',
     ),
     (
         'End of Life',
         'The CI has reached the end of its intended lifecycle and should no longer be used for production. '
         'Replacement or retirement should be planned or completed.',
+        'f44336',
     ),
     (
         'Expired',
         'The CI is no longer valid due to the expiration of its license, certificate, contract, subscription, or '
         'other time-based entitlement.',
+        'aa1409',
     ),
     (
         'Decommissioned',
         'The CI has been permanently removed from service and is no longer operational. It is retained in the '
         'CMDB for historical, audit, or compliance purposes.',
+        '607d8b',
     ),
     (
         'Cancelled',
         'The CI was planned but the implementation or deployment was cancelled before becoming operational.',
+        '795548',
     ),
 ]
 
@@ -480,9 +499,13 @@ def _create_lookup(label, path, items, extra_fields=lambda item: {}, plural=None
 def create_lifecycles():
     print('Creating lifecycles...')
     ids = {}
-    for name, description in LIFECYCLES:
+    for name, description, color in LIFECYCLES:
         slug = name.lower().replace(' ', '-')
-        obj = api('POST', 'plugins/service-specification/lifecycles/', {'name': name, 'slug': slug, 'description': description})
+        obj = api(
+            'POST',
+            'plugins/service-specification/lifecycles/',
+            {'name': name, 'slug': slug, 'description': description, 'color': color},
+        )
         created('lifecycle', obj)
         ids[name] = obj['id']
     return ids

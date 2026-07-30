@@ -68,7 +68,7 @@ __all__ = (
 class LifecycleForm(OrganizationalModelForm):
     class Meta:
         model = Lifecycle
-        fields = ('name', 'slug', 'description', 'tags', 'comments')
+        fields = ('name', 'slug', 'color', 'description', 'tags', 'comments')
         help_texts = {
             'name': (
                 'Standard lifecycle statuses: Draft (created but still being defined, not yet approved); '

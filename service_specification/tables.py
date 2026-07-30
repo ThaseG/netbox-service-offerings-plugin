@@ -1,6 +1,5 @@
 import django_tables2 as tables
-from django.db.models import Q
-from django.utils.html import format_html_join
+from django.utils.html import format_html, format_html_join
 from netbox.tables import NetBoxTable, columns
 from tenancy.models import Tenant
 
@@ -51,9 +50,12 @@ class LookupTable(NetBoxTable):
 
 class LifecycleTable(LookupTable):
     tags = columns.TagColumn(url_name='plugins:service_specification:lifecycle_list')
+    color = columns.ColorColumn()
 
     class Meta(LookupTable.Meta):
         model = Lifecycle
+        fields = LookupTable.Meta.fields + ('color',)
+        default_columns = ('pk', 'name', 'color', 'description')
 
 
 class SLATable(LookupTable):
@@ -111,7 +113,7 @@ class CIFunctionTable(LookupTable):
 
 class PortfolioTable(NetBoxTable):
     name = tables.Column(linkify=True)
-    lifecycle = tables.Column(linkify=True)
+    lifecycle = columns.ColoredLabelColumn()
     comments = columns.MarkdownColumn()
     tags = columns.TagColumn(url_name='plugins:service_specification:portfolio_list')
 
@@ -134,7 +136,7 @@ class PortfolioTable(NetBoxTable):
 
 class ServiceTable(NetBoxTable):
     name = tables.Column(linkify=True)
-    lifecycle = tables.Column(linkify=True)
+    lifecycle = columns.ColoredLabelColumn()
     ci_function = tables.Column(linkify=True)
     comments = columns.MarkdownColumn()
     tags = columns.TagColumn(url_name='plugins:service_specification:service_list')
@@ -159,7 +161,7 @@ class ServiceTable(NetBoxTable):
 
 class ServiceOfferingTable(NetBoxTable):
     name = tables.Column(linkify=True)
-    lifecycle = tables.Column(linkify=True)
+    lifecycle = columns.ColoredLabelColumn()
     comments = columns.MarkdownColumn()
     tags = columns.TagColumn(url_name='plugins:service_specification:serviceoffering_list')
 
@@ -184,7 +186,7 @@ class ServiceOfferingTable(NetBoxTable):
 class AppServiceTable(NetBoxTable):
     name = tables.Column(linkify=True)
     environment = tables.Column(linkify=True)
-    lifecycle = tables.Column(linkify=True)
+    lifecycle = columns.ColoredLabelColumn()
     service_offering = tables.Column(linkify=True)
     comments = columns.MarkdownColumn()
     tags = columns.TagColumn(url_name='plugins:service_specification:appservice_list')
@@ -219,39 +221,76 @@ class AppServiceTable(NetBoxTable):
 
 
 class TenantReportTable(NetBoxTable):
-    """Read-only rollup of every Tenant (views.TenantReportView) — Tenant is
-    a core NetBox model, so this isn't in Meta.fields/model the way every
-    other table here is; 'contacts' and 'related_service_offerings' aren't
-    real fields on Tenant at all (see the render_* methods below), so they
-    can't be declared via Meta either. actions/pk/id are intentionally left
-    out: this table has no edit/delete/bulk actions to offer.
+    """One row per (Tenant, Service Offering) pair — views.TenantReportView
+    expands each filtered Tenant into its related offerings (see
+    utils.tenant_offering_filter) before handing rows to this table, so a
+    Tenant with no related offerings still gets exactly one row, with
+    blank offering/application-service/lifecycle columns, rather than
+    being silently dropped from the report.
+
+    Rows are plain views._TenantOfferingRow objects, not Tenant instances
+    — Tenant is still Meta.model (NetBoxTable.__init__ unconditionally
+    looks up custom fields/links for it, and it's the closest "primary"
+    entity this report has), but every column here is rendered manually
+    against `record.tenant` / `record.service_offering` /
+    `record.application_service` rather than relying on accessor
+    auto-resolution. actions/pk/id are intentionally left out: this table
+    has no edit/delete/bulk actions to offer.
     """
 
-    name = tables.Column(linkify=True)
-    group = tables.Column(linkify=True, verbose_name='Tenant Group')
-    sites = columns.ManyToManyColumn(linkify_item=True)
+    name = tables.Column(empty_values=(), orderable=False, verbose_name='Tenant')
+    group = tables.Column(empty_values=(), orderable=False, verbose_name='Tenant Group')
+    sites = tables.Column(empty_values=(), orderable=False)
     contacts = tables.Column(empty_values=(), orderable=False)
-    related_service_offerings = tables.Column(
-        empty_values=(), orderable=False, verbose_name='Related Service Offerings'
+    service_offering = tables.Column(empty_values=(), orderable=False, verbose_name='Service Offering')
+    application_services = tables.Column(empty_values=(), orderable=False, verbose_name='Application Services')
+    service_offering_lifecycle = columns.ColoredLabelColumn(
+        accessor='service_offering__lifecycle',
+        orderable=False,
+        verbose_name='Service Offering Lifecycle',
     )
+
+    empty_text = 'No Tenants found.'
 
     class Meta(NetBoxTable.Meta):
         model = Tenant
-        fields = ('name', 'group', 'sites', 'contacts', 'related_service_offerings')
-        default_columns = ('name', 'group', 'sites', 'contacts', 'related_service_offerings')
+        fields = (
+            'name',
+            'group',
+            'sites',
+            'contacts',
+            'service_offering',
+            'application_services',
+            'service_offering_lifecycle',
+        )
+        default_columns = fields
+
+    def render_name(self, record):
+        return format_html('<a href="{}">{}</a>', record.tenant.get_absolute_url(), record.tenant.name)
+
+    def render_group(self, record):
+        if not record.tenant.group:
+            return '—'
+        return format_html('<a href="{}">{}</a>', record.tenant.group.get_absolute_url(), record.tenant.group.name)
+
+    def render_sites(self, record):
+        return format_html_join(
+            ', ', '<a href="{}">{}</a>', ((s.get_absolute_url(), s.name) for s in record.tenant.sites.all())
+        )
 
     def render_contacts(self, record):
-        contacts = [assignment.contact for assignment in record.get_contacts()]
+        contacts = [assignment.contact for assignment in record.tenant.get_contacts()]
         return format_html_join(', ', '<a href="{}">{}</a>', ((c.get_absolute_url(), c.name) for c in contacts))
 
-    def render_related_service_offerings(self, record):
-        # Q(tenant_group=None) would match every offering with *no*
-        # tenant_group set (Django translates field=None to __isnull=True),
-        # not just ones tied to this specific ungrouped tenant — so the
-        # tenant_group half of the filter only gets added when there
-        # actually is a group to match against.
-        filters = Q(tenant=record)
-        if record.group_id:
-            filters |= Q(tenant_group=record.group_id)
-        offerings = ServiceOffering.objects.filter(filters).distinct()
-        return format_html_join(', ', '<a href="{}">{}</a>', ((o.get_absolute_url(), o.name) for o in offerings))
+    def render_service_offering(self, record):
+        if not record.service_offering:
+            return '—'
+        return format_html(
+            '<a href="{}">{}</a>', record.service_offering.get_absolute_url(), record.service_offering.name
+        )
+
+    def render_application_services(self, record):
+        app_service = record.application_service
+        if not app_service:
+            return '—'
+        return format_html('<a href="{}">{}</a>', app_service.get_absolute_url(), app_service.name)
