@@ -1,3 +1,4 @@
+import json
 from dataclasses import dataclass
 
 from dcim.models import Device
@@ -514,8 +515,13 @@ class TenantReportView(generic.ObjectListView):
 
 class OfferingsTreeView(TemplateView):
     """Read-only Portfolio -> Service -> Service Offering -> Application
-    Service -> Technical CI tree, reached from the plugin's own 'Reports'
-    menu (see navigation.py).
+    Service -> Technical CI graph, reached from the plugin's own 'Reports'
+    menu (see navigation.py). Rendered client-side as a vis-network
+    node-link diagram (see the template) rather than a DOM tree — that's
+    the actual scalability fix over the previous CSS org-chart, so the
+    heavy lifting here is just producing vis-network's nodes/edges JSON
+    shape; the underlying tree traversal/filtering/pruning in _build_tree()
+    is unchanged from before.
     """
 
     template_name = 'service_specification/offerings_tree.html'
@@ -523,7 +529,84 @@ class OfferingsTreeView(TemplateView):
     def get(self, request, *args, **kwargs):
         form = forms.OfferingsTreeFilterForm(request.GET or None)
         filters = form.cleaned_data if form.is_valid() else {}
-        return self.render_to_response({'filter_form': form, 'portfolios': self._build_tree(filters)})
+        nodes, edges = self._flatten_to_graph(self._build_tree(filters))
+        return self.render_to_response(
+            {
+                'filter_form': form,
+                'has_results': bool(nodes),
+                'nodes_json': json.dumps(nodes),
+                'edges_json': json.dumps(edges),
+            }
+        )
+
+    @staticmethod
+    def _flatten_to_graph(tree):
+        """Walk _build_tree()'s nested (portfolio, [(service, [(offering,
+        app_service_or_None, [(ci, type_label, icon_class), ...]), ...]),
+        ...]) structure into vis-network's flat nodes/edges lists.
+
+        Dedup by id is required, not optional: Service.service_portfolio is
+        a ManyToMany, so a Service (and everything under it) can legally
+        appear under more than one Portfolio branch of the same tree.
+        Naively re-adding it would try to add the same node id twice, and
+        vis.DataSet.add() raises on a duplicate id — so a node already seen
+        is skipped (it's the same object), while an edge into it is still
+        added for each parent that reaches it, one entry per distinct
+        (from, to) pair.
+        """
+        nodes = []
+        edges = []
+        seen_nodes = set()
+        seen_edges = set()
+
+        def add_node(node_id, label, group, obj, type_label=None):
+            if node_id not in seen_nodes:
+                seen_nodes.add(node_id)
+                nodes.append(
+                    {
+                        'id': node_id,
+                        'label': label,
+                        'group': group,
+                        'url': obj.get_absolute_url(),
+                        'title': f'{type_label}: {label}' if type_label else label,
+                    }
+                )
+
+        def add_edge(from_id, to_id):
+            key = (from_id, to_id)
+            if key not in seen_edges:
+                seen_edges.add(key)
+                edges.append({'from': from_id, 'to': to_id})
+
+        for portfolio, services in tree:
+            portfolio_id = f'portfolio-{portfolio.pk}'
+            add_node(portfolio_id, portfolio.name, 'portfolio', portfolio, 'Portfolio')
+
+            for service, offerings in services:
+                service_id = f'service-{service.pk}'
+                add_node(service_id, service.name, 'service', service, 'Service')
+                add_edge(portfolio_id, service_id)
+
+                for offering, app_service, technical_cis in offerings:
+                    offering_id = f'offering-{offering.pk}'
+                    add_node(offering_id, offering.name, 'offering', offering, 'Service Offering')
+                    add_edge(service_id, offering_id)
+
+                    if app_service is None:
+                        continue
+                    app_service_id = f'appservice-{app_service.pk}'
+                    add_node(app_service_id, app_service.name, 'appservice', app_service, 'Application Service')
+                    add_edge(offering_id, app_service_id)
+
+                    for ci, type_label, _icon_class in technical_cis:
+                        # Device/VirtualMachine/Cluster/ClusterGroup are
+                        # different models whose primary keys can collide,
+                        # so the model name has to be part of the node id.
+                        ci_id = f'{ci.__class__.__name__.lower()}-{ci.pk}'
+                        add_node(ci_id, ci.name, 'technicalci', ci, type_label)
+                        add_edge(app_service_id, ci_id)
+
+        return nodes, edges
 
     @staticmethod
     def _filter_offerings_by_tenant(queryset, tenant):

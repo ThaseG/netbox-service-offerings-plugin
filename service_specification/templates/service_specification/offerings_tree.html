@@ -1,81 +1,18 @@
 {% extends 'generic/_base.html' %}
 {% load form_helpers %}
 {% load i18n %}
+{% load static %}
 
 {% block title %}{% trans "Service Offering Tree" %}{% endblock %}
 
 {% block content %}
+  <link rel="stylesheet" href="{% static 'service_specification/vendor/vis-network.min.css' %}">
   <style>
-    /* Classic pure-CSS org-chart: each level is a <ul>/<li>, cells laid out
-       as a table row so ::before/::after can draw the connecting lines —
-       no JS graph library, deliberately (see plan discussion). Wrapped in
-       an overflow-x scroller since wide trees (many siblings) can't wrap
-       onto a second line the way this technique works. */
-    .org-tree-wrapper { overflow-x: auto; padding: 1.5rem 0.5rem; }
-
-    .org-tree, .org-tree ul, .org-tree li {
-      list-style: none;
-      margin: 0;
-      padding: 0;
-      position: relative;
-    }
-    .org-tree { display: table; margin: 0 auto; }
-    .org-tree ul { display: table; table-layout: fixed; width: 100%; }
-
-    .org-tree li {
-      display: table-cell;
-      text-align: center;
-      vertical-align: top;
-      padding: 2rem 0.75rem 0;
-    }
-
-    /* Horizontal line across the top of a cell, connecting it to its
-       siblings; trimmed at the outer edges so it only spans between the
-       first and last sibling, not off into empty space. */
-    .org-tree li::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      border-top: 1px solid var(--tblr-border-color, #8c98a8);
-    }
-    .org-tree li:first-child::before { left: 50%; }
-    .org-tree li:last-child::before { right: 50%; }
-    .org-tree li:only-child::before { display: none; }
-    .org-tree > li::before { border-top: none; }
-
-    /* Vertical stub from that horizontal line down into the node itself. */
-    .org-tree li::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 50%;
-      width: 0;
-      height: 2rem;
-      border-left: 1px solid var(--tblr-border-color, #8c98a8);
-    }
-    .org-tree > li::after { border-left: none; }
-
-    .org-node {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.35rem;
+    #offerings-network {
+      height: 75vh;
+      min-height: 480px;
+      border: 1px solid var(--tblr-border-color, #8c98a8);
       border-radius: 0.375rem;
-      padding: 0.35rem 0.75rem;
-      font-size: 0.875rem;
-      white-space: nowrap;
-      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
-    }
-    .org-node a { color: inherit; text-decoration: none; font-weight: 500; }
-    .org-node a:hover { text-decoration: underline; }
-    .org-node i { font-size: 1rem; }
-
-    .org-leaf-empty {
-      display: inline-block;
-      padding: 0.35rem 0.75rem;
-      font-size: 0.8rem;
-      font-style: italic;
     }
   </style>
 
@@ -97,84 +34,99 @@
 
   <div class="card">
     <div class="card-body">
-      {% if portfolios %}
-        <div class="org-tree-wrapper">
-          <ul class="org-tree">
-            {% for portfolio, services in portfolios %}
-              <li>
-                <span class="org-node bg-blue-lt">
-                  <i class="mdi mdi-folder-open-outline" aria-hidden="true"></i>
-                  <a href="{{ portfolio.get_absolute_url }}">{{ portfolio }}</a>
-                </span>
-                {% if services %}
-                  <ul>
-                    {% for service, offerings in services %}
-                      <li>
-                        <span class="org-node bg-green-lt">
-                          <i class="mdi mdi-cog-outline" aria-hidden="true"></i>
-                          <a href="{{ service.get_absolute_url }}">{{ service }}</a>
-                        </span>
-                        {% if offerings %}
-                          <ul>
-                            {% for offering, app_service, technical_cis in offerings %}
-                              <li>
-                                <span class="org-node bg-orange-lt">
-                                  <i class="mdi mdi-package-variant-closed" aria-hidden="true"></i>
-                                  <a href="{{ offering.get_absolute_url }}">{{ offering }}</a>
-                                </span>
-                                {% if app_service %}
-                                  <ul>
-                                    <li>
-                                      <span class="org-node bg-purple-lt">
-                                        <i class="mdi mdi-application-cog-outline" aria-hidden="true"></i>
-                                        <a href="{{ app_service.get_absolute_url }}">{{ app_service }}</a>
-                                      </span>
-                                      {% if technical_cis %}
-                                        <ul>
-                                          {% for ci, ci_type, ci_icon in technical_cis %}
-                                            <li>
-                                              <span class="org-node bg-teal-lt">
-                                                <i class="mdi {{ ci_icon }}" aria-hidden="true"></i>
-                                                <a href="{{ ci.get_absolute_url }}">{{ ci }}</a>
-                                              </span>
-                                            </li>
-                                          {% endfor %}
-                                        </ul>
-                                      {% else %}
-                                        <ul>
-                                          <li>
-                                            <span class="org-leaf-empty text-muted">
-                                              {% trans "No Technical CIs assigned." %}
-                                            </span>
-                                          </li>
-                                        </ul>
-                                      {% endif %}
-                                    </li>
-                                  </ul>
-                                {% else %}
-                                  <ul>
-                                    <li>
-                                      <span class="org-leaf-empty text-muted">
-                                        {% trans "No Application Service assigned." %}
-                                      </span>
-                                    </li>
-                                  </ul>
-                                {% endif %}
-                              </li>
-                            {% endfor %}
-                          </ul>
-                        {% endif %}
-                      </li>
-                    {% endfor %}
-                  </ul>
-                {% endif %}
-              </li>
-            {% endfor %}
-          </ul>
-        </div>
+      {% if has_results %}
+        <div id="offerings-network"></div>
       {% else %}
         <p class="text-muted mb-0">{% trans "No matching Service Portfolios found." %}</p>
       {% endif %}
     </div>
   </div>
+
+  {% if has_results %}
+    <script src="{% static 'service_specification/vendor/vis-network.min.js' %}"></script>
+    <script>
+      (function () {
+        // Same per-level palette as the plugin's previous CSS org-chart
+        // (blue/green/orange/purple/teal), translated to vis-network's
+        // {background, border} group-color shape. Backgrounds use alpha
+        // rather than a flat tint so they read reasonably in both light
+        // and dark theme without needing two separate palettes.
+        var GROUP_COLORS = {
+          portfolio: { background: 'rgba(33, 150, 243, 0.18)', border: '#2196f3' },
+          service: { background: 'rgba(76, 175, 80, 0.18)', border: '#4caf50' },
+          offering: { background: 'rgba(255, 152, 0, 0.18)', border: '#ff9800' },
+          appservice: { background: 'rgba(156, 39, 176, 0.18)', border: '#9c27b0' },
+          technicalci: { background: 'rgba(0, 150, 136, 0.18)', border: '#009688' },
+        };
+
+        // Same theme-detection technique netbox-topology-views itself
+        // uses to pick readable node text for NetBox's light/dark mode.
+        var fontColor = document.documentElement.dataset.netboxColorMode === 'dark' ? '#fff' : '#000';
+
+        var nodes = new vis.DataSet({{ nodes_json|safe }});
+        var edges = new vis.DataSet({{ edges_json|safe }});
+
+        var groups = {};
+        Object.keys(GROUP_COLORS).forEach(function (key) {
+          groups[key] = { color: GROUP_COLORS[key] };
+        });
+
+        var network = new vis.Network(
+          document.getElementById('offerings-network'),
+          { nodes: nodes, edges: edges },
+          {
+            layout: {
+              hierarchical: {
+                direction: 'UD',
+                sortMethod: 'directed',
+                levelSeparation: 120,
+                nodeSpacing: 160,
+                treeSpacing: 220,
+              },
+            },
+            physics: {
+              hierarchicalRepulsion: { nodeDistance: 160 },
+              stabilization: { iterations: 200 },
+            },
+            nodes: {
+              shape: 'box',
+              margin: 10,
+              borderWidth: 2,
+              font: { color: fontColor, size: 14 },
+            },
+            edges: {
+              arrows: { to: { enabled: false } },
+              smooth: { type: 'cubicBezier', forceDirection: 'vertical', roundness: 0.4 },
+              color: { color: '#8c98a8', opacity: 0.6 },
+            },
+            groups: groups,
+            interaction: {
+              hover: true,
+              dragNodes: true,
+              zoomView: true,
+              dragView: true,
+              tooltipDelay: 150,
+            },
+          }
+        );
+
+        // Layout stabilizes once, then physics is switched off so dragging
+        // a node afterward moves just that node instead of fighting an
+        // ongoing simulation.
+        network.once('stabilizationIterationsDone', function () {
+          network.setOptions({ physics: false });
+        });
+
+        network.on('click', function (params) {
+          if (!params.nodes.length) {
+            return;
+          }
+          var node = nodes.get(params.nodes[0]);
+          if (node && node.url) {
+            window.location.href = node.url;
+          }
+        });
+      })();
+    </script>
+  {% endif %}
 {% endblock %}
