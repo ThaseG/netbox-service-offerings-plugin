@@ -138,11 +138,18 @@
               },
             },
             physics: {
-              // Matches nodeSpacing above, so the repulsion physics doesn't
-              // fight the layout by pushing same-row nodes further apart
-              // than the minimum gap it's meant to enforce.
-              hierarchicalRepulsion: { nodeDistance: 40 },
-              stabilization: { iterations: 200 },
+              // With physics enabled, hierarchical.nodeSpacing above is
+              // only used for the *initial* placement — vis-network's own
+              // docs say the effective spacing comes from here instead.
+              // avoidOverlap defaults to 0, which means node *size* isn't
+              // considered at all: repulsion only enforces nodeDistance
+              // between node centers as if every box were a point, so
+              // wider boxes (long/two-line labels) could still land on
+              // top of each other even with a "minimum distance" set.
+              // avoidOverlap: 1 makes the solver account for each node's
+              // actual rendered size instead.
+              hierarchicalRepulsion: { nodeDistance: 40, avoidOverlap: 1 },
+              stabilization: { iterations: 300 },
             },
             nodes: {
               shape: 'box',
