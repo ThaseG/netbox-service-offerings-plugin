@@ -553,7 +553,16 @@ class OfferingsTreeView(TemplateView):
         is skipped (it's the same object), while an edge into it is still
         added for each parent that reaches it, one entry per distinct
         (from, to) pair.
+
+        Every node also gets an explicit `level`, one per group, matching
+        the tree's fixed depth-per-type (Portfolio is always depth 0,
+        Service always 1, and so on) — this pins every node of the same
+        type to the same row in the template's hierarchical layout, rather
+        than leaving it to vis-network's automatic level inference, which
+        is depth-based already but not guaranteed to land every node of a
+        type on one exact row once physics nudges things around.
         """
+        levels = {'portfolio': 0, 'service': 1, 'offering': 2, 'appservice': 3, 'technicalci': 4}
         nodes = []
         edges = []
         seen_nodes = set()
@@ -575,6 +584,7 @@ class OfferingsTreeView(TemplateView):
                         'id': node_id,
                         'label': label,
                         'group': group,
+                        'level': levels[group],
                         'url': obj.get_absolute_url(),
                         'title': f'{type_label}: {name}' if type_label else name,
                     }

@@ -98,10 +98,15 @@
           technicalci: { background: 'rgba(0, 150, 136, 0.18)', border: '#009688' },
         };
 
-        // Same theme-detection technique netbox-topology-views itself
-        // uses to pick readable node text for NetBox's light/dark mode.
-        var fontColor = document.documentElement.dataset.netboxColorMode === 'dark' ? '#fff' : '#000';
-        var mutedColor = document.documentElement.dataset.netboxColorMode === 'dark' ? '#adb5bd' : '#6c757d';
+        // NetBox itself sets data-bs-theme="dark"/"light" on <html> (see
+        // colorMode.ts's updateElements()) — not data-netbox-color-mode,
+        // which is what an earlier version of this file checked (copied
+        // from netbox-topology-views, apparently stale for this NetBox
+        // version) and which never matched, so the name line was always
+        // rendered as light-mode black regardless of the active theme.
+        var isDarkMode = document.documentElement.getAttribute('data-bs-theme') === 'dark';
+        var fontColor = isDarkMode ? '#fff' : '#000';
+        var mutedColor = isDarkMode ? '#adb5bd' : '#6c757d';
 
         var nodes = new vis.DataSet({{ nodes_json|safe }});
         var edges = new vis.DataSet({{ edges_json|safe }});
@@ -118,14 +123,25 @@
             layout: {
               hierarchical: {
                 direction: 'UD',
+                // 'directed' would normally infer each node's row from
+                // edge direction alone, but every node here also carries
+                // an explicit `level` (see views.py's _flatten_to_graph) —
+                // that pins every node of a given type to the exact same
+                // row, rather than leaving row placement to inference.
                 sortMethod: 'directed',
                 levelSeparation: 120,
-                nodeSpacing: 160,
+                // Small but non-zero minimum gap between nodes sharing a
+                // row — was 160 (had them spread out much further than
+                // needed).
+                nodeSpacing: 40,
                 treeSpacing: 220,
               },
             },
             physics: {
-              hierarchicalRepulsion: { nodeDistance: 160 },
+              // Matches nodeSpacing above, so the repulsion physics doesn't
+              // fight the layout by pushing same-row nodes further apart
+              // than the minimum gap it's meant to enforce.
+              hierarchicalRepulsion: { nodeDistance: 40 },
               stabilization: { iterations: 200 },
             },
             nodes: {
