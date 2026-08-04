@@ -49,8 +49,8 @@ support_items = (
 )
 
 reports_items = (
-    _report_item('tenant_report', 'Table'),
-    _report_item('offerings_tree', 'Visual'),
+    _report_item('tenant_report', 'Service List'),
+    _report_item('offerings_tree', 'Service View'),
 )
 
 menu = PluginMenu(
