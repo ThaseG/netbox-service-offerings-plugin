@@ -568,17 +568,24 @@ class OfferingsTreeView(TemplateView):
         seen_nodes = set()
         seen_edges = set()
 
-        def add_node(node_id, name, group, obj, type_label=None):
+        def add_node(node_id, name, group, obj, type_label=None, extra_line=None):
             if node_id not in seen_nodes:
                 seen_nodes.add(node_id)
-                # Two-line on-node label: object type on top, name below.
-                # <code>/<b> are vis-network's own font.multi='html' markup
-                # (see the template's font.mono/font.bold config, which
-                # style the two lines differently) — rendered onto a
-                # <canvas>, not inserted as real DOM/innerHTML, so there's
-                # no injection risk from an object name containing '<' etc.,
-                # only a cosmetic one.
+                # Two-line on-node label: object type on top, name below,
+                # plus an optional third line (currently just Service
+                # Offering's Customer). <code>/<b>/<i> are vis-network's own
+                # font.multi='html' markup (see the template's
+                # font.mono/font.bold/font.ital config, which style the
+                # three lines differently) — rendered onto a <canvas>, not
+                # inserted as real DOM/innerHTML, so there's no injection
+                # risk from an object name containing '<' etc., only a
+                # cosmetic one.
                 label = f'<code>{type_label}</code>\n<b>{name}</b>' if type_label else name
+                if extra_line:
+                    label += f'\n<i>{extra_line}</i>'
+                title = f'{type_label}: {name}' if type_label else name
+                if extra_line:
+                    title += f' ({extra_line})'
                 nodes.append(
                     {
                         'id': node_id,
@@ -586,7 +593,7 @@ class OfferingsTreeView(TemplateView):
                         'group': group,
                         'level': levels[group],
                         'url': obj.get_absolute_url(),
-                        'title': f'{type_label}: {name}' if type_label else name,
+                        'title': title,
                     }
                 )
 
@@ -607,7 +614,22 @@ class OfferingsTreeView(TemplateView):
 
                 for offering, app_service, technical_cis in offerings:
                     offering_id = f'offering-{offering.pk}'
-                    add_node(offering_id, offering.name, 'offering', offering, 'Service Offering')
+                    # Third label line: Customer. Falls back to Customer
+                    # Group name(s) when no Tenant is set directly (an
+                    # offering can be scoped to a whole Tenant Group
+                    # instead — see utils.tenant_offering_filter), and to
+                    # nothing at all if neither is set.
+                    tenant_names = ', '.join(t.name for t in offering.tenant.all())
+                    if not tenant_names:
+                        tenant_names = ', '.join(g.name for g in offering.tenant_group.all())
+                    add_node(
+                        offering_id,
+                        offering.name,
+                        'offering',
+                        offering,
+                        'Service Offering',
+                        extra_line=tenant_names or None,
+                    )
                     add_edge(service_id, offering_id)
 
                     if app_service is None:
@@ -688,7 +710,7 @@ class OfferingsTreeView(TemplateView):
 
             service_nodes = []
             for service_obj in services_qs:
-                offerings_qs = service_obj.service_offerings.all()
+                offerings_qs = service_obj.service_offerings.all().prefetch_related('tenant', 'tenant_group')
                 if service_offering:
                     offerings_qs = offerings_qs.filter(pk=service_offering.pk)
                 offerings_qs = self._filter_offerings_by_tenant(offerings_qs, tenant)

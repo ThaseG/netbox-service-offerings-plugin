@@ -156,15 +156,19 @@
               margin: 10,
               borderWidth: 2,
               font: {
-                // Two-line node label (see views.py's _flatten_to_graph):
+                // Node label lines (see views.py's _flatten_to_graph):
                 // "<b>" bolds the name line, "<code>" (mapped to `mono`
                 // below, overridden away from its monospace default) sizes
-                // the object-type line down and mutes its color.
+                // the object-type line down and mutes its color, and "<i>"
+                // (Service Offering's third, Customer line) is likewise
+                // sized down and muted, distinguished from the type line by
+                // staying italic instead of switching to `mono`'s face.
                 multi: 'html',
                 color: fontColor,
                 size: 14,
                 bold: { color: fontColor, size: 14, face: 'arial', mod: 'bold' },
                 mono: { color: mutedColor, size: 11, face: 'arial', mod: '', vadjust: -2 },
+                ital: { color: mutedColor, size: 11, face: 'arial', mod: 'italic', vadjust: 2 },
               },
             },
             edges: {
