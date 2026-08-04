@@ -1,0 +1,322 @@
+{
+  "tenancy/tenants/": [
+    {"name": "Coca Cola", "slug": "coca-cola"}
+  ],
+
+  "tenancy/contact-groups/": [
+    {"name": "Portfolio Owners", "slug": "portfolio-owners"},
+    {"name": "Portfolio Managers", "slug": "portfolio-managers"},
+    {"name": "Service Managers", "slug": "service-managers"},
+    {"name": "Service Owners", "slug": "service-owners"},
+    {"name": "Service Offering Owners", "slug": "service-offering-owners"},
+    {"name": "Service Offering Managers", "slug": "service-offering-managers"},
+    {"name": "App1 Business Unit", "slug": "app1-business-unit"},
+    {"name": "App Support Group", "slug": "app-support-group"},
+    {"name": "App Change Group", "slug": "app-change-group"},
+    {"name": "App1 Owner Group", "slug": "app1-owner-group"}
+  ],
+
+  "tenancy/contacts/": [
+    {"name": "Alice Johnson", "email": "alice.johnson@coca-cola.example", "phone": "+1-555-0101", "groups": ["portfolio-owners"]},
+    {"name": "Brian Smith", "email": "brian.smith@coca-cola.example", "phone": "+1-555-0102", "groups": ["portfolio-managers"]},
+    {"name": "Carla Nguyen", "email": "carla.nguyen@coca-cola.example", "phone": "+1-555-0103", "groups": ["service-managers"]},
+    {"name": "David Kim", "email": "david.kim@coca-cola.example", "phone": "+1-555-0104", "groups": ["service-owners"]},
+    {"name": "Elena Petrova", "email": "elena.petrova@coca-cola.example", "phone": "+1-555-0105", "groups": ["service-offering-owners"]},
+    {"name": "Franklin Diaz", "email": "franklin.diaz@coca-cola.example", "phone": "+1-555-0106", "groups": ["service-offering-managers"]},
+    {"name": "Grace Muller", "email": "grace.muller@coca-cola.example", "phone": "+1-555-0107", "groups": ["app1-business-unit"]},
+    {"name": "Henry Osei", "email": "henry.osei@coca-cola.example", "phone": "+1-555-0108", "groups": ["app-support-group"]},
+    {"name": "Isabella Rossi", "email": "isabella.rossi@coca-cola.example", "phone": "+1-555-0109", "groups": ["app-change-group"]},
+    {"name": "Jack Thompson", "email": "jack.thompson@coca-cola.example", "phone": "+1-555-0110", "groups": ["app1-owner-group"]},
+    {"name": "Karen O'Brien", "email": "karen.obrien@coca-cola.example", "phone": "+1-555-0111", "groups": ["app1-owner-group"]}
+  ],
+
+  "dcim/sites/": [
+    {"name": "HQ", "slug": "hq", "physical_address": "100 Main Street, Atlanta, GA 30301, USA", "tenant": "coca-cola"},
+    {"name": "Branch", "slug": "branch", "physical_address": "200 Commerce Avenue, Denver, CO 80202, USA", "tenant": "coca-cola"}
+  ],
+
+  "dcim/manufacturers/": [
+    {"name": "Cisco", "slug": "cisco"},
+    {"name": "Fortinet", "slug": "fortinet"},
+    {"name": "Dell", "slug": "dell"}
+  ],
+
+  "dcim/device-roles/": [
+    {"name": "Firewall", "slug": "firewall", "color": "f44336"},
+    {"name": "Switch", "slug": "switch", "color": "2196f3"},
+    {"name": "Server", "slug": "server", "color": "4caf50"}
+  ],
+
+  "dcim/device-types/": [
+    {"model": "FortiGate-100F", "slug": "fortigate-100f", "manufacturer": "fortinet"},
+    {"model": "Catalyst 9300 24-Port", "slug": "c9300-24t", "manufacturer": "cisco"},
+    {"model": "PowerEdge R750", "slug": "poweredge-r750", "manufacturer": "dell"}
+  ],
+
+  "dcim/devices/": [
+    {"name": "HQ-FW-01", "role": "firewall", "device_type": "fortigate-100f", "site": "hq"},
+    {"name": "HQ-FW-02", "role": "firewall", "device_type": "fortigate-100f", "site": "hq"},
+    {"name": "HQ-SW-01", "role": "switch", "device_type": "c9300-24t", "site": "hq"},
+    {"name": "HQ-SW-02", "role": "switch", "device_type": "c9300-24t", "site": "hq"},
+    {"name": "HQ-SRV-01", "role": "server", "device_type": "poweredge-r750", "site": "hq"},
+    {"name": "HQ-SRV-02", "role": "server", "device_type": "poweredge-r750", "site": "hq"},
+    {"name": "BR-FW-01", "role": "firewall", "device_type": "fortigate-100f", "site": "branch"},
+    {"name": "BR-FW-02", "role": "firewall", "device_type": "fortigate-100f", "site": "branch"},
+    {"name": "BR-SW-01", "role": "switch", "device_type": "c9300-24t", "site": "branch"},
+    {"name": "BR-SW-02", "role": "switch", "device_type": "c9300-24t", "site": "branch"},
+    {"name": "BR-SRV-01", "role": "server", "device_type": "poweredge-r750", "site": "branch"},
+    {"name": "BR-SRV-02", "role": "server", "device_type": "poweredge-r750", "site": "branch"}
+  ],
+
+  "virtualization/cluster-groups/": [
+    {"name": "Proxmox Clusters", "slug": "proxmox-clusters"}
+  ],
+
+  "virtualization/cluster-types/": [
+    {"name": "Proxmox", "slug": "proxmox"}
+  ],
+
+  "virtualization/clusters/": [
+    {"name": "HQ Proxmox Cluster", "type": "proxmox", "group": "proxmox-clusters", "scope_type": "dcim.site", "scope_id": "hq"},
+    {"name": "Branch Proxmox Cluster", "type": "proxmox", "group": "proxmox-clusters", "scope_type": "dcim.site", "scope_id": "branch"}
+  ],
+
+  "virtualization/virtual-machines/": [
+    {"name": "hq-app-vm01", "cluster": "HQ Proxmox Cluster"},
+    {"name": "hq-app-vm02", "cluster": "HQ Proxmox Cluster"},
+    {"name": "br-app-vm01", "cluster": "Branch Proxmox Cluster"},
+    {"name": "br-app-vm02", "cluster": "Branch Proxmox Cluster"}
+  ],
+
+  "plugins/service-specification/lifecycles/": [
+    {
+      "name": "Draft",
+      "slug": "draft",
+      "description": "The CI has been created but is still being defined. Information is incomplete and the CI is not yet approved for further lifecycle activities.",
+      "color": "9e9e9e"
+    },
+    {
+      "name": "Design",
+      "slug": "design",
+      "description": "The CI is in the planning or design phase. Architecture, requirements, and specifications are being developed.",
+      "color": "2196f3"
+    },
+    {
+      "name": "Build",
+      "slug": "build",
+      "description": "The CI is currently being developed, configured, or implemented and is not yet ready for production use.",
+      "color": "ffc107"
+    },
+    {
+      "name": "Available",
+      "slug": "available",
+      "description": "The CI is ready for deployment or assignment but is not yet actively providing a production service.",
+      "color": "4caf50"
+    },
+    {
+      "name": "Operational",
+      "slug": "operational",
+      "description": "The CI is deployed, fully functional, and actively supporting business or IT services in production.",
+      "color": "2f6a31"
+    },
+    {
+      "name": "In Maintenance",
+      "slug": "in-maintenance",
+      "description": "The CI is temporarily undergoing maintenance, upgrades, or repairs. It may have limited or no availability during this period.",
+      "color": "ff9800"
+    },
+    {
+      "name": "End of Support",
+      "slug": "end-of-support",
+      "description": "Vendor or internal support has ended or has been scheduled to end. The CI may still be operational but will no longer receive support, updates, or patches.",
+      "color": "ff5722"
+    },
+    {
+      "name": "End of Life",
+      "slug": "end-of-life",
+      "description": "The CI has reached the end of its intended lifecycle and should no longer be used for production. Replacement or retirement should be planned or completed.",
+      "color": "f44336"
+    },
+    {
+      "name": "Expired",
+      "slug": "expired",
+      "description": "The CI is no longer valid due to the expiration of its license, certificate, contract, subscription, or other time-based entitlement.",
+      "color": "aa1409"
+    },
+    {
+      "name": "Decommissioned",
+      "slug": "decommissioned",
+      "description": "The CI has been permanently removed from service and is no longer operational. It is retained in the CMDB for historical, audit, or compliance purposes.",
+      "color": "607d8b"
+    },
+    {
+      "name": "Cancelled",
+      "slug": "cancelled",
+      "description": "The CI was planned but the implementation or deployment was cancelled before becoming operational.",
+      "color": "795548"
+    }
+  ],
+
+  "plugins/service-specification/slas/": [
+    {"name": "Change Support", "slug": "change-support", "sla_definition": "Change Support facilitates the implementation of changes to services or systems."},
+    {"name": "Basic Support", "slug": "basic-support", "sla_definition": "Basic Support provides foundational assistance for troubleshooting and resolving"},
+    {"name": "Catch & Dispatch", "slug": "catch-dispatch", "sla_definition": "This model focuses on the initial handling of incidents or service requests."},
+    {"name": "Incident Support", "slug": "incident-support", "sla_definition": "This SLA model aids with identifying, diagnosing, and resolving incidents."},
+    {"name": "Lifecycle package", "slug": "lifecycle-package", "sla_definition": "This package offers end-to-end support for the entire lifecycle of a service or system."},
+    {"name": "Monitoring", "slug": "monitoring", "sla_definition": "Monitoring services track the performance, health, and availability of systems."},
+    {"name": "On-site service", "slug": "on-site-service", "sla_definition": "On Site Service provides physical, on-site support for troubleshooting"}
+  ],
+
+  "plugins/service-specification/operation-times/": [
+    {"name": "24/7", "slug": "247", "description": "24/7"},
+    {"name": "8/5", "slug": "85", "description": "8/5"},
+    {"name": "10/5", "slug": "105", "description": "10/5"}
+  ],
+
+  "plugins/service-specification/availabilities/": [
+    {"name": "99.99%", "slug": "99-99", "description": "99.99%"},
+    {"name": "99.50%", "slug": "99-50", "description": "99.50%"},
+    {"name": "99.00%", "slug": "99-00", "description": "99.00%"},
+    {"name": "98.00%", "slug": "98-00", "description": "98.00%"},
+    {"name": "95.00%", "slug": "95-00", "description": "95.00%"}
+  ],
+
+  "plugins/service-specification/criticalities/": [
+    {"name": "Not Critical", "slug": "not-critical", "description": "Not Critical"},
+    {"name": "Less Critical", "slug": "less-critical", "description": "Less Critical"},
+    {"name": "Somewhat Critical", "slug": "somewhat-critical", "description": "Somewhat Critical"},
+    {"name": "Most Critical", "slug": "most-critical", "description": "Most Critical"}
+  ],
+
+  "plugins/service-specification/environments/": [
+    {"name": "Production", "slug": "production", "description": "Production"},
+    {"name": "Staging", "slug": "staging", "description": "Staging"},
+    {"name": "Test", "slug": "test", "description": "Test"},
+    {"name": "Development", "slug": "development", "description": "Development"},
+    {"name": "QA", "slug": "qa", "description": "QA"}
+  ],
+
+  "plugins/service-specification/mtats/": [
+    {"name": "Category A", "slug": "category-a", "description": "Category A", "value": 12, "unit": "hours"},
+    {"name": "Category B", "slug": "category-b", "description": "Category B", "value": 24, "unit": "hours"},
+    {"name": "Category C", "slug": "category-c", "description": "Category C", "value": 32, "unit": "hours"}
+  ],
+
+  "plugins/service-specification/ci-functions/": [
+    {"name": "Managed Exchange Service", "slug": "managed-exchange-service", "description": "Managed Exchange Service"}
+  ],
+
+  "plugins/service-specification/portfolios/": [
+    {
+      "name": "Primary Service Portfolio",
+      "description": "Primary Service Portfolio",
+      "lifecycle": "operational",
+      "portfolio_owner_contacts": ["Alice Johnson"],
+      "portfolio_owner_contact_groups": ["portfolio-owners"],
+      "portfolio_manager_contacts": ["Brian Smith"],
+      "portfolio_manager_contact_groups": ["portfolio-managers"]
+    }
+  ],
+
+  "plugins/service-specification/services/": [
+    {
+      "name": "Workspace",
+      "description": "Workspace services",
+      "lifecycle": "operational",
+      "ci_function": "managed-exchange-service",
+      "service_owner_contacts": ["David Kim"],
+      "service_owner_contact_groups": ["service-owners"],
+      "service_manager_contacts": ["Carla Nguyen"],
+      "service_manager_contact_groups": ["service-managers"],
+      "service_portfolio": ["Primary Service Portfolio"],
+      "business_unit": ["app1-business-unit"],
+      "support_group": ["app-support-group"],
+      "change_group": ["app-change-group"]
+    }
+  ],
+
+  "plugins/service-specification/service-offerings/": [
+    {
+      "name": "Managed Exchange Service High Availability",
+      "description": "Managed Exchange Service High Availability",
+      "contract_number": "12345",
+      "lifecycle": "operational",
+      "service": ["Workspace"],
+      "service_offering_owner_contacts": ["Elena Petrova"],
+      "service_offering_owner_contact_groups": ["service-offering-owners"],
+      "service_offering_manager_contacts": ["Franklin Diaz"],
+      "service_offering_manager_contact_groups": ["service-offering-managers"],
+      "business_unit": ["app1-business-unit"],
+      "support_group": ["app-support-group"],
+      "change_group": ["app-change-group"],
+      "tenant": ["coca-cola"]
+    },
+    {
+      "name": "Managed Exchange Service Standalone",
+      "description": "Managed Exchange Service Standalone",
+      "contract_number": "54321",
+      "lifecycle": "operational",
+      "service": ["Workspace"],
+      "service_offering_owner_contacts": ["Elena Petrova"],
+      "service_offering_owner_contact_groups": ["service-offering-owners"],
+      "service_offering_manager_contacts": ["Franklin Diaz"],
+      "service_offering_manager_contact_groups": ["service-offering-managers"],
+      "business_unit": ["app1-business-unit"],
+      "support_group": ["app-support-group"],
+      "change_group": ["app-change-group"],
+      "tenant": ["coca-cola"]
+    }
+  ],
+
+  "plugins/service-specification/app-services/": [
+    {
+      "name": "Managed Exchange Server High Availability - Prod",
+      "description": "Managed Exchange Server High Availability",
+      "environment": "production",
+      "lifecycle": "operational",
+      "service_offering": "Managed Exchange Service High Availability",
+      "business_unit": ["app1-business-unit"],
+      "support_group": ["app-support-group"],
+      "change_group": ["app-change-group"],
+      "sla": ["lifecycle-package"],
+      "owned_by_contact_group": "app1-owner-group",
+      "operation_time": ["247"],
+      "availability": ["99-99"],
+      "mtat": ["category-a"],
+      "service_criticality": ["most-critical"],
+      "accepted_downtime": 2,
+      "ttr": 2,
+      "rpo": 4,
+      "rto": 4,
+      "bcm": 2
+    },
+    {
+      "name": "Managed Exchange Server Standalone - Prod",
+      "description": "",
+      "environment": "production",
+      "lifecycle": "operational",
+      "service_offering": "Managed Exchange Service Standalone",
+      "business_unit": ["app1-business-unit"],
+      "support_group": ["app-support-group"],
+      "change_group": ["app-change-group"],
+      "sla": ["catch-dispatch"],
+      "owned_by_contact_group": "app1-owner-group",
+      "operation_time": ["247"],
+      "availability": ["99-50"],
+      "mtat": ["category-a"],
+      "service_criticality": ["most-critical"],
+      "accepted_downtime": 2,
+      "ttr": 2,
+      "rpo": 2,
+      "rto": 4,
+      "bcm": 2
+    }
+  ],
+
+  "plugins/service-specification/virtual-machine-service-infos/": [
+    {"virtual_machine": "hq-app-vm01", "application_services": ["Managed Exchange Server High Availability - Prod"]},
+    {"virtual_machine": "hq-app-vm02", "application_services": ["Managed Exchange Server High Availability - Prod"]},
+    {"virtual_machine": "br-app-vm01", "application_services": ["Managed Exchange Server High Availability - Prod"]},
+    {"virtual_machine": "br-app-vm02", "application_services": ["Managed Exchange Server High Availability - Prod"]}
+  ]
+}

@@ -14,6 +14,20 @@ the Service Specification plugin's own objects (lookup values, one
 Portfolio/Service, two Service Offerings/Application Services), wired
 together the same way they were originally built by hand through the UI.
 
+All the actual data lives in test-deployment.json, next to this script, as
+an ordered mapping of {api_endpoint_path: [payload, ...]}. This script is a
+generic engine, not per-object-type logic: it POSTs every payload to its
+endpoint, in file order, resolving any field listed in REFERENCE_FIELDS
+below from a slug/name string into the real id of an object created
+earlier in the same run.
+
+File order in the JSON *is* creation order — an object referenced by a
+later entry (by slug, or by name for models with no slug, e.g. Contact,
+Device, Cluster, VirtualMachine, and the plugin's own Portfolio/Service/
+ServiceOffering/AppService) must be listed earlier in the file. JSON can't
+hold comments, so that ordering requirement — and the object graph itself —
+is documented here and in REFERENCE_FIELDS instead.
+
 Stdlib-only (urllib), matching smoke-test.sh's dependency-free approach —
 no extra `pip install` needed on the runner.
 """
@@ -23,9 +37,99 @@ import os
 import sys
 import urllib.error
 import urllib.request
+from pathlib import Path
 
 BASE_URL = None
 API_AUTH_HEADER = None
+
+DATA_FILE = Path(__file__).with_name('test-deployment.json')
+
+# For each endpoint, which fields hold references to other objects rather
+# than literal values, and which endpoint those references resolve
+# against. A referenced object is looked up by its own `slug` if it has
+# one, else by its `name` (see resolve()) — deliberately explicit per
+# field/endpoint rather than inferred from the value itself, so a typo'd
+# or wrong-endpoint reference fails loudly instead of silently resolving
+# against the wrong thing. This table is also the object graph's
+# documentation: it replaces what the old per-object-type functions'
+# parameter lists used to show.
+REFERENCE_FIELDS = {
+    'dcim/sites/': {
+        'tenant': 'tenancy/tenants/',
+    },
+    'dcim/device-types/': {
+        'manufacturer': 'dcim/manufacturers/',
+    },
+    'dcim/devices/': {
+        'role': 'dcim/device-roles/',
+        'device_type': 'dcim/device-types/',
+        'site': 'dcim/sites/',
+    },
+    'tenancy/contacts/': {
+        'groups': 'tenancy/contact-groups/',
+    },
+    'virtualization/clusters/': {
+        'type': 'virtualization/cluster-types/',
+        'group': 'virtualization/cluster-groups/',
+        # Generic-FK-style scope (scope_type/scope_id): scope_type is a
+        # literal content-type string ('dcim.site'), not a reference, but
+        # scope_id needs the same slug -> id resolution as any other
+        # reference to a Site.
+        'scope_id': 'dcim/sites/',
+    },
+    'virtualization/virtual-machines/': {
+        'cluster': 'virtualization/clusters/',
+    },
+    'plugins/service-specification/portfolios/': {
+        'lifecycle': 'plugins/service-specification/lifecycles/',
+        'portfolio_owner_contacts': 'tenancy/contacts/',
+        'portfolio_owner_contact_groups': 'tenancy/contact-groups/',
+        'portfolio_manager_contacts': 'tenancy/contacts/',
+        'portfolio_manager_contact_groups': 'tenancy/contact-groups/',
+    },
+    'plugins/service-specification/services/': {
+        'lifecycle': 'plugins/service-specification/lifecycles/',
+        'ci_function': 'plugins/service-specification/ci-functions/',
+        'service_owner_contacts': 'tenancy/contacts/',
+        'service_owner_contact_groups': 'tenancy/contact-groups/',
+        'service_manager_contacts': 'tenancy/contacts/',
+        'service_manager_contact_groups': 'tenancy/contact-groups/',
+        'service_portfolio': 'plugins/service-specification/portfolios/',
+        'business_unit': 'tenancy/contact-groups/',
+        'support_group': 'tenancy/contact-groups/',
+        'change_group': 'tenancy/contact-groups/',
+    },
+    'plugins/service-specification/service-offerings/': {
+        'lifecycle': 'plugins/service-specification/lifecycles/',
+        'service': 'plugins/service-specification/services/',
+        'service_offering_owner_contacts': 'tenancy/contacts/',
+        'service_offering_owner_contact_groups': 'tenancy/contact-groups/',
+        'service_offering_manager_contacts': 'tenancy/contacts/',
+        'service_offering_manager_contact_groups': 'tenancy/contact-groups/',
+        'business_unit': 'tenancy/contact-groups/',
+        'support_group': 'tenancy/contact-groups/',
+        'change_group': 'tenancy/contact-groups/',
+        'tenant': 'tenancy/tenants/',
+    },
+    'plugins/service-specification/app-services/': {
+        'environment': 'plugins/service-specification/environments/',
+        'lifecycle': 'plugins/service-specification/lifecycles/',
+        'service_offering': 'plugins/service-specification/service-offerings/',
+        'business_unit': 'tenancy/contact-groups/',
+        'support_group': 'tenancy/contact-groups/',
+        'change_group': 'tenancy/contact-groups/',
+        'sla': 'plugins/service-specification/slas/',
+        'owned_by_contact_group': 'tenancy/contact-groups/',
+        'operation_time': 'plugins/service-specification/operation-times/',
+        'availability': 'plugins/service-specification/availabilities/',
+        'mtat': 'plugins/service-specification/mtats/',
+        'service_criticality': 'plugins/service-specification/criticalities/',
+    },
+    'plugins/service-specification/virtual-machine-service-infos/': {
+        'virtual_machine': 'virtualization/virtual-machines/',
+        'application_services': 'plugins/service-specification/app-services/',
+    },
+}
 
 
 def env(name):
@@ -64,654 +168,50 @@ def api(method, path, payload=None):
         fail(f'{method} {path} -> {e}')
 
 
-def created(label, obj):
-    print(f'  created {label}: {obj["display"]} (id={obj["id"]})')
+def created(endpoint, obj):
+    print(f'  created {endpoint}: {obj["display"]} (id={obj["id"]})')
     return obj
 
 
-#
-# Tenant
-#
-
-
-def create_tenant():
-    print('Creating tenant...')
-    obj = api('POST', 'tenancy/tenants/', {'name': 'Coca Cola', 'slug': 'coca-cola'})
-    created('tenant', obj)
-    return obj['id']
-
-
-#
-# Contact groups + contacts
-#
-
-CONTACT_GROUPS = [
-    {'name': 'Portfolio Owners', 'slug': 'portfolio-owners'},
-    {'name': 'Portfolio Managers', 'slug': 'portfolio-managers'},
-    {'name': 'Service Managers', 'slug': 'service-managers'},
-    {'name': 'Service Owners', 'slug': 'service-owners'},
-    {'name': 'Service Offering Owners', 'slug': 'service-offering-owners'},
-    {'name': 'Service Offering Managers', 'slug': 'service-offering-managers'},
-    {'name': 'App1 Business Unit', 'slug': 'app1-business-unit'},
-    {'name': 'App Support Group', 'slug': 'app-support-group'},
-    {'name': 'App Change Group', 'slug': 'app-change-group'},
-    {'name': 'App1 Owner Group', 'slug': 'app1-owner-group'},
-]
-
-# (first name, last name, group name) — one contact per group, except
-# "App1 Owner Group" which gets two, per the request.
-CONTACTS = [
-    ('Alice', 'Johnson', 'Portfolio Owners'),
-    ('Brian', 'Smith', 'Portfolio Managers'),
-    ('Carla', 'Nguyen', 'Service Managers'),
-    ('David', 'Kim', 'Service Owners'),
-    ('Elena', 'Petrova', 'Service Offering Owners'),
-    ('Franklin', 'Diaz', 'Service Offering Managers'),
-    ('Grace', 'Muller', 'App1 Business Unit'),
-    ('Henry', 'Osei', 'App Support Group'),
-    ('Isabella', 'Rossi', 'App Change Group'),
-    ('Jack', 'Thompson', 'App1 Owner Group'),
-    ('Karen', "O'Brien", 'App1 Owner Group'),
-]
-
-
-def create_contact_groups():
-    print('Creating contact groups...')
-    ids = {}
-    for group in CONTACT_GROUPS:
-        obj = api('POST', 'tenancy/contact-groups/', group)
-        created('contact group', obj)
-        ids[group['name']] = obj['id']
-    return ids
-
-
-def create_contacts(group_ids):
-    print('Creating contacts...')
-    # group name -> [contact id, ...], so plugin objects created later can
-    # pick "the" contact for a given role (e.g. contacts_by_group['Service
-    # Owners'][0]) without caring about the numeric ids the API assigned.
-    contacts_by_group = {}
-    for index, (first, last, group_name) in enumerate(CONTACTS, start=1):
-        email = f'{first.lower()}.{last.lower().replace(chr(39), "")}@coca-cola.example'
-        phone = f'+1-555-01{index:02d}'
-        obj = api(
-            'POST',
-            'tenancy/contacts/',
-            {
-                'name': f'{first} {last}',
-                'email': email,
-                'phone': phone,
-                'groups': [group_ids[group_name]],
-            },
+def resolve(value, target_endpoint, created_objects):
+    """Look up a single slug/name reference against objects already
+    created (earlier in the JSON file) at target_endpoint."""
+    cache = created_objects.get(target_endpoint, {})
+    if value not in cache:
+        fail(
+            f'Cannot resolve reference {value!r} against {target_endpoint} — no object with that slug/name has '
+            f'been created yet. Check test-deployment.json lists it earlier, and that the value is spelled '
+            f'exactly right.'
         )
-        created('contact', obj)
-        contacts_by_group.setdefault(group_name, []).append(obj['id'])
-    return contacts_by_group
-
-
-#
-# Sites
-#
-
-SITES = [
-    {
-        'name': 'HQ',
-        'slug': 'hq',
-        'physical_address': '100 Main Street, Atlanta, GA 30301, USA',
-    },
-    {
-        'name': 'Branch',
-        'slug': 'branch',
-        'physical_address': '200 Commerce Avenue, Denver, CO 80202, USA',
-    },
-]
-
-
-def create_sites(tenant_id):
-    print('Creating sites...')
-    ids = {}
-    for site in SITES:
-        obj = api('POST', 'dcim/sites/', {**site, 'tenant': tenant_id})
-        created('site', obj)
-        ids[site['name']] = obj['id']
-    return ids
-
-
-#
-# Manufacturers, device roles, device types
-#
-
-MANUFACTURERS = [
-    {'name': 'Cisco', 'slug': 'cisco'},
-    {'name': 'Fortinet', 'slug': 'fortinet'},
-    {'name': 'Dell', 'slug': 'dell'},
-]
-
-DEVICE_ROLES = [
-    {'name': 'Firewall', 'slug': 'firewall', 'color': 'f44336'},
-    {'name': 'Switch', 'slug': 'switch', 'color': '2196f3'},
-    {'name': 'Server', 'slug': 'server', 'color': '4caf50'},
-]
-
-# (model, slug, manufacturer name, role name) — one device type per role,
-# used below to build the per-site device inventory.
-DEVICE_TYPES = [
-    ('FortiGate-100F', 'fortigate-100f', 'Fortinet', 'Firewall'),
-    ('Catalyst 9300 24-Port', 'c9300-24t', 'Cisco', 'Switch'),
-    ('PowerEdge R750', 'poweredge-r750', 'Dell', 'Server'),
-]
-
-
-def create_manufacturers():
-    print('Creating manufacturers...')
-    ids = {}
-    for manufacturer in MANUFACTURERS:
-        obj = api('POST', 'dcim/manufacturers/', manufacturer)
-        created('manufacturer', obj)
-        ids[manufacturer['name']] = obj['id']
-    return ids
-
-
-def create_device_roles():
-    print('Creating device roles...')
-    ids = {}
-    for role in DEVICE_ROLES:
-        obj = api('POST', 'dcim/device-roles/', role)
-        created('device role', obj)
-        ids[role['name']] = obj['id']
-    return ids
-
-
-def create_device_types(manufacturer_ids):
-    print('Creating device types...')
-    # keyed by role name, since that's how create_devices() below looks
-    # them up (each role has exactly one device type here)
-    ids = {}
-    for model, slug, manufacturer_name, role_name in DEVICE_TYPES:
-        obj = api(
-            'POST',
-            'dcim/device-types/',
-            {'model': model, 'slug': slug, 'manufacturer': manufacturer_ids[manufacturer_name]},
-        )
-        created('device type', obj)
-        ids[role_name] = obj['id']
-    return ids
-
-
-#
-# Devices — 2 firewalls, 2 switches, 2 servers on each site
-#
-
-# (role name, name suffix)
-DEVICES_PER_SITE = [
-    ('Firewall', 'FW'),
-    ('Switch', 'SW'),
-    ('Server', 'SRV'),
-]
-
-SITE_CODES = {'HQ': 'HQ', 'Branch': 'BR'}
-
-
-def create_devices(site_ids, role_ids, device_type_ids):
-    print('Creating devices...')
-    for site_name, site_id in site_ids.items():
-        site_code = SITE_CODES[site_name]
-        for role_name, suffix in DEVICES_PER_SITE:
-            for n in (1, 2):
-                name = f'{site_code}-{suffix}-{n:02d}'
-                obj = api(
-                    'POST',
-                    'dcim/devices/',
-                    {
-                        'name': name,
-                        'role': role_ids[role_name],
-                        'device_type': device_type_ids[role_name],
-                        'site': site_id,
-                    },
-                )
-                created('device', obj)
-
-
-#
-# Virtualization: cluster group/type, one cluster per site, 2 VMs each
-#
-
-
-def create_cluster_group():
-    print('Creating cluster group...')
-    obj = api(
-        'POST',
-        'virtualization/cluster-groups/',
-        {'name': 'Proxmox Clusters', 'slug': 'proxmox-clusters'},
-    )
-    created('cluster group', obj)
-    return obj['id']
-
-
-def create_cluster_type():
-    print('Creating cluster type...')
-    obj = api('POST', 'virtualization/cluster-types/', {'name': 'Proxmox', 'slug': 'proxmox'})
-    created('cluster type', obj)
-    return obj['id']
-
-
-def create_clusters(group_id, type_id, site_ids):
-    print('Creating clusters...')
-    ids = {}
-    for site_name, site_id in site_ids.items():
-        obj = api(
-            'POST',
-            'virtualization/clusters/',
-            {
-                'name': f'{site_name} Proxmox Cluster',
-                'type': type_id,
-                'group': group_id,
-                'scope_type': 'dcim.site',
-                'scope_id': site_id,
-            },
-        )
-        created('cluster', obj)
-        ids[site_name] = obj['id']
-    return ids
-
-
-def create_virtual_machines(cluster_ids):
-    print('Creating virtual machines...')
-    ids = {}
-    for site_name, cluster_id in cluster_ids.items():
-        site_code = SITE_CODES[site_name].lower()
-        for n in (1, 2):
-            name = f'{site_code}-app-vm{n:02d}'
-            obj = api('POST', 'virtualization/virtual-machines/', {'name': name, 'cluster': cluster_id})
-            created('virtual machine', obj)
-            ids[name] = obj['id']
-    return ids
-
-
-def assign_vm_application_services(vm_ids, app_service_id):
-    """Gives every VM created above a 'Service Specification' entry (the
-    tab on its own NetBox detail page) with just Application Services set —
-    the plugin can't add real fields to VirtualMachine directly, so this is
-    a VirtualMachineServiceInfo row in a 1:1 relationship with it. See
-    models.py's ServiceSpecificationInfoBase for why lifecycle and the
-    organization groups are left unset here rather than required. CI
-    Function isn't set directly here either — it's derived read-only from
-    the assigned Application Service(s)' Service Offering -> Service.
-    """
-    print('Assigning Application Services to virtual machines...')
-    for name, vm_id in vm_ids.items():
-        obj = api(
-            'POST',
-            'plugins/service-specification/virtual-machine-service-infos/',
-            {'virtual_machine': vm_id, 'application_services': [app_service_id]},
-        )
-        created('virtual machine service info', obj)
-
-
-#
-# Service Specification plugin: Support lookup objects
-#
-
-# (name, description, color) — color is an RRGGBB hex string (Lifecycle.color,
-# see models.py). Roughly traffic-light-ordered: neutral/planning colors for
-# the earliest stages, green for the healthy/in-service stages (Available is
-# required to be green), warming through orange/red as a CI winds down, and
-# grey/brown for its archived end states.
-LIFECYCLES = [
-    (
-        'Draft',
-        'The CI has been created but is still being defined. Information is incomplete and the CI is not yet '
-        'approved for further lifecycle activities.',
-        '9e9e9e',
-    ),
-    (
-        'Design',
-        'The CI is in the planning or design phase. Architecture, requirements, and specifications are being '
-        'developed.',
-        '2196f3',
-    ),
-    (
-        'Build',
-        'The CI is currently being developed, configured, or implemented and is not yet ready for production use.',
-        'ffc107',
-    ),
-    (
-        'Available',
-        'The CI is ready for deployment or assignment but is not yet actively providing a production service.',
-        '4caf50',
-    ),
-    (
-        'Operational',
-        'The CI is deployed, fully functional, and actively supporting business or IT services in production.',
-        '2f6a31',
-    ),
-    (
-        'In Maintenance',
-        'The CI is temporarily undergoing maintenance, upgrades, or repairs. It may have limited or no availability '
-        'during this period.',
-        'ff9800',
-    ),
-    (
-        'End of Support',
-        'Vendor or internal support has ended or has been scheduled to end. The CI may still be operational but '
-        'will no longer receive support, updates, or patches.',
-        'ff5722',
-    ),
-    (
-        'End of Life',
-        'The CI has reached the end of its intended lifecycle and should no longer be used for production. '
-        'Replacement or retirement should be planned or completed.',
-        'f44336',
-    ),
-    (
-        'Expired',
-        'The CI is no longer valid due to the expiration of its license, certificate, contract, subscription, or '
-        'other time-based entitlement.',
-        'aa1409',
-    ),
-    (
-        'Decommissioned',
-        'The CI has been permanently removed from service and is no longer operational. It is retained in the '
-        'CMDB for historical, audit, or compliance purposes.',
-        '607d8b',
-    ),
-    (
-        'Cancelled',
-        'The CI was planned but the implementation or deployment was cancelled before becoming operational.',
-        '795548',
-    ),
-]
-
-# (name, slug, sla_definition)
-SLAS = [
-    ('Change Support', 'change-support', 'Change Support facilitates the implementation of changes to services or systems.'),
-    (
-        'Basic Support',
-        'basic-support',
-        'Basic Support provides foundational assistance for troubleshooting and resolving',
-    ),
-    (
-        'Catch & Dispatch',
-        'catch-dispatch',
-        'This model focuses on the initial handling of incidents or service requests.',
-    ),
-    (
-        'Incident Support',
-        'incident-support',
-        'This SLA model aids with identifying, diagnosing, and resolving incidents.',
-    ),
-    (
-        'Lifecycle package',
-        'lifecycle-package',
-        'This package offers end-to-end support for the entire lifecycle of a service or system.',
-    ),
-    ('Monitoring', 'monitoring', 'Monitoring services track the performance, health, and availability of systems.'),
-    (
-        'On-site service',
-        'on-site-service',
-        'On Site Service provides physical, on-site support for troubleshooting',
-    ),
-]
-
-# (name, slug)
-OPERATION_TIMES = [('24/7', '247'), ('8/5', '85'), ('10/5', '105')]
-AVAILABILITIES = [('99.99%', '99-99'), ('99.50%', '99-50'), ('99.00%', '99-00'), ('98.00%', '98-00'), ('95.00%', '95-00')]
-CRITICALITIES = [
-    ('Not Critical', 'not-critical'),
-    ('Less Critical', 'less-critical'),
-    ('Somewhat Critical', 'somewhat-critical'),
-    ('Most Critical', 'most-critical'),
-]
-ENVIRONMENTS = [
-    ('Production', 'production'),
-    ('Staging', 'staging'),
-    ('Test', 'test'),
-    ('Development', 'development'),
-    ('QA', 'qa'),
-]
-
-# (name, slug, value, unit)
-MTATS = [
-    ('Category A', 'category-a', 12, 'hours'),
-    ('Category B', 'category-b', 24, 'hours'),
-    ('Category C', 'category-c', 32, 'hours'),
-]
-
-CI_FUNCTIONS = [('Managed Exchange Service', 'managed-exchange-service')]
-
-
-def _create_lookup(label, path, items, extra_fields=lambda item: {}, plural=None):
-    """Shared helper for the plugin's simple name/slug(/description) lookup
-    models below — each `items` entry is a tuple starting with (name, slug),
-    with any model-specific fields appended and picked out by extra_fields.
-    """
-    print(f'Creating {plural or f"{label}s"}...')
-    ids = {}
-    for item in items:
-        name, slug = item[0], item[1]
-        payload = {'name': name, 'slug': slug, 'description': name, **extra_fields(item)}
-        obj = api('POST', path, payload)
-        created(label, obj)
-        ids[name] = obj['id']
-    return ids
-
-
-def create_lifecycles():
-    print('Creating lifecycles...')
-    ids = {}
-    for name, description, color in LIFECYCLES:
-        slug = name.lower().replace(' ', '-')
-        obj = api(
-            'POST',
-            'plugins/service-specification/lifecycles/',
-            {'name': name, 'slug': slug, 'description': description, 'color': color},
-        )
-        created('lifecycle', obj)
-        ids[name] = obj['id']
-    return ids
-
-
-def create_slas():
-    print('Creating SLAs...')
-    ids = {}
-    for name, slug, sla_definition in SLAS:
-        obj = api('POST', 'plugins/service-specification/slas/', {'name': name, 'slug': slug, 'sla_definition': sla_definition})
-        created('SLA', obj)
-        ids[name] = obj['id']
-    return ids
-
-
-def create_operation_times():
-    return _create_lookup('operation time', 'plugins/service-specification/operation-times/', OPERATION_TIMES)
-
-
-def create_availabilities():
-    return _create_lookup(
-        'availability', 'plugins/service-specification/availabilities/', AVAILABILITIES, plural='availabilities'
-    )
-
-
-def create_criticalities():
-    return _create_lookup(
-        'criticality', 'plugins/service-specification/criticalities/', CRITICALITIES, plural='criticalities'
-    )
-
-
-def create_environments():
-    return _create_lookup('environment', 'plugins/service-specification/environments/', ENVIRONMENTS)
-
-
-def create_mtats():
-    return _create_lookup(
-        'MTAT',
-        'plugins/service-specification/mtats/',
-        MTATS,
-        extra_fields=lambda item: {'value': item[2], 'unit': item[3]},
-    )
-
-
-def create_ci_functions():
-    return _create_lookup('CI Function', 'plugins/service-specification/ci-functions/', CI_FUNCTIONS)
-
-
-#
-# Service Specification plugin: Portfolio / Service / Service Offerings /
-# Application Services
-#
-
-
-def create_portfolio(lifecycle_ids, group_ids, contacts_by_group):
-    print('Creating portfolio...')
-    obj = api(
-        'POST',
-        'plugins/service-specification/portfolios/',
-        {
-            'name': 'Primary Service Portfolio',
-            'description': 'Primary Service Portfolio',
-            'lifecycle': lifecycle_ids['Operational'],
-            'portfolio_owner_contacts': [contacts_by_group['Portfolio Owners'][0]],
-            'portfolio_owner_contact_groups': [group_ids['Portfolio Owners']],
-            'portfolio_manager_contacts': [contacts_by_group['Portfolio Managers'][0]],
-            'portfolio_manager_contact_groups': [group_ids['Portfolio Managers']],
-        },
-    )
-    created('portfolio', obj)
-    return obj['id']
-
-
-def create_service(lifecycle_ids, ci_function_ids, group_ids, contacts_by_group, portfolio_id):
-    print('Creating service...')
-    obj = api(
-        'POST',
-        'plugins/service-specification/services/',
-        {
-            'name': 'Workspace',
-            'description': 'Workspace services',
-            'lifecycle': lifecycle_ids['Operational'],
-            'ci_function': ci_function_ids['Managed Exchange Service'],
-            'service_owner_contacts': [contacts_by_group['Service Owners'][0]],
-            'service_owner_contact_groups': [group_ids['Service Owners']],
-            'service_manager_contacts': [contacts_by_group['Service Managers'][0]],
-            'service_manager_contact_groups': [group_ids['Service Managers']],
-            'service_portfolio': [portfolio_id],
-            'business_unit': [group_ids['App1 Business Unit']],
-            'support_group': [group_ids['App Support Group']],
-            'change_group': [group_ids['App Change Group']],
-        },
-    )
-    created('service', obj)
-    return obj['id']
-
-
-# (name, contract_number)
-SERVICE_OFFERINGS = [
-    ('Managed Exchange Service High Availability', '12345'),
-    ('Managed Exchange Service Standalone', '54321'),
-]
-
-
-def create_service_offerings(lifecycle_ids, group_ids, contacts_by_group, service_id, tenant_id):
-    print('Creating service offerings...')
-    ids = {}
-    for name, contract_number in SERVICE_OFFERINGS:
-        obj = api(
-            'POST',
-            'plugins/service-specification/service-offerings/',
-            {
-                'name': name,
-                'description': name,
-                'contract_number': contract_number,
-                'lifecycle': lifecycle_ids['Operational'],
-                'service': [service_id],
-                'service_offering_owner_contacts': [contacts_by_group['Service Offering Owners'][0]],
-                'service_offering_owner_contact_groups': [group_ids['Service Offering Owners']],
-                'service_offering_manager_contacts': [contacts_by_group['Service Offering Managers'][0]],
-                'service_offering_manager_contact_groups': [group_ids['Service Offering Managers']],
-                'business_unit': [group_ids['App1 Business Unit']],
-                'support_group': [group_ids['App Support Group']],
-                'change_group': [group_ids['App Change Group']],
-                'tenant': [tenant_id],
-            },
-        )
-        created('service offering', obj)
-        ids[name] = obj['id']
-    return ids
-
-
-# (name, description, offering name, sla name, availability name, accepted_downtime, ttr, rpo, rto, bcm)
-APP_SERVICES = [
-    (
-        'Managed Exchange Server High Availability - Prod',
-        'Managed Exchange Server High Availability',
-        'Managed Exchange Service High Availability',
-        'Lifecycle package',
-        '99.99%',
-        2,
-        2,
-        4,
-        4,
-        2,
-    ),
-    (
-        'Managed Exchange Server Standalone - Prod',
-        '',
-        'Managed Exchange Service Standalone',
-        'Catch & Dispatch',
-        '99.50%',
-        2,
-        2,
-        2,
-        4,
-        2,
-    ),
-]
-
-
-def create_app_services(
-    environment_ids,
-    lifecycle_ids,
-    group_ids,
-    offering_ids,
-    sla_ids,
-    operation_time_ids,
-    availability_ids,
-    mtat_ids,
-    criticality_ids,
-):
-    # Customer isn't set here: it's set once, on the parent Service
-    # Offering (see create_service_offerings()), and shown read-only on
-    # the Application Service's own page.
-    print('Creating application services...')
-    ids = {}
-    for name, description, offering_name, sla_name, availability_name, downtime, ttr, rpo, rto, bcm in APP_SERVICES:
-        obj = api(
-            'POST',
-            'plugins/service-specification/app-services/',
-            {
-                'name': name,
-                'description': description,
-                'environment': environment_ids['Production'],
-                'lifecycle': lifecycle_ids['Operational'],
-                'service_offering': offering_ids[offering_name],
-                'business_unit': [group_ids['App1 Business Unit']],
-                'support_group': [group_ids['App Support Group']],
-                'change_group': [group_ids['App Change Group']],
-                'sla': [sla_ids[sla_name]],
-                'owned_by_contact_group': group_ids['App1 Owner Group'],
-                'operation_time': [operation_time_ids['24/7']],
-                'availability': [availability_ids[availability_name]],
-                'mtat': [mtat_ids['Category A']],
-                'service_criticality': [criticality_ids['Most Critical']],
-                'accepted_downtime': downtime,
-                'ttr': ttr,
-                'rpo': rpo,
-                'rto': rto,
-                'bcm': bcm,
-            },
-        )
-        created('application service', obj)
-        ids[name] = obj['id']
-    return ids
+    return cache[value]
+
+
+def resolve_field(value, target_endpoint, created_objects):
+    """A reference field's value is either a single slug/name (FK) or a
+    list of them (M2M) — resolve whichever shape it is."""
+    if isinstance(value, list):
+        return [resolve(v, target_endpoint, created_objects) for v in value]
+    return resolve(value, target_endpoint, created_objects)
+
+
+def create_all(data):
+    created_objects = {}  # endpoint -> {slug-or-name: id}
+    for endpoint, payloads in data.items():
+        print(f'Creating {len(payloads)} object(s) at {endpoint}...')
+        reference_fields = REFERENCE_FIELDS.get(endpoint, {})
+        cache = created_objects.setdefault(endpoint, {})
+        for payload in payloads:
+            resolved = dict(payload)
+            for field, target_endpoint in reference_fields.items():
+                if field in resolved and resolved[field] is not None:
+                    resolved[field] = resolve_field(resolved[field], target_endpoint, created_objects)
+            obj = api('POST', endpoint, resolved)
+            created(endpoint, obj)
+            key = payload.get('slug') or payload.get('name')
+            if key is not None:
+                if key in cache:
+                    fail(f'Duplicate slug/name {key!r} for {endpoint} in {DATA_FILE.name}')
+                cache[key] = obj['id']
 
 
 def main():
@@ -720,46 +220,10 @@ def main():
     # Same v2-token bearer scheme as smoke-test.sh: Bearer nbt_<key>.<secret>
     API_AUTH_HEADER = f'Bearer nbt_{env("NETBOX_SUPERUSER_API_KEY")}.{env("NETBOX_SUPERUSER_API_TOKEN")}'
 
-    tenant_id = create_tenant()
-    group_ids = create_contact_groups()
-    contacts_by_group = create_contacts(group_ids)
-    site_ids = create_sites(tenant_id)
-    manufacturer_ids = create_manufacturers()
-    role_ids = create_device_roles()
-    device_type_ids = create_device_types(manufacturer_ids)
-    create_devices(site_ids, role_ids, device_type_ids)
-    cluster_group_id = create_cluster_group()
-    cluster_type_id = create_cluster_type()
-    cluster_ids = create_clusters(cluster_group_id, cluster_type_id, site_ids)
-    vm_ids = create_virtual_machines(cluster_ids)
+    with DATA_FILE.open() as f:
+        data = json.load(f)
 
-    lifecycle_ids = create_lifecycles()
-    sla_ids = create_slas()
-    operation_time_ids = create_operation_times()
-    availability_ids = create_availabilities()
-    criticality_ids = create_criticalities()
-    environment_ids = create_environments()
-    mtat_ids = create_mtats()
-    ci_function_ids = create_ci_functions()
-
-    portfolio_id = create_portfolio(lifecycle_ids, group_ids, contacts_by_group)
-    service_id = create_service(lifecycle_ids, ci_function_ids, group_ids, contacts_by_group, portfolio_id)
-    offering_ids = create_service_offerings(lifecycle_ids, group_ids, contacts_by_group, service_id, tenant_id)
-    app_service_ids = create_app_services(
-        environment_ids,
-        lifecycle_ids,
-        group_ids,
-        offering_ids,
-        sla_ids,
-        operation_time_ids,
-        availability_ids,
-        mtat_ids,
-        criticality_ids,
-    )
-
-    assign_vm_application_services(
-        vm_ids, app_service_ids['Managed Exchange Server High Availability - Prod']
-    )
+    create_all(data)
 
     print('Test deployment data created successfully.')
 

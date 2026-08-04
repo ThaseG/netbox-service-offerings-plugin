@@ -130,27 +130,25 @@
                 // row, rather than leaving row placement to inference.
                 sortMethod: 'directed',
                 levelSeparation: 120,
-                // Small but non-zero minimum gap between nodes sharing a
-                // row — was 160 (had them spread out much further than
-                // needed).
-                nodeSpacing: 40,
+                // Minimum gap between nodes sharing a row. This is only
+                // actually *guaranteed* while physics stays disabled below
+                // — vis-network's own docs say so explicitly: "this is
+                // only for the initial layout; if you enable physics, the
+                // node distance there will be the effective node
+                // distance." Physics-based repulsion is an approximate
+                // simulation (even with avoidOverlap tuned up), not a hard
+                // minimum, and doesn't reliably prevent box-shaped nodes
+                // with variable-width text from visually overlapping —
+                // this deterministic placement does.
+                nodeSpacing: 60,
                 treeSpacing: 220,
               },
             },
-            physics: {
-              // With physics enabled, hierarchical.nodeSpacing above is
-              // only used for the *initial* placement — vis-network's own
-              // docs say the effective spacing comes from here instead.
-              // avoidOverlap defaults to 0, which means node *size* isn't
-              // considered at all: repulsion only enforces nodeDistance
-              // between node centers as if every box were a point, so
-              // wider boxes (long/two-line labels) could still land on
-              // top of each other even with a "minimum distance" set.
-              // avoidOverlap: 1 makes the solver account for each node's
-              // actual rendered size instead.
-              hierarchicalRepulsion: { nodeDistance: 40, avoidOverlap: 1 },
-              stabilization: { iterations: 300 },
-            },
+            // Deliberately off (see nodeSpacing's comment above) — the
+            // hierarchical layout's own deterministic placement already
+            // enforces spacing; physics would only override it with an
+            // approximate simulation.
+            physics: false,
             nodes: {
               shape: 'box',
               margin: 10,
@@ -186,13 +184,6 @@
             },
           }
         );
-
-        // Layout stabilizes once, then physics is switched off so dragging
-        // a node afterward moves just that node instead of fighting an
-        // ongoing simulation.
-        network.once('stabilizationIterationsDone', function () {
-          network.setOptions({ physics: false });
-        });
 
         network.on('click', function (params) {
           if (!params.nodes.length) {
