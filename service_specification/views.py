@@ -559,16 +559,24 @@ class OfferingsTreeView(TemplateView):
         seen_nodes = set()
         seen_edges = set()
 
-        def add_node(node_id, label, group, obj, type_label=None):
+        def add_node(node_id, name, group, obj, type_label=None):
             if node_id not in seen_nodes:
                 seen_nodes.add(node_id)
+                # Two-line on-node label: object type on top, name below.
+                # <code>/<b> are vis-network's own font.multi='html' markup
+                # (see the template's font.mono/font.bold config, which
+                # style the two lines differently) — rendered onto a
+                # <canvas>, not inserted as real DOM/innerHTML, so there's
+                # no injection risk from an object name containing '<' etc.,
+                # only a cosmetic one.
+                label = f'<code>{type_label}</code>\n<b>{name}</b>' if type_label else name
                 nodes.append(
                     {
                         'id': node_id,
                         'label': label,
                         'group': group,
                         'url': obj.get_absolute_url(),
-                        'title': f'{type_label}: {label}' if type_label else label,
+                        'title': f'{type_label}: {name}' if type_label else name,
                     }
                 )
 

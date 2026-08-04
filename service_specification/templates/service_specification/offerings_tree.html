@@ -5,6 +5,39 @@
 
 {% block title %}{% trans "Service Offering Tree" %}{% endblock %}
 
+{% block tabs %}
+  <ul class="nav nav-tabs">
+    <li class="nav-item" role="presentation">
+      <button
+        class="nav-link active"
+        id="graph-tab"
+        data-bs-toggle="tab"
+        data-bs-target="#graph-pane"
+        type="button"
+        role="tab"
+        aria-controls="graph-pane"
+        aria-selected="true"
+      >
+        <span class="mdi mdi-graph-outline" aria-hidden="true"></span> {% trans "Graph" %}
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button
+        class="nav-link"
+        id="filters-tab"
+        data-bs-toggle="tab"
+        data-bs-target="#filters-pane"
+        type="button"
+        role="tab"
+        aria-controls="filters-pane"
+        aria-selected="false"
+      >
+        <span class="mdi mdi-filter-outline" aria-hidden="true"></span> {% trans "Filters" %}
+      </button>
+    </li>
+  </ul>
+{% endblock tabs %}
+
 {% block content %}
   <link rel="stylesheet" href="{% static 'service_specification/vendor/vis-network.min.css' %}">
   <style>
@@ -16,29 +49,35 @@
     }
   </style>
 
-  <div class="row mb-3">
-    <div class="col col-md-10 col-lg-8">
-      <form method="get" class="form form-horizontal">
-        {% render_form filter_form %}
-        <div class="text-end">
-          <button type="submit" class="btn btn-primary">
-            <span class="mdi mdi-filter" aria-hidden="true"></span> {% trans "Filter" %}
-          </button>
-          <a href="{% url 'plugins:service_specification:offerings_tree' %}" class="btn btn-outline-secondary">
-            {% trans "Clear" %}
-          </a>
+  <div class="tab-content">
+    <div class="tab-pane fade show active" id="graph-pane" role="tabpanel" aria-labelledby="graph-tab">
+      <div class="card">
+        <div class="card-body">
+          {% if has_results %}
+            <div id="offerings-network"></div>
+          {% else %}
+            <p class="text-muted mb-0">{% trans "No matching Service Portfolios found." %}</p>
+          {% endif %}
         </div>
-      </form>
+      </div>
     </div>
-  </div>
 
-  <div class="card">
-    <div class="card-body">
-      {% if has_results %}
-        <div id="offerings-network"></div>
-      {% else %}
-        <p class="text-muted mb-0">{% trans "No matching Service Portfolios found." %}</p>
-      {% endif %}
+    <div class="tab-pane fade" id="filters-pane" role="tabpanel" aria-labelledby="filters-tab">
+      <div class="card">
+        <div class="card-body">
+          <form method="get" class="form form-horizontal">
+            {% render_form filter_form %}
+            <div class="text-end">
+              <button type="submit" class="btn btn-primary">
+                <span class="mdi mdi-filter" aria-hidden="true"></span> {% trans "Filter" %}
+              </button>
+              <a href="{% url 'plugins:service_specification:offerings_tree' %}" class="btn btn-outline-secondary">
+                {% trans "Clear" %}
+              </a>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -62,6 +101,7 @@
         // Same theme-detection technique netbox-topology-views itself
         // uses to pick readable node text for NetBox's light/dark mode.
         var fontColor = document.documentElement.dataset.netboxColorMode === 'dark' ? '#fff' : '#000';
+        var mutedColor = document.documentElement.dataset.netboxColorMode === 'dark' ? '#adb5bd' : '#6c757d';
 
         var nodes = new vis.DataSet({{ nodes_json|safe }});
         var edges = new vis.DataSet({{ edges_json|safe }});
@@ -92,7 +132,17 @@
               shape: 'box',
               margin: 10,
               borderWidth: 2,
-              font: { color: fontColor, size: 14 },
+              font: {
+                // Two-line node label (see views.py's _flatten_to_graph):
+                // "<b>" bolds the name line, "<code>" (mapped to `mono`
+                // below, overridden away from its monospace default) sizes
+                // the object-type line down and mutes its color.
+                multi: 'html',
+                color: fontColor,
+                size: 14,
+                bold: { color: fontColor, size: 14, face: 'arial', mod: 'bold' },
+                mono: { color: mutedColor, size: 11, face: 'arial', mod: '', vadjust: -2 },
+              },
             },
             edges: {
               arrows: { to: { enabled: false } },
