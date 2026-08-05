@@ -1,19 +1,17 @@
 #!/usr/bin/env python3
-"""Regenerates ci/scripts/test-deployment.json at scale — 20 customers each
-with their own site/device/cluster/VM infrastructure, and a 20x20x20
-Portfolio/Service/Service-Offering hierarchy (each Service Offering backing
-exactly one Application Service, per the plugin's 1:1 constraint) — as a
-stress-test dataset for pages like Service View that previously struggled
-with larger, denser trees.
+"""Regenerates ci/scripts/test-deployment.json — 20 tenants (realistic
+company names), each with its own HQ/Branch sites (named after real
+cities) and ~20 Technical CIs (devices/cluster/cluster group/VMs), plus 2
+Service Portfolios each realizing 10 Service Offerings (one per tenant,
+covering all 20), each with its own Application Service. Every Application
+Service is assigned the full set of Technical CIs belonging to its own
+offering's tenant.
 
 This is a one-off *generator*, not part of the actual deploy pipeline:
 ci/scripts/test-deployment.py itself stays a generic "read JSON, POST it,
 resolve references" engine with zero knowledge of how the JSON was
 produced. Run this script, by hand, whenever the seeded dataset's shape or
 scale needs to change; commit the regenerated test-deployment.json.
-
-Scale is deliberately hand-tunable at the top of main() rather than an
-inherent property of the data model.
 """
 
 import json
@@ -21,23 +19,127 @@ from pathlib import Path
 
 OUTPUT_FILE = Path(__file__).with_name('test-deployment.json')
 
-NUM_TENANTS = 20
-SITES_PER_TENANT = 2
-NUM_PORTFOLIOS = 20
-SERVICES_PER_PORTFOLIO = 20
-OFFERINGS_PER_SERVICE = 20
-
-# (role slug, device type slug, name suffix) — shared across every tenant's
-# sites, same as the original single-tenant dataset; 2 of each per site.
-DEVICE_ROLES = [
-    ('firewall', 'fortigate-100f', 'FW'),
-    ('switch', 'c9300-24t', 'SW'),
-    ('server', 'poweredge-r750', 'SRV'),
+# 20 recognizable, "nice" company names for tenants — this is a private
+# CI/demo seed fixture, not anything published as or claiming to be these
+# companies, same spirit as the original single-tenant dataset's "Coca
+# Cola" placeholder.
+COMPANIES = [
+    'Coca Cola',
+    'Cisco',
+    'SAP',
+    'Google',
+    'Amazon',
+    'Microsoft',
+    'IBM',
+    'Oracle',
+    'Siemens',
+    'BMW',
+    'Volkswagen',
+    'Deutsche Bank',
+    'Allianz',
+    'Adidas',
+    'Puma',
+    'Nike',
+    'Samsung',
+    'Sony',
+    'Toyota',
+    'Shell',
 ]
 
-# (name, slug, description, color) — only 11 of these regardless of scale
-# (lookup values are shared, not per-tenant/portfolio/offering), so there's
-# no cost to using the real descriptions rather than a placeholder.
+# 40 distinct cities — two per tenant (HQ + Branch) — kept globally unique
+# across the whole dataset so city-derived names (sites, devices, clusters,
+# VMs) never collide without needing to prefix everything with the tenant.
+CITIES = [
+    'Munich',
+    'Hamburg',
+    'Berlin',
+    'Frankfurt',
+    'Cologne',
+    'Stuttgart',
+    'Dusseldorf',
+    'Leipzig',
+    'Dortmund',
+    'Essen',
+    'Vienna',
+    'Zurich',
+    'Amsterdam',
+    'Brussels',
+    'Paris',
+    'London',
+    'Madrid',
+    'Milan',
+    'Rome',
+    'Lisbon',
+    'Warsaw',
+    'Prague',
+    'Budapest',
+    'Copenhagen',
+    'Stockholm',
+    'Oslo',
+    'Dublin',
+    'Helsinki',
+    'Athens',
+    'Geneva',
+    'Singapore',
+    'Tokyo',
+    'Sydney',
+    'Toronto',
+    'Chicago',
+    'Dallas',
+    'Seattle',
+    'Boston',
+    'Miami',
+    'Denver',
+]
+
+# (role slug, device type slug, name suffix, count per site) — shared
+# across every tenant's sites.
+DEVICE_ROLES = [
+    ('firewall', 'fortigate-100f', 'FW', 2),
+    ('switch', 'c9300-24t', 'SW', 2),
+    ('server', 'poweredge-r750', 'SRV', 1),
+]
+VMS_PER_CLUSTER = 4
+
+# 2 Service Portfolios, each with its own 10 offering themes — the
+# Portfolio/Service layer only exists because a Service Offering can't
+# exist without a parent Service; one Service per Portfolio keeps that
+# layer a simple pass-through rather than adding more scale of its own.
+PORTFOLIOS = [
+    {
+        'name': 'Digital Workplace Portfolio',
+        'service_name': 'Digital Workplace Services',
+        'themes': [
+            'Managed Email',
+            'Unified Communications',
+            'Endpoint Management',
+            'Helpdesk Support',
+            'Identity & Access Management',
+            'Video Conferencing',
+            'File Sharing & Collaboration',
+            'Mobile Device Management',
+            'Print Services',
+            'Virtual Desktop Infrastructure',
+        ],
+    },
+    {
+        'name': 'Cloud Infrastructure Portfolio',
+        'service_name': 'Cloud Infrastructure Services',
+        'themes': [
+            'Cloud Backup',
+            'Disaster Recovery',
+            'Network Security',
+            'Database Hosting',
+            'Load Balancing',
+            'Container Orchestration',
+            'Data Analytics Platform',
+            'Storage as a Service',
+            'Monitoring & Observability',
+            'DNS & DHCP Management',
+        ],
+    },
+]
+
 LIFECYCLES = [
     (
         'Draft',
@@ -149,9 +251,6 @@ MTATS = [('Category A', 'category-a', 12), ('Category B', 'category-b', 24), ('C
 CI_FUNCTIONS = [
     ('Managed Exchange Service', 'managed-exchange-service'),
     ('Managed Backup Service', 'managed-backup-service'),
-    ('Managed Database Service', 'managed-database-service'),
-    ('Managed Network Service', 'managed-network-service'),
-    ('Managed Identity Service', 'managed-identity-service'),
 ]
 
 CONTACT_GROUPS = [
@@ -167,10 +266,10 @@ CONTACT_GROUPS = [
     'App1 Owner Group',
 ]
 
-# (first, last, group) — one contact per group, reused across every
-# Portfolio/Service/Offering/AppService regardless of scale: ownership
-# groups are an org-chart concept, not something that multiplies with the
-# number of customers or offerings.
+# (first, last, group) — one contact per group, reused across both
+# Portfolios/Services/all 20 Offerings/AppServices: ownership groups are an
+# org-chart concept, not something that multiplies with the number of
+# tenants or offerings.
 CONTACTS = [
     ('Alice', 'Johnson', 'Portfolio Owners'),
     ('Brian', 'Smith', 'Portfolio Managers'),
@@ -189,66 +288,6 @@ def slugify(name):
     return name.lower().replace(' ', '-').replace('/', '-').replace('&', 'and')
 
 
-def build_tenants_and_infra(data):
-    data['tenancy/tenants/'] = []
-    data['dcim/sites/'] = []
-    data['dcim/devices/'] = []
-    data['virtualization/clusters/'] = []
-    data['virtualization/virtual-machines/'] = []
-
-    device_pool = []  # [(endpoint_field_key, device_name), ...]
-    cluster_pool = []
-    vm_pool = []
-
-    for t in range(1, NUM_TENANTS + 1):
-        tenant_name = f'Customer {t:02d}'
-        tenant_slug = f'customer-{t:02d}'
-        data['tenancy/tenants/'].append({'name': tenant_name, 'slug': tenant_slug})
-
-        for s in range(1, SITES_PER_TENANT + 1):
-            site_slug = f'{tenant_slug}-site-{s}'
-            data['dcim/sites/'].append(
-                {
-                    'name': f'{tenant_name} Site {s}',
-                    'slug': site_slug,
-                    'physical_address': f'{100 + t} Example Street, Site {s}',
-                    'tenant': tenant_slug,
-                }
-            )
-
-            for role_slug, device_type_slug, suffix in DEVICE_ROLES:
-                for n in (1, 2):
-                    device_name = f'{site_slug}-{suffix}-{n:02d}'
-                    data['dcim/devices/'].append(
-                        {
-                            'name': device_name,
-                            'role': role_slug,
-                            'device_type': device_type_slug,
-                            'site': site_slug,
-                        }
-                    )
-                    device_pool.append(device_name)
-
-            cluster_name = f'{tenant_name} Site {s} Cluster'
-            data['virtualization/clusters/'].append(
-                {
-                    'name': cluster_name,
-                    'type': 'proxmox',
-                    'group': 'proxmox-clusters',
-                    'scope_type': 'dcim.site',
-                    'scope_id': site_slug,
-                }
-            )
-            cluster_pool.append(cluster_name)
-
-            for n in (1, 2):
-                vm_name = f'{site_slug}-vm{n:02d}'
-                data['virtualization/virtual-machines/'].append({'name': vm_name, 'cluster': cluster_name})
-                vm_pool.append(vm_name)
-
-    return device_pool, cluster_pool, vm_pool
-
-
 def build_lookups(data):
     data['dcim/manufacturers/'] = [
         {'name': 'Cisco', 'slug': 'cisco'},
@@ -265,7 +304,6 @@ def build_lookups(data):
         {'model': 'Catalyst 9300 24-Port', 'slug': 'c9300-24t', 'manufacturer': 'cisco'},
         {'model': 'PowerEdge R750', 'slug': 'poweredge-r750', 'manufacturer': 'dell'},
     ]
-    data['virtualization/cluster-groups/'] = [{'name': 'Proxmox Clusters', 'slug': 'proxmox-clusters'}]
     data['virtualization/cluster-types/'] = [{'name': 'Proxmox', 'slug': 'proxmox'}]
 
     data['tenancy/contact-groups/'] = [{'name': name, 'slug': slugify(name)} for name in CONTACT_GROUPS]
@@ -307,7 +345,83 @@ def build_lookups(data):
     ]
 
 
+def build_tenants_and_infra(data):
+    """One tenant per COMPANIES entry, each with an HQ + Branch site (a
+    distinct real city each — see CITIES — so device/cluster/VM names
+    derived from the city stay globally unique without a tenant prefix)
+    and ~21 Technical CIs: 10 devices (5 per site), 1 tenant-level Cluster
+    Group, 2 Clusters (1 per site) and 8 VMs (4 per cluster).
+
+    Returns {tenant_slug: [(kind, name), ...]} — every Technical CI that
+    belongs to that tenant, for build_ci_assignments() to hand to that
+    tenant's one Application Service.
+    """
+    data['tenancy/tenants/'] = []
+    data['dcim/sites/'] = []
+    data['dcim/devices/'] = []
+    data['virtualization/cluster-groups/'] = []
+    data['virtualization/clusters/'] = []
+    data['virtualization/virtual-machines/'] = []
+
+    cis_by_tenant = {}
+
+    for i, company in enumerate(COMPANIES):
+        tenant_slug = slugify(company)
+        data['tenancy/tenants/'].append({'name': company, 'slug': tenant_slug})
+        tenant_cis = []
+
+        hq_city, branch_city = CITIES[2 * i], CITIES[2 * i + 1]
+        cluster_group_name = f'{company} Infrastructure'
+        data['virtualization/cluster-groups/'].append({'name': cluster_group_name, 'slug': f'{tenant_slug}-infra'})
+        tenant_cis.append(('cluster_group', cluster_group_name))
+
+        for site_label, city in (('HQ', hq_city), ('Branch', branch_city)):
+            site_name = f'{site_label}-{city}'
+            site_slug = slugify(site_name)
+            data['dcim/sites/'].append(
+                {
+                    'name': site_name,
+                    'slug': site_slug,
+                    'physical_address': f'{city} Business District',
+                    'tenant': tenant_slug,
+                }
+            )
+
+            for role_slug, device_type_slug, suffix, count in DEVICE_ROLES:
+                for n in range(1, count + 1):
+                    device_name = f'{city}-{suffix}-{n:02d}'
+                    data['dcim/devices/'].append(
+                        {'name': device_name, 'role': role_slug, 'device_type': device_type_slug, 'site': site_slug}
+                    )
+                    tenant_cis.append(('device', device_name))
+
+            cluster_name = f'{city} Cluster'
+            data['virtualization/clusters/'].append(
+                {
+                    'name': cluster_name,
+                    'type': 'proxmox',
+                    'group': f'{tenant_slug}-infra',
+                    'scope_type': 'dcim.site',
+                    'scope_id': site_slug,
+                }
+            )
+            tenant_cis.append(('cluster', cluster_name))
+
+            for n in range(1, VMS_PER_CLUSTER + 1):
+                vm_name = f'{city.lower()}-vm-{n:02d}'
+                data['virtualization/virtual-machines/'].append({'name': vm_name, 'cluster': cluster_name})
+                tenant_cis.append(('virtual_machine', vm_name))
+
+        cis_by_tenant[tenant_slug] = tenant_cis
+
+    return cis_by_tenant
+
+
 def build_hierarchy(data, tenant_slugs):
+    """2 Portfolios, each with one pass-through Service and 10 Service
+    Offerings — together covering all 20 tenants exactly once (10 + 10 =
+    20) — each Offering with its own 1:1 Application Service.
+    """
     lifecycle_slugs = [slug for _name, slug, _desc, _color in LIFECYCLES]
     sla_slugs = [slug for _name, slug in SLAS]
     op_time_slugs = [slug for _name, slug in OPERATION_TIMES]
@@ -315,7 +429,6 @@ def build_hierarchy(data, tenant_slugs):
     criticality_slugs = [slug for _name, slug in CRITICALITIES]
     environment_slugs = [slug for _name, slug in ENVIRONMENTS]
     mtat_slugs = [slug for _name, slug, _value in MTATS]
-    ci_function_slugs = [slug for _name, slug in CI_FUNCTIONS]
 
     shared_business_unit = ['app1-business-unit']
     shared_support_group = ['app-support-group']
@@ -326,141 +439,139 @@ def build_hierarchy(data, tenant_slugs):
     offerings = []
     app_services = []
 
-    offering_counter = 0
+    offering_index = 0  # global 0..19, also used to mix lifecycles/etc.
+    tenant_by_offering = {}
 
-    for p in range(1, NUM_PORTFOLIOS + 1):
-        portfolio_name = f'Portfolio {p:02d}'
+    for portfolio in PORTFOLIOS:
         portfolios.append(
             {
-                'name': portfolio_name,
-                'description': portfolio_name,
-                'lifecycle': lifecycle_slugs[p % len(lifecycle_slugs)],
+                'name': portfolio['name'],
+                'description': portfolio['name'],
+                'lifecycle': 'operational',
                 'portfolio_owner_contacts': ['Alice Johnson'],
                 'portfolio_owner_contact_groups': ['portfolio-owners'],
                 'portfolio_manager_contacts': ['Brian Smith'],
                 'portfolio_manager_contact_groups': ['portfolio-managers'],
             }
         )
+        services.append(
+            {
+                'name': portfolio['service_name'],
+                'description': portfolio['service_name'],
+                'lifecycle': 'operational',
+                'ci_function': 'managed-exchange-service',
+                'service_owner_contacts': ['David Kim'],
+                'service_owner_contact_groups': ['service-owners'],
+                'service_manager_contacts': ['Carla Nguyen'],
+                'service_manager_contact_groups': ['service-managers'],
+                'service_portfolio': [portfolio['name']],
+                'business_unit': shared_business_unit,
+                'support_group': shared_support_group,
+                'change_group': shared_change_group,
+            }
+        )
 
-        for s in range(1, SERVICES_PER_PORTFOLIO + 1):
-            service_name = f'Portfolio {p:02d} / Service {s:02d}'
-            services.append(
+        for theme in portfolio['themes']:
+            tenant_slug = tenant_slugs[offering_index]
+            tenant_name = next(c for c in COMPANIES if slugify(c) == tenant_slug)
+            offering_name = f'{theme} - {tenant_name}'
+            # Mixed on purpose (not all "Available"): cycle through every
+            # one of the 11 lifecycle statuses across the 20 offerings.
+            lifecycle_slug = lifecycle_slugs[offering_index % len(lifecycle_slugs)]
+
+            offerings.append(
                 {
-                    'name': service_name,
-                    'description': service_name,
-                    'lifecycle': lifecycle_slugs[(p + s) % len(lifecycle_slugs)],
-                    'ci_function': ci_function_slugs[(p + s) % len(ci_function_slugs)],
-                    'service_owner_contacts': ['David Kim'],
-                    'service_owner_contact_groups': ['service-owners'],
-                    'service_manager_contacts': ['Carla Nguyen'],
-                    'service_manager_contact_groups': ['service-managers'],
-                    'service_portfolio': [portfolio_name],
+                    'name': offering_name,
+                    'description': offering_name,
+                    'contract_number': f'CN-{offering_index + 1:04d}',
+                    'lifecycle': lifecycle_slug,
+                    'service': [portfolio['service_name']],
+                    'service_offering_owner_contacts': ['Elena Petrova'],
+                    'service_offering_owner_contact_groups': ['service-offering-owners'],
+                    'service_offering_manager_contacts': ['Franklin Diaz'],
+                    'service_offering_manager_contact_groups': ['service-offering-managers'],
                     'business_unit': shared_business_unit,
                     'support_group': shared_support_group,
                     'change_group': shared_change_group,
+                    'tenant': [tenant_slug],
                 }
             )
 
-            for o in range(1, OFFERINGS_PER_SERVICE + 1):
-                offering_name = f'Portfolio {p:02d} / Service {s:02d} / Offering {o:02d}'
-                tenant_slug = tenant_slugs[offering_counter % len(tenant_slugs)]
-                offerings.append(
-                    {
-                        'name': offering_name,
-                        'description': offering_name,
-                        'contract_number': f'CN-{p:02d}{s:02d}{o:02d}',
-                        'lifecycle': lifecycle_slugs[(p + s + o) % len(lifecycle_slugs)],
-                        'service': [service_name],
-                        'service_offering_owner_contacts': ['Elena Petrova'],
-                        'service_offering_owner_contact_groups': ['service-offering-owners'],
-                        'service_offering_manager_contacts': ['Franklin Diaz'],
-                        'service_offering_manager_contact_groups': ['service-offering-managers'],
-                        'business_unit': shared_business_unit,
-                        'support_group': shared_support_group,
-                        'change_group': shared_change_group,
-                        'tenant': [tenant_slug],
-                    }
-                )
+            app_service_name = f'{theme} - {tenant_name} (Application Service)'
+            app_services.append(
+                {
+                    'name': app_service_name,
+                    'description': app_service_name,
+                    'environment': environment_slugs[offering_index % len(environment_slugs)],
+                    'lifecycle': lifecycle_slugs[(offering_index + 1) % len(lifecycle_slugs)],
+                    'service_offering': offering_name,
+                    'business_unit': shared_business_unit,
+                    'support_group': shared_support_group,
+                    'change_group': shared_change_group,
+                    'sla': [sla_slugs[offering_index % len(sla_slugs)]],
+                    'owned_by_contact_group': 'app1-owner-group',
+                    'operation_time': [op_time_slugs[offering_index % len(op_time_slugs)]],
+                    'availability': [availability_slugs[offering_index % len(availability_slugs)]],
+                    'mtat': [mtat_slugs[offering_index % len(mtat_slugs)]],
+                    'service_criticality': [criticality_slugs[offering_index % len(criticality_slugs)]],
+                    'accepted_downtime': 1 + (offering_index % 4),
+                    'ttr': 1 + (offering_index % 3),
+                    'rpo': 2 + (offering_index % 3),
+                    'rto': 2 + (offering_index % 4),
+                    'bcm': 1 + (offering_index % 3),
+                }
+            )
 
-                app_service_name = f'Portfolio {p:02d} / Service {s:02d} / Offering {o:02d} / App'
-                app_services.append(
-                    {
-                        'name': app_service_name,
-                        'description': app_service_name,
-                        'environment': environment_slugs[offering_counter % len(environment_slugs)],
-                        'lifecycle': lifecycle_slugs[(p + s + o + 1) % len(lifecycle_slugs)],
-                        'service_offering': offering_name,
-                        'business_unit': shared_business_unit,
-                        'support_group': shared_support_group,
-                        'change_group': shared_change_group,
-                        'sla': [sla_slugs[offering_counter % len(sla_slugs)]],
-                        'owned_by_contact_group': 'app1-owner-group',
-                        'operation_time': [op_time_slugs[offering_counter % len(op_time_slugs)]],
-                        'availability': [availability_slugs[offering_counter % len(availability_slugs)]],
-                        'mtat': [mtat_slugs[offering_counter % len(mtat_slugs)]],
-                        'service_criticality': [criticality_slugs[offering_counter % len(criticality_slugs)]],
-                        'accepted_downtime': 1 + (offering_counter % 4),
-                        'ttr': 1 + (offering_counter % 3),
-                        'rpo': 2 + (offering_counter % 3),
-                        'rto': 2 + (offering_counter % 4),
-                        'bcm': 1 + (offering_counter % 3),
-                    }
-                )
-
-                offering_counter += 1
+            tenant_by_offering[app_service_name] = tenant_slug
+            offering_index += 1
 
     data['plugins/service-specification/portfolios/'] = portfolios
     data['plugins/service-specification/services/'] = services
     data['plugins/service-specification/service-offerings/'] = offerings
     data['plugins/service-specification/app-services/'] = app_services
 
-    return [a['name'] for a in app_services]
+    return tenant_by_offering
 
 
-def build_ci_assignments(data, device_pool, cluster_pool, vm_pool, app_service_names):
-    """Spreads every Application Service across the pool of devices,
-    clusters and VMs created for the 20 customers: cycling through the
-    combined pool assigns each Application Service to exactly one
-    Technical CI, so — since the pool is much smaller than the number of
-    Application Services — each CI ends up backing several of them
-    (application_services is a ManyToMany on each *ServiceInfo row, one
-    row per Device/Cluster/VirtualMachine, so every one of their
-    assignments has to be collected before emitting a single row per CI,
-    not one row per assignment).
+def build_ci_assignments(data, cis_by_tenant, tenant_by_offering):
+    """Each Application Service is 1:1 with a tenant (via its Service
+    Offering), so it gets every Technical CI that belongs to that same
+    tenant — not a cross-tenant pool. application_services is a
+    ManyToMany on each *ServiceInfo row (one row per Device/Cluster/
+    ClusterGroup/VirtualMachine, all 1:1 with their parent object), and
+    every tenant maps to exactly one Application Service here, so each of
+    a tenant's CIs simply gets that one Application Service in its list.
     """
-    pool = [('device', name) for name in device_pool]
-    pool += [('cluster', name) for name in cluster_pool]
-    pool += [('virtual_machine', name) for name in vm_pool]
-
-    assignments = {ci_ref: [] for ci_ref in pool}
-    for i, app_service_name in enumerate(app_service_names):
-        ci_ref = pool[i % len(pool)]
-        assignments[ci_ref].append(app_service_name)
-
     endpoint_by_kind = {
         'device': 'plugins/service-specification/device-service-infos/',
         'cluster': 'plugins/service-specification/cluster-service-infos/',
+        'cluster_group': 'plugins/service-specification/cluster-group-service-infos/',
         'virtual_machine': 'plugins/service-specification/virtual-machine-service-infos/',
     }
-    field_by_kind = {'device': 'device', 'cluster': 'cluster', 'virtual_machine': 'virtual_machine'}
-
+    field_by_kind = {
+        'device': 'device',
+        'cluster': 'cluster',
+        'cluster_group': 'cluster_group',
+        'virtual_machine': 'virtual_machine',
+    }
     for endpoint in endpoint_by_kind.values():
-        data.setdefault(endpoint, [])
+        data[endpoint] = []
 
-    for (kind, name), assigned in assignments.items():
-        if not assigned:
-            continue
-        data[endpoint_by_kind[kind]].append({field_by_kind[kind]: name, 'application_services': assigned})
+    for app_service_name, tenant_slug in tenant_by_offering.items():
+        for kind, ci_name in cis_by_tenant[tenant_slug]:
+            data[endpoint_by_kind[kind]].append(
+                {field_by_kind[kind]: ci_name, 'application_services': [app_service_name]}
+            )
 
 
 def main():
     data = {}
 
     build_lookups(data)
-    device_pool, cluster_pool, vm_pool = build_tenants_and_infra(data)
+    cis_by_tenant = build_tenants_and_infra(data)
     tenant_slugs = [t['slug'] for t in data['tenancy/tenants/']]
-    app_service_names = build_hierarchy(data, tenant_slugs)
-    build_ci_assignments(data, device_pool, cluster_pool, vm_pool, app_service_names)
+    tenant_by_offering = build_hierarchy(data, tenant_slugs)
+    build_ci_assignments(data, cis_by_tenant, tenant_by_offering)
 
     # Re-declare in dependency order: build_* above populated `data` in
     # convenient-for-generation order, not necessarily the order
@@ -495,6 +606,7 @@ def main():
         'plugins/service-specification/app-services/',
         'plugins/service-specification/device-service-infos/',
         'plugins/service-specification/cluster-service-infos/',
+        'plugins/service-specification/cluster-group-service-infos/',
         'plugins/service-specification/virtual-machine-service-infos/',
     ):
         ordered[key] = data[key]
