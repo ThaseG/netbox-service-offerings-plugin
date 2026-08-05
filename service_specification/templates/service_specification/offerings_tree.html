@@ -120,34 +120,18 @@
           document.getElementById('offerings-network'),
           { nodes: nodes, edges: edges },
           {
-            layout: {
-              hierarchical: {
-                direction: 'UD',
-                // 'directed' would normally infer each node's row from
-                // edge direction alone, but every node here also carries
-                // an explicit `level` (see views.py's _flatten_to_graph) —
-                // that pins every node of a given type to the exact same
-                // row, rather than leaving row placement to inference.
-                sortMethod: 'directed',
-                levelSeparation: 120,
-                // Minimum gap between nodes sharing a row. This is only
-                // actually *guaranteed* while physics stays disabled below
-                // — vis-network's own docs say so explicitly: "this is
-                // only for the initial layout; if you enable physics, the
-                // node distance there will be the effective node
-                // distance." Physics-based repulsion is an approximate
-                // simulation (even with avoidOverlap tuned up), not a hard
-                // minimum, and doesn't reliably prevent box-shaped nodes
-                // with variable-width text from visually overlapping —
-                // this deterministic placement does.
-                nodeSpacing: 60,
-                treeSpacing: 220,
-              },
-            },
-            // Deliberately off (see nodeSpacing's comment above) — the
-            // hierarchical layout's own deterministic placement already
-            // enforces spacing; physics would only override it with an
-            // approximate simulation.
+            // No layout.hierarchical here: vis-network's own automatic
+            // layout engine turned out not to be trustworthy once every
+            // node also carries an explicit `level` (needed so every node
+            // of a type lands on the same row) — nodes were rendering
+            // stacked directly on top of each other rather than merely
+            // "too close". Every node's exact x/y is computed server-side
+            // instead (see views.py's _flatten_to_graph — a classic
+            // bottom-up tree layout: lay out the leaves left to right with
+            // a fixed gap, then center each parent over its own
+            // children's span) and pinned via each node's own
+            // `fixed: {x: true, y: true}`, so physics has nothing left to
+            // do and stays off.
             physics: false,
             nodes: {
               shape: 'box',
@@ -184,6 +168,14 @@
             },
           }
         );
+
+        // With physics off (see above), vis-network has no stabilization
+        // pass to trigger its usual auto-fit — do it explicitly so the
+        // whole graph is framed in view on load instead of only whatever
+        // fits at a default 1:1 zoom from the origin.
+        network.once('afterDrawing', function () {
+          network.fit();
+        });
 
         network.on('click', function (params) {
           if (!params.nodes.length) {

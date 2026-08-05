@@ -543,59 +543,83 @@ class OfferingsTreeView(TemplateView):
     def _flatten_to_graph(tree):
         """Walk _build_tree()'s nested (portfolio, [(service, [(offering,
         app_service_or_None, [(ci, type_label, icon_class), ...]), ...]),
-        ...]) structure into vis-network's flat nodes/edges lists.
+        ...]) structure into vis-network's flat nodes/edges lists, laying
+        every node out ourselves (explicit pixel x/y, pinned via
+        `fixed: {x: True, y: True}`) rather than leaving positioning to
+        vis-network's own hierarchical layout engine.
 
-        Dedup by id is required, not optional: Service.service_portfolio is
-        a ManyToMany, so a Service (and everything under it) can legally
-        appear under more than one Portfolio branch of the same tree.
-        Naively re-adding it would try to add the same node id twice, and
-        vis.DataSet.add() raises on a duplicate id — so a node already seen
-        is skipped (it's the same object), while an edge into it is still
-        added for each parent that reaches it, one entry per distinct
-        (from, to) pair.
+        That engine turned out not to be trustworthy here: giving every
+        node an explicit `level` (needed so every node of a type lands on
+        the same row) apparently short-circuits whatever internal pass
+        vis-network normally uses to spread siblings out horizontally, so
+        nodes were rendering stacked directly on top of each other rather
+        than merely "too close". Computing positions ourselves sidesteps
+        that entirely: `y` is just `level * LEVEL_HEIGHT`, and `x` is a
+        classic bottom-up tree layout — lay out the leaves (Technical CIs)
+        left to right with a fixed gap, then center each parent over the
+        span of its own children, all the way up to Portfolio.
 
-        Every node also gets an explicit `level`, one per group, matching
-        the tree's fixed depth-per-type (Portfolio is always depth 0,
-        Service always 1, and so on) — this pins every node of the same
-        type to the same row in the template's hierarchical layout, rather
-        than leaving it to vis-network's automatic level inference, which
-        is depth-based already but not guaranteed to land every node of a
-        type on one exact row once physics nudges things around.
+        Dedup by id is required, not optional: Service.service_portfolio
+        and ServiceOffering.service are both ManyToMany, so a Service (and
+        everything under it) can legally appear under more than one
+        Portfolio branch of the same tree, and similarly an Offering under
+        more than one Service. A shared node's position is computed once,
+        the first time it's reached, and reused for every other parent
+        that also points to it — vis.DataSet.add() would raise on a
+        duplicate id if it were re-added, and repositioning it a second
+        time makes no sense anyway since it's the same object on screen.
         """
-        levels = {'portfolio': 0, 'service': 1, 'offering': 2, 'appservice': 3, 'technicalci': 4}
+        LEVEL_HEIGHT = 120
+        NODE_GAP = 60
+        LEVELS = {'portfolio': 0, 'service': 1, 'offering': 2, 'appservice': 3, 'technicalci': 4}
+
         nodes = []
         edges = []
-        seen_nodes = set()
         seen_edges = set()
+        positions = {}  # node_id -> x (already-placed nodes, shared or not)
+        next_x = 0.0
 
-        def add_node(node_id, name, group, obj, type_label=None, extra_line=None):
-            if node_id not in seen_nodes:
-                seen_nodes.add(node_id)
-                # Two-line on-node label: object type on top, name below,
-                # plus an optional third line (currently just Service
-                # Offering's Customer). <code>/<b>/<i> are vis-network's own
-                # font.multi='html' markup (see the template's
-                # font.mono/font.bold/font.ital config, which style the
-                # three lines differently) — rendered onto a <canvas>, not
-                # inserted as real DOM/innerHTML, so there's no injection
-                # risk from an object name containing '<' etc., only a
-                # cosmetic one.
-                label = f'<code>{type_label}</code>\n<b>{name}</b>' if type_label else name
-                if extra_line:
-                    label += f'\n<i>{extra_line}</i>'
-                title = f'{type_label}: {name}' if type_label else name
-                if extra_line:
-                    title += f' ({extra_line})'
-                nodes.append(
-                    {
-                        'id': node_id,
-                        'label': label,
-                        'group': group,
-                        'level': levels[group],
-                        'url': obj.get_absolute_url(),
-                        'title': title,
-                    }
-                )
+        def estimate_width(name, type_label, extra_line):
+            # Rough per-character pixel-width estimates for vis-network's
+            # default arial rendering at our configured font sizes (14px
+            # bold for the name line, 11px for the type/Customer lines) —
+            # there's no way to measure real rendered text width from the
+            # server, so this only needs to be generous enough that same
+            # -row siblings don't visually overlap, not pixel-perfect.
+            lines = [len(name) * 8.0]
+            if type_label:
+                lines.append(len(type_label) * 6.5)
+            if extra_line:
+                lines.append(len(extra_line) * 6.5)
+            return max(120.0, max(lines)) + 24
+
+        def place(node_id, name, group, obj, x, type_label=None, extra_line=None):
+            # Two-line on-node label: object type on top, name below, plus
+            # an optional third line (currently just Service Offering's
+            # Customer). <code>/<b>/<i> are vis-network's own
+            # font.multi='html' markup (see the template's
+            # font.mono/font.bold/font.ital config, which style the three
+            # lines differently) — rendered onto a <canvas>, not inserted
+            # as real DOM/innerHTML, so there's no injection risk from an
+            # object name containing '<' etc., only a cosmetic one.
+            label = f'<code>{type_label}</code>\n<b>{name}</b>' if type_label else name
+            if extra_line:
+                label += f'\n<i>{extra_line}</i>'
+            title = f'{type_label}: {name}' if type_label else name
+            if extra_line:
+                title += f' ({extra_line})'
+            nodes.append(
+                {
+                    'id': node_id,
+                    'label': label,
+                    'group': group,
+                    'url': obj.get_absolute_url(),
+                    'title': title,
+                    'x': x,
+                    'y': LEVELS[group] * LEVEL_HEIGHT,
+                    'fixed': {'x': True, 'y': True},
+                }
+            )
 
         def add_edge(from_id, to_id):
             key = (from_id, to_id)
@@ -603,48 +627,108 @@ class OfferingsTreeView(TemplateView):
                 seen_edges.add(key)
                 edges.append({'from': from_id, 'to': to_id})
 
-        for portfolio, services in tree:
-            portfolio_id = f'portfolio-{portfolio.pk}'
-            add_node(portfolio_id, portfolio.name, 'portfolio', portfolio, 'Portfolio')
+        def take_slot(name, type_label, extra_line):
+            # Claim the next free horizontal slot for a node with no
+            # children to center over (a true Technical CI leaf, or a
+            # higher-level node whose own branch is otherwise empty — e.g.
+            # a Service Offering with no Application Service attached
+            # yet). One shared counter across every level: since only
+            # same-row (same `level`, hence same y) placements can ever
+            # visually collide, and this counter only ever increases,
+            # nothing that gets its own slot this way can collide with
+            # anything else that did too, regardless of which level either
+            # one belongs to.
+            nonlocal next_x
+            width = estimate_width(name, type_label, extra_line)
+            x = next_x + width / 2
+            next_x += width + NODE_GAP
+            return x
 
-            for service, offerings in services:
-                service_id = f'service-{service.pk}'
-                add_node(service_id, service.name, 'service', service, 'Service')
-                add_edge(portfolio_id, service_id)
+        def layout_ci(ci, type_label):
+            ci_id = f'{ci.__class__.__name__.lower()}-{ci.pk}'
+            if ci_id not in positions:
+                x = take_slot(ci.name, type_label, None)
+                positions[ci_id] = x
+                place(ci_id, ci.name, 'technicalci', ci, x, type_label)
+            return ci_id
 
-                for offering, app_service, technical_cis in offerings:
-                    offering_id = f'offering-{offering.pk}'
-                    # Third label line: Customer. Falls back to Customer
-                    # Group name(s) when no Tenant is set directly (an
-                    # offering can be scoped to a whole Tenant Group
-                    # instead — see utils.tenant_offering_filter), and to
-                    # nothing at all if neither is set.
-                    tenant_names = ', '.join(t.name for t in offering.tenant.all())
-                    if not tenant_names:
-                        tenant_names = ', '.join(g.name for g in offering.tenant_group.all())
-                    add_node(
-                        offering_id,
-                        offering.name,
-                        'offering',
-                        offering,
-                        'Service Offering',
-                        extra_line=tenant_names or None,
-                    )
+        def layout_offering(offering, app_service, technical_cis):
+            offering_id = f'offering-{offering.pk}'
+            if offering_id in positions:
+                return offering_id
+
+            # Third label line: Customer. Falls back to Customer Group
+            # name(s) when no Tenant is set directly (an offering can be
+            # scoped to a whole Tenant Group instead — see
+            # utils.tenant_offering_filter), and to nothing at all if
+            # neither is set.
+            tenant_names = ', '.join(t.name for t in offering.tenant.all())
+            if not tenant_names:
+                tenant_names = ', '.join(g.name for g in offering.tenant_group.all())
+            tenant_names = tenant_names or None
+
+            if app_service is None:
+                x = take_slot(offering.name, 'Service Offering', tenant_names)
+            else:
+                app_service_id = f'appservice-{app_service.pk}'
+                if app_service_id in positions:
+                    x = positions[app_service_id]
+                else:
+                    if technical_cis:
+                        ci_ids = [layout_ci(ci, type_label) for ci, type_label, _icon_class in technical_cis]
+                        for ci_id in ci_ids:
+                            add_edge(app_service_id, ci_id)
+                        ci_xs = [positions[ci_id] for ci_id in ci_ids]
+                        app_x = (min(ci_xs) + max(ci_xs)) / 2
+                    else:
+                        app_x = take_slot(app_service.name, 'Application Service', None)
+                    positions[app_service_id] = app_x
+                    place(app_service_id, app_service.name, 'appservice', app_service, app_x, 'Application Service')
+                x = positions[app_service_id]
+                add_edge(offering_id, app_service_id)
+
+            positions[offering_id] = x
+            place(offering_id, offering.name, 'offering', offering, x, 'Service Offering', tenant_names)
+            return offering_id
+
+        def layout_service(service, offerings):
+            service_id = f'service-{service.pk}'
+            if service_id in positions:
+                return service_id
+
+            if offerings:
+                offering_ids = [layout_offering(o, a, c) for o, a, c in offerings]
+                for offering_id in offering_ids:
                     add_edge(service_id, offering_id)
+                offering_xs = [positions[offering_id] for offering_id in offering_ids]
+                x = (min(offering_xs) + max(offering_xs)) / 2
+            else:
+                x = take_slot(service.name, 'Service', None)
 
-                    if app_service is None:
-                        continue
-                    app_service_id = f'appservice-{app_service.pk}'
-                    add_node(app_service_id, app_service.name, 'appservice', app_service, 'Application Service')
-                    add_edge(offering_id, app_service_id)
+            positions[service_id] = x
+            place(service_id, service.name, 'service', service, x, 'Service')
+            return service_id
 
-                    for ci, type_label, _icon_class in technical_cis:
-                        # Device/VirtualMachine/Cluster/ClusterGroup are
-                        # different models whose primary keys can collide,
-                        # so the model name has to be part of the node id.
-                        ci_id = f'{ci.__class__.__name__.lower()}-{ci.pk}'
-                        add_node(ci_id, ci.name, 'technicalci', ci, type_label)
-                        add_edge(app_service_id, ci_id)
+        def layout_portfolio(portfolio, services):
+            portfolio_id = f'portfolio-{portfolio.pk}'
+            if portfolio_id in positions:
+                return portfolio_id
+
+            if services:
+                service_ids = [layout_service(s, o) for s, o in services]
+                for service_id in service_ids:
+                    add_edge(portfolio_id, service_id)
+                service_xs = [positions[service_id] for service_id in service_ids]
+                x = (min(service_xs) + max(service_xs)) / 2
+            else:
+                x = take_slot(portfolio.name, 'Portfolio', None)
+
+            positions[portfolio_id] = x
+            place(portfolio_id, portfolio.name, 'portfolio', portfolio, x, 'Portfolio')
+            return portfolio_id
+
+        for portfolio, services in tree:
+            layout_portfolio(portfolio, services)
 
         return nodes, edges
 
