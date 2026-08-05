@@ -544,8 +544,9 @@ class OfferingsTreeView(TemplateView):
         """Walk _build_tree()'s nested (portfolio, [(service, [(offering,
         app_service_or_None, [(ci, type_label, icon_class), ...]), ...]),
         ...]) structure into vis-network's flat nodes/edges lists, laying
-        every node out ourselves (explicit pixel x/y, pinned via
-        `fixed: {x: True, y: True}`) rather than leaving positioning to
+        every node out ourselves (explicit pixel x/y, with y pinned via
+        `fixed: {x: False, y: True}` — x is left free so users can still
+        drag nodes sideways) rather than leaving positioning to
         vis-network's own hierarchical layout engine.
 
         That engine turned out not to be trustworthy here: giving every
@@ -617,7 +618,13 @@ class OfferingsTreeView(TemplateView):
                     'title': title,
                     'x': x,
                     'y': LEVELS[group] * LEVEL_HEIGHT,
-                    'fixed': {'x': True, 'y': True},
+                    # y stays pinned — that's what keeps every node of a
+                    # type on the same row — but x is left free so users
+                    # can drag nodes sideways (vis-network's `fixed` blocks
+                    # manual dragging on whichever axes it covers, not just
+                    # physics, so this has to be per-axis rather than a
+                    # blanket `fixed: True`).
+                    'fixed': {'x': False, 'y': True},
                 }
             )
 
