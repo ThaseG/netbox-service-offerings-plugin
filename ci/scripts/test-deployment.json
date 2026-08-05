@@ -5890,121 +5890,121 @@
   ],
   "plugins/service-specification/cluster-group-service-infos/": [
     {
-      "cluster_group": "Coca Cola Infrastructure",
+      "cluster_group": "coca-cola-infra",
       "application_services": [
         "Managed Email - Coca Cola (Application Service)"
       ]
     },
     {
-      "cluster_group": "Cisco Infrastructure",
+      "cluster_group": "cisco-infra",
       "application_services": [
         "Unified Communications - Cisco (Application Service)"
       ]
     },
     {
-      "cluster_group": "SAP Infrastructure",
+      "cluster_group": "sap-infra",
       "application_services": [
         "Endpoint Management - SAP (Application Service)"
       ]
     },
     {
-      "cluster_group": "Google Infrastructure",
+      "cluster_group": "google-infra",
       "application_services": [
         "Helpdesk Support - Google (Application Service)"
       ]
     },
     {
-      "cluster_group": "Amazon Infrastructure",
+      "cluster_group": "amazon-infra",
       "application_services": [
         "Identity & Access Management - Amazon (Application Service)"
       ]
     },
     {
-      "cluster_group": "Microsoft Infrastructure",
+      "cluster_group": "microsoft-infra",
       "application_services": [
         "Video Conferencing - Microsoft (Application Service)"
       ]
     },
     {
-      "cluster_group": "IBM Infrastructure",
+      "cluster_group": "ibm-infra",
       "application_services": [
         "File Sharing & Collaboration - IBM (Application Service)"
       ]
     },
     {
-      "cluster_group": "Oracle Infrastructure",
+      "cluster_group": "oracle-infra",
       "application_services": [
         "Mobile Device Management - Oracle (Application Service)"
       ]
     },
     {
-      "cluster_group": "Siemens Infrastructure",
+      "cluster_group": "siemens-infra",
       "application_services": [
         "Print Services - Siemens (Application Service)"
       ]
     },
     {
-      "cluster_group": "BMW Infrastructure",
+      "cluster_group": "bmw-infra",
       "application_services": [
         "Virtual Desktop Infrastructure - BMW (Application Service)"
       ]
     },
     {
-      "cluster_group": "Volkswagen Infrastructure",
+      "cluster_group": "volkswagen-infra",
       "application_services": [
         "Cloud Backup - Volkswagen (Application Service)"
       ]
     },
     {
-      "cluster_group": "Deutsche Bank Infrastructure",
+      "cluster_group": "deutsche-bank-infra",
       "application_services": [
         "Disaster Recovery - Deutsche Bank (Application Service)"
       ]
     },
     {
-      "cluster_group": "Allianz Infrastructure",
+      "cluster_group": "allianz-infra",
       "application_services": [
         "Network Security - Allianz (Application Service)"
       ]
     },
     {
-      "cluster_group": "Adidas Infrastructure",
+      "cluster_group": "adidas-infra",
       "application_services": [
         "Database Hosting - Adidas (Application Service)"
       ]
     },
     {
-      "cluster_group": "Puma Infrastructure",
+      "cluster_group": "puma-infra",
       "application_services": [
         "Load Balancing - Puma (Application Service)"
       ]
     },
     {
-      "cluster_group": "Nike Infrastructure",
+      "cluster_group": "nike-infra",
       "application_services": [
         "Container Orchestration - Nike (Application Service)"
       ]
     },
     {
-      "cluster_group": "Samsung Infrastructure",
+      "cluster_group": "samsung-infra",
       "application_services": [
         "Data Analytics Platform - Samsung (Application Service)"
       ]
     },
     {
-      "cluster_group": "Sony Infrastructure",
+      "cluster_group": "sony-infra",
       "application_services": [
         "Storage as a Service - Sony (Application Service)"
       ]
     },
     {
-      "cluster_group": "Toyota Infrastructure",
+      "cluster_group": "toyota-infra",
       "application_services": [
         "Monitoring & Observability - Toyota (Application Service)"
       ]
     },
     {
-      "cluster_group": "Shell Infrastructure",
+      "cluster_group": "shell-infra",
       "application_services": [
         "DNS & DHCP Management - Shell (Application Service)"
       ]

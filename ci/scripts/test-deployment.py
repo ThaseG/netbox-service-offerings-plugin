@@ -129,6 +129,18 @@ REFERENCE_FIELDS = {
         'virtual_machine': 'virtualization/virtual-machines/',
         'application_services': 'plugins/service-specification/app-services/',
     },
+    'plugins/service-specification/device-service-infos/': {
+        'device': 'dcim/devices/',
+        'application_services': 'plugins/service-specification/app-services/',
+    },
+    'plugins/service-specification/cluster-service-infos/': {
+        'cluster': 'virtualization/clusters/',
+        'application_services': 'plugins/service-specification/app-services/',
+    },
+    'plugins/service-specification/cluster-group-service-infos/': {
+        'cluster_group': 'virtualization/cluster-groups/',
+        'application_services': 'plugins/service-specification/app-services/',
+    },
 }
 
 

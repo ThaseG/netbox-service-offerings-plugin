@@ -371,9 +371,14 @@ def build_tenants_and_infra(data):
         tenant_cis = []
 
         hq_city, branch_city = CITIES[2 * i], CITIES[2 * i + 1]
-        cluster_group_name = f'{company} Infrastructure'
-        data['virtualization/cluster-groups/'].append({'name': cluster_group_name, 'slug': f'{tenant_slug}-infra'})
-        tenant_cis.append(('cluster_group', cluster_group_name))
+        cluster_group_slug = f'{tenant_slug}-infra'
+        data['virtualization/cluster-groups/'].append({'name': f'{company} Infrastructure', 'slug': cluster_group_slug})
+        # Referenced by slug, not name: ClusterGroup has a slug field, and
+        # the engine's REFERENCE_FIELDS resolves cluster_group references
+        # against virtualization/cluster-groups/ keyed by slug-else-name —
+        # since this model has a slug, using the name here would 400 with
+        # "not found" the same way an earlier lifecycle/name mixup did.
+        tenant_cis.append(('cluster_group', cluster_group_slug))
 
         for site_label, city in (('HQ', hq_city), ('Branch', branch_city)):
             site_name = f'{site_label}-{city}'
@@ -400,7 +405,7 @@ def build_tenants_and_infra(data):
                 {
                     'name': cluster_name,
                     'type': 'proxmox',
-                    'group': f'{tenant_slug}-infra',
+                    'group': cluster_group_slug,
                     'scope_type': 'dcim.site',
                     'scope_id': site_slug,
                 }
