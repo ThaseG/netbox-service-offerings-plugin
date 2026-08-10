@@ -4,9 +4,10 @@ company names), each with its own HQ/Branch sites (named after real
 cities) and ~20 Technical CIs (devices/cluster/cluster group/VMs), plus 2
 Service Portfolios each realizing 20 Service Offerings across two rounds
 (two per tenant, covering all 20 tenants twice with different themes),
-each with its own Application Service. Every one of a tenant's Application
-Services is assigned the full set of Technical CIs belonging to that same
-tenant.
+each with its own Application Service, and its own 1:1 Contract (which in
+turn gets 2 Contract Rate Cards of its own). Every one of a tenant's
+Application Services is assigned the full set of Technical CIs belonging
+to that same tenant.
 
 This is a one-off *generator*, not part of the actual deploy pipeline:
 ci/scripts/test-deployment.py itself stays a generic "read JSON, POST it,
@@ -254,6 +255,13 @@ CI_FUNCTIONS = [
     ('Managed Backup Service', 'managed-backup-service'),
 ]
 
+# Slugs of the 3 manufacturers created in build_lookups() — reused as
+# Contract.vendor below. RateCardIntervalChoices' 3 values (see choices.py),
+# duplicated here rather than imported since this generator is otherwise
+# fully standalone from the plugin package.
+MANUFACTURER_SLUGS = ['cisco', 'fortinet', 'dell']
+RATE_CARD_INTERVALS = ['monthly', 'one-time', 'others']
+
 CONTACT_GROUPS = [
     'Portfolio Owners',
     'Portfolio Managers',
@@ -430,7 +438,8 @@ def build_hierarchy(data, tenant_slugs):
     second pass with tenant assignment rotated by half the tenant list
     (10 of 20) so each tenant's second Offering always lands on a
     different theme than its first — 40 Offerings total, each with its
-    own 1:1 Application Service.
+    own 1:1 Application Service. Each Offering also gets its own 1:1
+    Contract, and each Contract gets 2 Contract Rate Cards.
     """
     lifecycle_slugs = [slug for _name, slug, _desc, _color in LIFECYCLES]
     sla_slugs = [slug for _name, slug in SLAS]
@@ -448,6 +457,8 @@ def build_hierarchy(data, tenant_slugs):
     services = []
     offerings = []
     app_services = []
+    contracts = []
+    rate_cards = []
 
     for portfolio in PORTFOLIOS:
         portfolios.append(
@@ -498,11 +509,56 @@ def build_hierarchy(data, tenant_slugs):
                 # offerings.
                 lifecycle_slug = lifecycle_slugs[offering_index % len(lifecycle_slugs)]
 
+                # One Contract per Offering, with 2 Contract Rate Cards of
+                # its own — contract_number reuses the same CN-#### scheme
+                # ServiceOffering.contract_number used before it became a
+                # real reference (see models.py/forms.py's ServiceOffering).
+                contract_number = f'CN-{offering_index + 1:04d}'
+                start_year = 2022 + (offering_index % 3)
+                contracts.append(
+                    {
+                        'contract_number': contract_number,
+                        'external_reference': f'EXT-{offering_index + 1:04d}',
+                        'short_description': f'Contract covering {theme} for {tenant_name}.',
+                        'description': f'Commercial agreement backing {offering_name}.',
+                        'project': theme,
+                        'vendor': MANUFACTURER_SLUGS[offering_index % len(MANUFACTURER_SLUGS)],
+                        'location': f'{tenant_name} Headquarters',
+                        'tenant': tenant_slug,
+                        'contact_person': ['Elena Petrova'],
+                        'primary_contact': ['Franklin Diaz'],
+                        'contract_manager': ['Jack Thompson'],
+                        'approver': 'David Kim',
+                        'business_unit': 'app1-business-unit',
+                        'contract_starts': f'{start_year}-01-01',
+                        'contract_ends': f'{start_year + 3}-12-31',
+                    }
+                )
+                for position in (1, 2):
+                    rate_cards.append(
+                        {
+                            'contract': contract_number,
+                            'contract_position_number': f'{contract_number}-POS-{position:02d}',
+                            'short_description': f'Rate card {position} for {contract_number}.',
+                            'description': f'Position {position} of the {offering_name} contract.',
+                            'order_number': f'PO-{offering_index + 1:04d}-{position}',
+                            'project': theme,
+                            'base_costs': 500 + (offering_index * 10) + (position * 100),
+                            'hourly_rate': 50 + (position * 10),
+                            'hours_spend': 10 + (position * 5),
+                            'interval': RATE_CARD_INTERVALS[(offering_index + position) % len(RATE_CARD_INTERVALS)],
+                            'billing': position == 1,
+                            'start_date': f'{start_year}-01-01',
+                            'end_date': f'{start_year + 3}-12-31',
+                        }
+                    )
+
                 offerings.append(
                     {
                         'name': offering_name,
                         'description': offering_name,
                         'lifecycle': lifecycle_slug,
+                        'contract': contract_number,
                         'service': [portfolio['service_name']],
                         'service_offering_owner_contacts': ['Elena Petrova'],
                         'service_offering_owner_contact_groups': ['service-offering-owners'],
@@ -545,6 +601,8 @@ def build_hierarchy(data, tenant_slugs):
 
     data['plugins/service-specification/portfolios/'] = portfolios
     data['plugins/service-specification/services/'] = services
+    data['plugins/service-specification/contracts/'] = contracts
+    data['plugins/service-specification/contract-rate-cards/'] = rate_cards
     data['plugins/service-specification/service-offerings/'] = offerings
     data['plugins/service-specification/app-services/'] = app_services
 
@@ -625,6 +683,8 @@ def main():
         'plugins/service-specification/ci-functions/',
         'plugins/service-specification/portfolios/',
         'plugins/service-specification/services/',
+        'plugins/service-specification/contracts/',
+        'plugins/service-specification/contract-rate-cards/',
         'plugins/service-specification/service-offerings/',
         'plugins/service-specification/app-services/',
         'plugins/service-specification/device-service-infos/',

@@ -3040,11 +3040,2136 @@
       ]
     }
   ],
+  "plugins/service-specification/contracts/": [
+    {
+      "contract_number": "CN-0001",
+      "external_reference": "EXT-0001",
+      "short_description": "Contract covering Managed Email for Coca Cola.",
+      "description": "Commercial agreement backing Managed Email - Coca Cola.",
+      "project": "Managed Email",
+      "vendor": "cisco",
+      "location": "Coca Cola Headquarters",
+      "tenant": "coca-cola",
+      "contact_person": [
+        "Elena Petrova"
+      ],
+      "primary_contact": [
+        "Franklin Diaz"
+      ],
+      "contract_manager": [
+        "Jack Thompson"
+      ],
+      "approver": "David Kim",
+      "business_unit": "app1-business-unit",
+      "contract_starts": "2022-01-01",
+      "contract_ends": "2025-12-31"
+    },
+    {
+      "contract_number": "CN-0002",
+      "external_reference": "EXT-0002",
+      "short_description": "Contract covering Unified Communications for Cisco.",
+      "description": "Commercial agreement backing Unified Communications - Cisco.",
+      "project": "Unified Communications",
+      "vendor": "fortinet",
+      "location": "Cisco Headquarters",
+      "tenant": "cisco",
+      "contact_person": [
+        "Elena Petrova"
+      ],
+      "primary_contact": [
+        "Franklin Diaz"
+      ],
+      "contract_manager": [
+        "Jack Thompson"
+      ],
+      "approver": "David Kim",
+      "business_unit": "app1-business-unit",
+      "contract_starts": "2023-01-01",
+      "contract_ends": "2026-12-31"
+    },
+    {
+      "contract_number": "CN-0003",
+      "external_reference": "EXT-0003",
+      "short_description": "Contract covering Endpoint Management for SAP.",
+      "description": "Commercial agreement backing Endpoint Management - SAP.",
+      "project": "Endpoint Management",
+      "vendor": "dell",
+      "location": "SAP Headquarters",
+      "tenant": "sap",
+      "contact_person": [
+        "Elena Petrova"
+      ],
+      "primary_contact": [
+        "Franklin Diaz"
+      ],
+      "contract_manager": [
+        "Jack Thompson"
+      ],
+      "approver": "David Kim",
+      "business_unit": "app1-business-unit",
+      "contract_starts": "2024-01-01",
+      "contract_ends": "2027-12-31"
+    },
+    {
+      "contract_number": "CN-0004",
+      "external_reference": "EXT-0004",
+      "short_description": "Contract covering Helpdesk Support for Google.",
+      "description": "Commercial agreement backing Helpdesk Support - Google.",
+      "project": "Helpdesk Support",
+      "vendor": "cisco",
+      "location": "Google Headquarters",
+      "tenant": "google",
+      "contact_person": [
+        "Elena Petrova"
+      ],
+      "primary_contact": [
+        "Franklin Diaz"
+      ],
+      "contract_manager": [
+        "Jack Thompson"
+      ],
+      "approver": "David Kim",
+      "business_unit": "app1-business-unit",
+      "contract_starts": "2022-01-01",
+      "contract_ends": "2025-12-31"
+    },
+    {
+      "contract_number": "CN-0005",
+      "external_reference": "EXT-0005",
+      "short_description": "Contract covering Identity & Access Management for Amazon.",
+      "description": "Commercial agreement backing Identity & Access Management - Amazon.",
+      "project": "Identity & Access Management",
+      "vendor": "fortinet",
+      "location": "Amazon Headquarters",
+      "tenant": "amazon",
+      "contact_person": [
+        "Elena Petrova"
+      ],
+      "primary_contact": [
+        "Franklin Diaz"
+      ],
+      "contract_manager": [
+        "Jack Thompson"
+      ],
+      "approver": "David Kim",
+      "business_unit": "app1-business-unit",
+      "contract_starts": "2023-01-01",
+      "contract_ends": "2026-12-31"
+    },
+    {
+      "contract_number": "CN-0006",
+      "external_reference": "EXT-0006",
+      "short_description": "Contract covering Video Conferencing for Microsoft.",
+      "description": "Commercial agreement backing Video Conferencing - Microsoft.",
+      "project": "Video Conferencing",
+      "vendor": "dell",
+      "location": "Microsoft Headquarters",
+      "tenant": "microsoft",
+      "contact_person": [
+        "Elena Petrova"
+      ],
+      "primary_contact": [
+        "Franklin Diaz"
+      ],
+      "contract_manager": [
+        "Jack Thompson"
+      ],
+      "approver": "David Kim",
+      "business_unit": "app1-business-unit",
+      "contract_starts": "2024-01-01",
+      "contract_ends": "2027-12-31"
+    },
+    {
+      "contract_number": "CN-0007",
+      "external_reference": "EXT-0007",
+      "short_description": "Contract covering File Sharing & Collaboration for IBM.",
+      "description": "Commercial agreement backing File Sharing & Collaboration - IBM.",
+      "project": "File Sharing & Collaboration",
+      "vendor": "cisco",
+      "location": "IBM Headquarters",
+      "tenant": "ibm",
+      "contact_person": [
+        "Elena Petrova"
+      ],
+      "primary_contact": [
+        "Franklin Diaz"
+      ],
+      "contract_manager": [
+        "Jack Thompson"
+      ],
+      "approver": "David Kim",
+      "business_unit": "app1-business-unit",
+      "contract_starts": "2022-01-01",
+      "contract_ends": "2025-12-31"
+    },
+    {
+      "contract_number": "CN-0008",
+      "external_reference": "EXT-0008",
+      "short_description": "Contract covering Mobile Device Management for Oracle.",
+      "description": "Commercial agreement backing Mobile Device Management - Oracle.",
+      "project": "Mobile Device Management",
+      "vendor": "fortinet",
+      "location": "Oracle Headquarters",
+      "tenant": "oracle",
+      "contact_person": [
+        "Elena Petrova"
+      ],
+      "primary_contact": [
+        "Franklin Diaz"
+      ],
+      "contract_manager": [
+        "Jack Thompson"
+      ],
+      "approver": "David Kim",
+      "business_unit": "app1-business-unit",
+      "contract_starts": "2023-01-01",
+      "contract_ends": "2026-12-31"
+    },
+    {
+      "contract_number": "CN-0009",
+      "external_reference": "EXT-0009",
+      "short_description": "Contract covering Print Services for Siemens.",
+      "description": "Commercial agreement backing Print Services - Siemens.",
+      "project": "Print Services",
+      "vendor": "dell",
+      "location": "Siemens Headquarters",
+      "tenant": "siemens",
+      "contact_person": [
+        "Elena Petrova"
+      ],
+      "primary_contact": [
+        "Franklin Diaz"
+      ],
+      "contract_manager": [
+        "Jack Thompson"
+      ],
+      "approver": "David Kim",
+      "business_unit": "app1-business-unit",
+      "contract_starts": "2024-01-01",
+      "contract_ends": "2027-12-31"
+    },
+    {
+      "contract_number": "CN-0010",
+      "external_reference": "EXT-0010",
+      "short_description": "Contract covering Virtual Desktop Infrastructure for BMW.",
+      "description": "Commercial agreement backing Virtual Desktop Infrastructure - BMW.",
+      "project": "Virtual Desktop Infrastructure",
+      "vendor": "cisco",
+      "location": "BMW Headquarters",
+      "tenant": "bmw",
+      "contact_person": [
+        "Elena Petrova"
+      ],
+      "primary_contact": [
+        "Franklin Diaz"
+      ],
+      "contract_manager": [
+        "Jack Thompson"
+      ],
+      "approver": "David Kim",
+      "business_unit": "app1-business-unit",
+      "contract_starts": "2022-01-01",
+      "contract_ends": "2025-12-31"
+    },
+    {
+      "contract_number": "CN-0011",
+      "external_reference": "EXT-0011",
+      "short_description": "Contract covering Cloud Backup for Volkswagen.",
+      "description": "Commercial agreement backing Cloud Backup - Volkswagen.",
+      "project": "Cloud Backup",
+      "vendor": "fortinet",
+      "location": "Volkswagen Headquarters",
+      "tenant": "volkswagen",
+      "contact_person": [
+        "Elena Petrova"
+      ],
+      "primary_contact": [
+        "Franklin Diaz"
+      ],
+      "contract_manager": [
+        "Jack Thompson"
+      ],
+      "approver": "David Kim",
+      "business_unit": "app1-business-unit",
+      "contract_starts": "2023-01-01",
+      "contract_ends": "2026-12-31"
+    },
+    {
+      "contract_number": "CN-0012",
+      "external_reference": "EXT-0012",
+      "short_description": "Contract covering Disaster Recovery for Deutsche Bank.",
+      "description": "Commercial agreement backing Disaster Recovery - Deutsche Bank.",
+      "project": "Disaster Recovery",
+      "vendor": "dell",
+      "location": "Deutsche Bank Headquarters",
+      "tenant": "deutsche-bank",
+      "contact_person": [
+        "Elena Petrova"
+      ],
+      "primary_contact": [
+        "Franklin Diaz"
+      ],
+      "contract_manager": [
+        "Jack Thompson"
+      ],
+      "approver": "David Kim",
+      "business_unit": "app1-business-unit",
+      "contract_starts": "2024-01-01",
+      "contract_ends": "2027-12-31"
+    },
+    {
+      "contract_number": "CN-0013",
+      "external_reference": "EXT-0013",
+      "short_description": "Contract covering Network Security for Allianz.",
+      "description": "Commercial agreement backing Network Security - Allianz.",
+      "project": "Network Security",
+      "vendor": "cisco",
+      "location": "Allianz Headquarters",
+      "tenant": "allianz",
+      "contact_person": [
+        "Elena Petrova"
+      ],
+      "primary_contact": [
+        "Franklin Diaz"
+      ],
+      "contract_manager": [
+        "Jack Thompson"
+      ],
+      "approver": "David Kim",
+      "business_unit": "app1-business-unit",
+      "contract_starts": "2022-01-01",
+      "contract_ends": "2025-12-31"
+    },
+    {
+      "contract_number": "CN-0014",
+      "external_reference": "EXT-0014",
+      "short_description": "Contract covering Database Hosting for Adidas.",
+      "description": "Commercial agreement backing Database Hosting - Adidas.",
+      "project": "Database Hosting",
+      "vendor": "fortinet",
+      "location": "Adidas Headquarters",
+      "tenant": "adidas",
+      "contact_person": [
+        "Elena Petrova"
+      ],
+      "primary_contact": [
+        "Franklin Diaz"
+      ],
+      "contract_manager": [
+        "Jack Thompson"
+      ],
+      "approver": "David Kim",
+      "business_unit": "app1-business-unit",
+      "contract_starts": "2023-01-01",
+      "contract_ends": "2026-12-31"
+    },
+    {
+      "contract_number": "CN-0015",
+      "external_reference": "EXT-0015",
+      "short_description": "Contract covering Load Balancing for Puma.",
+      "description": "Commercial agreement backing Load Balancing - Puma.",
+      "project": "Load Balancing",
+      "vendor": "dell",
+      "location": "Puma Headquarters",
+      "tenant": "puma",
+      "contact_person": [
+        "Elena Petrova"
+      ],
+      "primary_contact": [
+        "Franklin Diaz"
+      ],
+      "contract_manager": [
+        "Jack Thompson"
+      ],
+      "approver": "David Kim",
+      "business_unit": "app1-business-unit",
+      "contract_starts": "2024-01-01",
+      "contract_ends": "2027-12-31"
+    },
+    {
+      "contract_number": "CN-0016",
+      "external_reference": "EXT-0016",
+      "short_description": "Contract covering Container Orchestration for Nike.",
+      "description": "Commercial agreement backing Container Orchestration - Nike.",
+      "project": "Container Orchestration",
+      "vendor": "cisco",
+      "location": "Nike Headquarters",
+      "tenant": "nike",
+      "contact_person": [
+        "Elena Petrova"
+      ],
+      "primary_contact": [
+        "Franklin Diaz"
+      ],
+      "contract_manager": [
+        "Jack Thompson"
+      ],
+      "approver": "David Kim",
+      "business_unit": "app1-business-unit",
+      "contract_starts": "2022-01-01",
+      "contract_ends": "2025-12-31"
+    },
+    {
+      "contract_number": "CN-0017",
+      "external_reference": "EXT-0017",
+      "short_description": "Contract covering Data Analytics Platform for Samsung.",
+      "description": "Commercial agreement backing Data Analytics Platform - Samsung.",
+      "project": "Data Analytics Platform",
+      "vendor": "fortinet",
+      "location": "Samsung Headquarters",
+      "tenant": "samsung",
+      "contact_person": [
+        "Elena Petrova"
+      ],
+      "primary_contact": [
+        "Franklin Diaz"
+      ],
+      "contract_manager": [
+        "Jack Thompson"
+      ],
+      "approver": "David Kim",
+      "business_unit": "app1-business-unit",
+      "contract_starts": "2023-01-01",
+      "contract_ends": "2026-12-31"
+    },
+    {
+      "contract_number": "CN-0018",
+      "external_reference": "EXT-0018",
+      "short_description": "Contract covering Storage as a Service for Sony.",
+      "description": "Commercial agreement backing Storage as a Service - Sony.",
+      "project": "Storage as a Service",
+      "vendor": "dell",
+      "location": "Sony Headquarters",
+      "tenant": "sony",
+      "contact_person": [
+        "Elena Petrova"
+      ],
+      "primary_contact": [
+        "Franklin Diaz"
+      ],
+      "contract_manager": [
+        "Jack Thompson"
+      ],
+      "approver": "David Kim",
+      "business_unit": "app1-business-unit",
+      "contract_starts": "2024-01-01",
+      "contract_ends": "2027-12-31"
+    },
+    {
+      "contract_number": "CN-0019",
+      "external_reference": "EXT-0019",
+      "short_description": "Contract covering Monitoring & Observability for Toyota.",
+      "description": "Commercial agreement backing Monitoring & Observability - Toyota.",
+      "project": "Monitoring & Observability",
+      "vendor": "cisco",
+      "location": "Toyota Headquarters",
+      "tenant": "toyota",
+      "contact_person": [
+        "Elena Petrova"
+      ],
+      "primary_contact": [
+        "Franklin Diaz"
+      ],
+      "contract_manager": [
+        "Jack Thompson"
+      ],
+      "approver": "David Kim",
+      "business_unit": "app1-business-unit",
+      "contract_starts": "2022-01-01",
+      "contract_ends": "2025-12-31"
+    },
+    {
+      "contract_number": "CN-0020",
+      "external_reference": "EXT-0020",
+      "short_description": "Contract covering DNS & DHCP Management for Shell.",
+      "description": "Commercial agreement backing DNS & DHCP Management - Shell.",
+      "project": "DNS & DHCP Management",
+      "vendor": "fortinet",
+      "location": "Shell Headquarters",
+      "tenant": "shell",
+      "contact_person": [
+        "Elena Petrova"
+      ],
+      "primary_contact": [
+        "Franklin Diaz"
+      ],
+      "contract_manager": [
+        "Jack Thompson"
+      ],
+      "approver": "David Kim",
+      "business_unit": "app1-business-unit",
+      "contract_starts": "2023-01-01",
+      "contract_ends": "2026-12-31"
+    },
+    {
+      "contract_number": "CN-0021",
+      "external_reference": "EXT-0021",
+      "short_description": "Contract covering Managed Email for Volkswagen.",
+      "description": "Commercial agreement backing Managed Email - Volkswagen.",
+      "project": "Managed Email",
+      "vendor": "dell",
+      "location": "Volkswagen Headquarters",
+      "tenant": "volkswagen",
+      "contact_person": [
+        "Elena Petrova"
+      ],
+      "primary_contact": [
+        "Franklin Diaz"
+      ],
+      "contract_manager": [
+        "Jack Thompson"
+      ],
+      "approver": "David Kim",
+      "business_unit": "app1-business-unit",
+      "contract_starts": "2024-01-01",
+      "contract_ends": "2027-12-31"
+    },
+    {
+      "contract_number": "CN-0022",
+      "external_reference": "EXT-0022",
+      "short_description": "Contract covering Unified Communications for Deutsche Bank.",
+      "description": "Commercial agreement backing Unified Communications - Deutsche Bank.",
+      "project": "Unified Communications",
+      "vendor": "cisco",
+      "location": "Deutsche Bank Headquarters",
+      "tenant": "deutsche-bank",
+      "contact_person": [
+        "Elena Petrova"
+      ],
+      "primary_contact": [
+        "Franklin Diaz"
+      ],
+      "contract_manager": [
+        "Jack Thompson"
+      ],
+      "approver": "David Kim",
+      "business_unit": "app1-business-unit",
+      "contract_starts": "2022-01-01",
+      "contract_ends": "2025-12-31"
+    },
+    {
+      "contract_number": "CN-0023",
+      "external_reference": "EXT-0023",
+      "short_description": "Contract covering Endpoint Management for Allianz.",
+      "description": "Commercial agreement backing Endpoint Management - Allianz.",
+      "project": "Endpoint Management",
+      "vendor": "fortinet",
+      "location": "Allianz Headquarters",
+      "tenant": "allianz",
+      "contact_person": [
+        "Elena Petrova"
+      ],
+      "primary_contact": [
+        "Franklin Diaz"
+      ],
+      "contract_manager": [
+        "Jack Thompson"
+      ],
+      "approver": "David Kim",
+      "business_unit": "app1-business-unit",
+      "contract_starts": "2023-01-01",
+      "contract_ends": "2026-12-31"
+    },
+    {
+      "contract_number": "CN-0024",
+      "external_reference": "EXT-0024",
+      "short_description": "Contract covering Helpdesk Support for Adidas.",
+      "description": "Commercial agreement backing Helpdesk Support - Adidas.",
+      "project": "Helpdesk Support",
+      "vendor": "dell",
+      "location": "Adidas Headquarters",
+      "tenant": "adidas",
+      "contact_person": [
+        "Elena Petrova"
+      ],
+      "primary_contact": [
+        "Franklin Diaz"
+      ],
+      "contract_manager": [
+        "Jack Thompson"
+      ],
+      "approver": "David Kim",
+      "business_unit": "app1-business-unit",
+      "contract_starts": "2024-01-01",
+      "contract_ends": "2027-12-31"
+    },
+    {
+      "contract_number": "CN-0025",
+      "external_reference": "EXT-0025",
+      "short_description": "Contract covering Identity & Access Management for Puma.",
+      "description": "Commercial agreement backing Identity & Access Management - Puma.",
+      "project": "Identity & Access Management",
+      "vendor": "cisco",
+      "location": "Puma Headquarters",
+      "tenant": "puma",
+      "contact_person": [
+        "Elena Petrova"
+      ],
+      "primary_contact": [
+        "Franklin Diaz"
+      ],
+      "contract_manager": [
+        "Jack Thompson"
+      ],
+      "approver": "David Kim",
+      "business_unit": "app1-business-unit",
+      "contract_starts": "2022-01-01",
+      "contract_ends": "2025-12-31"
+    },
+    {
+      "contract_number": "CN-0026",
+      "external_reference": "EXT-0026",
+      "short_description": "Contract covering Video Conferencing for Nike.",
+      "description": "Commercial agreement backing Video Conferencing - Nike.",
+      "project": "Video Conferencing",
+      "vendor": "fortinet",
+      "location": "Nike Headquarters",
+      "tenant": "nike",
+      "contact_person": [
+        "Elena Petrova"
+      ],
+      "primary_contact": [
+        "Franklin Diaz"
+      ],
+      "contract_manager": [
+        "Jack Thompson"
+      ],
+      "approver": "David Kim",
+      "business_unit": "app1-business-unit",
+      "contract_starts": "2023-01-01",
+      "contract_ends": "2026-12-31"
+    },
+    {
+      "contract_number": "CN-0027",
+      "external_reference": "EXT-0027",
+      "short_description": "Contract covering File Sharing & Collaboration for Samsung.",
+      "description": "Commercial agreement backing File Sharing & Collaboration - Samsung.",
+      "project": "File Sharing & Collaboration",
+      "vendor": "dell",
+      "location": "Samsung Headquarters",
+      "tenant": "samsung",
+      "contact_person": [
+        "Elena Petrova"
+      ],
+      "primary_contact": [
+        "Franklin Diaz"
+      ],
+      "contract_manager": [
+        "Jack Thompson"
+      ],
+      "approver": "David Kim",
+      "business_unit": "app1-business-unit",
+      "contract_starts": "2024-01-01",
+      "contract_ends": "2027-12-31"
+    },
+    {
+      "contract_number": "CN-0028",
+      "external_reference": "EXT-0028",
+      "short_description": "Contract covering Mobile Device Management for Sony.",
+      "description": "Commercial agreement backing Mobile Device Management - Sony.",
+      "project": "Mobile Device Management",
+      "vendor": "cisco",
+      "location": "Sony Headquarters",
+      "tenant": "sony",
+      "contact_person": [
+        "Elena Petrova"
+      ],
+      "primary_contact": [
+        "Franklin Diaz"
+      ],
+      "contract_manager": [
+        "Jack Thompson"
+      ],
+      "approver": "David Kim",
+      "business_unit": "app1-business-unit",
+      "contract_starts": "2022-01-01",
+      "contract_ends": "2025-12-31"
+    },
+    {
+      "contract_number": "CN-0029",
+      "external_reference": "EXT-0029",
+      "short_description": "Contract covering Print Services for Toyota.",
+      "description": "Commercial agreement backing Print Services - Toyota.",
+      "project": "Print Services",
+      "vendor": "fortinet",
+      "location": "Toyota Headquarters",
+      "tenant": "toyota",
+      "contact_person": [
+        "Elena Petrova"
+      ],
+      "primary_contact": [
+        "Franklin Diaz"
+      ],
+      "contract_manager": [
+        "Jack Thompson"
+      ],
+      "approver": "David Kim",
+      "business_unit": "app1-business-unit",
+      "contract_starts": "2023-01-01",
+      "contract_ends": "2026-12-31"
+    },
+    {
+      "contract_number": "CN-0030",
+      "external_reference": "EXT-0030",
+      "short_description": "Contract covering Virtual Desktop Infrastructure for Shell.",
+      "description": "Commercial agreement backing Virtual Desktop Infrastructure - Shell.",
+      "project": "Virtual Desktop Infrastructure",
+      "vendor": "dell",
+      "location": "Shell Headquarters",
+      "tenant": "shell",
+      "contact_person": [
+        "Elena Petrova"
+      ],
+      "primary_contact": [
+        "Franklin Diaz"
+      ],
+      "contract_manager": [
+        "Jack Thompson"
+      ],
+      "approver": "David Kim",
+      "business_unit": "app1-business-unit",
+      "contract_starts": "2024-01-01",
+      "contract_ends": "2027-12-31"
+    },
+    {
+      "contract_number": "CN-0031",
+      "external_reference": "EXT-0031",
+      "short_description": "Contract covering Cloud Backup for Coca Cola.",
+      "description": "Commercial agreement backing Cloud Backup - Coca Cola.",
+      "project": "Cloud Backup",
+      "vendor": "cisco",
+      "location": "Coca Cola Headquarters",
+      "tenant": "coca-cola",
+      "contact_person": [
+        "Elena Petrova"
+      ],
+      "primary_contact": [
+        "Franklin Diaz"
+      ],
+      "contract_manager": [
+        "Jack Thompson"
+      ],
+      "approver": "David Kim",
+      "business_unit": "app1-business-unit",
+      "contract_starts": "2022-01-01",
+      "contract_ends": "2025-12-31"
+    },
+    {
+      "contract_number": "CN-0032",
+      "external_reference": "EXT-0032",
+      "short_description": "Contract covering Disaster Recovery for Cisco.",
+      "description": "Commercial agreement backing Disaster Recovery - Cisco.",
+      "project": "Disaster Recovery",
+      "vendor": "fortinet",
+      "location": "Cisco Headquarters",
+      "tenant": "cisco",
+      "contact_person": [
+        "Elena Petrova"
+      ],
+      "primary_contact": [
+        "Franklin Diaz"
+      ],
+      "contract_manager": [
+        "Jack Thompson"
+      ],
+      "approver": "David Kim",
+      "business_unit": "app1-business-unit",
+      "contract_starts": "2023-01-01",
+      "contract_ends": "2026-12-31"
+    },
+    {
+      "contract_number": "CN-0033",
+      "external_reference": "EXT-0033",
+      "short_description": "Contract covering Network Security for SAP.",
+      "description": "Commercial agreement backing Network Security - SAP.",
+      "project": "Network Security",
+      "vendor": "dell",
+      "location": "SAP Headquarters",
+      "tenant": "sap",
+      "contact_person": [
+        "Elena Petrova"
+      ],
+      "primary_contact": [
+        "Franklin Diaz"
+      ],
+      "contract_manager": [
+        "Jack Thompson"
+      ],
+      "approver": "David Kim",
+      "business_unit": "app1-business-unit",
+      "contract_starts": "2024-01-01",
+      "contract_ends": "2027-12-31"
+    },
+    {
+      "contract_number": "CN-0034",
+      "external_reference": "EXT-0034",
+      "short_description": "Contract covering Database Hosting for Google.",
+      "description": "Commercial agreement backing Database Hosting - Google.",
+      "project": "Database Hosting",
+      "vendor": "cisco",
+      "location": "Google Headquarters",
+      "tenant": "google",
+      "contact_person": [
+        "Elena Petrova"
+      ],
+      "primary_contact": [
+        "Franklin Diaz"
+      ],
+      "contract_manager": [
+        "Jack Thompson"
+      ],
+      "approver": "David Kim",
+      "business_unit": "app1-business-unit",
+      "contract_starts": "2022-01-01",
+      "contract_ends": "2025-12-31"
+    },
+    {
+      "contract_number": "CN-0035",
+      "external_reference": "EXT-0035",
+      "short_description": "Contract covering Load Balancing for Amazon.",
+      "description": "Commercial agreement backing Load Balancing - Amazon.",
+      "project": "Load Balancing",
+      "vendor": "fortinet",
+      "location": "Amazon Headquarters",
+      "tenant": "amazon",
+      "contact_person": [
+        "Elena Petrova"
+      ],
+      "primary_contact": [
+        "Franklin Diaz"
+      ],
+      "contract_manager": [
+        "Jack Thompson"
+      ],
+      "approver": "David Kim",
+      "business_unit": "app1-business-unit",
+      "contract_starts": "2023-01-01",
+      "contract_ends": "2026-12-31"
+    },
+    {
+      "contract_number": "CN-0036",
+      "external_reference": "EXT-0036",
+      "short_description": "Contract covering Container Orchestration for Microsoft.",
+      "description": "Commercial agreement backing Container Orchestration - Microsoft.",
+      "project": "Container Orchestration",
+      "vendor": "dell",
+      "location": "Microsoft Headquarters",
+      "tenant": "microsoft",
+      "contact_person": [
+        "Elena Petrova"
+      ],
+      "primary_contact": [
+        "Franklin Diaz"
+      ],
+      "contract_manager": [
+        "Jack Thompson"
+      ],
+      "approver": "David Kim",
+      "business_unit": "app1-business-unit",
+      "contract_starts": "2024-01-01",
+      "contract_ends": "2027-12-31"
+    },
+    {
+      "contract_number": "CN-0037",
+      "external_reference": "EXT-0037",
+      "short_description": "Contract covering Data Analytics Platform for IBM.",
+      "description": "Commercial agreement backing Data Analytics Platform - IBM.",
+      "project": "Data Analytics Platform",
+      "vendor": "cisco",
+      "location": "IBM Headquarters",
+      "tenant": "ibm",
+      "contact_person": [
+        "Elena Petrova"
+      ],
+      "primary_contact": [
+        "Franklin Diaz"
+      ],
+      "contract_manager": [
+        "Jack Thompson"
+      ],
+      "approver": "David Kim",
+      "business_unit": "app1-business-unit",
+      "contract_starts": "2022-01-01",
+      "contract_ends": "2025-12-31"
+    },
+    {
+      "contract_number": "CN-0038",
+      "external_reference": "EXT-0038",
+      "short_description": "Contract covering Storage as a Service for Oracle.",
+      "description": "Commercial agreement backing Storage as a Service - Oracle.",
+      "project": "Storage as a Service",
+      "vendor": "fortinet",
+      "location": "Oracle Headquarters",
+      "tenant": "oracle",
+      "contact_person": [
+        "Elena Petrova"
+      ],
+      "primary_contact": [
+        "Franklin Diaz"
+      ],
+      "contract_manager": [
+        "Jack Thompson"
+      ],
+      "approver": "David Kim",
+      "business_unit": "app1-business-unit",
+      "contract_starts": "2023-01-01",
+      "contract_ends": "2026-12-31"
+    },
+    {
+      "contract_number": "CN-0039",
+      "external_reference": "EXT-0039",
+      "short_description": "Contract covering Monitoring & Observability for Siemens.",
+      "description": "Commercial agreement backing Monitoring & Observability - Siemens.",
+      "project": "Monitoring & Observability",
+      "vendor": "dell",
+      "location": "Siemens Headquarters",
+      "tenant": "siemens",
+      "contact_person": [
+        "Elena Petrova"
+      ],
+      "primary_contact": [
+        "Franklin Diaz"
+      ],
+      "contract_manager": [
+        "Jack Thompson"
+      ],
+      "approver": "David Kim",
+      "business_unit": "app1-business-unit",
+      "contract_starts": "2024-01-01",
+      "contract_ends": "2027-12-31"
+    },
+    {
+      "contract_number": "CN-0040",
+      "external_reference": "EXT-0040",
+      "short_description": "Contract covering DNS & DHCP Management for BMW.",
+      "description": "Commercial agreement backing DNS & DHCP Management - BMW.",
+      "project": "DNS & DHCP Management",
+      "vendor": "cisco",
+      "location": "BMW Headquarters",
+      "tenant": "bmw",
+      "contact_person": [
+        "Elena Petrova"
+      ],
+      "primary_contact": [
+        "Franklin Diaz"
+      ],
+      "contract_manager": [
+        "Jack Thompson"
+      ],
+      "approver": "David Kim",
+      "business_unit": "app1-business-unit",
+      "contract_starts": "2022-01-01",
+      "contract_ends": "2025-12-31"
+    }
+  ],
+  "plugins/service-specification/contract-rate-cards/": [
+    {
+      "contract": "CN-0001",
+      "contract_position_number": "CN-0001-POS-01",
+      "short_description": "Rate card 1 for CN-0001.",
+      "description": "Position 1 of the Managed Email - Coca Cola contract.",
+      "order_number": "PO-0001-1",
+      "project": "Managed Email",
+      "base_costs": 600,
+      "hourly_rate": 60,
+      "hours_spend": 15,
+      "interval": "one-time",
+      "billing": true,
+      "start_date": "2022-01-01",
+      "end_date": "2025-12-31"
+    },
+    {
+      "contract": "CN-0001",
+      "contract_position_number": "CN-0001-POS-02",
+      "short_description": "Rate card 2 for CN-0001.",
+      "description": "Position 2 of the Managed Email - Coca Cola contract.",
+      "order_number": "PO-0001-2",
+      "project": "Managed Email",
+      "base_costs": 700,
+      "hourly_rate": 70,
+      "hours_spend": 20,
+      "interval": "others",
+      "billing": false,
+      "start_date": "2022-01-01",
+      "end_date": "2025-12-31"
+    },
+    {
+      "contract": "CN-0002",
+      "contract_position_number": "CN-0002-POS-01",
+      "short_description": "Rate card 1 for CN-0002.",
+      "description": "Position 1 of the Unified Communications - Cisco contract.",
+      "order_number": "PO-0002-1",
+      "project": "Unified Communications",
+      "base_costs": 610,
+      "hourly_rate": 60,
+      "hours_spend": 15,
+      "interval": "others",
+      "billing": true,
+      "start_date": "2023-01-01",
+      "end_date": "2026-12-31"
+    },
+    {
+      "contract": "CN-0002",
+      "contract_position_number": "CN-0002-POS-02",
+      "short_description": "Rate card 2 for CN-0002.",
+      "description": "Position 2 of the Unified Communications - Cisco contract.",
+      "order_number": "PO-0002-2",
+      "project": "Unified Communications",
+      "base_costs": 710,
+      "hourly_rate": 70,
+      "hours_spend": 20,
+      "interval": "monthly",
+      "billing": false,
+      "start_date": "2023-01-01",
+      "end_date": "2026-12-31"
+    },
+    {
+      "contract": "CN-0003",
+      "contract_position_number": "CN-0003-POS-01",
+      "short_description": "Rate card 1 for CN-0003.",
+      "description": "Position 1 of the Endpoint Management - SAP contract.",
+      "order_number": "PO-0003-1",
+      "project": "Endpoint Management",
+      "base_costs": 620,
+      "hourly_rate": 60,
+      "hours_spend": 15,
+      "interval": "monthly",
+      "billing": true,
+      "start_date": "2024-01-01",
+      "end_date": "2027-12-31"
+    },
+    {
+      "contract": "CN-0003",
+      "contract_position_number": "CN-0003-POS-02",
+      "short_description": "Rate card 2 for CN-0003.",
+      "description": "Position 2 of the Endpoint Management - SAP contract.",
+      "order_number": "PO-0003-2",
+      "project": "Endpoint Management",
+      "base_costs": 720,
+      "hourly_rate": 70,
+      "hours_spend": 20,
+      "interval": "one-time",
+      "billing": false,
+      "start_date": "2024-01-01",
+      "end_date": "2027-12-31"
+    },
+    {
+      "contract": "CN-0004",
+      "contract_position_number": "CN-0004-POS-01",
+      "short_description": "Rate card 1 for CN-0004.",
+      "description": "Position 1 of the Helpdesk Support - Google contract.",
+      "order_number": "PO-0004-1",
+      "project": "Helpdesk Support",
+      "base_costs": 630,
+      "hourly_rate": 60,
+      "hours_spend": 15,
+      "interval": "one-time",
+      "billing": true,
+      "start_date": "2022-01-01",
+      "end_date": "2025-12-31"
+    },
+    {
+      "contract": "CN-0004",
+      "contract_position_number": "CN-0004-POS-02",
+      "short_description": "Rate card 2 for CN-0004.",
+      "description": "Position 2 of the Helpdesk Support - Google contract.",
+      "order_number": "PO-0004-2",
+      "project": "Helpdesk Support",
+      "base_costs": 730,
+      "hourly_rate": 70,
+      "hours_spend": 20,
+      "interval": "others",
+      "billing": false,
+      "start_date": "2022-01-01",
+      "end_date": "2025-12-31"
+    },
+    {
+      "contract": "CN-0005",
+      "contract_position_number": "CN-0005-POS-01",
+      "short_description": "Rate card 1 for CN-0005.",
+      "description": "Position 1 of the Identity & Access Management - Amazon contract.",
+      "order_number": "PO-0005-1",
+      "project": "Identity & Access Management",
+      "base_costs": 640,
+      "hourly_rate": 60,
+      "hours_spend": 15,
+      "interval": "others",
+      "billing": true,
+      "start_date": "2023-01-01",
+      "end_date": "2026-12-31"
+    },
+    {
+      "contract": "CN-0005",
+      "contract_position_number": "CN-0005-POS-02",
+      "short_description": "Rate card 2 for CN-0005.",
+      "description": "Position 2 of the Identity & Access Management - Amazon contract.",
+      "order_number": "PO-0005-2",
+      "project": "Identity & Access Management",
+      "base_costs": 740,
+      "hourly_rate": 70,
+      "hours_spend": 20,
+      "interval": "monthly",
+      "billing": false,
+      "start_date": "2023-01-01",
+      "end_date": "2026-12-31"
+    },
+    {
+      "contract": "CN-0006",
+      "contract_position_number": "CN-0006-POS-01",
+      "short_description": "Rate card 1 for CN-0006.",
+      "description": "Position 1 of the Video Conferencing - Microsoft contract.",
+      "order_number": "PO-0006-1",
+      "project": "Video Conferencing",
+      "base_costs": 650,
+      "hourly_rate": 60,
+      "hours_spend": 15,
+      "interval": "monthly",
+      "billing": true,
+      "start_date": "2024-01-01",
+      "end_date": "2027-12-31"
+    },
+    {
+      "contract": "CN-0006",
+      "contract_position_number": "CN-0006-POS-02",
+      "short_description": "Rate card 2 for CN-0006.",
+      "description": "Position 2 of the Video Conferencing - Microsoft contract.",
+      "order_number": "PO-0006-2",
+      "project": "Video Conferencing",
+      "base_costs": 750,
+      "hourly_rate": 70,
+      "hours_spend": 20,
+      "interval": "one-time",
+      "billing": false,
+      "start_date": "2024-01-01",
+      "end_date": "2027-12-31"
+    },
+    {
+      "contract": "CN-0007",
+      "contract_position_number": "CN-0007-POS-01",
+      "short_description": "Rate card 1 for CN-0007.",
+      "description": "Position 1 of the File Sharing & Collaboration - IBM contract.",
+      "order_number": "PO-0007-1",
+      "project": "File Sharing & Collaboration",
+      "base_costs": 660,
+      "hourly_rate": 60,
+      "hours_spend": 15,
+      "interval": "one-time",
+      "billing": true,
+      "start_date": "2022-01-01",
+      "end_date": "2025-12-31"
+    },
+    {
+      "contract": "CN-0007",
+      "contract_position_number": "CN-0007-POS-02",
+      "short_description": "Rate card 2 for CN-0007.",
+      "description": "Position 2 of the File Sharing & Collaboration - IBM contract.",
+      "order_number": "PO-0007-2",
+      "project": "File Sharing & Collaboration",
+      "base_costs": 760,
+      "hourly_rate": 70,
+      "hours_spend": 20,
+      "interval": "others",
+      "billing": false,
+      "start_date": "2022-01-01",
+      "end_date": "2025-12-31"
+    },
+    {
+      "contract": "CN-0008",
+      "contract_position_number": "CN-0008-POS-01",
+      "short_description": "Rate card 1 for CN-0008.",
+      "description": "Position 1 of the Mobile Device Management - Oracle contract.",
+      "order_number": "PO-0008-1",
+      "project": "Mobile Device Management",
+      "base_costs": 670,
+      "hourly_rate": 60,
+      "hours_spend": 15,
+      "interval": "others",
+      "billing": true,
+      "start_date": "2023-01-01",
+      "end_date": "2026-12-31"
+    },
+    {
+      "contract": "CN-0008",
+      "contract_position_number": "CN-0008-POS-02",
+      "short_description": "Rate card 2 for CN-0008.",
+      "description": "Position 2 of the Mobile Device Management - Oracle contract.",
+      "order_number": "PO-0008-2",
+      "project": "Mobile Device Management",
+      "base_costs": 770,
+      "hourly_rate": 70,
+      "hours_spend": 20,
+      "interval": "monthly",
+      "billing": false,
+      "start_date": "2023-01-01",
+      "end_date": "2026-12-31"
+    },
+    {
+      "contract": "CN-0009",
+      "contract_position_number": "CN-0009-POS-01",
+      "short_description": "Rate card 1 for CN-0009.",
+      "description": "Position 1 of the Print Services - Siemens contract.",
+      "order_number": "PO-0009-1",
+      "project": "Print Services",
+      "base_costs": 680,
+      "hourly_rate": 60,
+      "hours_spend": 15,
+      "interval": "monthly",
+      "billing": true,
+      "start_date": "2024-01-01",
+      "end_date": "2027-12-31"
+    },
+    {
+      "contract": "CN-0009",
+      "contract_position_number": "CN-0009-POS-02",
+      "short_description": "Rate card 2 for CN-0009.",
+      "description": "Position 2 of the Print Services - Siemens contract.",
+      "order_number": "PO-0009-2",
+      "project": "Print Services",
+      "base_costs": 780,
+      "hourly_rate": 70,
+      "hours_spend": 20,
+      "interval": "one-time",
+      "billing": false,
+      "start_date": "2024-01-01",
+      "end_date": "2027-12-31"
+    },
+    {
+      "contract": "CN-0010",
+      "contract_position_number": "CN-0010-POS-01",
+      "short_description": "Rate card 1 for CN-0010.",
+      "description": "Position 1 of the Virtual Desktop Infrastructure - BMW contract.",
+      "order_number": "PO-0010-1",
+      "project": "Virtual Desktop Infrastructure",
+      "base_costs": 690,
+      "hourly_rate": 60,
+      "hours_spend": 15,
+      "interval": "one-time",
+      "billing": true,
+      "start_date": "2022-01-01",
+      "end_date": "2025-12-31"
+    },
+    {
+      "contract": "CN-0010",
+      "contract_position_number": "CN-0010-POS-02",
+      "short_description": "Rate card 2 for CN-0010.",
+      "description": "Position 2 of the Virtual Desktop Infrastructure - BMW contract.",
+      "order_number": "PO-0010-2",
+      "project": "Virtual Desktop Infrastructure",
+      "base_costs": 790,
+      "hourly_rate": 70,
+      "hours_spend": 20,
+      "interval": "others",
+      "billing": false,
+      "start_date": "2022-01-01",
+      "end_date": "2025-12-31"
+    },
+    {
+      "contract": "CN-0011",
+      "contract_position_number": "CN-0011-POS-01",
+      "short_description": "Rate card 1 for CN-0011.",
+      "description": "Position 1 of the Cloud Backup - Volkswagen contract.",
+      "order_number": "PO-0011-1",
+      "project": "Cloud Backup",
+      "base_costs": 700,
+      "hourly_rate": 60,
+      "hours_spend": 15,
+      "interval": "others",
+      "billing": true,
+      "start_date": "2023-01-01",
+      "end_date": "2026-12-31"
+    },
+    {
+      "contract": "CN-0011",
+      "contract_position_number": "CN-0011-POS-02",
+      "short_description": "Rate card 2 for CN-0011.",
+      "description": "Position 2 of the Cloud Backup - Volkswagen contract.",
+      "order_number": "PO-0011-2",
+      "project": "Cloud Backup",
+      "base_costs": 800,
+      "hourly_rate": 70,
+      "hours_spend": 20,
+      "interval": "monthly",
+      "billing": false,
+      "start_date": "2023-01-01",
+      "end_date": "2026-12-31"
+    },
+    {
+      "contract": "CN-0012",
+      "contract_position_number": "CN-0012-POS-01",
+      "short_description": "Rate card 1 for CN-0012.",
+      "description": "Position 1 of the Disaster Recovery - Deutsche Bank contract.",
+      "order_number": "PO-0012-1",
+      "project": "Disaster Recovery",
+      "base_costs": 710,
+      "hourly_rate": 60,
+      "hours_spend": 15,
+      "interval": "monthly",
+      "billing": true,
+      "start_date": "2024-01-01",
+      "end_date": "2027-12-31"
+    },
+    {
+      "contract": "CN-0012",
+      "contract_position_number": "CN-0012-POS-02",
+      "short_description": "Rate card 2 for CN-0012.",
+      "description": "Position 2 of the Disaster Recovery - Deutsche Bank contract.",
+      "order_number": "PO-0012-2",
+      "project": "Disaster Recovery",
+      "base_costs": 810,
+      "hourly_rate": 70,
+      "hours_spend": 20,
+      "interval": "one-time",
+      "billing": false,
+      "start_date": "2024-01-01",
+      "end_date": "2027-12-31"
+    },
+    {
+      "contract": "CN-0013",
+      "contract_position_number": "CN-0013-POS-01",
+      "short_description": "Rate card 1 for CN-0013.",
+      "description": "Position 1 of the Network Security - Allianz contract.",
+      "order_number": "PO-0013-1",
+      "project": "Network Security",
+      "base_costs": 720,
+      "hourly_rate": 60,
+      "hours_spend": 15,
+      "interval": "one-time",
+      "billing": true,
+      "start_date": "2022-01-01",
+      "end_date": "2025-12-31"
+    },
+    {
+      "contract": "CN-0013",
+      "contract_position_number": "CN-0013-POS-02",
+      "short_description": "Rate card 2 for CN-0013.",
+      "description": "Position 2 of the Network Security - Allianz contract.",
+      "order_number": "PO-0013-2",
+      "project": "Network Security",
+      "base_costs": 820,
+      "hourly_rate": 70,
+      "hours_spend": 20,
+      "interval": "others",
+      "billing": false,
+      "start_date": "2022-01-01",
+      "end_date": "2025-12-31"
+    },
+    {
+      "contract": "CN-0014",
+      "contract_position_number": "CN-0014-POS-01",
+      "short_description": "Rate card 1 for CN-0014.",
+      "description": "Position 1 of the Database Hosting - Adidas contract.",
+      "order_number": "PO-0014-1",
+      "project": "Database Hosting",
+      "base_costs": 730,
+      "hourly_rate": 60,
+      "hours_spend": 15,
+      "interval": "others",
+      "billing": true,
+      "start_date": "2023-01-01",
+      "end_date": "2026-12-31"
+    },
+    {
+      "contract": "CN-0014",
+      "contract_position_number": "CN-0014-POS-02",
+      "short_description": "Rate card 2 for CN-0014.",
+      "description": "Position 2 of the Database Hosting - Adidas contract.",
+      "order_number": "PO-0014-2",
+      "project": "Database Hosting",
+      "base_costs": 830,
+      "hourly_rate": 70,
+      "hours_spend": 20,
+      "interval": "monthly",
+      "billing": false,
+      "start_date": "2023-01-01",
+      "end_date": "2026-12-31"
+    },
+    {
+      "contract": "CN-0015",
+      "contract_position_number": "CN-0015-POS-01",
+      "short_description": "Rate card 1 for CN-0015.",
+      "description": "Position 1 of the Load Balancing - Puma contract.",
+      "order_number": "PO-0015-1",
+      "project": "Load Balancing",
+      "base_costs": 740,
+      "hourly_rate": 60,
+      "hours_spend": 15,
+      "interval": "monthly",
+      "billing": true,
+      "start_date": "2024-01-01",
+      "end_date": "2027-12-31"
+    },
+    {
+      "contract": "CN-0015",
+      "contract_position_number": "CN-0015-POS-02",
+      "short_description": "Rate card 2 for CN-0015.",
+      "description": "Position 2 of the Load Balancing - Puma contract.",
+      "order_number": "PO-0015-2",
+      "project": "Load Balancing",
+      "base_costs": 840,
+      "hourly_rate": 70,
+      "hours_spend": 20,
+      "interval": "one-time",
+      "billing": false,
+      "start_date": "2024-01-01",
+      "end_date": "2027-12-31"
+    },
+    {
+      "contract": "CN-0016",
+      "contract_position_number": "CN-0016-POS-01",
+      "short_description": "Rate card 1 for CN-0016.",
+      "description": "Position 1 of the Container Orchestration - Nike contract.",
+      "order_number": "PO-0016-1",
+      "project": "Container Orchestration",
+      "base_costs": 750,
+      "hourly_rate": 60,
+      "hours_spend": 15,
+      "interval": "one-time",
+      "billing": true,
+      "start_date": "2022-01-01",
+      "end_date": "2025-12-31"
+    },
+    {
+      "contract": "CN-0016",
+      "contract_position_number": "CN-0016-POS-02",
+      "short_description": "Rate card 2 for CN-0016.",
+      "description": "Position 2 of the Container Orchestration - Nike contract.",
+      "order_number": "PO-0016-2",
+      "project": "Container Orchestration",
+      "base_costs": 850,
+      "hourly_rate": 70,
+      "hours_spend": 20,
+      "interval": "others",
+      "billing": false,
+      "start_date": "2022-01-01",
+      "end_date": "2025-12-31"
+    },
+    {
+      "contract": "CN-0017",
+      "contract_position_number": "CN-0017-POS-01",
+      "short_description": "Rate card 1 for CN-0017.",
+      "description": "Position 1 of the Data Analytics Platform - Samsung contract.",
+      "order_number": "PO-0017-1",
+      "project": "Data Analytics Platform",
+      "base_costs": 760,
+      "hourly_rate": 60,
+      "hours_spend": 15,
+      "interval": "others",
+      "billing": true,
+      "start_date": "2023-01-01",
+      "end_date": "2026-12-31"
+    },
+    {
+      "contract": "CN-0017",
+      "contract_position_number": "CN-0017-POS-02",
+      "short_description": "Rate card 2 for CN-0017.",
+      "description": "Position 2 of the Data Analytics Platform - Samsung contract.",
+      "order_number": "PO-0017-2",
+      "project": "Data Analytics Platform",
+      "base_costs": 860,
+      "hourly_rate": 70,
+      "hours_spend": 20,
+      "interval": "monthly",
+      "billing": false,
+      "start_date": "2023-01-01",
+      "end_date": "2026-12-31"
+    },
+    {
+      "contract": "CN-0018",
+      "contract_position_number": "CN-0018-POS-01",
+      "short_description": "Rate card 1 for CN-0018.",
+      "description": "Position 1 of the Storage as a Service - Sony contract.",
+      "order_number": "PO-0018-1",
+      "project": "Storage as a Service",
+      "base_costs": 770,
+      "hourly_rate": 60,
+      "hours_spend": 15,
+      "interval": "monthly",
+      "billing": true,
+      "start_date": "2024-01-01",
+      "end_date": "2027-12-31"
+    },
+    {
+      "contract": "CN-0018",
+      "contract_position_number": "CN-0018-POS-02",
+      "short_description": "Rate card 2 for CN-0018.",
+      "description": "Position 2 of the Storage as a Service - Sony contract.",
+      "order_number": "PO-0018-2",
+      "project": "Storage as a Service",
+      "base_costs": 870,
+      "hourly_rate": 70,
+      "hours_spend": 20,
+      "interval": "one-time",
+      "billing": false,
+      "start_date": "2024-01-01",
+      "end_date": "2027-12-31"
+    },
+    {
+      "contract": "CN-0019",
+      "contract_position_number": "CN-0019-POS-01",
+      "short_description": "Rate card 1 for CN-0019.",
+      "description": "Position 1 of the Monitoring & Observability - Toyota contract.",
+      "order_number": "PO-0019-1",
+      "project": "Monitoring & Observability",
+      "base_costs": 780,
+      "hourly_rate": 60,
+      "hours_spend": 15,
+      "interval": "one-time",
+      "billing": true,
+      "start_date": "2022-01-01",
+      "end_date": "2025-12-31"
+    },
+    {
+      "contract": "CN-0019",
+      "contract_position_number": "CN-0019-POS-02",
+      "short_description": "Rate card 2 for CN-0019.",
+      "description": "Position 2 of the Monitoring & Observability - Toyota contract.",
+      "order_number": "PO-0019-2",
+      "project": "Monitoring & Observability",
+      "base_costs": 880,
+      "hourly_rate": 70,
+      "hours_spend": 20,
+      "interval": "others",
+      "billing": false,
+      "start_date": "2022-01-01",
+      "end_date": "2025-12-31"
+    },
+    {
+      "contract": "CN-0020",
+      "contract_position_number": "CN-0020-POS-01",
+      "short_description": "Rate card 1 for CN-0020.",
+      "description": "Position 1 of the DNS & DHCP Management - Shell contract.",
+      "order_number": "PO-0020-1",
+      "project": "DNS & DHCP Management",
+      "base_costs": 790,
+      "hourly_rate": 60,
+      "hours_spend": 15,
+      "interval": "others",
+      "billing": true,
+      "start_date": "2023-01-01",
+      "end_date": "2026-12-31"
+    },
+    {
+      "contract": "CN-0020",
+      "contract_position_number": "CN-0020-POS-02",
+      "short_description": "Rate card 2 for CN-0020.",
+      "description": "Position 2 of the DNS & DHCP Management - Shell contract.",
+      "order_number": "PO-0020-2",
+      "project": "DNS & DHCP Management",
+      "base_costs": 890,
+      "hourly_rate": 70,
+      "hours_spend": 20,
+      "interval": "monthly",
+      "billing": false,
+      "start_date": "2023-01-01",
+      "end_date": "2026-12-31"
+    },
+    {
+      "contract": "CN-0021",
+      "contract_position_number": "CN-0021-POS-01",
+      "short_description": "Rate card 1 for CN-0021.",
+      "description": "Position 1 of the Managed Email - Volkswagen contract.",
+      "order_number": "PO-0021-1",
+      "project": "Managed Email",
+      "base_costs": 800,
+      "hourly_rate": 60,
+      "hours_spend": 15,
+      "interval": "monthly",
+      "billing": true,
+      "start_date": "2024-01-01",
+      "end_date": "2027-12-31"
+    },
+    {
+      "contract": "CN-0021",
+      "contract_position_number": "CN-0021-POS-02",
+      "short_description": "Rate card 2 for CN-0021.",
+      "description": "Position 2 of the Managed Email - Volkswagen contract.",
+      "order_number": "PO-0021-2",
+      "project": "Managed Email",
+      "base_costs": 900,
+      "hourly_rate": 70,
+      "hours_spend": 20,
+      "interval": "one-time",
+      "billing": false,
+      "start_date": "2024-01-01",
+      "end_date": "2027-12-31"
+    },
+    {
+      "contract": "CN-0022",
+      "contract_position_number": "CN-0022-POS-01",
+      "short_description": "Rate card 1 for CN-0022.",
+      "description": "Position 1 of the Unified Communications - Deutsche Bank contract.",
+      "order_number": "PO-0022-1",
+      "project": "Unified Communications",
+      "base_costs": 810,
+      "hourly_rate": 60,
+      "hours_spend": 15,
+      "interval": "one-time",
+      "billing": true,
+      "start_date": "2022-01-01",
+      "end_date": "2025-12-31"
+    },
+    {
+      "contract": "CN-0022",
+      "contract_position_number": "CN-0022-POS-02",
+      "short_description": "Rate card 2 for CN-0022.",
+      "description": "Position 2 of the Unified Communications - Deutsche Bank contract.",
+      "order_number": "PO-0022-2",
+      "project": "Unified Communications",
+      "base_costs": 910,
+      "hourly_rate": 70,
+      "hours_spend": 20,
+      "interval": "others",
+      "billing": false,
+      "start_date": "2022-01-01",
+      "end_date": "2025-12-31"
+    },
+    {
+      "contract": "CN-0023",
+      "contract_position_number": "CN-0023-POS-01",
+      "short_description": "Rate card 1 for CN-0023.",
+      "description": "Position 1 of the Endpoint Management - Allianz contract.",
+      "order_number": "PO-0023-1",
+      "project": "Endpoint Management",
+      "base_costs": 820,
+      "hourly_rate": 60,
+      "hours_spend": 15,
+      "interval": "others",
+      "billing": true,
+      "start_date": "2023-01-01",
+      "end_date": "2026-12-31"
+    },
+    {
+      "contract": "CN-0023",
+      "contract_position_number": "CN-0023-POS-02",
+      "short_description": "Rate card 2 for CN-0023.",
+      "description": "Position 2 of the Endpoint Management - Allianz contract.",
+      "order_number": "PO-0023-2",
+      "project": "Endpoint Management",
+      "base_costs": 920,
+      "hourly_rate": 70,
+      "hours_spend": 20,
+      "interval": "monthly",
+      "billing": false,
+      "start_date": "2023-01-01",
+      "end_date": "2026-12-31"
+    },
+    {
+      "contract": "CN-0024",
+      "contract_position_number": "CN-0024-POS-01",
+      "short_description": "Rate card 1 for CN-0024.",
+      "description": "Position 1 of the Helpdesk Support - Adidas contract.",
+      "order_number": "PO-0024-1",
+      "project": "Helpdesk Support",
+      "base_costs": 830,
+      "hourly_rate": 60,
+      "hours_spend": 15,
+      "interval": "monthly",
+      "billing": true,
+      "start_date": "2024-01-01",
+      "end_date": "2027-12-31"
+    },
+    {
+      "contract": "CN-0024",
+      "contract_position_number": "CN-0024-POS-02",
+      "short_description": "Rate card 2 for CN-0024.",
+      "description": "Position 2 of the Helpdesk Support - Adidas contract.",
+      "order_number": "PO-0024-2",
+      "project": "Helpdesk Support",
+      "base_costs": 930,
+      "hourly_rate": 70,
+      "hours_spend": 20,
+      "interval": "one-time",
+      "billing": false,
+      "start_date": "2024-01-01",
+      "end_date": "2027-12-31"
+    },
+    {
+      "contract": "CN-0025",
+      "contract_position_number": "CN-0025-POS-01",
+      "short_description": "Rate card 1 for CN-0025.",
+      "description": "Position 1 of the Identity & Access Management - Puma contract.",
+      "order_number": "PO-0025-1",
+      "project": "Identity & Access Management",
+      "base_costs": 840,
+      "hourly_rate": 60,
+      "hours_spend": 15,
+      "interval": "one-time",
+      "billing": true,
+      "start_date": "2022-01-01",
+      "end_date": "2025-12-31"
+    },
+    {
+      "contract": "CN-0025",
+      "contract_position_number": "CN-0025-POS-02",
+      "short_description": "Rate card 2 for CN-0025.",
+      "description": "Position 2 of the Identity & Access Management - Puma contract.",
+      "order_number": "PO-0025-2",
+      "project": "Identity & Access Management",
+      "base_costs": 940,
+      "hourly_rate": 70,
+      "hours_spend": 20,
+      "interval": "others",
+      "billing": false,
+      "start_date": "2022-01-01",
+      "end_date": "2025-12-31"
+    },
+    {
+      "contract": "CN-0026",
+      "contract_position_number": "CN-0026-POS-01",
+      "short_description": "Rate card 1 for CN-0026.",
+      "description": "Position 1 of the Video Conferencing - Nike contract.",
+      "order_number": "PO-0026-1",
+      "project": "Video Conferencing",
+      "base_costs": 850,
+      "hourly_rate": 60,
+      "hours_spend": 15,
+      "interval": "others",
+      "billing": true,
+      "start_date": "2023-01-01",
+      "end_date": "2026-12-31"
+    },
+    {
+      "contract": "CN-0026",
+      "contract_position_number": "CN-0026-POS-02",
+      "short_description": "Rate card 2 for CN-0026.",
+      "description": "Position 2 of the Video Conferencing - Nike contract.",
+      "order_number": "PO-0026-2",
+      "project": "Video Conferencing",
+      "base_costs": 950,
+      "hourly_rate": 70,
+      "hours_spend": 20,
+      "interval": "monthly",
+      "billing": false,
+      "start_date": "2023-01-01",
+      "end_date": "2026-12-31"
+    },
+    {
+      "contract": "CN-0027",
+      "contract_position_number": "CN-0027-POS-01",
+      "short_description": "Rate card 1 for CN-0027.",
+      "description": "Position 1 of the File Sharing & Collaboration - Samsung contract.",
+      "order_number": "PO-0027-1",
+      "project": "File Sharing & Collaboration",
+      "base_costs": 860,
+      "hourly_rate": 60,
+      "hours_spend": 15,
+      "interval": "monthly",
+      "billing": true,
+      "start_date": "2024-01-01",
+      "end_date": "2027-12-31"
+    },
+    {
+      "contract": "CN-0027",
+      "contract_position_number": "CN-0027-POS-02",
+      "short_description": "Rate card 2 for CN-0027.",
+      "description": "Position 2 of the File Sharing & Collaboration - Samsung contract.",
+      "order_number": "PO-0027-2",
+      "project": "File Sharing & Collaboration",
+      "base_costs": 960,
+      "hourly_rate": 70,
+      "hours_spend": 20,
+      "interval": "one-time",
+      "billing": false,
+      "start_date": "2024-01-01",
+      "end_date": "2027-12-31"
+    },
+    {
+      "contract": "CN-0028",
+      "contract_position_number": "CN-0028-POS-01",
+      "short_description": "Rate card 1 for CN-0028.",
+      "description": "Position 1 of the Mobile Device Management - Sony contract.",
+      "order_number": "PO-0028-1",
+      "project": "Mobile Device Management",
+      "base_costs": 870,
+      "hourly_rate": 60,
+      "hours_spend": 15,
+      "interval": "one-time",
+      "billing": true,
+      "start_date": "2022-01-01",
+      "end_date": "2025-12-31"
+    },
+    {
+      "contract": "CN-0028",
+      "contract_position_number": "CN-0028-POS-02",
+      "short_description": "Rate card 2 for CN-0028.",
+      "description": "Position 2 of the Mobile Device Management - Sony contract.",
+      "order_number": "PO-0028-2",
+      "project": "Mobile Device Management",
+      "base_costs": 970,
+      "hourly_rate": 70,
+      "hours_spend": 20,
+      "interval": "others",
+      "billing": false,
+      "start_date": "2022-01-01",
+      "end_date": "2025-12-31"
+    },
+    {
+      "contract": "CN-0029",
+      "contract_position_number": "CN-0029-POS-01",
+      "short_description": "Rate card 1 for CN-0029.",
+      "description": "Position 1 of the Print Services - Toyota contract.",
+      "order_number": "PO-0029-1",
+      "project": "Print Services",
+      "base_costs": 880,
+      "hourly_rate": 60,
+      "hours_spend": 15,
+      "interval": "others",
+      "billing": true,
+      "start_date": "2023-01-01",
+      "end_date": "2026-12-31"
+    },
+    {
+      "contract": "CN-0029",
+      "contract_position_number": "CN-0029-POS-02",
+      "short_description": "Rate card 2 for CN-0029.",
+      "description": "Position 2 of the Print Services - Toyota contract.",
+      "order_number": "PO-0029-2",
+      "project": "Print Services",
+      "base_costs": 980,
+      "hourly_rate": 70,
+      "hours_spend": 20,
+      "interval": "monthly",
+      "billing": false,
+      "start_date": "2023-01-01",
+      "end_date": "2026-12-31"
+    },
+    {
+      "contract": "CN-0030",
+      "contract_position_number": "CN-0030-POS-01",
+      "short_description": "Rate card 1 for CN-0030.",
+      "description": "Position 1 of the Virtual Desktop Infrastructure - Shell contract.",
+      "order_number": "PO-0030-1",
+      "project": "Virtual Desktop Infrastructure",
+      "base_costs": 890,
+      "hourly_rate": 60,
+      "hours_spend": 15,
+      "interval": "monthly",
+      "billing": true,
+      "start_date": "2024-01-01",
+      "end_date": "2027-12-31"
+    },
+    {
+      "contract": "CN-0030",
+      "contract_position_number": "CN-0030-POS-02",
+      "short_description": "Rate card 2 for CN-0030.",
+      "description": "Position 2 of the Virtual Desktop Infrastructure - Shell contract.",
+      "order_number": "PO-0030-2",
+      "project": "Virtual Desktop Infrastructure",
+      "base_costs": 990,
+      "hourly_rate": 70,
+      "hours_spend": 20,
+      "interval": "one-time",
+      "billing": false,
+      "start_date": "2024-01-01",
+      "end_date": "2027-12-31"
+    },
+    {
+      "contract": "CN-0031",
+      "contract_position_number": "CN-0031-POS-01",
+      "short_description": "Rate card 1 for CN-0031.",
+      "description": "Position 1 of the Cloud Backup - Coca Cola contract.",
+      "order_number": "PO-0031-1",
+      "project": "Cloud Backup",
+      "base_costs": 900,
+      "hourly_rate": 60,
+      "hours_spend": 15,
+      "interval": "one-time",
+      "billing": true,
+      "start_date": "2022-01-01",
+      "end_date": "2025-12-31"
+    },
+    {
+      "contract": "CN-0031",
+      "contract_position_number": "CN-0031-POS-02",
+      "short_description": "Rate card 2 for CN-0031.",
+      "description": "Position 2 of the Cloud Backup - Coca Cola contract.",
+      "order_number": "PO-0031-2",
+      "project": "Cloud Backup",
+      "base_costs": 1000,
+      "hourly_rate": 70,
+      "hours_spend": 20,
+      "interval": "others",
+      "billing": false,
+      "start_date": "2022-01-01",
+      "end_date": "2025-12-31"
+    },
+    {
+      "contract": "CN-0032",
+      "contract_position_number": "CN-0032-POS-01",
+      "short_description": "Rate card 1 for CN-0032.",
+      "description": "Position 1 of the Disaster Recovery - Cisco contract.",
+      "order_number": "PO-0032-1",
+      "project": "Disaster Recovery",
+      "base_costs": 910,
+      "hourly_rate": 60,
+      "hours_spend": 15,
+      "interval": "others",
+      "billing": true,
+      "start_date": "2023-01-01",
+      "end_date": "2026-12-31"
+    },
+    {
+      "contract": "CN-0032",
+      "contract_position_number": "CN-0032-POS-02",
+      "short_description": "Rate card 2 for CN-0032.",
+      "description": "Position 2 of the Disaster Recovery - Cisco contract.",
+      "order_number": "PO-0032-2",
+      "project": "Disaster Recovery",
+      "base_costs": 1010,
+      "hourly_rate": 70,
+      "hours_spend": 20,
+      "interval": "monthly",
+      "billing": false,
+      "start_date": "2023-01-01",
+      "end_date": "2026-12-31"
+    },
+    {
+      "contract": "CN-0033",
+      "contract_position_number": "CN-0033-POS-01",
+      "short_description": "Rate card 1 for CN-0033.",
+      "description": "Position 1 of the Network Security - SAP contract.",
+      "order_number": "PO-0033-1",
+      "project": "Network Security",
+      "base_costs": 920,
+      "hourly_rate": 60,
+      "hours_spend": 15,
+      "interval": "monthly",
+      "billing": true,
+      "start_date": "2024-01-01",
+      "end_date": "2027-12-31"
+    },
+    {
+      "contract": "CN-0033",
+      "contract_position_number": "CN-0033-POS-02",
+      "short_description": "Rate card 2 for CN-0033.",
+      "description": "Position 2 of the Network Security - SAP contract.",
+      "order_number": "PO-0033-2",
+      "project": "Network Security",
+      "base_costs": 1020,
+      "hourly_rate": 70,
+      "hours_spend": 20,
+      "interval": "one-time",
+      "billing": false,
+      "start_date": "2024-01-01",
+      "end_date": "2027-12-31"
+    },
+    {
+      "contract": "CN-0034",
+      "contract_position_number": "CN-0034-POS-01",
+      "short_description": "Rate card 1 for CN-0034.",
+      "description": "Position 1 of the Database Hosting - Google contract.",
+      "order_number": "PO-0034-1",
+      "project": "Database Hosting",
+      "base_costs": 930,
+      "hourly_rate": 60,
+      "hours_spend": 15,
+      "interval": "one-time",
+      "billing": true,
+      "start_date": "2022-01-01",
+      "end_date": "2025-12-31"
+    },
+    {
+      "contract": "CN-0034",
+      "contract_position_number": "CN-0034-POS-02",
+      "short_description": "Rate card 2 for CN-0034.",
+      "description": "Position 2 of the Database Hosting - Google contract.",
+      "order_number": "PO-0034-2",
+      "project": "Database Hosting",
+      "base_costs": 1030,
+      "hourly_rate": 70,
+      "hours_spend": 20,
+      "interval": "others",
+      "billing": false,
+      "start_date": "2022-01-01",
+      "end_date": "2025-12-31"
+    },
+    {
+      "contract": "CN-0035",
+      "contract_position_number": "CN-0035-POS-01",
+      "short_description": "Rate card 1 for CN-0035.",
+      "description": "Position 1 of the Load Balancing - Amazon contract.",
+      "order_number": "PO-0035-1",
+      "project": "Load Balancing",
+      "base_costs": 940,
+      "hourly_rate": 60,
+      "hours_spend": 15,
+      "interval": "others",
+      "billing": true,
+      "start_date": "2023-01-01",
+      "end_date": "2026-12-31"
+    },
+    {
+      "contract": "CN-0035",
+      "contract_position_number": "CN-0035-POS-02",
+      "short_description": "Rate card 2 for CN-0035.",
+      "description": "Position 2 of the Load Balancing - Amazon contract.",
+      "order_number": "PO-0035-2",
+      "project": "Load Balancing",
+      "base_costs": 1040,
+      "hourly_rate": 70,
+      "hours_spend": 20,
+      "interval": "monthly",
+      "billing": false,
+      "start_date": "2023-01-01",
+      "end_date": "2026-12-31"
+    },
+    {
+      "contract": "CN-0036",
+      "contract_position_number": "CN-0036-POS-01",
+      "short_description": "Rate card 1 for CN-0036.",
+      "description": "Position 1 of the Container Orchestration - Microsoft contract.",
+      "order_number": "PO-0036-1",
+      "project": "Container Orchestration",
+      "base_costs": 950,
+      "hourly_rate": 60,
+      "hours_spend": 15,
+      "interval": "monthly",
+      "billing": true,
+      "start_date": "2024-01-01",
+      "end_date": "2027-12-31"
+    },
+    {
+      "contract": "CN-0036",
+      "contract_position_number": "CN-0036-POS-02",
+      "short_description": "Rate card 2 for CN-0036.",
+      "description": "Position 2 of the Container Orchestration - Microsoft contract.",
+      "order_number": "PO-0036-2",
+      "project": "Container Orchestration",
+      "base_costs": 1050,
+      "hourly_rate": 70,
+      "hours_spend": 20,
+      "interval": "one-time",
+      "billing": false,
+      "start_date": "2024-01-01",
+      "end_date": "2027-12-31"
+    },
+    {
+      "contract": "CN-0037",
+      "contract_position_number": "CN-0037-POS-01",
+      "short_description": "Rate card 1 for CN-0037.",
+      "description": "Position 1 of the Data Analytics Platform - IBM contract.",
+      "order_number": "PO-0037-1",
+      "project": "Data Analytics Platform",
+      "base_costs": 960,
+      "hourly_rate": 60,
+      "hours_spend": 15,
+      "interval": "one-time",
+      "billing": true,
+      "start_date": "2022-01-01",
+      "end_date": "2025-12-31"
+    },
+    {
+      "contract": "CN-0037",
+      "contract_position_number": "CN-0037-POS-02",
+      "short_description": "Rate card 2 for CN-0037.",
+      "description": "Position 2 of the Data Analytics Platform - IBM contract.",
+      "order_number": "PO-0037-2",
+      "project": "Data Analytics Platform",
+      "base_costs": 1060,
+      "hourly_rate": 70,
+      "hours_spend": 20,
+      "interval": "others",
+      "billing": false,
+      "start_date": "2022-01-01",
+      "end_date": "2025-12-31"
+    },
+    {
+      "contract": "CN-0038",
+      "contract_position_number": "CN-0038-POS-01",
+      "short_description": "Rate card 1 for CN-0038.",
+      "description": "Position 1 of the Storage as a Service - Oracle contract.",
+      "order_number": "PO-0038-1",
+      "project": "Storage as a Service",
+      "base_costs": 970,
+      "hourly_rate": 60,
+      "hours_spend": 15,
+      "interval": "others",
+      "billing": true,
+      "start_date": "2023-01-01",
+      "end_date": "2026-12-31"
+    },
+    {
+      "contract": "CN-0038",
+      "contract_position_number": "CN-0038-POS-02",
+      "short_description": "Rate card 2 for CN-0038.",
+      "description": "Position 2 of the Storage as a Service - Oracle contract.",
+      "order_number": "PO-0038-2",
+      "project": "Storage as a Service",
+      "base_costs": 1070,
+      "hourly_rate": 70,
+      "hours_spend": 20,
+      "interval": "monthly",
+      "billing": false,
+      "start_date": "2023-01-01",
+      "end_date": "2026-12-31"
+    },
+    {
+      "contract": "CN-0039",
+      "contract_position_number": "CN-0039-POS-01",
+      "short_description": "Rate card 1 for CN-0039.",
+      "description": "Position 1 of the Monitoring & Observability - Siemens contract.",
+      "order_number": "PO-0039-1",
+      "project": "Monitoring & Observability",
+      "base_costs": 980,
+      "hourly_rate": 60,
+      "hours_spend": 15,
+      "interval": "monthly",
+      "billing": true,
+      "start_date": "2024-01-01",
+      "end_date": "2027-12-31"
+    },
+    {
+      "contract": "CN-0039",
+      "contract_position_number": "CN-0039-POS-02",
+      "short_description": "Rate card 2 for CN-0039.",
+      "description": "Position 2 of the Monitoring & Observability - Siemens contract.",
+      "order_number": "PO-0039-2",
+      "project": "Monitoring & Observability",
+      "base_costs": 1080,
+      "hourly_rate": 70,
+      "hours_spend": 20,
+      "interval": "one-time",
+      "billing": false,
+      "start_date": "2024-01-01",
+      "end_date": "2027-12-31"
+    },
+    {
+      "contract": "CN-0040",
+      "contract_position_number": "CN-0040-POS-01",
+      "short_description": "Rate card 1 for CN-0040.",
+      "description": "Position 1 of the DNS & DHCP Management - BMW contract.",
+      "order_number": "PO-0040-1",
+      "project": "DNS & DHCP Management",
+      "base_costs": 990,
+      "hourly_rate": 60,
+      "hours_spend": 15,
+      "interval": "one-time",
+      "billing": true,
+      "start_date": "2022-01-01",
+      "end_date": "2025-12-31"
+    },
+    {
+      "contract": "CN-0040",
+      "contract_position_number": "CN-0040-POS-02",
+      "short_description": "Rate card 2 for CN-0040.",
+      "description": "Position 2 of the DNS & DHCP Management - BMW contract.",
+      "order_number": "PO-0040-2",
+      "project": "DNS & DHCP Management",
+      "base_costs": 1090,
+      "hourly_rate": 70,
+      "hours_spend": 20,
+      "interval": "others",
+      "billing": false,
+      "start_date": "2022-01-01",
+      "end_date": "2025-12-31"
+    }
+  ],
   "plugins/service-specification/service-offerings/": [
     {
       "name": "Managed Email - Coca Cola",
       "description": "Managed Email - Coca Cola",
       "lifecycle": "draft",
+      "contract": "CN-0001",
       "service": [
         "Digital Workplace Services"
       ],
@@ -3077,6 +5202,7 @@
       "name": "Unified Communications - Cisco",
       "description": "Unified Communications - Cisco",
       "lifecycle": "design",
+      "contract": "CN-0002",
       "service": [
         "Digital Workplace Services"
       ],
@@ -3109,6 +5235,7 @@
       "name": "Endpoint Management - SAP",
       "description": "Endpoint Management - SAP",
       "lifecycle": "build",
+      "contract": "CN-0003",
       "service": [
         "Digital Workplace Services"
       ],
@@ -3141,6 +5268,7 @@
       "name": "Helpdesk Support - Google",
       "description": "Helpdesk Support - Google",
       "lifecycle": "available",
+      "contract": "CN-0004",
       "service": [
         "Digital Workplace Services"
       ],
@@ -3173,6 +5301,7 @@
       "name": "Identity & Access Management - Amazon",
       "description": "Identity & Access Management - Amazon",
       "lifecycle": "operational",
+      "contract": "CN-0005",
       "service": [
         "Digital Workplace Services"
       ],
@@ -3205,6 +5334,7 @@
       "name": "Video Conferencing - Microsoft",
       "description": "Video Conferencing - Microsoft",
       "lifecycle": "in-maintenance",
+      "contract": "CN-0006",
       "service": [
         "Digital Workplace Services"
       ],
@@ -3237,6 +5367,7 @@
       "name": "File Sharing & Collaboration - IBM",
       "description": "File Sharing & Collaboration - IBM",
       "lifecycle": "end-of-support",
+      "contract": "CN-0007",
       "service": [
         "Digital Workplace Services"
       ],
@@ -3269,6 +5400,7 @@
       "name": "Mobile Device Management - Oracle",
       "description": "Mobile Device Management - Oracle",
       "lifecycle": "end-of-life",
+      "contract": "CN-0008",
       "service": [
         "Digital Workplace Services"
       ],
@@ -3301,6 +5433,7 @@
       "name": "Print Services - Siemens",
       "description": "Print Services - Siemens",
       "lifecycle": "expired",
+      "contract": "CN-0009",
       "service": [
         "Digital Workplace Services"
       ],
@@ -3333,6 +5466,7 @@
       "name": "Virtual Desktop Infrastructure - BMW",
       "description": "Virtual Desktop Infrastructure - BMW",
       "lifecycle": "decommissioned",
+      "contract": "CN-0010",
       "service": [
         "Digital Workplace Services"
       ],
@@ -3365,6 +5499,7 @@
       "name": "Cloud Backup - Volkswagen",
       "description": "Cloud Backup - Volkswagen",
       "lifecycle": "cancelled",
+      "contract": "CN-0011",
       "service": [
         "Cloud Infrastructure Services"
       ],
@@ -3397,6 +5532,7 @@
       "name": "Disaster Recovery - Deutsche Bank",
       "description": "Disaster Recovery - Deutsche Bank",
       "lifecycle": "draft",
+      "contract": "CN-0012",
       "service": [
         "Cloud Infrastructure Services"
       ],
@@ -3429,6 +5565,7 @@
       "name": "Network Security - Allianz",
       "description": "Network Security - Allianz",
       "lifecycle": "design",
+      "contract": "CN-0013",
       "service": [
         "Cloud Infrastructure Services"
       ],
@@ -3461,6 +5598,7 @@
       "name": "Database Hosting - Adidas",
       "description": "Database Hosting - Adidas",
       "lifecycle": "build",
+      "contract": "CN-0014",
       "service": [
         "Cloud Infrastructure Services"
       ],
@@ -3493,6 +5631,7 @@
       "name": "Load Balancing - Puma",
       "description": "Load Balancing - Puma",
       "lifecycle": "available",
+      "contract": "CN-0015",
       "service": [
         "Cloud Infrastructure Services"
       ],
@@ -3525,6 +5664,7 @@
       "name": "Container Orchestration - Nike",
       "description": "Container Orchestration - Nike",
       "lifecycle": "operational",
+      "contract": "CN-0016",
       "service": [
         "Cloud Infrastructure Services"
       ],
@@ -3557,6 +5697,7 @@
       "name": "Data Analytics Platform - Samsung",
       "description": "Data Analytics Platform - Samsung",
       "lifecycle": "in-maintenance",
+      "contract": "CN-0017",
       "service": [
         "Cloud Infrastructure Services"
       ],
@@ -3589,6 +5730,7 @@
       "name": "Storage as a Service - Sony",
       "description": "Storage as a Service - Sony",
       "lifecycle": "end-of-support",
+      "contract": "CN-0018",
       "service": [
         "Cloud Infrastructure Services"
       ],
@@ -3621,6 +5763,7 @@
       "name": "Monitoring & Observability - Toyota",
       "description": "Monitoring & Observability - Toyota",
       "lifecycle": "end-of-life",
+      "contract": "CN-0019",
       "service": [
         "Cloud Infrastructure Services"
       ],
@@ -3653,6 +5796,7 @@
       "name": "DNS & DHCP Management - Shell",
       "description": "DNS & DHCP Management - Shell",
       "lifecycle": "expired",
+      "contract": "CN-0020",
       "service": [
         "Cloud Infrastructure Services"
       ],
@@ -3685,6 +5829,7 @@
       "name": "Managed Email - Volkswagen",
       "description": "Managed Email - Volkswagen",
       "lifecycle": "decommissioned",
+      "contract": "CN-0021",
       "service": [
         "Digital Workplace Services"
       ],
@@ -3717,6 +5862,7 @@
       "name": "Unified Communications - Deutsche Bank",
       "description": "Unified Communications - Deutsche Bank",
       "lifecycle": "cancelled",
+      "contract": "CN-0022",
       "service": [
         "Digital Workplace Services"
       ],
@@ -3749,6 +5895,7 @@
       "name": "Endpoint Management - Allianz",
       "description": "Endpoint Management - Allianz",
       "lifecycle": "draft",
+      "contract": "CN-0023",
       "service": [
         "Digital Workplace Services"
       ],
@@ -3781,6 +5928,7 @@
       "name": "Helpdesk Support - Adidas",
       "description": "Helpdesk Support - Adidas",
       "lifecycle": "design",
+      "contract": "CN-0024",
       "service": [
         "Digital Workplace Services"
       ],
@@ -3813,6 +5961,7 @@
       "name": "Identity & Access Management - Puma",
       "description": "Identity & Access Management - Puma",
       "lifecycle": "build",
+      "contract": "CN-0025",
       "service": [
         "Digital Workplace Services"
       ],
@@ -3845,6 +5994,7 @@
       "name": "Video Conferencing - Nike",
       "description": "Video Conferencing - Nike",
       "lifecycle": "available",
+      "contract": "CN-0026",
       "service": [
         "Digital Workplace Services"
       ],
@@ -3877,6 +6027,7 @@
       "name": "File Sharing & Collaboration - Samsung",
       "description": "File Sharing & Collaboration - Samsung",
       "lifecycle": "operational",
+      "contract": "CN-0027",
       "service": [
         "Digital Workplace Services"
       ],
@@ -3909,6 +6060,7 @@
       "name": "Mobile Device Management - Sony",
       "description": "Mobile Device Management - Sony",
       "lifecycle": "in-maintenance",
+      "contract": "CN-0028",
       "service": [
         "Digital Workplace Services"
       ],
@@ -3941,6 +6093,7 @@
       "name": "Print Services - Toyota",
       "description": "Print Services - Toyota",
       "lifecycle": "end-of-support",
+      "contract": "CN-0029",
       "service": [
         "Digital Workplace Services"
       ],
@@ -3973,6 +6126,7 @@
       "name": "Virtual Desktop Infrastructure - Shell",
       "description": "Virtual Desktop Infrastructure - Shell",
       "lifecycle": "end-of-life",
+      "contract": "CN-0030",
       "service": [
         "Digital Workplace Services"
       ],
@@ -4005,6 +6159,7 @@
       "name": "Cloud Backup - Coca Cola",
       "description": "Cloud Backup - Coca Cola",
       "lifecycle": "expired",
+      "contract": "CN-0031",
       "service": [
         "Cloud Infrastructure Services"
       ],
@@ -4037,6 +6192,7 @@
       "name": "Disaster Recovery - Cisco",
       "description": "Disaster Recovery - Cisco",
       "lifecycle": "decommissioned",
+      "contract": "CN-0032",
       "service": [
         "Cloud Infrastructure Services"
       ],
@@ -4069,6 +6225,7 @@
       "name": "Network Security - SAP",
       "description": "Network Security - SAP",
       "lifecycle": "cancelled",
+      "contract": "CN-0033",
       "service": [
         "Cloud Infrastructure Services"
       ],
@@ -4101,6 +6258,7 @@
       "name": "Database Hosting - Google",
       "description": "Database Hosting - Google",
       "lifecycle": "draft",
+      "contract": "CN-0034",
       "service": [
         "Cloud Infrastructure Services"
       ],
@@ -4133,6 +6291,7 @@
       "name": "Load Balancing - Amazon",
       "description": "Load Balancing - Amazon",
       "lifecycle": "design",
+      "contract": "CN-0035",
       "service": [
         "Cloud Infrastructure Services"
       ],
@@ -4165,6 +6324,7 @@
       "name": "Container Orchestration - Microsoft",
       "description": "Container Orchestration - Microsoft",
       "lifecycle": "build",
+      "contract": "CN-0036",
       "service": [
         "Cloud Infrastructure Services"
       ],
@@ -4197,6 +6357,7 @@
       "name": "Data Analytics Platform - IBM",
       "description": "Data Analytics Platform - IBM",
       "lifecycle": "available",
+      "contract": "CN-0037",
       "service": [
         "Cloud Infrastructure Services"
       ],
@@ -4229,6 +6390,7 @@
       "name": "Storage as a Service - Oracle",
       "description": "Storage as a Service - Oracle",
       "lifecycle": "operational",
+      "contract": "CN-0038",
       "service": [
         "Cloud Infrastructure Services"
       ],
@@ -4261,6 +6423,7 @@
       "name": "Monitoring & Observability - Siemens",
       "description": "Monitoring & Observability - Siemens",
       "lifecycle": "in-maintenance",
+      "contract": "CN-0039",
       "service": [
         "Cloud Infrastructure Services"
       ],
@@ -4293,6 +6456,7 @@
       "name": "DNS & DHCP Management - BMW",
       "description": "DNS & DHCP Management - BMW",
       "lifecycle": "end-of-support",
+      "contract": "CN-0040",
       "service": [
         "Cloud Infrastructure Services"
       ],

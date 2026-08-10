@@ -24,9 +24,10 @@ earlier in the same run.
 File order in the JSON *is* creation order — an object referenced by a
 later entry (by slug, or by name for models with no slug, e.g. Contact,
 Device, Cluster, VirtualMachine, and the plugin's own Portfolio/Service/
-ServiceOffering/AppService) must be listed earlier in the file. JSON can't
-hold comments, so that ordering requirement — and the object graph itself —
-is documented here and in REFERENCE_FIELDS instead.
+ServiceOffering/AppService — or by contract_number for Contract, the one
+model with neither a slug nor a name) must be listed earlier in the file.
+JSON can't hold comments, so that ordering requirement — and the object
+graph itself — is documented here and in REFERENCE_FIELDS instead.
 
 Stdlib-only (urllib), matching smoke-test.sh's dependency-free approach —
 no extra `pip install` needed on the runner.
@@ -98,6 +99,20 @@ REFERENCE_FIELDS = {
         'business_unit': 'tenancy/contact-groups/',
         'support_group': 'tenancy/contact-groups/',
         'change_group': 'tenancy/contact-groups/',
+    },
+    'plugins/service-specification/contracts/': {
+        'parent_contract': 'plugins/service-specification/contracts/',
+        'vendor': 'dcim/manufacturers/',
+        'tenant': 'tenancy/tenants/',
+        'tenant_group': 'tenancy/tenant-groups/',
+        'contact_person': 'tenancy/contacts/',
+        'primary_contact': 'tenancy/contacts/',
+        'contract_manager': 'tenancy/contacts/',
+        'approver': 'tenancy/contacts/',
+        'business_unit': 'tenancy/contact-groups/',
+    },
+    'plugins/service-specification/contract-rate-cards/': {
+        'contract': 'plugins/service-specification/contracts/',
     },
     'plugins/service-specification/service-offerings/': {
         'lifecycle': 'plugins/service-specification/lifecycles/',
@@ -187,8 +202,8 @@ def created(endpoint, obj):
 
 
 def resolve(value, target_endpoint, created_objects):
-    """Look up a single slug/name reference against objects already
-    created (earlier in the JSON file) at target_endpoint."""
+    """Look up a single slug/name/contract_number reference against objects
+    already created (earlier in the JSON file) at target_endpoint."""
     cache = created_objects.get(target_endpoint, {})
     if value not in cache:
         fail(
@@ -220,7 +235,10 @@ def create_all(data):
                     resolved[field] = resolve_field(resolved[field], target_endpoint, created_objects)
             obj = api('POST', endpoint, resolved)
             created(endpoint, obj)
-            key = payload.get('slug') or payload.get('name')
+            # Almost everything is keyed by slug-else-name (see resolve()),
+            # but Contract has neither — its own identity field is
+            # contract_number instead (see models.py's Contract.__str__).
+            key = payload.get('slug') or payload.get('name') or payload.get('contract_number')
             if key is not None:
                 if key in cache:
                     fail(f'Duplicate slug/name {key!r} for {endpoint} in {DATA_FILE.name}')
