@@ -508,7 +508,7 @@ class Migration(migrations.Migration):
                 ('base_costs', models.DecimalField(decimal_places=2, default=0, max_digits=14)),
                 ('hourly_rate', models.DecimalField(decimal_places=2, default=0, max_digits=10)),
                 ('hours_spend', models.DecimalField(decimal_places=2, default=0, max_digits=10)),
-                ('interval', models.CharField(max_length=30)),
+                ('interval', models.CharField(default='monthly', max_length=30)),
                 ('billing', models.BooleanField(default=False)),
                 ('project', models.CharField(blank=True, max_length=150)),
                 ('tags', taggit.managers.TaggableManager(through='extras.TaggedItem', to='extras.Tag')),
