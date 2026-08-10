@@ -16,7 +16,8 @@
       "Bash(python3 -m ruff check service_specification/migrations/0001_initial.py)",
       "Bash(python3 -m ruff format --check service_specification/migrations/0001_initial.py)",
       "Bash(python3 -m ruff check service_specification/navigation.py)",
-      "Bash(python3 -m ruff format --check service_specification/navigation.py)"
+      "Bash(python3 -m ruff format --check service_specification/navigation.py)",
+      "Bash(curl -s \"https://raw.githubusercontent.com/netbox-community/netbox/v4.6.5/netbox/netbox/views/generic/object_views.py\")"
     ]
   }
 }
