@@ -9,4 +9,4 @@
 
 # netboxcommunity/netbox image tag: "<netbox-version>-<netbox-docker-build>"
 export NETBOX_VERSION="v4.6.5-5.0.2"
-export SERVICE_SPECIFICATION_PLUGIN_VERSION="v1.0.0_rc1"
+export SERVICE_SPECIFICATION_PLUGIN_VERSION="v1.0.0"
