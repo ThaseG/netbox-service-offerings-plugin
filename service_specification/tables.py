@@ -344,7 +344,10 @@ class TenantReportTable(NetBoxTable):
             'service_offering',
             'application_services',
         )
-        default_columns = fields
+        # 'group' (Tenant Group) is deliberately excluded here: still a
+        # selectable column (it's in `fields` above), just not shown until
+        # the user adds it themselves via the table's column picker.
+        default_columns = tuple(f for f in fields if f != 'group')
 
     def render_name(self, record):
         return format_html('<a href="{}">{}</a>', record.tenant.get_absolute_url(), record.tenant.name)
