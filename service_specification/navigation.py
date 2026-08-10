@@ -31,12 +31,15 @@ def _report_item(url_name, link_text):
 
 
 data_model_items = (
-    _item('contract', 'Contracts'),
-    _item('contractratecard', 'Contract Rate Cards'),
     _item('portfolio', 'Service Portfolios'),
     _item('service', 'Services'),
     _item('serviceoffering', 'Service Offerings'),
     _item('appservice', 'Application Services'),
+)
+
+contract_items = (
+    _item('contract', 'Contracts'),
+    _item('contractratecard', 'Contract Rate Cards'),
 )
 
 support_items = (
@@ -60,6 +63,7 @@ menu = PluginMenu(
     icon_class='mdi mdi-briefcase-outline',
     groups=(
         ('Data Model', data_model_items),
+        ('Contracts', contract_items),
         ('Support', support_items),
         ('Reports', reports_items),
     ),

@@ -14,7 +14,9 @@
       "Bash(python3 -m ruff format --check service_specification/ ci/scripts/)",
       "Bash(python3 -m py_compile service_specification/tables.py service_specification/views.py service_specification/utils.py)",
       "Bash(python3 -m ruff check service_specification/migrations/0001_initial.py)",
-      "Bash(python3 -m ruff format --check service_specification/migrations/0001_initial.py)"
+      "Bash(python3 -m ruff format --check service_specification/migrations/0001_initial.py)",
+      "Bash(python3 -m ruff check service_specification/navigation.py)",
+      "Bash(python3 -m ruff format --check service_specification/navigation.py)"
     ]
   }
 }
