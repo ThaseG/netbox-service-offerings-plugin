@@ -184,7 +184,7 @@ jobs:
   # starting empty each time, not carrying over data from the previous
   # deploy.
   #
-  tests:
+  test:
     needs: build
     runs-on: [self-hosted, netbox]
     steps:
