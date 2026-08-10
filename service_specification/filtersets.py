@@ -1,5 +1,5 @@
 import django_filters
-from dcim.models import Device
+from dcim.models import Device, Manufacturer
 from django.db.models import Q
 from netbox.filtersets import NetBoxModelFilterSet
 from tenancy.models import Contact, ContactGroup, Tenant, TenantGroup
@@ -13,6 +13,8 @@ from .models import (
     CIFunction,
     ClusterGroupServiceInfo,
     ClusterServiceInfo,
+    Contract,
+    ContractRateCard,
     Criticality,
     DeviceServiceInfo,
     Environment,
@@ -25,6 +27,8 @@ from .models import (
 )
 
 __all__ = (
+    'ContractFilterSet',
+    'ContractRateCardFilterSet',
     'PortfolioFilterSet',
     'ServiceFilterSet',
     'ServiceOfferingFilterSet',
@@ -116,6 +120,113 @@ class CIFunctionFilterSet(NetBoxModelFilterSet):
 
     def search(self, queryset, name, value):
         return queryset.filter(Q(name__icontains=value) | Q(description__icontains=value))
+
+
+class ContractFilterSet(NetBoxModelFilterSet):
+    parent_contract_id = django_filters.ModelMultipleChoiceFilter(
+        field_name='parent_contract',
+        queryset=Contract.objects.all(),
+        label='Parent Contract (ID)',
+    )
+    vendor_id = django_filters.ModelMultipleChoiceFilter(
+        field_name='vendor',
+        queryset=Manufacturer.objects.all(),
+        label='Vendor (ID)',
+    )
+    tenant_id = django_filters.ModelMultipleChoiceFilter(
+        field_name='tenant',
+        queryset=Tenant.objects.all(),
+        label='Customer (ID)',
+    )
+    tenant_group_id = django_filters.ModelMultipleChoiceFilter(
+        field_name='tenant_group',
+        queryset=TenantGroup.objects.all(),
+        label='Customer Group (ID)',
+    )
+    contact_person_id = django_filters.ModelMultipleChoiceFilter(
+        field_name='contact_person',
+        queryset=Contact.objects.all(),
+        label='Contact Person (ID)',
+    )
+    primary_contact_id = django_filters.ModelMultipleChoiceFilter(
+        field_name='primary_contact',
+        queryset=Contact.objects.all(),
+        label='Primary Contact (ID)',
+    )
+    contract_manager_id = django_filters.ModelMultipleChoiceFilter(
+        field_name='contract_manager',
+        queryset=Contact.objects.all(),
+        label='Contract Manager (ID)',
+    )
+    approver_id = django_filters.ModelMultipleChoiceFilter(
+        field_name='approver',
+        queryset=Contact.objects.all(),
+        label='Approver (ID)',
+    )
+    business_unit_id = django_filters.ModelMultipleChoiceFilter(
+        field_name='business_unit',
+        queryset=ContactGroup.objects.all(),
+        label='Business Unit (ID)',
+    )
+
+    class Meta:
+        model = Contract
+        fields = (
+            'id',
+            'contract_number',
+            'external_reference',
+            'legacy_contract',
+            'location',
+            'parent_contract_id',
+            'vendor_id',
+            'tenant_id',
+            'tenant_group_id',
+            'contact_person_id',
+            'primary_contact_id',
+            'contract_manager_id',
+            'approver_id',
+            'business_unit_id',
+        )
+
+    def search(self, queryset, name, value):
+        return queryset.filter(
+            Q(contract_number__icontains=value)
+            | Q(external_reference__icontains=value)
+            | Q(short_description__icontains=value)
+            | Q(description__icontains=value)
+            | Q(legacy_contract__icontains=value)
+            | Q(project__icontains=value)
+            | Q(location__icontains=value)
+        )
+
+
+class ContractRateCardFilterSet(NetBoxModelFilterSet):
+    contract_id = django_filters.ModelMultipleChoiceFilter(
+        field_name='contract',
+        queryset=Contract.objects.all(),
+        label='Contract (ID)',
+    )
+
+    class Meta:
+        model = ContractRateCard
+        fields = (
+            'id',
+            'contract_id',
+            'contract_position_number',
+            'active',
+            'order_number',
+            'interval',
+            'billing',
+        )
+
+    def search(self, queryset, name, value):
+        return queryset.filter(
+            Q(contract_position_number__icontains=value)
+            | Q(order_number__icontains=value)
+            | Q(short_description__icontains=value)
+            | Q(description__icontains=value)
+            | Q(project__icontains=value)
+        )
 
 
 class PortfolioFilterSet(NetBoxModelFilterSet):
@@ -240,6 +351,11 @@ class ServiceOfferingFilterSet(NetBoxModelFilterSet):
         queryset=Lifecycle.objects.all(),
         label='Lifecycle (ID)',
     )
+    contract_id = django_filters.ModelMultipleChoiceFilter(
+        field_name='contract',
+        queryset=Contract.objects.all(),
+        label='Contract (ID)',
+    )
     service_id = django_filters.ModelMultipleChoiceFilter(
         field_name='service',
         queryset=Service.objects.all(),
@@ -301,7 +417,7 @@ class ServiceOfferingFilterSet(NetBoxModelFilterSet):
         fields = (
             'id',
             'name',
-            'contract_number',
+            'contract_id',
             'lifecycle_id',
             'service_id',
             'service_offering_owner_contacts_id',
@@ -318,7 +434,7 @@ class ServiceOfferingFilterSet(NetBoxModelFilterSet):
 
     def search(self, queryset, name, value):
         return queryset.filter(
-            Q(name__icontains=value) | Q(description__icontains=value) | Q(contract_number__icontains=value)
+            Q(name__icontains=value) | Q(description__icontains=value) | Q(contract__contract_number__icontains=value)
         )
 
 

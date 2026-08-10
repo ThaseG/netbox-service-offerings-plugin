@@ -61,6 +61,21 @@ class CIFunctionType(OrganizationalObjectType):
 #
 
 
+@strawberry_django.type(models.Contract, fields='__all__', pagination=True)
+class ContractType(PrimaryObjectType):
+    # Computed property (models.py), not a real column — needs an explicit
+    # annotated field, same as LifecycleType's `color: str` above (which
+    # instead works around a field-type strawberry-django can't resolve on
+    # its own; this is the same mechanism for a field that isn't there at
+    # all until getattr() is called on the instance).
+    status: str
+
+
+@strawberry_django.type(models.ContractRateCard, fields='__all__', pagination=True)
+class ContractRateCardType(PrimaryObjectType):
+    total_costs: str
+
+
 @strawberry_django.type(models.Portfolio, fields='__all__', pagination=True)
 class PortfolioType(PrimaryObjectType):
     pass
@@ -83,6 +98,12 @@ class AppServiceType(PrimaryObjectType):
 
 @strawberry.type(name='Query')
 class ServiceSpecificationQuery:
+    contract: ContractType = strawberry_django.field()
+    contract_list: list[ContractType] = strawberry_django.field()
+
+    contract_rate_card: ContractRateCardType = strawberry_django.field()
+    contract_rate_card_list: list[ContractRateCardType] = strawberry_django.field()
+
     portfolio: PortfolioType = strawberry_django.field()
     portfolio_list: list[PortfolioType] = strawberry_django.field()
 

@@ -53,6 +53,18 @@ class CIFunctionViewSet(NetBoxModelViewSet):
     filterset_class = filtersets.CIFunctionFilterSet
 
 
+class ContractViewSet(NetBoxModelViewSet):
+    queryset = models.Contract.objects.all()
+    serializer_class = serializers.ContractSerializer
+    filterset_class = filtersets.ContractFilterSet
+
+
+class ContractRateCardViewSet(NetBoxModelViewSet):
+    queryset = models.ContractRateCard.objects.all()
+    serializer_class = serializers.ContractRateCardSerializer
+    filterset_class = filtersets.ContractRateCardFilterSet
+
+
 class PortfolioViewSet(NetBoxModelViewSet):
     queryset = models.Portfolio.objects.all()
     serializer_class = serializers.PortfolioSerializer

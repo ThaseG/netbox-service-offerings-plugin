@@ -1,4 +1,4 @@
-from dcim.models import Device
+from dcim.models import Device, Manufacturer
 from django.db import models
 from django.urls import reverse
 from netbox.choices import ColorChoices
@@ -7,7 +7,7 @@ from tenancy.models import Contact, ContactGroup, Tenant, TenantGroup
 from utilities.fields import ColorField
 from virtualization.models import Cluster, ClusterGroup, VirtualMachine
 
-from .choices import TimeUnitChoices
+from .choices import RateCardIntervalChoices, TimeUnitChoices
 
 # Every FK/M2M field below uses related_name='+': many of these models point
 # at the same core NetBox models (ContactGroup in particular is targeted by
@@ -26,6 +26,8 @@ from .choices import TimeUnitChoices
 # closes off the same failure mode against any future name collision.
 
 __all__ = (
+    'Contract',
+    'ContractRateCard',
     'Portfolio',
     'Service',
     'ServiceOffering',
@@ -304,10 +306,169 @@ class Service(PrimaryModel):
         return reverse(f'plugins:service_specification:{self._meta.model_name}', args=[self.pk])
 
 
+class Contract(PrimaryModel):
+    owner = models.ForeignKey(to='users.Owner', on_delete=models.PROTECT, related_name='+', blank=True, null=True)
+    contract_number = models.CharField(max_length=100, verbose_name='Contract Number')
+    external_reference = models.CharField(max_length=100, blank=True, verbose_name='External Reference')
+    short_description = models.CharField(max_length=300, blank=True, verbose_name='Short Description')
+    legacy_contract = models.CharField(max_length=100, blank=True, verbose_name='Legacy Contract')
+    project = models.CharField(max_length=150, blank=True, verbose_name='Project')
+    parent_contract = models.ForeignKey(
+        to='self',
+        on_delete=models.PROTECT,
+        related_name='+',
+        blank=True,
+        null=True,
+        verbose_name='Parent Contract',
+    )
+    vendor = models.ForeignKey(
+        to=Manufacturer,
+        on_delete=models.PROTECT,
+        related_name='+',
+        blank=True,
+        null=True,
+        verbose_name='Vendor',
+    )
+    location = models.CharField(max_length=200, blank=True, verbose_name='Location')
+    tenant = models.ForeignKey(
+        to=Tenant,
+        on_delete=models.PROTECT,
+        related_name='+',
+        blank=True,
+        null=True,
+        verbose_name='Tenant',
+    )
+    tenant_group = models.ForeignKey(
+        to=TenantGroup,
+        on_delete=models.PROTECT,
+        related_name='+',
+        blank=True,
+        null=True,
+        verbose_name='Tenant Group',
+    )
+    contact_person = models.ManyToManyField(
+        to=Contact,
+        related_name='+',
+        blank=True,
+        verbose_name='Contact Person',
+    )
+    primary_contact = models.ManyToManyField(
+        to=Contact,
+        related_name='+',
+        blank=True,
+        verbose_name='Primary Contact',
+    )
+    contract_manager = models.ManyToManyField(
+        to=Contact,
+        related_name='+',
+        blank=True,
+        verbose_name='Contract Manager',
+    )
+    approver = models.ForeignKey(
+        to=Contact,
+        on_delete=models.PROTECT,
+        related_name='+',
+        blank=True,
+        null=True,
+        verbose_name='Approver',
+    )
+    business_unit = models.ForeignKey(
+        to=ContactGroup,
+        on_delete=models.PROTECT,
+        related_name='+',
+        blank=True,
+        null=True,
+        verbose_name='Business Unit',
+    )
+    contract_starts = models.DateField(blank=True, null=True, verbose_name='Contract Starts')
+    contract_ends = models.DateField(blank=True, null=True, verbose_name='Contract Ends')
+
+    class Meta(PrimaryModel.Meta):
+        ordering = ('contract_number',)
+        verbose_name = 'Contract'
+        verbose_name_plural = 'Contracts'
+
+    def __str__(self):
+        return self.contract_number
+
+    def get_absolute_url(self):
+        return reverse(f'plugins:service_specification:{self._meta.model_name}', args=[self.pk])
+
+    @property
+    def status(self):
+        # Deliberately not a stored field: a Contract with zero active Rate
+        # Cards must always read as Inactive, including the instant the
+        # last one is deleted or deactivated elsewhere — a stored field
+        # would only get re-validated when the Contract itself is next
+        # saved, and could otherwise sit stale. See ContractRateCard.active.
+        if self.rate_cards.filter(active=True).exists():
+            return 'Active'
+        return 'Inactive'
+
+
+class ContractRateCard(PrimaryModel):
+    owner = models.ForeignKey(to='users.Owner', on_delete=models.PROTECT, related_name='+', blank=True, null=True)
+    # CASCADE, not PROTECT: a Rate Card has no independent existence outside
+    # its Contract (unlike every other FK in this file, which points at a
+    # shared/independent object). related_name is a real name, not '+' —
+    # it's the only FK targeting Contract this way, and Contract.status /
+    # the Contract detail page's rollup panel both read it directly.
+    contract = models.ForeignKey(
+        to=Contract,
+        on_delete=models.CASCADE,
+        related_name='rate_cards',
+        verbose_name='Contract',
+    )
+    contract_position_number = models.CharField(max_length=100, verbose_name='Contract Position Number')
+    # No tenant/tenant_group here: Customer is set once, on the parent
+    # Contract, and shown read-only on this object's detail page (see
+    # views.py's ContractRateCard layout) rather than duplicated here —
+    # same reasoning as AppService's own Customer fields (see models.py's
+    # AppService for the equivalent comment).
+    active = models.BooleanField(default=True, verbose_name='Active')
+    short_description = models.CharField(max_length=300, blank=True, verbose_name='Short Description')
+    start_date = models.DateField(blank=True, null=True, verbose_name='Start Date')
+    end_date = models.DateField(blank=True, null=True, verbose_name='End Date')
+    order_number = models.CharField(max_length=100, blank=True, verbose_name='Order Number')
+    base_costs = models.DecimalField(max_digits=14, decimal_places=2, default=0, verbose_name='Base Costs')
+    hourly_rate = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name='Hourly Rate')
+    hours_spend = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name='Hours Spend')
+    interval = models.CharField(
+        max_length=30,
+        choices=RateCardIntervalChoices,
+        default=RateCardIntervalChoices.INTERVAL_MONTHLY,
+        verbose_name='Interval',
+    )
+    billing = models.BooleanField(default=False, verbose_name='Billing')
+    project = models.CharField(max_length=150, blank=True, verbose_name='Project')
+
+    class Meta(PrimaryModel.Meta):
+        ordering = ('contract', 'contract_position_number')
+        verbose_name = 'Contract Rate Card'
+        verbose_name_plural = 'Contract Rate Cards'
+
+    def __str__(self):
+        return self.contract_position_number
+
+    def get_absolute_url(self):
+        return reverse(f'plugins:service_specification:{self._meta.model_name}', args=[self.pk])
+
+    @property
+    def total_costs(self):
+        return self.base_costs + self.hourly_rate * self.hours_spend
+
+
 class ServiceOffering(PrimaryModel):
     owner = models.ForeignKey(to='users.Owner', on_delete=models.PROTECT, related_name='+', blank=True, null=True)
     name = models.CharField(max_length=150)
-    contract_number = models.CharField(max_length=100, verbose_name='Contract Number')
+    contract = models.ForeignKey(
+        to=Contract,
+        on_delete=models.PROTECT,
+        related_name='service_offerings',
+        blank=True,
+        null=True,
+        verbose_name='Contract',
+    )
     service_offering_owner_contacts = models.ManyToManyField(
         to=Contact,
         related_name='+',

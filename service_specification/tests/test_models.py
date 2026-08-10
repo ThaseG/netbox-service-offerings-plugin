@@ -1,10 +1,12 @@
+from decimal import Decimal
+
 from django.test import TestCase
 from netbox.choices import ColorChoices
 from tenancy.models import ContactGroup
 
 from service_specification.choices import TimeUnitChoices
 from service_specification.forms import PortfolioForm
-from service_specification.models import MTAT, Lifecycle, Portfolio
+from service_specification.models import MTAT, Contract, ContractRateCard, Lifecycle, Portfolio
 
 
 class LifecycleModelTestCase(TestCase):
@@ -32,6 +34,47 @@ class MTATModelTestCase(TestCase):
         mtat = MTAT.objects.create(name='Gold', slug='gold', value=15, unit=TimeUnitChoices.UNIT_MINUTES)
         self.assertEqual(mtat.value, 15)
         self.assertEqual(mtat.unit, 'minutes')
+
+
+class ContractModelTestCase(TestCase):
+    def test_status_computed_from_active_rate_cards(self):
+        # Regression coverage for the "no manual status field" design: a
+        # Contract with zero Rate Cards must read as Inactive, flip to
+        # Active as soon as one active Rate Card exists, and flip back the
+        # moment that Rate Card is deactivated — all without ever saving
+        # the Contract itself (see models.py's Contract.status property).
+        contract = Contract.objects.create(contract_number='CN-0001')
+        self.assertEqual(contract.status, 'Inactive')
+
+        rate_card = ContractRateCard.objects.create(
+            contract=contract,
+            contract_position_number='POS-0001',
+        )
+        self.assertEqual(contract.status, 'Active')
+
+        rate_card.active = False
+        rate_card.save()
+        self.assertEqual(contract.status, 'Inactive')
+
+    def test_create_and_str(self):
+        contract = Contract.objects.create(contract_number='CN-0002')
+        self.assertEqual(str(contract), 'CN-0002')
+        self.assertIn(f'/{contract.pk}/', contract.get_absolute_url())
+
+
+class ContractRateCardModelTestCase(TestCase):
+    def test_total_costs_computed(self):
+        # The one piece of arithmetic this model exists to hold — see the
+        # spec's own "Total costs - Base cost + Hourly rate*Hours spend".
+        contract = Contract.objects.create(contract_number='CN-0003')
+        rate_card = ContractRateCard.objects.create(
+            contract=contract,
+            contract_position_number='POS-0001',
+            base_costs=Decimal('100.00'),
+            hourly_rate=Decimal('50.00'),
+            hours_spend=Decimal('3.00'),
+        )
+        self.assertEqual(rate_card.total_costs, Decimal('250.00'))
 
 
 class PortfolioModelTestCase(TestCase):

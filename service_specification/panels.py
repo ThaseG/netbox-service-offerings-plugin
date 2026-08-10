@@ -7,6 +7,11 @@ __all__ = (
     'LookupPanel',
     'SLAPanel',
     'MTATPanel',
+    'ContractPanel',
+    'ContractContactsPanel',
+    'ContractCustomerPanel',
+    'ContractRateCardPanel',
+    'ContractRateCardCostsPanel',
     'PortfolioPanel',
     'PortfolioOwnershipPanel',
     'ServicePanel',
@@ -39,6 +44,65 @@ class SLAPanel(LookupPanel):
 class MTATPanel(LookupPanel):
     value = attrs.NumericAttr('value', label=_('Value'))
     unit = attrs.ChoiceAttr('unit', label=_('Time Unit'))
+
+
+class ContractPanel(ObjectAttributesPanel):
+    contract_number = attrs.TextAttr('contract_number', label=_('Contract Number'))
+    external_reference = attrs.TextAttr('external_reference', label=_('External Reference'))
+    legacy_contract = attrs.TextAttr('legacy_contract', label=_('Legacy Contract'))
+    parent_contract = attrs.RelatedObjectAttr('parent_contract', label=_('Parent Contract'), linkify=True)
+    project = attrs.TextAttr('project', label=_('Project'))
+    # `status` is a computed property (see models.py), not a stored field —
+    # TextAttr just displays whatever getattr(instance, 'status') returns,
+    # which works the same for a property as for a real field.
+    status = attrs.TextAttr('status', label=_('Status'))
+    vendor = attrs.RelatedObjectAttr('vendor', label=_('Vendor'), linkify=True)
+    location = attrs.TextAttr('location', label=_('Location'))
+    contract_starts = attrs.TextAttr('contract_starts', label=_('Contract Starts'))
+    contract_ends = attrs.TextAttr('contract_ends', label=_('Contract Ends'))
+    short_description = attrs.TextAttr('short_description', label=_('Short Description'))
+    description = attrs.TextAttr('description', label=_('Description'))
+    tags = attrs.RelatedObjectListAttr('tags', label=_('Tags'), linkify=True)
+
+
+class ContractContactsPanel(ObjectAttributesPanel):
+    title = _('Contacts & Ownership')
+    contact_person = attrs.RelatedObjectListAttr('contact_person', label=_('Contact Person'), linkify=True)
+    primary_contact = attrs.RelatedObjectListAttr('primary_contact', label=_('Primary Contact'), linkify=True)
+    contract_manager = attrs.RelatedObjectListAttr('contract_manager', label=_('Contract Manager'), linkify=True)
+    approver = attrs.RelatedObjectAttr('approver', label=_('Approver'), linkify=True)
+    business_unit = attrs.RelatedObjectAttr('business_unit', label=_('Business Unit'), linkify=True)
+
+
+class ContractCustomerPanel(ObjectAttributesPanel):
+    title = _('Customer')
+    tenant = attrs.RelatedObjectAttr('tenant', label=_('Customer'), linkify=True)
+    tenant_group = attrs.RelatedObjectAttr('tenant_group', label=_('Customer Group'), linkify=True)
+
+
+class ContractRateCardPanel(ObjectAttributesPanel):
+    contract = attrs.RelatedObjectAttr('contract', label=_('Contract'), linkify=True)
+    contract_position_number = attrs.TextAttr('contract_position_number', label=_('Contract Position Number'))
+    order_number = attrs.TextAttr('order_number', label=_('Order Number'))
+    project = attrs.TextAttr('project', label=_('Project'))
+    active = attrs.TextAttr('active', label=_('Active'))
+    start_date = attrs.TextAttr('start_date', label=_('Start Date'))
+    end_date = attrs.TextAttr('end_date', label=_('End Date'))
+    short_description = attrs.TextAttr('short_description', label=_('Short Description'))
+    description = attrs.TextAttr('description', label=_('Description'))
+    tags = attrs.RelatedObjectListAttr('tags', label=_('Tags'), linkify=True)
+
+
+class ContractRateCardCostsPanel(ObjectAttributesPanel):
+    title = _('Costs & Billing')
+    base_costs = attrs.NumericAttr('base_costs', label=_('Base Costs'))
+    hourly_rate = attrs.NumericAttr('hourly_rate', label=_('Hourly Rate'))
+    hours_spend = attrs.NumericAttr('hours_spend', label=_('Hours Spend'))
+    # `total_costs` is a computed property (see models.py) — NumericAttr
+    # reads it via the same getattr as any real numeric field.
+    total_costs = attrs.NumericAttr('total_costs', label=_('Total Costs'))
+    interval = attrs.ChoiceAttr('interval', label=_('Interval'))
+    billing = attrs.TextAttr('billing', label=_('Billing'))
 
 
 class PortfolioPanel(ObjectAttributesPanel):
@@ -114,7 +178,7 @@ class ServiceOrganizationPanel(ObjectAttributesPanel):
 
 class ServiceOfferingPanel(ObjectAttributesPanel):
     name = attrs.TextAttr('name', label=_('Name'))
-    contract_number = attrs.TextAttr('contract_number', label=_('Contract Number'))
+    contract = attrs.RelatedObjectAttr('contract', label=_('Contract'), linkify=True)
     lifecycle = attrs.RelatedObjectAttr('lifecycle', label=_('Service Lifecycle Management'), linkify=True)
     service = attrs.RelatedObjectListAttr('service', label=_('Services'), linkify=True)
     description = attrs.TextAttr('description', label=_('Description'))

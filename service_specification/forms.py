@@ -1,4 +1,4 @@
-from dcim.models import Device
+from dcim.models import Device, Manufacturer
 from django import forms
 from django.core.exceptions import ValidationError
 from django.db.models import Q
@@ -16,6 +16,8 @@ from .models import (
     CIFunction,
     ClusterGroupServiceInfo,
     ClusterServiceInfo,
+    Contract,
+    ContractRateCard,
     Criticality,
     DeviceServiceInfo,
     Environment,
@@ -28,6 +30,8 @@ from .models import (
 )
 
 __all__ = (
+    'ContractForm',
+    'ContractRateCardForm',
     'PortfolioForm',
     'ServiceForm',
     'ServiceOfferingForm',
@@ -44,6 +48,8 @@ __all__ = (
     'VirtualMachineServiceInfoForm',
     'ClusterServiceInfoForm',
     'ClusterGroupServiceInfoForm',
+    'ContractFilterForm',
+    'ContractRateCardFilterForm',
     'PortfolioFilterForm',
     'ServiceFilterForm',
     'ServiceOfferingFilterForm',
@@ -341,11 +347,138 @@ class ServiceForm(PrimaryModelForm):
         return cleaned_data
 
 
+class ContractForm(PrimaryModelForm):
+    parent_contract = DynamicModelChoiceField(
+        queryset=Contract.objects.all(),
+        required=False,
+        help_text='Parent contract this one is a sub-contract of, if any.',
+    )
+    vendor = DynamicModelChoiceField(
+        queryset=Manufacturer.objects.all(),
+        required=False,
+        help_text='Manufacturer/vendor providing the contracted goods or services.',
+    )
+    tenant = DynamicModelChoiceField(queryset=Tenant.objects.all(), required=False, label='Customer')
+    tenant_group = DynamicModelChoiceField(queryset=TenantGroup.objects.all(), required=False, label='Customer Group')
+    contact_person = DynamicModelMultipleChoiceField(queryset=Contact.objects.all(), required=False)
+    primary_contact = DynamicModelMultipleChoiceField(queryset=Contact.objects.all(), required=False)
+    contract_manager = DynamicModelMultipleChoiceField(queryset=Contact.objects.all(), required=False)
+    approver = DynamicModelChoiceField(queryset=Contact.objects.all(), required=False)
+    business_unit = DynamicModelChoiceField(
+        queryset=ContactGroup.objects.all(),
+        required=False,
+        help_text='Unit that owns or funds this contract.',
+    )
+
+    fieldsets = (
+        FieldSet(
+            'contract_number',
+            'external_reference',
+            'legacy_contract',
+            'parent_contract',
+            'project',
+            'short_description',
+            'description',
+            'tags',
+            name='Contract',
+        ),
+        FieldSet('vendor', 'location', name='Vendor & Location'),
+        FieldSet('tenant', 'tenant_group', name='Customer'),
+        FieldSet(
+            'contact_person',
+            'primary_contact',
+            'contract_manager',
+            'approver',
+            'business_unit',
+            name='Contacts & Ownership',
+        ),
+        FieldSet('contract_starts', 'contract_ends', name='Term'),
+    )
+
+    class Meta:
+        model = Contract
+        fields = (
+            'contract_number',
+            'external_reference',
+            'legacy_contract',
+            'parent_contract',
+            'project',
+            'vendor',
+            'location',
+            'tenant',
+            'tenant_group',
+            'contact_person',
+            'primary_contact',
+            'contract_manager',
+            'approver',
+            'business_unit',
+            'contract_starts',
+            'contract_ends',
+            'short_description',
+            'description',
+            'tags',
+            'comments',
+        )
+        help_texts = {
+            'contract_number': 'Reference number for the legal or commercial agreement. Use the actual contract ID.',
+            'location': 'Free-text site/location description for this contract.',
+        }
+
+
+class ContractRateCardForm(PrimaryModelForm):
+    contract = DynamicModelChoiceField(
+        queryset=Contract.objects.all(),
+        required=True,
+        help_text='The contract this rate card is a position of.',
+    )
+
+    fieldsets = (
+        FieldSet(
+            'contract',
+            'contract_position_number',
+            'order_number',
+            'project',
+            'short_description',
+            'description',
+            'tags',
+            name='Contract Rate Card',
+        ),
+        FieldSet('active', 'start_date', 'end_date', name='Term & Status'),
+        FieldSet('base_costs', 'hourly_rate', 'hours_spend', 'interval', 'billing', name='Costs & Billing'),
+    )
+
+    class Meta:
+        model = ContractRateCard
+        fields = (
+            'contract',
+            'contract_position_number',
+            'order_number',
+            'project',
+            'active',
+            'start_date',
+            'end_date',
+            'base_costs',
+            'hourly_rate',
+            'hours_spend',
+            'interval',
+            'billing',
+            'short_description',
+            'description',
+            'tags',
+            'comments',
+        )
+
+
 class ServiceOfferingForm(PrimaryModelForm):
     lifecycle = DynamicModelChoiceField(
         queryset=Lifecycle.objects.all(),
         required=True,
         help_text='Current phase of the offering (e.g., Available, End of Life). Follows the standard lifecycle list.',
+    )
+    contract = DynamicModelChoiceField(
+        queryset=Contract.objects.all(),
+        required=False,
+        help_text='Reference to the legal or commercial agreement governing this offering.',
     )
     service = DynamicModelMultipleChoiceField(
         queryset=Service.objects.all(),
@@ -420,7 +553,7 @@ class ServiceOfferingForm(PrimaryModelForm):
     fieldsets = (
         FieldSet(
             'name',
-            'contract_number',
+            'contract',
             'lifecycle',
             'service',
             'description',
@@ -445,7 +578,7 @@ class ServiceOfferingForm(PrimaryModelForm):
         model = ServiceOffering
         fields = (
             'name',
-            'contract_number',
+            'contract',
             'lifecycle',
             'service',
             'service_offering_owner_contact_groups',
@@ -465,9 +598,6 @@ class ServiceOfferingForm(PrimaryModelForm):
             'name': (
                 'Distinct name for the offering (e.g., Premium Support, Basic Plan). Differentiates it from '
                 'other offerings.'
-            ),
-            'contract_number': (
-                'Reference to the legal or commercial agreement governing this offering. Use the actual contract ID.'
             ),
             'description': (
                 'Summary of what the offering includes in terms of features or service levels. Keep it '
@@ -792,6 +922,64 @@ class CIFunctionFilterForm(NetBoxModelFilterSetForm):
     model = CIFunction
 
 
+class ContractFilterForm(NetBoxModelFilterSetForm):
+    model = Contract
+    parent_contract_id = DynamicModelMultipleChoiceField(
+        queryset=Contract.objects.all(),
+        required=False,
+        label='Parent Contract',
+    )
+    vendor_id = DynamicModelMultipleChoiceField(
+        queryset=Manufacturer.objects.all(),
+        required=False,
+        label='Vendor',
+    )
+    tenant_id = DynamicModelMultipleChoiceField(
+        queryset=Tenant.objects.all(),
+        required=False,
+        label='Customer',
+    )
+    tenant_group_id = DynamicModelMultipleChoiceField(
+        queryset=TenantGroup.objects.all(),
+        required=False,
+        label='Customer Group',
+    )
+    contact_person_id = DynamicModelMultipleChoiceField(
+        queryset=Contact.objects.all(),
+        required=False,
+        label='Contact Person',
+    )
+    primary_contact_id = DynamicModelMultipleChoiceField(
+        queryset=Contact.objects.all(),
+        required=False,
+        label='Primary Contact',
+    )
+    contract_manager_id = DynamicModelMultipleChoiceField(
+        queryset=Contact.objects.all(),
+        required=False,
+        label='Contract Manager',
+    )
+    approver_id = DynamicModelMultipleChoiceField(
+        queryset=Contact.objects.all(),
+        required=False,
+        label='Approver',
+    )
+    business_unit_id = DynamicModelMultipleChoiceField(
+        queryset=ContactGroup.objects.all(),
+        required=False,
+        label='Business Unit',
+    )
+
+
+class ContractRateCardFilterForm(NetBoxModelFilterSetForm):
+    model = ContractRateCard
+    contract_id = DynamicModelMultipleChoiceField(
+        queryset=Contract.objects.all(),
+        required=False,
+        label='Contract',
+    )
+
+
 class PortfolioFilterForm(NetBoxModelFilterSetForm):
     model = Portfolio
     lifecycle_id = DynamicModelMultipleChoiceField(
@@ -881,6 +1069,11 @@ class ServiceOfferingFilterForm(NetBoxModelFilterSetForm):
         queryset=Lifecycle.objects.all(),
         required=False,
         label='Lifecycle',
+    )
+    contract_id = DynamicModelMultipleChoiceField(
+        queryset=Contract.objects.all(),
+        required=False,
+        label='Contract',
     )
     service_id = DynamicModelMultipleChoiceField(
         queryset=Service.objects.all(),
@@ -1035,7 +1228,15 @@ class OfferingsTreeFilterForm(forms.Form):
     tenant = DynamicModelChoiceField(queryset=Tenant.objects.all(), required=False)
     portfolio = DynamicModelChoiceField(queryset=Portfolio.objects.all(), required=False, label='Service Portfolio')
     service = DynamicModelChoiceField(queryset=Service.objects.all(), required=False)
-    service_offering = DynamicModelChoiceField(queryset=ServiceOffering.objects.all(), required=False)
+    service_offering = DynamicModelChoiceField(
+        queryset=ServiceOffering.objects.all(),
+        required=False,
+        # Once a Tenant is picked, the live dropdown narrows to just that
+        # tenant's own offerings instead of all of them — same
+        # query_params cascading pattern as e.g. PortfolioForm's
+        # portfolio_owner_contacts/portfolio_owner_contact_groups pair.
+        query_params={'tenant_id': '$tenant'},
+    )
     app_service = DynamicModelChoiceField(
         queryset=AppService.objects.all(), required=False, label='Application Service'
     )

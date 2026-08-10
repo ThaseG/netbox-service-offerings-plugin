@@ -101,6 +101,7 @@ REFERENCE_FIELDS = {
     },
     'plugins/service-specification/service-offerings/': {
         'lifecycle': 'plugins/service-specification/lifecycles/',
+        'contract': 'plugins/service-specification/contracts/',
         'service': 'plugins/service-specification/services/',
         'service_offering_owner_contacts': 'tenancy/contacts/',
         'service_offering_owner_contact_groups': 'tenancy/contact-groups/',

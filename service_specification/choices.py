@@ -19,3 +19,15 @@ class TimeUnitChoices(ChoiceSet):
         (UNIT_MONTHS, 'Months'),
         (UNIT_YEARS, 'Years'),
     )
+
+
+class RateCardIntervalChoices(ChoiceSet):
+    INTERVAL_MONTHLY = 'monthly'
+    INTERVAL_ONE_TIME = 'one-time'
+    INTERVAL_OTHERS = 'others'
+
+    CHOICES = (
+        (INTERVAL_MONTHLY, 'Monthly'),
+        (INTERVAL_ONE_TIME, 'One time cost'),
+        (INTERVAL_OTHERS, 'Others'),
+    )

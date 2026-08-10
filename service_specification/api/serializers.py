@@ -1,4 +1,5 @@
 from netbox.api.serializers import NetBoxModelSerializer
+from rest_framework import serializers
 
 from service_specification.models import (
     MTAT,
@@ -8,6 +9,8 @@ from service_specification.models import (
     CIFunction,
     ClusterGroupServiceInfo,
     ClusterServiceInfo,
+    Contract,
+    ContractRateCard,
     Criticality,
     DeviceServiceInfo,
     Environment,
@@ -20,6 +23,8 @@ from service_specification.models import (
 )
 
 __all__ = (
+    'ContractSerializer',
+    'ContractRateCardSerializer',
     'PortfolioSerializer',
     'ServiceSerializer',
     'ServiceOfferingSerializer',
@@ -93,6 +98,27 @@ class CIFunctionSerializer(NetBoxModelSerializer):
         model = CIFunction
         fields = '__all__'
         brief_fields = ('id', 'url', 'display', 'name')
+
+
+class ContractSerializer(NetBoxModelSerializer):
+    # Computed property (models.py), not a real column — '__all__' only
+    # introspects model fields, so it needs an explicit declaration to be
+    # included; DRF always includes declared fields regardless of '__all__'.
+    status = serializers.CharField(read_only=True)
+
+    class Meta:
+        model = Contract
+        fields = '__all__'
+        brief_fields = ('id', 'url', 'display', 'contract_number')
+
+
+class ContractRateCardSerializer(NetBoxModelSerializer):
+    total_costs = serializers.DecimalField(max_digits=16, decimal_places=2, read_only=True)
+
+    class Meta:
+        model = ContractRateCard
+        fields = '__all__'
+        brief_fields = ('id', 'url', 'display', 'contract_position_number')
 
 
 class PortfolioSerializer(NetBoxModelSerializer):

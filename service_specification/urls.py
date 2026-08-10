@@ -9,6 +9,13 @@ app_name = 'service_specification'
 from . import views  # noqa: E402,F401
 
 urlpatterns = [
+    path('contracts/', include(get_model_urls('service_specification', 'contract', detail=False))),
+    path('contracts/<int:pk>/', include(get_model_urls('service_specification', 'contract'))),
+    path(
+        'contract-rate-cards/',
+        include(get_model_urls('service_specification', 'contractratecard', detail=False)),
+    ),
+    path('contract-rate-cards/<int:pk>/', include(get_model_urls('service_specification', 'contractratecard'))),
     path('portfolios/', include(get_model_urls('service_specification', 'portfolio', detail=False))),
     path('portfolios/<int:pk>/', include(get_model_urls('service_specification', 'portfolio'))),
     path('services/', include(get_model_urls('service_specification', 'service', detail=False))),

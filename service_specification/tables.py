@@ -9,6 +9,8 @@ from .models import (
     AppService,
     Availability,
     CIFunction,
+    Contract,
+    ContractRateCard,
     Criticality,
     Environment,
     Lifecycle,
@@ -19,6 +21,8 @@ from .models import (
 )
 
 __all__ = (
+    'ContractTable',
+    'ContractRateCardTable',
     'PortfolioTable',
     'ServiceTable',
     'ServiceOfferingTable',
@@ -111,6 +115,80 @@ class CIFunctionTable(LookupTable):
         model = CIFunction
 
 
+class ContractTable(NetBoxTable):
+    contract_number = tables.Column(linkify=True)
+    status = tables.Column(orderable=False)
+    comments = columns.MarkdownColumn()
+    tags = columns.TagColumn(url_name='plugins:service_specification:contract_list')
+
+    class Meta(NetBoxTable.Meta):
+        model = Contract
+        fields = (
+            'pk',
+            'id',
+            'contract_number',
+            'external_reference',
+            'tenant',
+            'tenant_group',
+            'vendor',
+            'location',
+            'status',
+            'contract_starts',
+            'contract_ends',
+            'description',
+            'comments',
+            'tags',
+            'created',
+            'last_updated',
+            'actions',
+        )
+        default_columns = ('pk', 'contract_number', 'tenant', 'vendor', 'status', 'contract_starts', 'contract_ends')
+
+
+class ContractRateCardTable(NetBoxTable):
+    contract_position_number = tables.Column(linkify=True)
+    contract = tables.Column(linkify=True)
+    total_costs = tables.Column(orderable=False)
+    comments = columns.MarkdownColumn()
+    tags = columns.TagColumn(url_name='plugins:service_specification:contractratecard_list')
+
+    class Meta(NetBoxTable.Meta):
+        model = ContractRateCard
+        fields = (
+            'pk',
+            'id',
+            'contract',
+            'contract_position_number',
+            'active',
+            'start_date',
+            'end_date',
+            'order_number',
+            'base_costs',
+            'hourly_rate',
+            'hours_spend',
+            'total_costs',
+            'interval',
+            'billing',
+            'description',
+            'comments',
+            'tags',
+            'created',
+            'last_updated',
+            'actions',
+        )
+        default_columns = (
+            'pk',
+            'contract',
+            'contract_position_number',
+            'active',
+            'base_costs',
+            'hourly_rate',
+            'hours_spend',
+            'total_costs',
+            'interval',
+        )
+
+
 class PortfolioTable(NetBoxTable):
     name = tables.Column(linkify=True)
     lifecycle = columns.ColoredLabelColumn()
@@ -161,6 +239,7 @@ class ServiceTable(NetBoxTable):
 
 class ServiceOfferingTable(NetBoxTable):
     name = tables.Column(linkify=True)
+    contract = tables.Column(linkify=True)
     lifecycle = columns.ColoredLabelColumn()
     comments = columns.MarkdownColumn()
     tags = columns.TagColumn(url_name='plugins:service_specification:serviceoffering_list')
@@ -171,7 +250,7 @@ class ServiceOfferingTable(NetBoxTable):
             'pk',
             'id',
             'name',
-            'contract_number',
+            'contract',
             'lifecycle',
             'description',
             'comments',
@@ -180,7 +259,7 @@ class ServiceOfferingTable(NetBoxTable):
             'last_updated',
             'actions',
         )
-        default_columns = ('pk', 'name', 'contract_number', 'lifecycle', 'description')
+        default_columns = ('pk', 'name', 'contract', 'lifecycle', 'description')
 
 
 class AppServiceTable(NetBoxTable):
@@ -240,15 +319,16 @@ class TenantReportTable(NetBoxTable):
 
     name = tables.Column(empty_values=(), orderable=False, verbose_name='Tenant')
     group = tables.Column(empty_values=(), orderable=False, verbose_name='Tenant Group')
-    sites = tables.Column(empty_values=(), orderable=False)
-    contacts = tables.Column(empty_values=(), orderable=False)
-    service_offering = tables.Column(empty_values=(), orderable=False, verbose_name='Service Offering')
-    application_services = tables.Column(empty_values=(), orderable=False, verbose_name='Application Services')
     service_offering_lifecycle = columns.ColoredLabelColumn(
         accessor='service_offering__lifecycle',
         orderable=False,
         verbose_name='Service Offering Lifecycle',
     )
+    contract = tables.Column(empty_values=(), orderable=False, verbose_name='Contract')
+    contract_location = tables.Column(empty_values=(), orderable=False, verbose_name='Contract Location')
+    sites = tables.Column(empty_values=(), orderable=False)
+    service_offering = tables.Column(empty_values=(), orderable=False, verbose_name='Service Offering')
+    application_services = tables.Column(empty_values=(), orderable=False, verbose_name='Application Services')
 
     empty_text = 'No Tenants found.'
 
@@ -257,11 +337,12 @@ class TenantReportTable(NetBoxTable):
         fields = (
             'name',
             'group',
+            'service_offering_lifecycle',
+            'contract',
+            'contract_location',
             'sites',
-            'contacts',
             'service_offering',
             'application_services',
-            'service_offering_lifecycle',
         )
         default_columns = fields
 
@@ -278,9 +359,16 @@ class TenantReportTable(NetBoxTable):
             ', ', '<a href="{}">{}</a>', ((s.get_absolute_url(), s.name) for s in record.tenant.sites.all())
         )
 
-    def render_contacts(self, record):
-        contacts = [assignment.contact for assignment in record.tenant.get_contacts()]
-        return format_html_join(', ', '<a href="{}">{}</a>', ((c.get_absolute_url(), c.name) for c in contacts))
+    def render_contract(self, record):
+        if not record.service_offering or not record.service_offering.contract:
+            return '—'
+        contract = record.service_offering.contract
+        return format_html('<a href="{}">{}</a>', contract.get_absolute_url(), contract.contract_number)
+
+    def render_contract_location(self, record):
+        if not record.service_offering or not record.service_offering.contract:
+            return '—'
+        return record.service_offering.contract.location or '—'
 
     def render_service_offering(self, record):
         if not record.service_offering:

@@ -12,6 +12,8 @@ router = NetBoxRouter()
 # four *-service-info entries have no UI list page of their own (they're
 # only reachable via a tab on their parent Device/VM/Cluster/ClusterGroup),
 # but are still named as plural collections for consistency with the rest.
+router.register('contracts', views.ContractViewSet)
+router.register('contract-rate-cards', views.ContractRateCardViewSet)
 router.register('portfolios', views.PortfolioViewSet)
 router.register('services', views.ServiceViewSet)
 router.register('service-offerings', views.ServiceOfferingViewSet)

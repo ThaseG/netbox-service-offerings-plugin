@@ -3044,7 +3044,6 @@
     {
       "name": "Managed Email - Coca Cola",
       "description": "Managed Email - Coca Cola",
-      "contract_number": "CN-0001",
       "lifecycle": "draft",
       "service": [
         "Digital Workplace Services"
@@ -3077,7 +3076,6 @@
     {
       "name": "Unified Communications - Cisco",
       "description": "Unified Communications - Cisco",
-      "contract_number": "CN-0002",
       "lifecycle": "design",
       "service": [
         "Digital Workplace Services"
@@ -3110,7 +3108,6 @@
     {
       "name": "Endpoint Management - SAP",
       "description": "Endpoint Management - SAP",
-      "contract_number": "CN-0003",
       "lifecycle": "build",
       "service": [
         "Digital Workplace Services"
@@ -3143,7 +3140,6 @@
     {
       "name": "Helpdesk Support - Google",
       "description": "Helpdesk Support - Google",
-      "contract_number": "CN-0004",
       "lifecycle": "available",
       "service": [
         "Digital Workplace Services"
@@ -3176,7 +3172,6 @@
     {
       "name": "Identity & Access Management - Amazon",
       "description": "Identity & Access Management - Amazon",
-      "contract_number": "CN-0005",
       "lifecycle": "operational",
       "service": [
         "Digital Workplace Services"
@@ -3209,7 +3204,6 @@
     {
       "name": "Video Conferencing - Microsoft",
       "description": "Video Conferencing - Microsoft",
-      "contract_number": "CN-0006",
       "lifecycle": "in-maintenance",
       "service": [
         "Digital Workplace Services"
@@ -3242,7 +3236,6 @@
     {
       "name": "File Sharing & Collaboration - IBM",
       "description": "File Sharing & Collaboration - IBM",
-      "contract_number": "CN-0007",
       "lifecycle": "end-of-support",
       "service": [
         "Digital Workplace Services"
@@ -3275,7 +3268,6 @@
     {
       "name": "Mobile Device Management - Oracle",
       "description": "Mobile Device Management - Oracle",
-      "contract_number": "CN-0008",
       "lifecycle": "end-of-life",
       "service": [
         "Digital Workplace Services"
@@ -3308,7 +3300,6 @@
     {
       "name": "Print Services - Siemens",
       "description": "Print Services - Siemens",
-      "contract_number": "CN-0009",
       "lifecycle": "expired",
       "service": [
         "Digital Workplace Services"
@@ -3341,7 +3332,6 @@
     {
       "name": "Virtual Desktop Infrastructure - BMW",
       "description": "Virtual Desktop Infrastructure - BMW",
-      "contract_number": "CN-0010",
       "lifecycle": "decommissioned",
       "service": [
         "Digital Workplace Services"
@@ -3374,7 +3364,6 @@
     {
       "name": "Cloud Backup - Volkswagen",
       "description": "Cloud Backup - Volkswagen",
-      "contract_number": "CN-0011",
       "lifecycle": "cancelled",
       "service": [
         "Cloud Infrastructure Services"
@@ -3407,7 +3396,6 @@
     {
       "name": "Disaster Recovery - Deutsche Bank",
       "description": "Disaster Recovery - Deutsche Bank",
-      "contract_number": "CN-0012",
       "lifecycle": "draft",
       "service": [
         "Cloud Infrastructure Services"
@@ -3440,7 +3428,6 @@
     {
       "name": "Network Security - Allianz",
       "description": "Network Security - Allianz",
-      "contract_number": "CN-0013",
       "lifecycle": "design",
       "service": [
         "Cloud Infrastructure Services"
@@ -3473,7 +3460,6 @@
     {
       "name": "Database Hosting - Adidas",
       "description": "Database Hosting - Adidas",
-      "contract_number": "CN-0014",
       "lifecycle": "build",
       "service": [
         "Cloud Infrastructure Services"
@@ -3506,7 +3492,6 @@
     {
       "name": "Load Balancing - Puma",
       "description": "Load Balancing - Puma",
-      "contract_number": "CN-0015",
       "lifecycle": "available",
       "service": [
         "Cloud Infrastructure Services"
@@ -3539,7 +3524,6 @@
     {
       "name": "Container Orchestration - Nike",
       "description": "Container Orchestration - Nike",
-      "contract_number": "CN-0016",
       "lifecycle": "operational",
       "service": [
         "Cloud Infrastructure Services"
@@ -3572,7 +3556,6 @@
     {
       "name": "Data Analytics Platform - Samsung",
       "description": "Data Analytics Platform - Samsung",
-      "contract_number": "CN-0017",
       "lifecycle": "in-maintenance",
       "service": [
         "Cloud Infrastructure Services"
@@ -3605,7 +3588,6 @@
     {
       "name": "Storage as a Service - Sony",
       "description": "Storage as a Service - Sony",
-      "contract_number": "CN-0018",
       "lifecycle": "end-of-support",
       "service": [
         "Cloud Infrastructure Services"
@@ -3638,7 +3620,6 @@
     {
       "name": "Monitoring & Observability - Toyota",
       "description": "Monitoring & Observability - Toyota",
-      "contract_number": "CN-0019",
       "lifecycle": "end-of-life",
       "service": [
         "Cloud Infrastructure Services"
@@ -3671,7 +3652,6 @@
     {
       "name": "DNS & DHCP Management - Shell",
       "description": "DNS & DHCP Management - Shell",
-      "contract_number": "CN-0020",
       "lifecycle": "expired",
       "service": [
         "Cloud Infrastructure Services"
@@ -3699,6 +3679,646 @@
       ],
       "tenant": [
         "shell"
+      ]
+    },
+    {
+      "name": "Managed Email - Volkswagen",
+      "description": "Managed Email - Volkswagen",
+      "lifecycle": "decommissioned",
+      "service": [
+        "Digital Workplace Services"
+      ],
+      "service_offering_owner_contacts": [
+        "Elena Petrova"
+      ],
+      "service_offering_owner_contact_groups": [
+        "service-offering-owners"
+      ],
+      "service_offering_manager_contacts": [
+        "Franklin Diaz"
+      ],
+      "service_offering_manager_contact_groups": [
+        "service-offering-managers"
+      ],
+      "business_unit": [
+        "app1-business-unit"
+      ],
+      "support_group": [
+        "app-support-group"
+      ],
+      "change_group": [
+        "app-change-group"
+      ],
+      "tenant": [
+        "volkswagen"
+      ]
+    },
+    {
+      "name": "Unified Communications - Deutsche Bank",
+      "description": "Unified Communications - Deutsche Bank",
+      "lifecycle": "cancelled",
+      "service": [
+        "Digital Workplace Services"
+      ],
+      "service_offering_owner_contacts": [
+        "Elena Petrova"
+      ],
+      "service_offering_owner_contact_groups": [
+        "service-offering-owners"
+      ],
+      "service_offering_manager_contacts": [
+        "Franklin Diaz"
+      ],
+      "service_offering_manager_contact_groups": [
+        "service-offering-managers"
+      ],
+      "business_unit": [
+        "app1-business-unit"
+      ],
+      "support_group": [
+        "app-support-group"
+      ],
+      "change_group": [
+        "app-change-group"
+      ],
+      "tenant": [
+        "deutsche-bank"
+      ]
+    },
+    {
+      "name": "Endpoint Management - Allianz",
+      "description": "Endpoint Management - Allianz",
+      "lifecycle": "draft",
+      "service": [
+        "Digital Workplace Services"
+      ],
+      "service_offering_owner_contacts": [
+        "Elena Petrova"
+      ],
+      "service_offering_owner_contact_groups": [
+        "service-offering-owners"
+      ],
+      "service_offering_manager_contacts": [
+        "Franklin Diaz"
+      ],
+      "service_offering_manager_contact_groups": [
+        "service-offering-managers"
+      ],
+      "business_unit": [
+        "app1-business-unit"
+      ],
+      "support_group": [
+        "app-support-group"
+      ],
+      "change_group": [
+        "app-change-group"
+      ],
+      "tenant": [
+        "allianz"
+      ]
+    },
+    {
+      "name": "Helpdesk Support - Adidas",
+      "description": "Helpdesk Support - Adidas",
+      "lifecycle": "design",
+      "service": [
+        "Digital Workplace Services"
+      ],
+      "service_offering_owner_contacts": [
+        "Elena Petrova"
+      ],
+      "service_offering_owner_contact_groups": [
+        "service-offering-owners"
+      ],
+      "service_offering_manager_contacts": [
+        "Franklin Diaz"
+      ],
+      "service_offering_manager_contact_groups": [
+        "service-offering-managers"
+      ],
+      "business_unit": [
+        "app1-business-unit"
+      ],
+      "support_group": [
+        "app-support-group"
+      ],
+      "change_group": [
+        "app-change-group"
+      ],
+      "tenant": [
+        "adidas"
+      ]
+    },
+    {
+      "name": "Identity & Access Management - Puma",
+      "description": "Identity & Access Management - Puma",
+      "lifecycle": "build",
+      "service": [
+        "Digital Workplace Services"
+      ],
+      "service_offering_owner_contacts": [
+        "Elena Petrova"
+      ],
+      "service_offering_owner_contact_groups": [
+        "service-offering-owners"
+      ],
+      "service_offering_manager_contacts": [
+        "Franklin Diaz"
+      ],
+      "service_offering_manager_contact_groups": [
+        "service-offering-managers"
+      ],
+      "business_unit": [
+        "app1-business-unit"
+      ],
+      "support_group": [
+        "app-support-group"
+      ],
+      "change_group": [
+        "app-change-group"
+      ],
+      "tenant": [
+        "puma"
+      ]
+    },
+    {
+      "name": "Video Conferencing - Nike",
+      "description": "Video Conferencing - Nike",
+      "lifecycle": "available",
+      "service": [
+        "Digital Workplace Services"
+      ],
+      "service_offering_owner_contacts": [
+        "Elena Petrova"
+      ],
+      "service_offering_owner_contact_groups": [
+        "service-offering-owners"
+      ],
+      "service_offering_manager_contacts": [
+        "Franklin Diaz"
+      ],
+      "service_offering_manager_contact_groups": [
+        "service-offering-managers"
+      ],
+      "business_unit": [
+        "app1-business-unit"
+      ],
+      "support_group": [
+        "app-support-group"
+      ],
+      "change_group": [
+        "app-change-group"
+      ],
+      "tenant": [
+        "nike"
+      ]
+    },
+    {
+      "name": "File Sharing & Collaboration - Samsung",
+      "description": "File Sharing & Collaboration - Samsung",
+      "lifecycle": "operational",
+      "service": [
+        "Digital Workplace Services"
+      ],
+      "service_offering_owner_contacts": [
+        "Elena Petrova"
+      ],
+      "service_offering_owner_contact_groups": [
+        "service-offering-owners"
+      ],
+      "service_offering_manager_contacts": [
+        "Franklin Diaz"
+      ],
+      "service_offering_manager_contact_groups": [
+        "service-offering-managers"
+      ],
+      "business_unit": [
+        "app1-business-unit"
+      ],
+      "support_group": [
+        "app-support-group"
+      ],
+      "change_group": [
+        "app-change-group"
+      ],
+      "tenant": [
+        "samsung"
+      ]
+    },
+    {
+      "name": "Mobile Device Management - Sony",
+      "description": "Mobile Device Management - Sony",
+      "lifecycle": "in-maintenance",
+      "service": [
+        "Digital Workplace Services"
+      ],
+      "service_offering_owner_contacts": [
+        "Elena Petrova"
+      ],
+      "service_offering_owner_contact_groups": [
+        "service-offering-owners"
+      ],
+      "service_offering_manager_contacts": [
+        "Franklin Diaz"
+      ],
+      "service_offering_manager_contact_groups": [
+        "service-offering-managers"
+      ],
+      "business_unit": [
+        "app1-business-unit"
+      ],
+      "support_group": [
+        "app-support-group"
+      ],
+      "change_group": [
+        "app-change-group"
+      ],
+      "tenant": [
+        "sony"
+      ]
+    },
+    {
+      "name": "Print Services - Toyota",
+      "description": "Print Services - Toyota",
+      "lifecycle": "end-of-support",
+      "service": [
+        "Digital Workplace Services"
+      ],
+      "service_offering_owner_contacts": [
+        "Elena Petrova"
+      ],
+      "service_offering_owner_contact_groups": [
+        "service-offering-owners"
+      ],
+      "service_offering_manager_contacts": [
+        "Franklin Diaz"
+      ],
+      "service_offering_manager_contact_groups": [
+        "service-offering-managers"
+      ],
+      "business_unit": [
+        "app1-business-unit"
+      ],
+      "support_group": [
+        "app-support-group"
+      ],
+      "change_group": [
+        "app-change-group"
+      ],
+      "tenant": [
+        "toyota"
+      ]
+    },
+    {
+      "name": "Virtual Desktop Infrastructure - Shell",
+      "description": "Virtual Desktop Infrastructure - Shell",
+      "lifecycle": "end-of-life",
+      "service": [
+        "Digital Workplace Services"
+      ],
+      "service_offering_owner_contacts": [
+        "Elena Petrova"
+      ],
+      "service_offering_owner_contact_groups": [
+        "service-offering-owners"
+      ],
+      "service_offering_manager_contacts": [
+        "Franklin Diaz"
+      ],
+      "service_offering_manager_contact_groups": [
+        "service-offering-managers"
+      ],
+      "business_unit": [
+        "app1-business-unit"
+      ],
+      "support_group": [
+        "app-support-group"
+      ],
+      "change_group": [
+        "app-change-group"
+      ],
+      "tenant": [
+        "shell"
+      ]
+    },
+    {
+      "name": "Cloud Backup - Coca Cola",
+      "description": "Cloud Backup - Coca Cola",
+      "lifecycle": "expired",
+      "service": [
+        "Cloud Infrastructure Services"
+      ],
+      "service_offering_owner_contacts": [
+        "Elena Petrova"
+      ],
+      "service_offering_owner_contact_groups": [
+        "service-offering-owners"
+      ],
+      "service_offering_manager_contacts": [
+        "Franklin Diaz"
+      ],
+      "service_offering_manager_contact_groups": [
+        "service-offering-managers"
+      ],
+      "business_unit": [
+        "app1-business-unit"
+      ],
+      "support_group": [
+        "app-support-group"
+      ],
+      "change_group": [
+        "app-change-group"
+      ],
+      "tenant": [
+        "coca-cola"
+      ]
+    },
+    {
+      "name": "Disaster Recovery - Cisco",
+      "description": "Disaster Recovery - Cisco",
+      "lifecycle": "decommissioned",
+      "service": [
+        "Cloud Infrastructure Services"
+      ],
+      "service_offering_owner_contacts": [
+        "Elena Petrova"
+      ],
+      "service_offering_owner_contact_groups": [
+        "service-offering-owners"
+      ],
+      "service_offering_manager_contacts": [
+        "Franklin Diaz"
+      ],
+      "service_offering_manager_contact_groups": [
+        "service-offering-managers"
+      ],
+      "business_unit": [
+        "app1-business-unit"
+      ],
+      "support_group": [
+        "app-support-group"
+      ],
+      "change_group": [
+        "app-change-group"
+      ],
+      "tenant": [
+        "cisco"
+      ]
+    },
+    {
+      "name": "Network Security - SAP",
+      "description": "Network Security - SAP",
+      "lifecycle": "cancelled",
+      "service": [
+        "Cloud Infrastructure Services"
+      ],
+      "service_offering_owner_contacts": [
+        "Elena Petrova"
+      ],
+      "service_offering_owner_contact_groups": [
+        "service-offering-owners"
+      ],
+      "service_offering_manager_contacts": [
+        "Franklin Diaz"
+      ],
+      "service_offering_manager_contact_groups": [
+        "service-offering-managers"
+      ],
+      "business_unit": [
+        "app1-business-unit"
+      ],
+      "support_group": [
+        "app-support-group"
+      ],
+      "change_group": [
+        "app-change-group"
+      ],
+      "tenant": [
+        "sap"
+      ]
+    },
+    {
+      "name": "Database Hosting - Google",
+      "description": "Database Hosting - Google",
+      "lifecycle": "draft",
+      "service": [
+        "Cloud Infrastructure Services"
+      ],
+      "service_offering_owner_contacts": [
+        "Elena Petrova"
+      ],
+      "service_offering_owner_contact_groups": [
+        "service-offering-owners"
+      ],
+      "service_offering_manager_contacts": [
+        "Franklin Diaz"
+      ],
+      "service_offering_manager_contact_groups": [
+        "service-offering-managers"
+      ],
+      "business_unit": [
+        "app1-business-unit"
+      ],
+      "support_group": [
+        "app-support-group"
+      ],
+      "change_group": [
+        "app-change-group"
+      ],
+      "tenant": [
+        "google"
+      ]
+    },
+    {
+      "name": "Load Balancing - Amazon",
+      "description": "Load Balancing - Amazon",
+      "lifecycle": "design",
+      "service": [
+        "Cloud Infrastructure Services"
+      ],
+      "service_offering_owner_contacts": [
+        "Elena Petrova"
+      ],
+      "service_offering_owner_contact_groups": [
+        "service-offering-owners"
+      ],
+      "service_offering_manager_contacts": [
+        "Franklin Diaz"
+      ],
+      "service_offering_manager_contact_groups": [
+        "service-offering-managers"
+      ],
+      "business_unit": [
+        "app1-business-unit"
+      ],
+      "support_group": [
+        "app-support-group"
+      ],
+      "change_group": [
+        "app-change-group"
+      ],
+      "tenant": [
+        "amazon"
+      ]
+    },
+    {
+      "name": "Container Orchestration - Microsoft",
+      "description": "Container Orchestration - Microsoft",
+      "lifecycle": "build",
+      "service": [
+        "Cloud Infrastructure Services"
+      ],
+      "service_offering_owner_contacts": [
+        "Elena Petrova"
+      ],
+      "service_offering_owner_contact_groups": [
+        "service-offering-owners"
+      ],
+      "service_offering_manager_contacts": [
+        "Franklin Diaz"
+      ],
+      "service_offering_manager_contact_groups": [
+        "service-offering-managers"
+      ],
+      "business_unit": [
+        "app1-business-unit"
+      ],
+      "support_group": [
+        "app-support-group"
+      ],
+      "change_group": [
+        "app-change-group"
+      ],
+      "tenant": [
+        "microsoft"
+      ]
+    },
+    {
+      "name": "Data Analytics Platform - IBM",
+      "description": "Data Analytics Platform - IBM",
+      "lifecycle": "available",
+      "service": [
+        "Cloud Infrastructure Services"
+      ],
+      "service_offering_owner_contacts": [
+        "Elena Petrova"
+      ],
+      "service_offering_owner_contact_groups": [
+        "service-offering-owners"
+      ],
+      "service_offering_manager_contacts": [
+        "Franklin Diaz"
+      ],
+      "service_offering_manager_contact_groups": [
+        "service-offering-managers"
+      ],
+      "business_unit": [
+        "app1-business-unit"
+      ],
+      "support_group": [
+        "app-support-group"
+      ],
+      "change_group": [
+        "app-change-group"
+      ],
+      "tenant": [
+        "ibm"
+      ]
+    },
+    {
+      "name": "Storage as a Service - Oracle",
+      "description": "Storage as a Service - Oracle",
+      "lifecycle": "operational",
+      "service": [
+        "Cloud Infrastructure Services"
+      ],
+      "service_offering_owner_contacts": [
+        "Elena Petrova"
+      ],
+      "service_offering_owner_contact_groups": [
+        "service-offering-owners"
+      ],
+      "service_offering_manager_contacts": [
+        "Franklin Diaz"
+      ],
+      "service_offering_manager_contact_groups": [
+        "service-offering-managers"
+      ],
+      "business_unit": [
+        "app1-business-unit"
+      ],
+      "support_group": [
+        "app-support-group"
+      ],
+      "change_group": [
+        "app-change-group"
+      ],
+      "tenant": [
+        "oracle"
+      ]
+    },
+    {
+      "name": "Monitoring & Observability - Siemens",
+      "description": "Monitoring & Observability - Siemens",
+      "lifecycle": "in-maintenance",
+      "service": [
+        "Cloud Infrastructure Services"
+      ],
+      "service_offering_owner_contacts": [
+        "Elena Petrova"
+      ],
+      "service_offering_owner_contact_groups": [
+        "service-offering-owners"
+      ],
+      "service_offering_manager_contacts": [
+        "Franklin Diaz"
+      ],
+      "service_offering_manager_contact_groups": [
+        "service-offering-managers"
+      ],
+      "business_unit": [
+        "app1-business-unit"
+      ],
+      "support_group": [
+        "app-support-group"
+      ],
+      "change_group": [
+        "app-change-group"
+      ],
+      "tenant": [
+        "siemens"
+      ]
+    },
+    {
+      "name": "DNS & DHCP Management - BMW",
+      "description": "DNS & DHCP Management - BMW",
+      "lifecycle": "end-of-support",
+      "service": [
+        "Cloud Infrastructure Services"
+      ],
+      "service_offering_owner_contacts": [
+        "Elena Petrova"
+      ],
+      "service_offering_owner_contact_groups": [
+        "service-offering-owners"
+      ],
+      "service_offering_manager_contacts": [
+        "Franklin Diaz"
+      ],
+      "service_offering_manager_contact_groups": [
+        "service-offering-managers"
+      ],
+      "business_unit": [
+        "app1-business-unit"
+      ],
+      "support_group": [
+        "app-support-group"
+      ],
+      "change_group": [
+        "app-change-group"
+      ],
+      "tenant": [
+        "bmw"
       ]
     }
   ],
@@ -4442,1207 +5062,2147 @@
       "rpo": 3,
       "rto": 5,
       "bcm": 2
+    },
+    {
+      "name": "Managed Email - Volkswagen (Application Service)",
+      "description": "Managed Email - Volkswagen (Application Service)",
+      "environment": "production",
+      "lifecycle": "cancelled",
+      "service_offering": "Managed Email - Volkswagen",
+      "business_unit": [
+        "app1-business-unit"
+      ],
+      "support_group": [
+        "app-support-group"
+      ],
+      "change_group": [
+        "app-change-group"
+      ],
+      "sla": [
+        "on-site-service"
+      ],
+      "owned_by_contact_group": "app1-owner-group",
+      "operation_time": [
+        "105"
+      ],
+      "availability": [
+        "99-99"
+      ],
+      "mtat": [
+        "category-c"
+      ],
+      "service_criticality": [
+        "not-critical"
+      ],
+      "accepted_downtime": 1,
+      "ttr": 3,
+      "rpo": 4,
+      "rto": 2,
+      "bcm": 3
+    },
+    {
+      "name": "Unified Communications - Deutsche Bank (Application Service)",
+      "description": "Unified Communications - Deutsche Bank (Application Service)",
+      "environment": "staging",
+      "lifecycle": "draft",
+      "service_offering": "Unified Communications - Deutsche Bank",
+      "business_unit": [
+        "app1-business-unit"
+      ],
+      "support_group": [
+        "app-support-group"
+      ],
+      "change_group": [
+        "app-change-group"
+      ],
+      "sla": [
+        "change-support"
+      ],
+      "owned_by_contact_group": "app1-owner-group",
+      "operation_time": [
+        "247"
+      ],
+      "availability": [
+        "99-50"
+      ],
+      "mtat": [
+        "category-a"
+      ],
+      "service_criticality": [
+        "less-critical"
+      ],
+      "accepted_downtime": 2,
+      "ttr": 1,
+      "rpo": 2,
+      "rto": 3,
+      "bcm": 1
+    },
+    {
+      "name": "Endpoint Management - Allianz (Application Service)",
+      "description": "Endpoint Management - Allianz (Application Service)",
+      "environment": "test",
+      "lifecycle": "design",
+      "service_offering": "Endpoint Management - Allianz",
+      "business_unit": [
+        "app1-business-unit"
+      ],
+      "support_group": [
+        "app-support-group"
+      ],
+      "change_group": [
+        "app-change-group"
+      ],
+      "sla": [
+        "basic-support"
+      ],
+      "owned_by_contact_group": "app1-owner-group",
+      "operation_time": [
+        "85"
+      ],
+      "availability": [
+        "99-00"
+      ],
+      "mtat": [
+        "category-b"
+      ],
+      "service_criticality": [
+        "somewhat-critical"
+      ],
+      "accepted_downtime": 3,
+      "ttr": 2,
+      "rpo": 3,
+      "rto": 4,
+      "bcm": 2
+    },
+    {
+      "name": "Helpdesk Support - Adidas (Application Service)",
+      "description": "Helpdesk Support - Adidas (Application Service)",
+      "environment": "development",
+      "lifecycle": "build",
+      "service_offering": "Helpdesk Support - Adidas",
+      "business_unit": [
+        "app1-business-unit"
+      ],
+      "support_group": [
+        "app-support-group"
+      ],
+      "change_group": [
+        "app-change-group"
+      ],
+      "sla": [
+        "catch-dispatch"
+      ],
+      "owned_by_contact_group": "app1-owner-group",
+      "operation_time": [
+        "105"
+      ],
+      "availability": [
+        "98-00"
+      ],
+      "mtat": [
+        "category-c"
+      ],
+      "service_criticality": [
+        "most-critical"
+      ],
+      "accepted_downtime": 4,
+      "ttr": 3,
+      "rpo": 4,
+      "rto": 5,
+      "bcm": 3
+    },
+    {
+      "name": "Identity & Access Management - Puma (Application Service)",
+      "description": "Identity & Access Management - Puma (Application Service)",
+      "environment": "qa",
+      "lifecycle": "available",
+      "service_offering": "Identity & Access Management - Puma",
+      "business_unit": [
+        "app1-business-unit"
+      ],
+      "support_group": [
+        "app-support-group"
+      ],
+      "change_group": [
+        "app-change-group"
+      ],
+      "sla": [
+        "incident-support"
+      ],
+      "owned_by_contact_group": "app1-owner-group",
+      "operation_time": [
+        "247"
+      ],
+      "availability": [
+        "95-00"
+      ],
+      "mtat": [
+        "category-a"
+      ],
+      "service_criticality": [
+        "not-critical"
+      ],
+      "accepted_downtime": 1,
+      "ttr": 1,
+      "rpo": 2,
+      "rto": 2,
+      "bcm": 1
+    },
+    {
+      "name": "Video Conferencing - Nike (Application Service)",
+      "description": "Video Conferencing - Nike (Application Service)",
+      "environment": "production",
+      "lifecycle": "operational",
+      "service_offering": "Video Conferencing - Nike",
+      "business_unit": [
+        "app1-business-unit"
+      ],
+      "support_group": [
+        "app-support-group"
+      ],
+      "change_group": [
+        "app-change-group"
+      ],
+      "sla": [
+        "lifecycle-package"
+      ],
+      "owned_by_contact_group": "app1-owner-group",
+      "operation_time": [
+        "85"
+      ],
+      "availability": [
+        "99-99"
+      ],
+      "mtat": [
+        "category-b"
+      ],
+      "service_criticality": [
+        "less-critical"
+      ],
+      "accepted_downtime": 2,
+      "ttr": 2,
+      "rpo": 3,
+      "rto": 3,
+      "bcm": 2
+    },
+    {
+      "name": "File Sharing & Collaboration - Samsung (Application Service)",
+      "description": "File Sharing & Collaboration - Samsung (Application Service)",
+      "environment": "staging",
+      "lifecycle": "in-maintenance",
+      "service_offering": "File Sharing & Collaboration - Samsung",
+      "business_unit": [
+        "app1-business-unit"
+      ],
+      "support_group": [
+        "app-support-group"
+      ],
+      "change_group": [
+        "app-change-group"
+      ],
+      "sla": [
+        "monitoring"
+      ],
+      "owned_by_contact_group": "app1-owner-group",
+      "operation_time": [
+        "105"
+      ],
+      "availability": [
+        "99-50"
+      ],
+      "mtat": [
+        "category-c"
+      ],
+      "service_criticality": [
+        "somewhat-critical"
+      ],
+      "accepted_downtime": 3,
+      "ttr": 3,
+      "rpo": 4,
+      "rto": 4,
+      "bcm": 3
+    },
+    {
+      "name": "Mobile Device Management - Sony (Application Service)",
+      "description": "Mobile Device Management - Sony (Application Service)",
+      "environment": "test",
+      "lifecycle": "end-of-support",
+      "service_offering": "Mobile Device Management - Sony",
+      "business_unit": [
+        "app1-business-unit"
+      ],
+      "support_group": [
+        "app-support-group"
+      ],
+      "change_group": [
+        "app-change-group"
+      ],
+      "sla": [
+        "on-site-service"
+      ],
+      "owned_by_contact_group": "app1-owner-group",
+      "operation_time": [
+        "247"
+      ],
+      "availability": [
+        "99-00"
+      ],
+      "mtat": [
+        "category-a"
+      ],
+      "service_criticality": [
+        "most-critical"
+      ],
+      "accepted_downtime": 4,
+      "ttr": 1,
+      "rpo": 2,
+      "rto": 5,
+      "bcm": 1
+    },
+    {
+      "name": "Print Services - Toyota (Application Service)",
+      "description": "Print Services - Toyota (Application Service)",
+      "environment": "development",
+      "lifecycle": "end-of-life",
+      "service_offering": "Print Services - Toyota",
+      "business_unit": [
+        "app1-business-unit"
+      ],
+      "support_group": [
+        "app-support-group"
+      ],
+      "change_group": [
+        "app-change-group"
+      ],
+      "sla": [
+        "change-support"
+      ],
+      "owned_by_contact_group": "app1-owner-group",
+      "operation_time": [
+        "85"
+      ],
+      "availability": [
+        "98-00"
+      ],
+      "mtat": [
+        "category-b"
+      ],
+      "service_criticality": [
+        "not-critical"
+      ],
+      "accepted_downtime": 1,
+      "ttr": 2,
+      "rpo": 3,
+      "rto": 2,
+      "bcm": 2
+    },
+    {
+      "name": "Virtual Desktop Infrastructure - Shell (Application Service)",
+      "description": "Virtual Desktop Infrastructure - Shell (Application Service)",
+      "environment": "qa",
+      "lifecycle": "expired",
+      "service_offering": "Virtual Desktop Infrastructure - Shell",
+      "business_unit": [
+        "app1-business-unit"
+      ],
+      "support_group": [
+        "app-support-group"
+      ],
+      "change_group": [
+        "app-change-group"
+      ],
+      "sla": [
+        "basic-support"
+      ],
+      "owned_by_contact_group": "app1-owner-group",
+      "operation_time": [
+        "105"
+      ],
+      "availability": [
+        "95-00"
+      ],
+      "mtat": [
+        "category-c"
+      ],
+      "service_criticality": [
+        "less-critical"
+      ],
+      "accepted_downtime": 2,
+      "ttr": 3,
+      "rpo": 4,
+      "rto": 3,
+      "bcm": 3
+    },
+    {
+      "name": "Cloud Backup - Coca Cola (Application Service)",
+      "description": "Cloud Backup - Coca Cola (Application Service)",
+      "environment": "production",
+      "lifecycle": "decommissioned",
+      "service_offering": "Cloud Backup - Coca Cola",
+      "business_unit": [
+        "app1-business-unit"
+      ],
+      "support_group": [
+        "app-support-group"
+      ],
+      "change_group": [
+        "app-change-group"
+      ],
+      "sla": [
+        "catch-dispatch"
+      ],
+      "owned_by_contact_group": "app1-owner-group",
+      "operation_time": [
+        "247"
+      ],
+      "availability": [
+        "99-99"
+      ],
+      "mtat": [
+        "category-a"
+      ],
+      "service_criticality": [
+        "somewhat-critical"
+      ],
+      "accepted_downtime": 3,
+      "ttr": 1,
+      "rpo": 2,
+      "rto": 4,
+      "bcm": 1
+    },
+    {
+      "name": "Disaster Recovery - Cisco (Application Service)",
+      "description": "Disaster Recovery - Cisco (Application Service)",
+      "environment": "staging",
+      "lifecycle": "cancelled",
+      "service_offering": "Disaster Recovery - Cisco",
+      "business_unit": [
+        "app1-business-unit"
+      ],
+      "support_group": [
+        "app-support-group"
+      ],
+      "change_group": [
+        "app-change-group"
+      ],
+      "sla": [
+        "incident-support"
+      ],
+      "owned_by_contact_group": "app1-owner-group",
+      "operation_time": [
+        "85"
+      ],
+      "availability": [
+        "99-50"
+      ],
+      "mtat": [
+        "category-b"
+      ],
+      "service_criticality": [
+        "most-critical"
+      ],
+      "accepted_downtime": 4,
+      "ttr": 2,
+      "rpo": 3,
+      "rto": 5,
+      "bcm": 2
+    },
+    {
+      "name": "Network Security - SAP (Application Service)",
+      "description": "Network Security - SAP (Application Service)",
+      "environment": "test",
+      "lifecycle": "draft",
+      "service_offering": "Network Security - SAP",
+      "business_unit": [
+        "app1-business-unit"
+      ],
+      "support_group": [
+        "app-support-group"
+      ],
+      "change_group": [
+        "app-change-group"
+      ],
+      "sla": [
+        "lifecycle-package"
+      ],
+      "owned_by_contact_group": "app1-owner-group",
+      "operation_time": [
+        "105"
+      ],
+      "availability": [
+        "99-00"
+      ],
+      "mtat": [
+        "category-c"
+      ],
+      "service_criticality": [
+        "not-critical"
+      ],
+      "accepted_downtime": 1,
+      "ttr": 3,
+      "rpo": 4,
+      "rto": 2,
+      "bcm": 3
+    },
+    {
+      "name": "Database Hosting - Google (Application Service)",
+      "description": "Database Hosting - Google (Application Service)",
+      "environment": "development",
+      "lifecycle": "design",
+      "service_offering": "Database Hosting - Google",
+      "business_unit": [
+        "app1-business-unit"
+      ],
+      "support_group": [
+        "app-support-group"
+      ],
+      "change_group": [
+        "app-change-group"
+      ],
+      "sla": [
+        "monitoring"
+      ],
+      "owned_by_contact_group": "app1-owner-group",
+      "operation_time": [
+        "247"
+      ],
+      "availability": [
+        "98-00"
+      ],
+      "mtat": [
+        "category-a"
+      ],
+      "service_criticality": [
+        "less-critical"
+      ],
+      "accepted_downtime": 2,
+      "ttr": 1,
+      "rpo": 2,
+      "rto": 3,
+      "bcm": 1
+    },
+    {
+      "name": "Load Balancing - Amazon (Application Service)",
+      "description": "Load Balancing - Amazon (Application Service)",
+      "environment": "qa",
+      "lifecycle": "build",
+      "service_offering": "Load Balancing - Amazon",
+      "business_unit": [
+        "app1-business-unit"
+      ],
+      "support_group": [
+        "app-support-group"
+      ],
+      "change_group": [
+        "app-change-group"
+      ],
+      "sla": [
+        "on-site-service"
+      ],
+      "owned_by_contact_group": "app1-owner-group",
+      "operation_time": [
+        "85"
+      ],
+      "availability": [
+        "95-00"
+      ],
+      "mtat": [
+        "category-b"
+      ],
+      "service_criticality": [
+        "somewhat-critical"
+      ],
+      "accepted_downtime": 3,
+      "ttr": 2,
+      "rpo": 3,
+      "rto": 4,
+      "bcm": 2
+    },
+    {
+      "name": "Container Orchestration - Microsoft (Application Service)",
+      "description": "Container Orchestration - Microsoft (Application Service)",
+      "environment": "production",
+      "lifecycle": "available",
+      "service_offering": "Container Orchestration - Microsoft",
+      "business_unit": [
+        "app1-business-unit"
+      ],
+      "support_group": [
+        "app-support-group"
+      ],
+      "change_group": [
+        "app-change-group"
+      ],
+      "sla": [
+        "change-support"
+      ],
+      "owned_by_contact_group": "app1-owner-group",
+      "operation_time": [
+        "105"
+      ],
+      "availability": [
+        "99-99"
+      ],
+      "mtat": [
+        "category-c"
+      ],
+      "service_criticality": [
+        "most-critical"
+      ],
+      "accepted_downtime": 4,
+      "ttr": 3,
+      "rpo": 4,
+      "rto": 5,
+      "bcm": 3
+    },
+    {
+      "name": "Data Analytics Platform - IBM (Application Service)",
+      "description": "Data Analytics Platform - IBM (Application Service)",
+      "environment": "staging",
+      "lifecycle": "operational",
+      "service_offering": "Data Analytics Platform - IBM",
+      "business_unit": [
+        "app1-business-unit"
+      ],
+      "support_group": [
+        "app-support-group"
+      ],
+      "change_group": [
+        "app-change-group"
+      ],
+      "sla": [
+        "basic-support"
+      ],
+      "owned_by_contact_group": "app1-owner-group",
+      "operation_time": [
+        "247"
+      ],
+      "availability": [
+        "99-50"
+      ],
+      "mtat": [
+        "category-a"
+      ],
+      "service_criticality": [
+        "not-critical"
+      ],
+      "accepted_downtime": 1,
+      "ttr": 1,
+      "rpo": 2,
+      "rto": 2,
+      "bcm": 1
+    },
+    {
+      "name": "Storage as a Service - Oracle (Application Service)",
+      "description": "Storage as a Service - Oracle (Application Service)",
+      "environment": "test",
+      "lifecycle": "in-maintenance",
+      "service_offering": "Storage as a Service - Oracle",
+      "business_unit": [
+        "app1-business-unit"
+      ],
+      "support_group": [
+        "app-support-group"
+      ],
+      "change_group": [
+        "app-change-group"
+      ],
+      "sla": [
+        "catch-dispatch"
+      ],
+      "owned_by_contact_group": "app1-owner-group",
+      "operation_time": [
+        "85"
+      ],
+      "availability": [
+        "99-00"
+      ],
+      "mtat": [
+        "category-b"
+      ],
+      "service_criticality": [
+        "less-critical"
+      ],
+      "accepted_downtime": 2,
+      "ttr": 2,
+      "rpo": 3,
+      "rto": 3,
+      "bcm": 2
+    },
+    {
+      "name": "Monitoring & Observability - Siemens (Application Service)",
+      "description": "Monitoring & Observability - Siemens (Application Service)",
+      "environment": "development",
+      "lifecycle": "end-of-support",
+      "service_offering": "Monitoring & Observability - Siemens",
+      "business_unit": [
+        "app1-business-unit"
+      ],
+      "support_group": [
+        "app-support-group"
+      ],
+      "change_group": [
+        "app-change-group"
+      ],
+      "sla": [
+        "incident-support"
+      ],
+      "owned_by_contact_group": "app1-owner-group",
+      "operation_time": [
+        "105"
+      ],
+      "availability": [
+        "98-00"
+      ],
+      "mtat": [
+        "category-c"
+      ],
+      "service_criticality": [
+        "somewhat-critical"
+      ],
+      "accepted_downtime": 3,
+      "ttr": 3,
+      "rpo": 4,
+      "rto": 4,
+      "bcm": 3
+    },
+    {
+      "name": "DNS & DHCP Management - BMW (Application Service)",
+      "description": "DNS & DHCP Management - BMW (Application Service)",
+      "environment": "qa",
+      "lifecycle": "end-of-life",
+      "service_offering": "DNS & DHCP Management - BMW",
+      "business_unit": [
+        "app1-business-unit"
+      ],
+      "support_group": [
+        "app-support-group"
+      ],
+      "change_group": [
+        "app-change-group"
+      ],
+      "sla": [
+        "lifecycle-package"
+      ],
+      "owned_by_contact_group": "app1-owner-group",
+      "operation_time": [
+        "247"
+      ],
+      "availability": [
+        "95-00"
+      ],
+      "mtat": [
+        "category-a"
+      ],
+      "service_criticality": [
+        "most-critical"
+      ],
+      "accepted_downtime": 4,
+      "ttr": 1,
+      "rpo": 2,
+      "rto": 5,
+      "bcm": 1
     }
   ],
   "plugins/service-specification/device-service-infos/": [
     {
       "device": "Munich-FW-01",
       "application_services": [
-        "Managed Email - Coca Cola (Application Service)"
+        "Managed Email - Coca Cola (Application Service)",
+        "Cloud Backup - Coca Cola (Application Service)"
       ]
     },
     {
       "device": "Munich-FW-02",
       "application_services": [
-        "Managed Email - Coca Cola (Application Service)"
+        "Managed Email - Coca Cola (Application Service)",
+        "Cloud Backup - Coca Cola (Application Service)"
       ]
     },
     {
       "device": "Munich-SW-01",
       "application_services": [
-        "Managed Email - Coca Cola (Application Service)"
+        "Managed Email - Coca Cola (Application Service)",
+        "Cloud Backup - Coca Cola (Application Service)"
       ]
     },
     {
       "device": "Munich-SW-02",
       "application_services": [
-        "Managed Email - Coca Cola (Application Service)"
+        "Managed Email - Coca Cola (Application Service)",
+        "Cloud Backup - Coca Cola (Application Service)"
       ]
     },
     {
       "device": "Munich-SRV-01",
       "application_services": [
-        "Managed Email - Coca Cola (Application Service)"
+        "Managed Email - Coca Cola (Application Service)",
+        "Cloud Backup - Coca Cola (Application Service)"
       ]
     },
     {
       "device": "Hamburg-FW-01",
       "application_services": [
-        "Managed Email - Coca Cola (Application Service)"
+        "Managed Email - Coca Cola (Application Service)",
+        "Cloud Backup - Coca Cola (Application Service)"
       ]
     },
     {
       "device": "Hamburg-FW-02",
       "application_services": [
-        "Managed Email - Coca Cola (Application Service)"
+        "Managed Email - Coca Cola (Application Service)",
+        "Cloud Backup - Coca Cola (Application Service)"
       ]
     },
     {
       "device": "Hamburg-SW-01",
       "application_services": [
-        "Managed Email - Coca Cola (Application Service)"
+        "Managed Email - Coca Cola (Application Service)",
+        "Cloud Backup - Coca Cola (Application Service)"
       ]
     },
     {
       "device": "Hamburg-SW-02",
       "application_services": [
-        "Managed Email - Coca Cola (Application Service)"
+        "Managed Email - Coca Cola (Application Service)",
+        "Cloud Backup - Coca Cola (Application Service)"
       ]
     },
     {
       "device": "Hamburg-SRV-01",
       "application_services": [
-        "Managed Email - Coca Cola (Application Service)"
+        "Managed Email - Coca Cola (Application Service)",
+        "Cloud Backup - Coca Cola (Application Service)"
       ]
     },
     {
       "device": "Berlin-FW-01",
       "application_services": [
-        "Unified Communications - Cisco (Application Service)"
+        "Unified Communications - Cisco (Application Service)",
+        "Disaster Recovery - Cisco (Application Service)"
       ]
     },
     {
       "device": "Berlin-FW-02",
       "application_services": [
-        "Unified Communications - Cisco (Application Service)"
+        "Unified Communications - Cisco (Application Service)",
+        "Disaster Recovery - Cisco (Application Service)"
       ]
     },
     {
       "device": "Berlin-SW-01",
       "application_services": [
-        "Unified Communications - Cisco (Application Service)"
+        "Unified Communications - Cisco (Application Service)",
+        "Disaster Recovery - Cisco (Application Service)"
       ]
     },
     {
       "device": "Berlin-SW-02",
       "application_services": [
-        "Unified Communications - Cisco (Application Service)"
+        "Unified Communications - Cisco (Application Service)",
+        "Disaster Recovery - Cisco (Application Service)"
       ]
     },
     {
       "device": "Berlin-SRV-01",
       "application_services": [
-        "Unified Communications - Cisco (Application Service)"
+        "Unified Communications - Cisco (Application Service)",
+        "Disaster Recovery - Cisco (Application Service)"
       ]
     },
     {
       "device": "Frankfurt-FW-01",
       "application_services": [
-        "Unified Communications - Cisco (Application Service)"
+        "Unified Communications - Cisco (Application Service)",
+        "Disaster Recovery - Cisco (Application Service)"
       ]
     },
     {
       "device": "Frankfurt-FW-02",
       "application_services": [
-        "Unified Communications - Cisco (Application Service)"
+        "Unified Communications - Cisco (Application Service)",
+        "Disaster Recovery - Cisco (Application Service)"
       ]
     },
     {
       "device": "Frankfurt-SW-01",
       "application_services": [
-        "Unified Communications - Cisco (Application Service)"
+        "Unified Communications - Cisco (Application Service)",
+        "Disaster Recovery - Cisco (Application Service)"
       ]
     },
     {
       "device": "Frankfurt-SW-02",
       "application_services": [
-        "Unified Communications - Cisco (Application Service)"
+        "Unified Communications - Cisco (Application Service)",
+        "Disaster Recovery - Cisco (Application Service)"
       ]
     },
     {
       "device": "Frankfurt-SRV-01",
       "application_services": [
-        "Unified Communications - Cisco (Application Service)"
+        "Unified Communications - Cisco (Application Service)",
+        "Disaster Recovery - Cisco (Application Service)"
       ]
     },
     {
       "device": "Cologne-FW-01",
       "application_services": [
-        "Endpoint Management - SAP (Application Service)"
+        "Endpoint Management - SAP (Application Service)",
+        "Network Security - SAP (Application Service)"
       ]
     },
     {
       "device": "Cologne-FW-02",
       "application_services": [
-        "Endpoint Management - SAP (Application Service)"
+        "Endpoint Management - SAP (Application Service)",
+        "Network Security - SAP (Application Service)"
       ]
     },
     {
       "device": "Cologne-SW-01",
       "application_services": [
-        "Endpoint Management - SAP (Application Service)"
+        "Endpoint Management - SAP (Application Service)",
+        "Network Security - SAP (Application Service)"
       ]
     },
     {
       "device": "Cologne-SW-02",
       "application_services": [
-        "Endpoint Management - SAP (Application Service)"
+        "Endpoint Management - SAP (Application Service)",
+        "Network Security - SAP (Application Service)"
       ]
     },
     {
       "device": "Cologne-SRV-01",
       "application_services": [
-        "Endpoint Management - SAP (Application Service)"
+        "Endpoint Management - SAP (Application Service)",
+        "Network Security - SAP (Application Service)"
       ]
     },
     {
       "device": "Stuttgart-FW-01",
       "application_services": [
-        "Endpoint Management - SAP (Application Service)"
+        "Endpoint Management - SAP (Application Service)",
+        "Network Security - SAP (Application Service)"
       ]
     },
     {
       "device": "Stuttgart-FW-02",
       "application_services": [
-        "Endpoint Management - SAP (Application Service)"
+        "Endpoint Management - SAP (Application Service)",
+        "Network Security - SAP (Application Service)"
       ]
     },
     {
       "device": "Stuttgart-SW-01",
       "application_services": [
-        "Endpoint Management - SAP (Application Service)"
+        "Endpoint Management - SAP (Application Service)",
+        "Network Security - SAP (Application Service)"
       ]
     },
     {
       "device": "Stuttgart-SW-02",
       "application_services": [
-        "Endpoint Management - SAP (Application Service)"
+        "Endpoint Management - SAP (Application Service)",
+        "Network Security - SAP (Application Service)"
       ]
     },
     {
       "device": "Stuttgart-SRV-01",
       "application_services": [
-        "Endpoint Management - SAP (Application Service)"
+        "Endpoint Management - SAP (Application Service)",
+        "Network Security - SAP (Application Service)"
       ]
     },
     {
       "device": "Dusseldorf-FW-01",
       "application_services": [
-        "Helpdesk Support - Google (Application Service)"
+        "Helpdesk Support - Google (Application Service)",
+        "Database Hosting - Google (Application Service)"
       ]
     },
     {
       "device": "Dusseldorf-FW-02",
       "application_services": [
-        "Helpdesk Support - Google (Application Service)"
+        "Helpdesk Support - Google (Application Service)",
+        "Database Hosting - Google (Application Service)"
       ]
     },
     {
       "device": "Dusseldorf-SW-01",
       "application_services": [
-        "Helpdesk Support - Google (Application Service)"
+        "Helpdesk Support - Google (Application Service)",
+        "Database Hosting - Google (Application Service)"
       ]
     },
     {
       "device": "Dusseldorf-SW-02",
       "application_services": [
-        "Helpdesk Support - Google (Application Service)"
+        "Helpdesk Support - Google (Application Service)",
+        "Database Hosting - Google (Application Service)"
       ]
     },
     {
       "device": "Dusseldorf-SRV-01",
       "application_services": [
-        "Helpdesk Support - Google (Application Service)"
+        "Helpdesk Support - Google (Application Service)",
+        "Database Hosting - Google (Application Service)"
       ]
     },
     {
       "device": "Leipzig-FW-01",
       "application_services": [
-        "Helpdesk Support - Google (Application Service)"
+        "Helpdesk Support - Google (Application Service)",
+        "Database Hosting - Google (Application Service)"
       ]
     },
     {
       "device": "Leipzig-FW-02",
       "application_services": [
-        "Helpdesk Support - Google (Application Service)"
+        "Helpdesk Support - Google (Application Service)",
+        "Database Hosting - Google (Application Service)"
       ]
     },
     {
       "device": "Leipzig-SW-01",
       "application_services": [
-        "Helpdesk Support - Google (Application Service)"
+        "Helpdesk Support - Google (Application Service)",
+        "Database Hosting - Google (Application Service)"
       ]
     },
     {
       "device": "Leipzig-SW-02",
       "application_services": [
-        "Helpdesk Support - Google (Application Service)"
+        "Helpdesk Support - Google (Application Service)",
+        "Database Hosting - Google (Application Service)"
       ]
     },
     {
       "device": "Leipzig-SRV-01",
       "application_services": [
-        "Helpdesk Support - Google (Application Service)"
+        "Helpdesk Support - Google (Application Service)",
+        "Database Hosting - Google (Application Service)"
       ]
     },
     {
       "device": "Dortmund-FW-01",
       "application_services": [
-        "Identity & Access Management - Amazon (Application Service)"
+        "Identity & Access Management - Amazon (Application Service)",
+        "Load Balancing - Amazon (Application Service)"
       ]
     },
     {
       "device": "Dortmund-FW-02",
       "application_services": [
-        "Identity & Access Management - Amazon (Application Service)"
+        "Identity & Access Management - Amazon (Application Service)",
+        "Load Balancing - Amazon (Application Service)"
       ]
     },
     {
       "device": "Dortmund-SW-01",
       "application_services": [
-        "Identity & Access Management - Amazon (Application Service)"
+        "Identity & Access Management - Amazon (Application Service)",
+        "Load Balancing - Amazon (Application Service)"
       ]
     },
     {
       "device": "Dortmund-SW-02",
       "application_services": [
-        "Identity & Access Management - Amazon (Application Service)"
+        "Identity & Access Management - Amazon (Application Service)",
+        "Load Balancing - Amazon (Application Service)"
       ]
     },
     {
       "device": "Dortmund-SRV-01",
       "application_services": [
-        "Identity & Access Management - Amazon (Application Service)"
+        "Identity & Access Management - Amazon (Application Service)",
+        "Load Balancing - Amazon (Application Service)"
       ]
     },
     {
       "device": "Essen-FW-01",
       "application_services": [
-        "Identity & Access Management - Amazon (Application Service)"
+        "Identity & Access Management - Amazon (Application Service)",
+        "Load Balancing - Amazon (Application Service)"
       ]
     },
     {
       "device": "Essen-FW-02",
       "application_services": [
-        "Identity & Access Management - Amazon (Application Service)"
+        "Identity & Access Management - Amazon (Application Service)",
+        "Load Balancing - Amazon (Application Service)"
       ]
     },
     {
       "device": "Essen-SW-01",
       "application_services": [
-        "Identity & Access Management - Amazon (Application Service)"
+        "Identity & Access Management - Amazon (Application Service)",
+        "Load Balancing - Amazon (Application Service)"
       ]
     },
     {
       "device": "Essen-SW-02",
       "application_services": [
-        "Identity & Access Management - Amazon (Application Service)"
+        "Identity & Access Management - Amazon (Application Service)",
+        "Load Balancing - Amazon (Application Service)"
       ]
     },
     {
       "device": "Essen-SRV-01",
       "application_services": [
-        "Identity & Access Management - Amazon (Application Service)"
+        "Identity & Access Management - Amazon (Application Service)",
+        "Load Balancing - Amazon (Application Service)"
       ]
     },
     {
       "device": "Vienna-FW-01",
       "application_services": [
-        "Video Conferencing - Microsoft (Application Service)"
+        "Video Conferencing - Microsoft (Application Service)",
+        "Container Orchestration - Microsoft (Application Service)"
       ]
     },
     {
       "device": "Vienna-FW-02",
       "application_services": [
-        "Video Conferencing - Microsoft (Application Service)"
+        "Video Conferencing - Microsoft (Application Service)",
+        "Container Orchestration - Microsoft (Application Service)"
       ]
     },
     {
       "device": "Vienna-SW-01",
       "application_services": [
-        "Video Conferencing - Microsoft (Application Service)"
+        "Video Conferencing - Microsoft (Application Service)",
+        "Container Orchestration - Microsoft (Application Service)"
       ]
     },
     {
       "device": "Vienna-SW-02",
       "application_services": [
-        "Video Conferencing - Microsoft (Application Service)"
+        "Video Conferencing - Microsoft (Application Service)",
+        "Container Orchestration - Microsoft (Application Service)"
       ]
     },
     {
       "device": "Vienna-SRV-01",
       "application_services": [
-        "Video Conferencing - Microsoft (Application Service)"
+        "Video Conferencing - Microsoft (Application Service)",
+        "Container Orchestration - Microsoft (Application Service)"
       ]
     },
     {
       "device": "Zurich-FW-01",
       "application_services": [
-        "Video Conferencing - Microsoft (Application Service)"
+        "Video Conferencing - Microsoft (Application Service)",
+        "Container Orchestration - Microsoft (Application Service)"
       ]
     },
     {
       "device": "Zurich-FW-02",
       "application_services": [
-        "Video Conferencing - Microsoft (Application Service)"
+        "Video Conferencing - Microsoft (Application Service)",
+        "Container Orchestration - Microsoft (Application Service)"
       ]
     },
     {
       "device": "Zurich-SW-01",
       "application_services": [
-        "Video Conferencing - Microsoft (Application Service)"
+        "Video Conferencing - Microsoft (Application Service)",
+        "Container Orchestration - Microsoft (Application Service)"
       ]
     },
     {
       "device": "Zurich-SW-02",
       "application_services": [
-        "Video Conferencing - Microsoft (Application Service)"
+        "Video Conferencing - Microsoft (Application Service)",
+        "Container Orchestration - Microsoft (Application Service)"
       ]
     },
     {
       "device": "Zurich-SRV-01",
       "application_services": [
-        "Video Conferencing - Microsoft (Application Service)"
+        "Video Conferencing - Microsoft (Application Service)",
+        "Container Orchestration - Microsoft (Application Service)"
       ]
     },
     {
       "device": "Amsterdam-FW-01",
       "application_services": [
-        "File Sharing & Collaboration - IBM (Application Service)"
+        "File Sharing & Collaboration - IBM (Application Service)",
+        "Data Analytics Platform - IBM (Application Service)"
       ]
     },
     {
       "device": "Amsterdam-FW-02",
       "application_services": [
-        "File Sharing & Collaboration - IBM (Application Service)"
+        "File Sharing & Collaboration - IBM (Application Service)",
+        "Data Analytics Platform - IBM (Application Service)"
       ]
     },
     {
       "device": "Amsterdam-SW-01",
       "application_services": [
-        "File Sharing & Collaboration - IBM (Application Service)"
+        "File Sharing & Collaboration - IBM (Application Service)",
+        "Data Analytics Platform - IBM (Application Service)"
       ]
     },
     {
       "device": "Amsterdam-SW-02",
       "application_services": [
-        "File Sharing & Collaboration - IBM (Application Service)"
+        "File Sharing & Collaboration - IBM (Application Service)",
+        "Data Analytics Platform - IBM (Application Service)"
       ]
     },
     {
       "device": "Amsterdam-SRV-01",
       "application_services": [
-        "File Sharing & Collaboration - IBM (Application Service)"
+        "File Sharing & Collaboration - IBM (Application Service)",
+        "Data Analytics Platform - IBM (Application Service)"
       ]
     },
     {
       "device": "Brussels-FW-01",
       "application_services": [
-        "File Sharing & Collaboration - IBM (Application Service)"
+        "File Sharing & Collaboration - IBM (Application Service)",
+        "Data Analytics Platform - IBM (Application Service)"
       ]
     },
     {
       "device": "Brussels-FW-02",
       "application_services": [
-        "File Sharing & Collaboration - IBM (Application Service)"
+        "File Sharing & Collaboration - IBM (Application Service)",
+        "Data Analytics Platform - IBM (Application Service)"
       ]
     },
     {
       "device": "Brussels-SW-01",
       "application_services": [
-        "File Sharing & Collaboration - IBM (Application Service)"
+        "File Sharing & Collaboration - IBM (Application Service)",
+        "Data Analytics Platform - IBM (Application Service)"
       ]
     },
     {
       "device": "Brussels-SW-02",
       "application_services": [
-        "File Sharing & Collaboration - IBM (Application Service)"
+        "File Sharing & Collaboration - IBM (Application Service)",
+        "Data Analytics Platform - IBM (Application Service)"
       ]
     },
     {
       "device": "Brussels-SRV-01",
       "application_services": [
-        "File Sharing & Collaboration - IBM (Application Service)"
+        "File Sharing & Collaboration - IBM (Application Service)",
+        "Data Analytics Platform - IBM (Application Service)"
       ]
     },
     {
       "device": "Paris-FW-01",
       "application_services": [
-        "Mobile Device Management - Oracle (Application Service)"
+        "Mobile Device Management - Oracle (Application Service)",
+        "Storage as a Service - Oracle (Application Service)"
       ]
     },
     {
       "device": "Paris-FW-02",
       "application_services": [
-        "Mobile Device Management - Oracle (Application Service)"
+        "Mobile Device Management - Oracle (Application Service)",
+        "Storage as a Service - Oracle (Application Service)"
       ]
     },
     {
       "device": "Paris-SW-01",
       "application_services": [
-        "Mobile Device Management - Oracle (Application Service)"
+        "Mobile Device Management - Oracle (Application Service)",
+        "Storage as a Service - Oracle (Application Service)"
       ]
     },
     {
       "device": "Paris-SW-02",
       "application_services": [
-        "Mobile Device Management - Oracle (Application Service)"
+        "Mobile Device Management - Oracle (Application Service)",
+        "Storage as a Service - Oracle (Application Service)"
       ]
     },
     {
       "device": "Paris-SRV-01",
       "application_services": [
-        "Mobile Device Management - Oracle (Application Service)"
+        "Mobile Device Management - Oracle (Application Service)",
+        "Storage as a Service - Oracle (Application Service)"
       ]
     },
     {
       "device": "London-FW-01",
       "application_services": [
-        "Mobile Device Management - Oracle (Application Service)"
+        "Mobile Device Management - Oracle (Application Service)",
+        "Storage as a Service - Oracle (Application Service)"
       ]
     },
     {
       "device": "London-FW-02",
       "application_services": [
-        "Mobile Device Management - Oracle (Application Service)"
+        "Mobile Device Management - Oracle (Application Service)",
+        "Storage as a Service - Oracle (Application Service)"
       ]
     },
     {
       "device": "London-SW-01",
       "application_services": [
-        "Mobile Device Management - Oracle (Application Service)"
+        "Mobile Device Management - Oracle (Application Service)",
+        "Storage as a Service - Oracle (Application Service)"
       ]
     },
     {
       "device": "London-SW-02",
       "application_services": [
-        "Mobile Device Management - Oracle (Application Service)"
+        "Mobile Device Management - Oracle (Application Service)",
+        "Storage as a Service - Oracle (Application Service)"
       ]
     },
     {
       "device": "London-SRV-01",
       "application_services": [
-        "Mobile Device Management - Oracle (Application Service)"
+        "Mobile Device Management - Oracle (Application Service)",
+        "Storage as a Service - Oracle (Application Service)"
       ]
     },
     {
       "device": "Madrid-FW-01",
       "application_services": [
-        "Print Services - Siemens (Application Service)"
+        "Print Services - Siemens (Application Service)",
+        "Monitoring & Observability - Siemens (Application Service)"
       ]
     },
     {
       "device": "Madrid-FW-02",
       "application_services": [
-        "Print Services - Siemens (Application Service)"
+        "Print Services - Siemens (Application Service)",
+        "Monitoring & Observability - Siemens (Application Service)"
       ]
     },
     {
       "device": "Madrid-SW-01",
       "application_services": [
-        "Print Services - Siemens (Application Service)"
+        "Print Services - Siemens (Application Service)",
+        "Monitoring & Observability - Siemens (Application Service)"
       ]
     },
     {
       "device": "Madrid-SW-02",
       "application_services": [
-        "Print Services - Siemens (Application Service)"
+        "Print Services - Siemens (Application Service)",
+        "Monitoring & Observability - Siemens (Application Service)"
       ]
     },
     {
       "device": "Madrid-SRV-01",
       "application_services": [
-        "Print Services - Siemens (Application Service)"
+        "Print Services - Siemens (Application Service)",
+        "Monitoring & Observability - Siemens (Application Service)"
       ]
     },
     {
       "device": "Milan-FW-01",
       "application_services": [
-        "Print Services - Siemens (Application Service)"
+        "Print Services - Siemens (Application Service)",
+        "Monitoring & Observability - Siemens (Application Service)"
       ]
     },
     {
       "device": "Milan-FW-02",
       "application_services": [
-        "Print Services - Siemens (Application Service)"
+        "Print Services - Siemens (Application Service)",
+        "Monitoring & Observability - Siemens (Application Service)"
       ]
     },
     {
       "device": "Milan-SW-01",
       "application_services": [
-        "Print Services - Siemens (Application Service)"
+        "Print Services - Siemens (Application Service)",
+        "Monitoring & Observability - Siemens (Application Service)"
       ]
     },
     {
       "device": "Milan-SW-02",
       "application_services": [
-        "Print Services - Siemens (Application Service)"
+        "Print Services - Siemens (Application Service)",
+        "Monitoring & Observability - Siemens (Application Service)"
       ]
     },
     {
       "device": "Milan-SRV-01",
       "application_services": [
-        "Print Services - Siemens (Application Service)"
+        "Print Services - Siemens (Application Service)",
+        "Monitoring & Observability - Siemens (Application Service)"
       ]
     },
     {
       "device": "Rome-FW-01",
       "application_services": [
-        "Virtual Desktop Infrastructure - BMW (Application Service)"
+        "Virtual Desktop Infrastructure - BMW (Application Service)",
+        "DNS & DHCP Management - BMW (Application Service)"
       ]
     },
     {
       "device": "Rome-FW-02",
       "application_services": [
-        "Virtual Desktop Infrastructure - BMW (Application Service)"
+        "Virtual Desktop Infrastructure - BMW (Application Service)",
+        "DNS & DHCP Management - BMW (Application Service)"
       ]
     },
     {
       "device": "Rome-SW-01",
       "application_services": [
-        "Virtual Desktop Infrastructure - BMW (Application Service)"
+        "Virtual Desktop Infrastructure - BMW (Application Service)",
+        "DNS & DHCP Management - BMW (Application Service)"
       ]
     },
     {
       "device": "Rome-SW-02",
       "application_services": [
-        "Virtual Desktop Infrastructure - BMW (Application Service)"
+        "Virtual Desktop Infrastructure - BMW (Application Service)",
+        "DNS & DHCP Management - BMW (Application Service)"
       ]
     },
     {
       "device": "Rome-SRV-01",
       "application_services": [
-        "Virtual Desktop Infrastructure - BMW (Application Service)"
+        "Virtual Desktop Infrastructure - BMW (Application Service)",
+        "DNS & DHCP Management - BMW (Application Service)"
       ]
     },
     {
       "device": "Lisbon-FW-01",
       "application_services": [
-        "Virtual Desktop Infrastructure - BMW (Application Service)"
+        "Virtual Desktop Infrastructure - BMW (Application Service)",
+        "DNS & DHCP Management - BMW (Application Service)"
       ]
     },
     {
       "device": "Lisbon-FW-02",
       "application_services": [
-        "Virtual Desktop Infrastructure - BMW (Application Service)"
+        "Virtual Desktop Infrastructure - BMW (Application Service)",
+        "DNS & DHCP Management - BMW (Application Service)"
       ]
     },
     {
       "device": "Lisbon-SW-01",
       "application_services": [
-        "Virtual Desktop Infrastructure - BMW (Application Service)"
+        "Virtual Desktop Infrastructure - BMW (Application Service)",
+        "DNS & DHCP Management - BMW (Application Service)"
       ]
     },
     {
       "device": "Lisbon-SW-02",
       "application_services": [
-        "Virtual Desktop Infrastructure - BMW (Application Service)"
+        "Virtual Desktop Infrastructure - BMW (Application Service)",
+        "DNS & DHCP Management - BMW (Application Service)"
       ]
     },
     {
       "device": "Lisbon-SRV-01",
       "application_services": [
-        "Virtual Desktop Infrastructure - BMW (Application Service)"
+        "Virtual Desktop Infrastructure - BMW (Application Service)",
+        "DNS & DHCP Management - BMW (Application Service)"
       ]
     },
     {
       "device": "Warsaw-FW-01",
       "application_services": [
-        "Cloud Backup - Volkswagen (Application Service)"
+        "Cloud Backup - Volkswagen (Application Service)",
+        "Managed Email - Volkswagen (Application Service)"
       ]
     },
     {
       "device": "Warsaw-FW-02",
       "application_services": [
-        "Cloud Backup - Volkswagen (Application Service)"
+        "Cloud Backup - Volkswagen (Application Service)",
+        "Managed Email - Volkswagen (Application Service)"
       ]
     },
     {
       "device": "Warsaw-SW-01",
       "application_services": [
-        "Cloud Backup - Volkswagen (Application Service)"
+        "Cloud Backup - Volkswagen (Application Service)",
+        "Managed Email - Volkswagen (Application Service)"
       ]
     },
     {
       "device": "Warsaw-SW-02",
       "application_services": [
-        "Cloud Backup - Volkswagen (Application Service)"
+        "Cloud Backup - Volkswagen (Application Service)",
+        "Managed Email - Volkswagen (Application Service)"
       ]
     },
     {
       "device": "Warsaw-SRV-01",
       "application_services": [
-        "Cloud Backup - Volkswagen (Application Service)"
+        "Cloud Backup - Volkswagen (Application Service)",
+        "Managed Email - Volkswagen (Application Service)"
       ]
     },
     {
       "device": "Prague-FW-01",
       "application_services": [
-        "Cloud Backup - Volkswagen (Application Service)"
+        "Cloud Backup - Volkswagen (Application Service)",
+        "Managed Email - Volkswagen (Application Service)"
       ]
     },
     {
       "device": "Prague-FW-02",
       "application_services": [
-        "Cloud Backup - Volkswagen (Application Service)"
+        "Cloud Backup - Volkswagen (Application Service)",
+        "Managed Email - Volkswagen (Application Service)"
       ]
     },
     {
       "device": "Prague-SW-01",
       "application_services": [
-        "Cloud Backup - Volkswagen (Application Service)"
+        "Cloud Backup - Volkswagen (Application Service)",
+        "Managed Email - Volkswagen (Application Service)"
       ]
     },
     {
       "device": "Prague-SW-02",
       "application_services": [
-        "Cloud Backup - Volkswagen (Application Service)"
+        "Cloud Backup - Volkswagen (Application Service)",
+        "Managed Email - Volkswagen (Application Service)"
       ]
     },
     {
       "device": "Prague-SRV-01",
       "application_services": [
-        "Cloud Backup - Volkswagen (Application Service)"
+        "Cloud Backup - Volkswagen (Application Service)",
+        "Managed Email - Volkswagen (Application Service)"
       ]
     },
     {
       "device": "Budapest-FW-01",
       "application_services": [
-        "Disaster Recovery - Deutsche Bank (Application Service)"
+        "Disaster Recovery - Deutsche Bank (Application Service)",
+        "Unified Communications - Deutsche Bank (Application Service)"
       ]
     },
     {
       "device": "Budapest-FW-02",
       "application_services": [
-        "Disaster Recovery - Deutsche Bank (Application Service)"
+        "Disaster Recovery - Deutsche Bank (Application Service)",
+        "Unified Communications - Deutsche Bank (Application Service)"
       ]
     },
     {
       "device": "Budapest-SW-01",
       "application_services": [
-        "Disaster Recovery - Deutsche Bank (Application Service)"
+        "Disaster Recovery - Deutsche Bank (Application Service)",
+        "Unified Communications - Deutsche Bank (Application Service)"
       ]
     },
     {
       "device": "Budapest-SW-02",
       "application_services": [
-        "Disaster Recovery - Deutsche Bank (Application Service)"
+        "Disaster Recovery - Deutsche Bank (Application Service)",
+        "Unified Communications - Deutsche Bank (Application Service)"
       ]
     },
     {
       "device": "Budapest-SRV-01",
       "application_services": [
-        "Disaster Recovery - Deutsche Bank (Application Service)"
+        "Disaster Recovery - Deutsche Bank (Application Service)",
+        "Unified Communications - Deutsche Bank (Application Service)"
       ]
     },
     {
       "device": "Copenhagen-FW-01",
       "application_services": [
-        "Disaster Recovery - Deutsche Bank (Application Service)"
+        "Disaster Recovery - Deutsche Bank (Application Service)",
+        "Unified Communications - Deutsche Bank (Application Service)"
       ]
     },
     {
       "device": "Copenhagen-FW-02",
       "application_services": [
-        "Disaster Recovery - Deutsche Bank (Application Service)"
+        "Disaster Recovery - Deutsche Bank (Application Service)",
+        "Unified Communications - Deutsche Bank (Application Service)"
       ]
     },
     {
       "device": "Copenhagen-SW-01",
       "application_services": [
-        "Disaster Recovery - Deutsche Bank (Application Service)"
+        "Disaster Recovery - Deutsche Bank (Application Service)",
+        "Unified Communications - Deutsche Bank (Application Service)"
       ]
     },
     {
       "device": "Copenhagen-SW-02",
       "application_services": [
-        "Disaster Recovery - Deutsche Bank (Application Service)"
+        "Disaster Recovery - Deutsche Bank (Application Service)",
+        "Unified Communications - Deutsche Bank (Application Service)"
       ]
     },
     {
       "device": "Copenhagen-SRV-01",
       "application_services": [
-        "Disaster Recovery - Deutsche Bank (Application Service)"
+        "Disaster Recovery - Deutsche Bank (Application Service)",
+        "Unified Communications - Deutsche Bank (Application Service)"
       ]
     },
     {
       "device": "Stockholm-FW-01",
       "application_services": [
-        "Network Security - Allianz (Application Service)"
+        "Network Security - Allianz (Application Service)",
+        "Endpoint Management - Allianz (Application Service)"
       ]
     },
     {
       "device": "Stockholm-FW-02",
       "application_services": [
-        "Network Security - Allianz (Application Service)"
+        "Network Security - Allianz (Application Service)",
+        "Endpoint Management - Allianz (Application Service)"
       ]
     },
     {
       "device": "Stockholm-SW-01",
       "application_services": [
-        "Network Security - Allianz (Application Service)"
+        "Network Security - Allianz (Application Service)",
+        "Endpoint Management - Allianz (Application Service)"
       ]
     },
     {
       "device": "Stockholm-SW-02",
       "application_services": [
-        "Network Security - Allianz (Application Service)"
+        "Network Security - Allianz (Application Service)",
+        "Endpoint Management - Allianz (Application Service)"
       ]
     },
     {
       "device": "Stockholm-SRV-01",
       "application_services": [
-        "Network Security - Allianz (Application Service)"
+        "Network Security - Allianz (Application Service)",
+        "Endpoint Management - Allianz (Application Service)"
       ]
     },
     {
       "device": "Oslo-FW-01",
       "application_services": [
-        "Network Security - Allianz (Application Service)"
+        "Network Security - Allianz (Application Service)",
+        "Endpoint Management - Allianz (Application Service)"
       ]
     },
     {
       "device": "Oslo-FW-02",
       "application_services": [
-        "Network Security - Allianz (Application Service)"
+        "Network Security - Allianz (Application Service)",
+        "Endpoint Management - Allianz (Application Service)"
       ]
     },
     {
       "device": "Oslo-SW-01",
       "application_services": [
-        "Network Security - Allianz (Application Service)"
+        "Network Security - Allianz (Application Service)",
+        "Endpoint Management - Allianz (Application Service)"
       ]
     },
     {
       "device": "Oslo-SW-02",
       "application_services": [
-        "Network Security - Allianz (Application Service)"
+        "Network Security - Allianz (Application Service)",
+        "Endpoint Management - Allianz (Application Service)"
       ]
     },
     {
       "device": "Oslo-SRV-01",
       "application_services": [
-        "Network Security - Allianz (Application Service)"
+        "Network Security - Allianz (Application Service)",
+        "Endpoint Management - Allianz (Application Service)"
       ]
     },
     {
       "device": "Dublin-FW-01",
       "application_services": [
-        "Database Hosting - Adidas (Application Service)"
+        "Database Hosting - Adidas (Application Service)",
+        "Helpdesk Support - Adidas (Application Service)"
       ]
     },
     {
       "device": "Dublin-FW-02",
       "application_services": [
-        "Database Hosting - Adidas (Application Service)"
+        "Database Hosting - Adidas (Application Service)",
+        "Helpdesk Support - Adidas (Application Service)"
       ]
     },
     {
       "device": "Dublin-SW-01",
       "application_services": [
-        "Database Hosting - Adidas (Application Service)"
+        "Database Hosting - Adidas (Application Service)",
+        "Helpdesk Support - Adidas (Application Service)"
       ]
     },
     {
       "device": "Dublin-SW-02",
       "application_services": [
-        "Database Hosting - Adidas (Application Service)"
+        "Database Hosting - Adidas (Application Service)",
+        "Helpdesk Support - Adidas (Application Service)"
       ]
     },
     {
       "device": "Dublin-SRV-01",
       "application_services": [
-        "Database Hosting - Adidas (Application Service)"
+        "Database Hosting - Adidas (Application Service)",
+        "Helpdesk Support - Adidas (Application Service)"
       ]
     },
     {
       "device": "Helsinki-FW-01",
       "application_services": [
-        "Database Hosting - Adidas (Application Service)"
+        "Database Hosting - Adidas (Application Service)",
+        "Helpdesk Support - Adidas (Application Service)"
       ]
     },
     {
       "device": "Helsinki-FW-02",
       "application_services": [
-        "Database Hosting - Adidas (Application Service)"
+        "Database Hosting - Adidas (Application Service)",
+        "Helpdesk Support - Adidas (Application Service)"
       ]
     },
     {
       "device": "Helsinki-SW-01",
       "application_services": [
-        "Database Hosting - Adidas (Application Service)"
+        "Database Hosting - Adidas (Application Service)",
+        "Helpdesk Support - Adidas (Application Service)"
       ]
     },
     {
       "device": "Helsinki-SW-02",
       "application_services": [
-        "Database Hosting - Adidas (Application Service)"
+        "Database Hosting - Adidas (Application Service)",
+        "Helpdesk Support - Adidas (Application Service)"
       ]
     },
     {
       "device": "Helsinki-SRV-01",
       "application_services": [
-        "Database Hosting - Adidas (Application Service)"
+        "Database Hosting - Adidas (Application Service)",
+        "Helpdesk Support - Adidas (Application Service)"
       ]
     },
     {
       "device": "Athens-FW-01",
       "application_services": [
-        "Load Balancing - Puma (Application Service)"
+        "Load Balancing - Puma (Application Service)",
+        "Identity & Access Management - Puma (Application Service)"
       ]
     },
     {
       "device": "Athens-FW-02",
       "application_services": [
-        "Load Balancing - Puma (Application Service)"
+        "Load Balancing - Puma (Application Service)",
+        "Identity & Access Management - Puma (Application Service)"
       ]
     },
     {
       "device": "Athens-SW-01",
       "application_services": [
-        "Load Balancing - Puma (Application Service)"
+        "Load Balancing - Puma (Application Service)",
+        "Identity & Access Management - Puma (Application Service)"
       ]
     },
     {
       "device": "Athens-SW-02",
       "application_services": [
-        "Load Balancing - Puma (Application Service)"
+        "Load Balancing - Puma (Application Service)",
+        "Identity & Access Management - Puma (Application Service)"
       ]
     },
     {
       "device": "Athens-SRV-01",
       "application_services": [
-        "Load Balancing - Puma (Application Service)"
+        "Load Balancing - Puma (Application Service)",
+        "Identity & Access Management - Puma (Application Service)"
       ]
     },
     {
       "device": "Geneva-FW-01",
       "application_services": [
-        "Load Balancing - Puma (Application Service)"
+        "Load Balancing - Puma (Application Service)",
+        "Identity & Access Management - Puma (Application Service)"
       ]
     },
     {
       "device": "Geneva-FW-02",
       "application_services": [
-        "Load Balancing - Puma (Application Service)"
+        "Load Balancing - Puma (Application Service)",
+        "Identity & Access Management - Puma (Application Service)"
       ]
     },
     {
       "device": "Geneva-SW-01",
       "application_services": [
-        "Load Balancing - Puma (Application Service)"
+        "Load Balancing - Puma (Application Service)",
+        "Identity & Access Management - Puma (Application Service)"
       ]
     },
     {
       "device": "Geneva-SW-02",
       "application_services": [
-        "Load Balancing - Puma (Application Service)"
+        "Load Balancing - Puma (Application Service)",
+        "Identity & Access Management - Puma (Application Service)"
       ]
     },
     {
       "device": "Geneva-SRV-01",
       "application_services": [
-        "Load Balancing - Puma (Application Service)"
+        "Load Balancing - Puma (Application Service)",
+        "Identity & Access Management - Puma (Application Service)"
       ]
     },
     {
       "device": "Singapore-FW-01",
       "application_services": [
-        "Container Orchestration - Nike (Application Service)"
+        "Container Orchestration - Nike (Application Service)",
+        "Video Conferencing - Nike (Application Service)"
       ]
     },
     {
       "device": "Singapore-FW-02",
       "application_services": [
-        "Container Orchestration - Nike (Application Service)"
+        "Container Orchestration - Nike (Application Service)",
+        "Video Conferencing - Nike (Application Service)"
       ]
     },
     {
       "device": "Singapore-SW-01",
       "application_services": [
-        "Container Orchestration - Nike (Application Service)"
+        "Container Orchestration - Nike (Application Service)",
+        "Video Conferencing - Nike (Application Service)"
       ]
     },
     {
       "device": "Singapore-SW-02",
       "application_services": [
-        "Container Orchestration - Nike (Application Service)"
+        "Container Orchestration - Nike (Application Service)",
+        "Video Conferencing - Nike (Application Service)"
       ]
     },
     {
       "device": "Singapore-SRV-01",
       "application_services": [
-        "Container Orchestration - Nike (Application Service)"
+        "Container Orchestration - Nike (Application Service)",
+        "Video Conferencing - Nike (Application Service)"
       ]
     },
     {
       "device": "Tokyo-FW-01",
       "application_services": [
-        "Container Orchestration - Nike (Application Service)"
+        "Container Orchestration - Nike (Application Service)",
+        "Video Conferencing - Nike (Application Service)"
       ]
     },
     {
       "device": "Tokyo-FW-02",
       "application_services": [
-        "Container Orchestration - Nike (Application Service)"
+        "Container Orchestration - Nike (Application Service)",
+        "Video Conferencing - Nike (Application Service)"
       ]
     },
     {
       "device": "Tokyo-SW-01",
       "application_services": [
-        "Container Orchestration - Nike (Application Service)"
+        "Container Orchestration - Nike (Application Service)",
+        "Video Conferencing - Nike (Application Service)"
       ]
     },
     {
       "device": "Tokyo-SW-02",
       "application_services": [
-        "Container Orchestration - Nike (Application Service)"
+        "Container Orchestration - Nike (Application Service)",
+        "Video Conferencing - Nike (Application Service)"
       ]
     },
     {
       "device": "Tokyo-SRV-01",
       "application_services": [
-        "Container Orchestration - Nike (Application Service)"
+        "Container Orchestration - Nike (Application Service)",
+        "Video Conferencing - Nike (Application Service)"
       ]
     },
     {
       "device": "Sydney-FW-01",
       "application_services": [
-        "Data Analytics Platform - Samsung (Application Service)"
+        "Data Analytics Platform - Samsung (Application Service)",
+        "File Sharing & Collaboration - Samsung (Application Service)"
       ]
     },
     {
       "device": "Sydney-FW-02",
       "application_services": [
-        "Data Analytics Platform - Samsung (Application Service)"
+        "Data Analytics Platform - Samsung (Application Service)",
+        "File Sharing & Collaboration - Samsung (Application Service)"
       ]
     },
     {
       "device": "Sydney-SW-01",
       "application_services": [
-        "Data Analytics Platform - Samsung (Application Service)"
+        "Data Analytics Platform - Samsung (Application Service)",
+        "File Sharing & Collaboration - Samsung (Application Service)"
       ]
     },
     {
       "device": "Sydney-SW-02",
       "application_services": [
-        "Data Analytics Platform - Samsung (Application Service)"
+        "Data Analytics Platform - Samsung (Application Service)",
+        "File Sharing & Collaboration - Samsung (Application Service)"
       ]
     },
     {
       "device": "Sydney-SRV-01",
       "application_services": [
-        "Data Analytics Platform - Samsung (Application Service)"
+        "Data Analytics Platform - Samsung (Application Service)",
+        "File Sharing & Collaboration - Samsung (Application Service)"
       ]
     },
     {
       "device": "Toronto-FW-01",
       "application_services": [
-        "Data Analytics Platform - Samsung (Application Service)"
+        "Data Analytics Platform - Samsung (Application Service)",
+        "File Sharing & Collaboration - Samsung (Application Service)"
       ]
     },
     {
       "device": "Toronto-FW-02",
       "application_services": [
-        "Data Analytics Platform - Samsung (Application Service)"
+        "Data Analytics Platform - Samsung (Application Service)",
+        "File Sharing & Collaboration - Samsung (Application Service)"
       ]
     },
     {
       "device": "Toronto-SW-01",
       "application_services": [
-        "Data Analytics Platform - Samsung (Application Service)"
+        "Data Analytics Platform - Samsung (Application Service)",
+        "File Sharing & Collaboration - Samsung (Application Service)"
       ]
     },
     {
       "device": "Toronto-SW-02",
       "application_services": [
-        "Data Analytics Platform - Samsung (Application Service)"
+        "Data Analytics Platform - Samsung (Application Service)",
+        "File Sharing & Collaboration - Samsung (Application Service)"
       ]
     },
     {
       "device": "Toronto-SRV-01",
       "application_services": [
-        "Data Analytics Platform - Samsung (Application Service)"
+        "Data Analytics Platform - Samsung (Application Service)",
+        "File Sharing & Collaboration - Samsung (Application Service)"
       ]
     },
     {
       "device": "Chicago-FW-01",
       "application_services": [
-        "Storage as a Service - Sony (Application Service)"
+        "Storage as a Service - Sony (Application Service)",
+        "Mobile Device Management - Sony (Application Service)"
       ]
     },
     {
       "device": "Chicago-FW-02",
       "application_services": [
-        "Storage as a Service - Sony (Application Service)"
+        "Storage as a Service - Sony (Application Service)",
+        "Mobile Device Management - Sony (Application Service)"
       ]
     },
     {
       "device": "Chicago-SW-01",
       "application_services": [
-        "Storage as a Service - Sony (Application Service)"
+        "Storage as a Service - Sony (Application Service)",
+        "Mobile Device Management - Sony (Application Service)"
       ]
     },
     {
       "device": "Chicago-SW-02",
       "application_services": [
-        "Storage as a Service - Sony (Application Service)"
+        "Storage as a Service - Sony (Application Service)",
+        "Mobile Device Management - Sony (Application Service)"
       ]
     },
     {
       "device": "Chicago-SRV-01",
       "application_services": [
-        "Storage as a Service - Sony (Application Service)"
+        "Storage as a Service - Sony (Application Service)",
+        "Mobile Device Management - Sony (Application Service)"
       ]
     },
     {
       "device": "Dallas-FW-01",
       "application_services": [
-        "Storage as a Service - Sony (Application Service)"
+        "Storage as a Service - Sony (Application Service)",
+        "Mobile Device Management - Sony (Application Service)"
       ]
     },
     {
       "device": "Dallas-FW-02",
       "application_services": [
-        "Storage as a Service - Sony (Application Service)"
+        "Storage as a Service - Sony (Application Service)",
+        "Mobile Device Management - Sony (Application Service)"
       ]
     },
     {
       "device": "Dallas-SW-01",
       "application_services": [
-        "Storage as a Service - Sony (Application Service)"
+        "Storage as a Service - Sony (Application Service)",
+        "Mobile Device Management - Sony (Application Service)"
       ]
     },
     {
       "device": "Dallas-SW-02",
       "application_services": [
-        "Storage as a Service - Sony (Application Service)"
+        "Storage as a Service - Sony (Application Service)",
+        "Mobile Device Management - Sony (Application Service)"
       ]
     },
     {
       "device": "Dallas-SRV-01",
       "application_services": [
-        "Storage as a Service - Sony (Application Service)"
+        "Storage as a Service - Sony (Application Service)",
+        "Mobile Device Management - Sony (Application Service)"
       ]
     },
     {
       "device": "Seattle-FW-01",
       "application_services": [
-        "Monitoring & Observability - Toyota (Application Service)"
+        "Monitoring & Observability - Toyota (Application Service)",
+        "Print Services - Toyota (Application Service)"
       ]
     },
     {
       "device": "Seattle-FW-02",
       "application_services": [
-        "Monitoring & Observability - Toyota (Application Service)"
+        "Monitoring & Observability - Toyota (Application Service)",
+        "Print Services - Toyota (Application Service)"
       ]
     },
     {
       "device": "Seattle-SW-01",
       "application_services": [
-        "Monitoring & Observability - Toyota (Application Service)"
+        "Monitoring & Observability - Toyota (Application Service)",
+        "Print Services - Toyota (Application Service)"
       ]
     },
     {
       "device": "Seattle-SW-02",
       "application_services": [
-        "Monitoring & Observability - Toyota (Application Service)"
+        "Monitoring & Observability - Toyota (Application Service)",
+        "Print Services - Toyota (Application Service)"
       ]
     },
     {
       "device": "Seattle-SRV-01",
       "application_services": [
-        "Monitoring & Observability - Toyota (Application Service)"
+        "Monitoring & Observability - Toyota (Application Service)",
+        "Print Services - Toyota (Application Service)"
       ]
     },
     {
       "device": "Boston-FW-01",
       "application_services": [
-        "Monitoring & Observability - Toyota (Application Service)"
+        "Monitoring & Observability - Toyota (Application Service)",
+        "Print Services - Toyota (Application Service)"
       ]
     },
     {
       "device": "Boston-FW-02",
       "application_services": [
-        "Monitoring & Observability - Toyota (Application Service)"
+        "Monitoring & Observability - Toyota (Application Service)",
+        "Print Services - Toyota (Application Service)"
       ]
     },
     {
       "device": "Boston-SW-01",
       "application_services": [
-        "Monitoring & Observability - Toyota (Application Service)"
+        "Monitoring & Observability - Toyota (Application Service)",
+        "Print Services - Toyota (Application Service)"
       ]
     },
     {
       "device": "Boston-SW-02",
       "application_services": [
-        "Monitoring & Observability - Toyota (Application Service)"
+        "Monitoring & Observability - Toyota (Application Service)",
+        "Print Services - Toyota (Application Service)"
       ]
     },
     {
       "device": "Boston-SRV-01",
       "application_services": [
-        "Monitoring & Observability - Toyota (Application Service)"
+        "Monitoring & Observability - Toyota (Application Service)",
+        "Print Services - Toyota (Application Service)"
       ]
     },
     {
       "device": "Miami-FW-01",
       "application_services": [
-        "DNS & DHCP Management - Shell (Application Service)"
+        "DNS & DHCP Management - Shell (Application Service)",
+        "Virtual Desktop Infrastructure - Shell (Application Service)"
       ]
     },
     {
       "device": "Miami-FW-02",
       "application_services": [
-        "DNS & DHCP Management - Shell (Application Service)"
+        "DNS & DHCP Management - Shell (Application Service)",
+        "Virtual Desktop Infrastructure - Shell (Application Service)"
       ]
     },
     {
       "device": "Miami-SW-01",
       "application_services": [
-        "DNS & DHCP Management - Shell (Application Service)"
+        "DNS & DHCP Management - Shell (Application Service)",
+        "Virtual Desktop Infrastructure - Shell (Application Service)"
       ]
     },
     {
       "device": "Miami-SW-02",
       "application_services": [
-        "DNS & DHCP Management - Shell (Application Service)"
+        "DNS & DHCP Management - Shell (Application Service)",
+        "Virtual Desktop Infrastructure - Shell (Application Service)"
       ]
     },
     {
       "device": "Miami-SRV-01",
       "application_services": [
-        "DNS & DHCP Management - Shell (Application Service)"
+        "DNS & DHCP Management - Shell (Application Service)",
+        "Virtual Desktop Infrastructure - Shell (Application Service)"
       ]
     },
     {
       "device": "Denver-FW-01",
       "application_services": [
-        "DNS & DHCP Management - Shell (Application Service)"
+        "DNS & DHCP Management - Shell (Application Service)",
+        "Virtual Desktop Infrastructure - Shell (Application Service)"
       ]
     },
     {
       "device": "Denver-FW-02",
       "application_services": [
-        "DNS & DHCP Management - Shell (Application Service)"
+        "DNS & DHCP Management - Shell (Application Service)",
+        "Virtual Desktop Infrastructure - Shell (Application Service)"
       ]
     },
     {
       "device": "Denver-SW-01",
       "application_services": [
-        "DNS & DHCP Management - Shell (Application Service)"
+        "DNS & DHCP Management - Shell (Application Service)",
+        "Virtual Desktop Infrastructure - Shell (Application Service)"
       ]
     },
     {
       "device": "Denver-SW-02",
       "application_services": [
-        "DNS & DHCP Management - Shell (Application Service)"
+        "DNS & DHCP Management - Shell (Application Service)",
+        "Virtual Desktop Infrastructure - Shell (Application Service)"
       ]
     },
     {
       "device": "Denver-SRV-01",
       "application_services": [
-        "DNS & DHCP Management - Shell (Application Service)"
+        "DNS & DHCP Management - Shell (Application Service)",
+        "Virtual Desktop Infrastructure - Shell (Application Service)"
       ]
     }
   ],
@@ -5650,241 +7210,281 @@
     {
       "cluster": "Munich Cluster",
       "application_services": [
-        "Managed Email - Coca Cola (Application Service)"
+        "Managed Email - Coca Cola (Application Service)",
+        "Cloud Backup - Coca Cola (Application Service)"
       ]
     },
     {
       "cluster": "Hamburg Cluster",
       "application_services": [
-        "Managed Email - Coca Cola (Application Service)"
+        "Managed Email - Coca Cola (Application Service)",
+        "Cloud Backup - Coca Cola (Application Service)"
       ]
     },
     {
       "cluster": "Berlin Cluster",
       "application_services": [
-        "Unified Communications - Cisco (Application Service)"
+        "Unified Communications - Cisco (Application Service)",
+        "Disaster Recovery - Cisco (Application Service)"
       ]
     },
     {
       "cluster": "Frankfurt Cluster",
       "application_services": [
-        "Unified Communications - Cisco (Application Service)"
+        "Unified Communications - Cisco (Application Service)",
+        "Disaster Recovery - Cisco (Application Service)"
       ]
     },
     {
       "cluster": "Cologne Cluster",
       "application_services": [
-        "Endpoint Management - SAP (Application Service)"
+        "Endpoint Management - SAP (Application Service)",
+        "Network Security - SAP (Application Service)"
       ]
     },
     {
       "cluster": "Stuttgart Cluster",
       "application_services": [
-        "Endpoint Management - SAP (Application Service)"
+        "Endpoint Management - SAP (Application Service)",
+        "Network Security - SAP (Application Service)"
       ]
     },
     {
       "cluster": "Dusseldorf Cluster",
       "application_services": [
-        "Helpdesk Support - Google (Application Service)"
+        "Helpdesk Support - Google (Application Service)",
+        "Database Hosting - Google (Application Service)"
       ]
     },
     {
       "cluster": "Leipzig Cluster",
       "application_services": [
-        "Helpdesk Support - Google (Application Service)"
+        "Helpdesk Support - Google (Application Service)",
+        "Database Hosting - Google (Application Service)"
       ]
     },
     {
       "cluster": "Dortmund Cluster",
       "application_services": [
-        "Identity & Access Management - Amazon (Application Service)"
+        "Identity & Access Management - Amazon (Application Service)",
+        "Load Balancing - Amazon (Application Service)"
       ]
     },
     {
       "cluster": "Essen Cluster",
       "application_services": [
-        "Identity & Access Management - Amazon (Application Service)"
+        "Identity & Access Management - Amazon (Application Service)",
+        "Load Balancing - Amazon (Application Service)"
       ]
     },
     {
       "cluster": "Vienna Cluster",
       "application_services": [
-        "Video Conferencing - Microsoft (Application Service)"
+        "Video Conferencing - Microsoft (Application Service)",
+        "Container Orchestration - Microsoft (Application Service)"
       ]
     },
     {
       "cluster": "Zurich Cluster",
       "application_services": [
-        "Video Conferencing - Microsoft (Application Service)"
+        "Video Conferencing - Microsoft (Application Service)",
+        "Container Orchestration - Microsoft (Application Service)"
       ]
     },
     {
       "cluster": "Amsterdam Cluster",
       "application_services": [
-        "File Sharing & Collaboration - IBM (Application Service)"
+        "File Sharing & Collaboration - IBM (Application Service)",
+        "Data Analytics Platform - IBM (Application Service)"
       ]
     },
     {
       "cluster": "Brussels Cluster",
       "application_services": [
-        "File Sharing & Collaboration - IBM (Application Service)"
+        "File Sharing & Collaboration - IBM (Application Service)",
+        "Data Analytics Platform - IBM (Application Service)"
       ]
     },
     {
       "cluster": "Paris Cluster",
       "application_services": [
-        "Mobile Device Management - Oracle (Application Service)"
+        "Mobile Device Management - Oracle (Application Service)",
+        "Storage as a Service - Oracle (Application Service)"
       ]
     },
     {
       "cluster": "London Cluster",
       "application_services": [
-        "Mobile Device Management - Oracle (Application Service)"
+        "Mobile Device Management - Oracle (Application Service)",
+        "Storage as a Service - Oracle (Application Service)"
       ]
     },
     {
       "cluster": "Madrid Cluster",
       "application_services": [
-        "Print Services - Siemens (Application Service)"
+        "Print Services - Siemens (Application Service)",
+        "Monitoring & Observability - Siemens (Application Service)"
       ]
     },
     {
       "cluster": "Milan Cluster",
       "application_services": [
-        "Print Services - Siemens (Application Service)"
+        "Print Services - Siemens (Application Service)",
+        "Monitoring & Observability - Siemens (Application Service)"
       ]
     },
     {
       "cluster": "Rome Cluster",
       "application_services": [
-        "Virtual Desktop Infrastructure - BMW (Application Service)"
+        "Virtual Desktop Infrastructure - BMW (Application Service)",
+        "DNS & DHCP Management - BMW (Application Service)"
       ]
     },
     {
       "cluster": "Lisbon Cluster",
       "application_services": [
-        "Virtual Desktop Infrastructure - BMW (Application Service)"
+        "Virtual Desktop Infrastructure - BMW (Application Service)",
+        "DNS & DHCP Management - BMW (Application Service)"
       ]
     },
     {
       "cluster": "Warsaw Cluster",
       "application_services": [
-        "Cloud Backup - Volkswagen (Application Service)"
+        "Cloud Backup - Volkswagen (Application Service)",
+        "Managed Email - Volkswagen (Application Service)"
       ]
     },
     {
       "cluster": "Prague Cluster",
       "application_services": [
-        "Cloud Backup - Volkswagen (Application Service)"
+        "Cloud Backup - Volkswagen (Application Service)",
+        "Managed Email - Volkswagen (Application Service)"
       ]
     },
     {
       "cluster": "Budapest Cluster",
       "application_services": [
-        "Disaster Recovery - Deutsche Bank (Application Service)"
+        "Disaster Recovery - Deutsche Bank (Application Service)",
+        "Unified Communications - Deutsche Bank (Application Service)"
       ]
     },
     {
       "cluster": "Copenhagen Cluster",
       "application_services": [
-        "Disaster Recovery - Deutsche Bank (Application Service)"
+        "Disaster Recovery - Deutsche Bank (Application Service)",
+        "Unified Communications - Deutsche Bank (Application Service)"
       ]
     },
     {
       "cluster": "Stockholm Cluster",
       "application_services": [
-        "Network Security - Allianz (Application Service)"
+        "Network Security - Allianz (Application Service)",
+        "Endpoint Management - Allianz (Application Service)"
       ]
     },
     {
       "cluster": "Oslo Cluster",
       "application_services": [
-        "Network Security - Allianz (Application Service)"
+        "Network Security - Allianz (Application Service)",
+        "Endpoint Management - Allianz (Application Service)"
       ]
     },
     {
       "cluster": "Dublin Cluster",
       "application_services": [
-        "Database Hosting - Adidas (Application Service)"
+        "Database Hosting - Adidas (Application Service)",
+        "Helpdesk Support - Adidas (Application Service)"
       ]
     },
     {
       "cluster": "Helsinki Cluster",
       "application_services": [
-        "Database Hosting - Adidas (Application Service)"
+        "Database Hosting - Adidas (Application Service)",
+        "Helpdesk Support - Adidas (Application Service)"
       ]
     },
     {
       "cluster": "Athens Cluster",
       "application_services": [
-        "Load Balancing - Puma (Application Service)"
+        "Load Balancing - Puma (Application Service)",
+        "Identity & Access Management - Puma (Application Service)"
       ]
     },
     {
       "cluster": "Geneva Cluster",
       "application_services": [
-        "Load Balancing - Puma (Application Service)"
+        "Load Balancing - Puma (Application Service)",
+        "Identity & Access Management - Puma (Application Service)"
       ]
     },
     {
       "cluster": "Singapore Cluster",
       "application_services": [
-        "Container Orchestration - Nike (Application Service)"
+        "Container Orchestration - Nike (Application Service)",
+        "Video Conferencing - Nike (Application Service)"
       ]
     },
     {
       "cluster": "Tokyo Cluster",
       "application_services": [
-        "Container Orchestration - Nike (Application Service)"
+        "Container Orchestration - Nike (Application Service)",
+        "Video Conferencing - Nike (Application Service)"
       ]
     },
     {
       "cluster": "Sydney Cluster",
       "application_services": [
-        "Data Analytics Platform - Samsung (Application Service)"
+        "Data Analytics Platform - Samsung (Application Service)",
+        "File Sharing & Collaboration - Samsung (Application Service)"
       ]
     },
     {
       "cluster": "Toronto Cluster",
       "application_services": [
-        "Data Analytics Platform - Samsung (Application Service)"
+        "Data Analytics Platform - Samsung (Application Service)",
+        "File Sharing & Collaboration - Samsung (Application Service)"
       ]
     },
     {
       "cluster": "Chicago Cluster",
       "application_services": [
-        "Storage as a Service - Sony (Application Service)"
+        "Storage as a Service - Sony (Application Service)",
+        "Mobile Device Management - Sony (Application Service)"
       ]
     },
     {
       "cluster": "Dallas Cluster",
       "application_services": [
-        "Storage as a Service - Sony (Application Service)"
+        "Storage as a Service - Sony (Application Service)",
+        "Mobile Device Management - Sony (Application Service)"
       ]
     },
     {
       "cluster": "Seattle Cluster",
       "application_services": [
-        "Monitoring & Observability - Toyota (Application Service)"
+        "Monitoring & Observability - Toyota (Application Service)",
+        "Print Services - Toyota (Application Service)"
       ]
     },
     {
       "cluster": "Boston Cluster",
       "application_services": [
-        "Monitoring & Observability - Toyota (Application Service)"
+        "Monitoring & Observability - Toyota (Application Service)",
+        "Print Services - Toyota (Application Service)"
       ]
     },
     {
       "cluster": "Miami Cluster",
       "application_services": [
-        "DNS & DHCP Management - Shell (Application Service)"
+        "DNS & DHCP Management - Shell (Application Service)",
+        "Virtual Desktop Infrastructure - Shell (Application Service)"
       ]
     },
     {
       "cluster": "Denver Cluster",
       "application_services": [
-        "DNS & DHCP Management - Shell (Application Service)"
+        "DNS & DHCP Management - Shell (Application Service)",
+        "Virtual Desktop Infrastructure - Shell (Application Service)"
       ]
     }
   ],
@@ -5892,121 +7492,141 @@
     {
       "cluster_group": "coca-cola-infra",
       "application_services": [
-        "Managed Email - Coca Cola (Application Service)"
+        "Managed Email - Coca Cola (Application Service)",
+        "Cloud Backup - Coca Cola (Application Service)"
       ]
     },
     {
       "cluster_group": "cisco-infra",
       "application_services": [
-        "Unified Communications - Cisco (Application Service)"
+        "Unified Communications - Cisco (Application Service)",
+        "Disaster Recovery - Cisco (Application Service)"
       ]
     },
     {
       "cluster_group": "sap-infra",
       "application_services": [
-        "Endpoint Management - SAP (Application Service)"
+        "Endpoint Management - SAP (Application Service)",
+        "Network Security - SAP (Application Service)"
       ]
     },
     {
       "cluster_group": "google-infra",
       "application_services": [
-        "Helpdesk Support - Google (Application Service)"
+        "Helpdesk Support - Google (Application Service)",
+        "Database Hosting - Google (Application Service)"
       ]
     },
     {
       "cluster_group": "amazon-infra",
       "application_services": [
-        "Identity & Access Management - Amazon (Application Service)"
+        "Identity & Access Management - Amazon (Application Service)",
+        "Load Balancing - Amazon (Application Service)"
       ]
     },
     {
       "cluster_group": "microsoft-infra",
       "application_services": [
-        "Video Conferencing - Microsoft (Application Service)"
+        "Video Conferencing - Microsoft (Application Service)",
+        "Container Orchestration - Microsoft (Application Service)"
       ]
     },
     {
       "cluster_group": "ibm-infra",
       "application_services": [
-        "File Sharing & Collaboration - IBM (Application Service)"
+        "File Sharing & Collaboration - IBM (Application Service)",
+        "Data Analytics Platform - IBM (Application Service)"
       ]
     },
     {
       "cluster_group": "oracle-infra",
       "application_services": [
-        "Mobile Device Management - Oracle (Application Service)"
+        "Mobile Device Management - Oracle (Application Service)",
+        "Storage as a Service - Oracle (Application Service)"
       ]
     },
     {
       "cluster_group": "siemens-infra",
       "application_services": [
-        "Print Services - Siemens (Application Service)"
+        "Print Services - Siemens (Application Service)",
+        "Monitoring & Observability - Siemens (Application Service)"
       ]
     },
     {
       "cluster_group": "bmw-infra",
       "application_services": [
-        "Virtual Desktop Infrastructure - BMW (Application Service)"
+        "Virtual Desktop Infrastructure - BMW (Application Service)",
+        "DNS & DHCP Management - BMW (Application Service)"
       ]
     },
     {
       "cluster_group": "volkswagen-infra",
       "application_services": [
-        "Cloud Backup - Volkswagen (Application Service)"
+        "Cloud Backup - Volkswagen (Application Service)",
+        "Managed Email - Volkswagen (Application Service)"
       ]
     },
     {
       "cluster_group": "deutsche-bank-infra",
       "application_services": [
-        "Disaster Recovery - Deutsche Bank (Application Service)"
+        "Disaster Recovery - Deutsche Bank (Application Service)",
+        "Unified Communications - Deutsche Bank (Application Service)"
       ]
     },
     {
       "cluster_group": "allianz-infra",
       "application_services": [
-        "Network Security - Allianz (Application Service)"
+        "Network Security - Allianz (Application Service)",
+        "Endpoint Management - Allianz (Application Service)"
       ]
     },
     {
       "cluster_group": "adidas-infra",
       "application_services": [
-        "Database Hosting - Adidas (Application Service)"
+        "Database Hosting - Adidas (Application Service)",
+        "Helpdesk Support - Adidas (Application Service)"
       ]
     },
     {
       "cluster_group": "puma-infra",
       "application_services": [
-        "Load Balancing - Puma (Application Service)"
+        "Load Balancing - Puma (Application Service)",
+        "Identity & Access Management - Puma (Application Service)"
       ]
     },
     {
       "cluster_group": "nike-infra",
       "application_services": [
-        "Container Orchestration - Nike (Application Service)"
+        "Container Orchestration - Nike (Application Service)",
+        "Video Conferencing - Nike (Application Service)"
       ]
     },
     {
       "cluster_group": "samsung-infra",
       "application_services": [
-        "Data Analytics Platform - Samsung (Application Service)"
+        "Data Analytics Platform - Samsung (Application Service)",
+        "File Sharing & Collaboration - Samsung (Application Service)"
       ]
     },
     {
       "cluster_group": "sony-infra",
       "application_services": [
-        "Storage as a Service - Sony (Application Service)"
+        "Storage as a Service - Sony (Application Service)",
+        "Mobile Device Management - Sony (Application Service)"
       ]
     },
     {
       "cluster_group": "toyota-infra",
       "application_services": [
-        "Monitoring & Observability - Toyota (Application Service)"
+        "Monitoring & Observability - Toyota (Application Service)",
+        "Print Services - Toyota (Application Service)"
       ]
     },
     {
       "cluster_group": "shell-infra",
       "application_services": [
-        "DNS & DHCP Management - Shell (Application Service)"
+        "DNS & DHCP Management - Shell (Application Service)",
+        "Virtual Desktop Infrastructure - Shell (Application Service)"
       ]
     }
   ],
@@ -6014,961 +7634,1121 @@
     {
       "virtual_machine": "munich-vm-01",
       "application_services": [
-        "Managed Email - Coca Cola (Application Service)"
+        "Managed Email - Coca Cola (Application Service)",
+        "Cloud Backup - Coca Cola (Application Service)"
       ]
     },
     {
       "virtual_machine": "munich-vm-02",
       "application_services": [
-        "Managed Email - Coca Cola (Application Service)"
+        "Managed Email - Coca Cola (Application Service)",
+        "Cloud Backup - Coca Cola (Application Service)"
       ]
     },
     {
       "virtual_machine": "munich-vm-03",
       "application_services": [
-        "Managed Email - Coca Cola (Application Service)"
+        "Managed Email - Coca Cola (Application Service)",
+        "Cloud Backup - Coca Cola (Application Service)"
       ]
     },
     {
       "virtual_machine": "munich-vm-04",
       "application_services": [
-        "Managed Email - Coca Cola (Application Service)"
+        "Managed Email - Coca Cola (Application Service)",
+        "Cloud Backup - Coca Cola (Application Service)"
       ]
     },
     {
       "virtual_machine": "hamburg-vm-01",
       "application_services": [
-        "Managed Email - Coca Cola (Application Service)"
+        "Managed Email - Coca Cola (Application Service)",
+        "Cloud Backup - Coca Cola (Application Service)"
       ]
     },
     {
       "virtual_machine": "hamburg-vm-02",
       "application_services": [
-        "Managed Email - Coca Cola (Application Service)"
+        "Managed Email - Coca Cola (Application Service)",
+        "Cloud Backup - Coca Cola (Application Service)"
       ]
     },
     {
       "virtual_machine": "hamburg-vm-03",
       "application_services": [
-        "Managed Email - Coca Cola (Application Service)"
+        "Managed Email - Coca Cola (Application Service)",
+        "Cloud Backup - Coca Cola (Application Service)"
       ]
     },
     {
       "virtual_machine": "hamburg-vm-04",
       "application_services": [
-        "Managed Email - Coca Cola (Application Service)"
+        "Managed Email - Coca Cola (Application Service)",
+        "Cloud Backup - Coca Cola (Application Service)"
       ]
     },
     {
       "virtual_machine": "berlin-vm-01",
       "application_services": [
-        "Unified Communications - Cisco (Application Service)"
+        "Unified Communications - Cisco (Application Service)",
+        "Disaster Recovery - Cisco (Application Service)"
       ]
     },
     {
       "virtual_machine": "berlin-vm-02",
       "application_services": [
-        "Unified Communications - Cisco (Application Service)"
+        "Unified Communications - Cisco (Application Service)",
+        "Disaster Recovery - Cisco (Application Service)"
       ]
     },
     {
       "virtual_machine": "berlin-vm-03",
       "application_services": [
-        "Unified Communications - Cisco (Application Service)"
+        "Unified Communications - Cisco (Application Service)",
+        "Disaster Recovery - Cisco (Application Service)"
       ]
     },
     {
       "virtual_machine": "berlin-vm-04",
       "application_services": [
-        "Unified Communications - Cisco (Application Service)"
+        "Unified Communications - Cisco (Application Service)",
+        "Disaster Recovery - Cisco (Application Service)"
       ]
     },
     {
       "virtual_machine": "frankfurt-vm-01",
       "application_services": [
-        "Unified Communications - Cisco (Application Service)"
+        "Unified Communications - Cisco (Application Service)",
+        "Disaster Recovery - Cisco (Application Service)"
       ]
     },
     {
       "virtual_machine": "frankfurt-vm-02",
       "application_services": [
-        "Unified Communications - Cisco (Application Service)"
+        "Unified Communications - Cisco (Application Service)",
+        "Disaster Recovery - Cisco (Application Service)"
       ]
     },
     {
       "virtual_machine": "frankfurt-vm-03",
       "application_services": [
-        "Unified Communications - Cisco (Application Service)"
+        "Unified Communications - Cisco (Application Service)",
+        "Disaster Recovery - Cisco (Application Service)"
       ]
     },
     {
       "virtual_machine": "frankfurt-vm-04",
       "application_services": [
-        "Unified Communications - Cisco (Application Service)"
+        "Unified Communications - Cisco (Application Service)",
+        "Disaster Recovery - Cisco (Application Service)"
       ]
     },
     {
       "virtual_machine": "cologne-vm-01",
       "application_services": [
-        "Endpoint Management - SAP (Application Service)"
+        "Endpoint Management - SAP (Application Service)",
+        "Network Security - SAP (Application Service)"
       ]
     },
     {
       "virtual_machine": "cologne-vm-02",
       "application_services": [
-        "Endpoint Management - SAP (Application Service)"
+        "Endpoint Management - SAP (Application Service)",
+        "Network Security - SAP (Application Service)"
       ]
     },
     {
       "virtual_machine": "cologne-vm-03",
       "application_services": [
-        "Endpoint Management - SAP (Application Service)"
+        "Endpoint Management - SAP (Application Service)",
+        "Network Security - SAP (Application Service)"
       ]
     },
     {
       "virtual_machine": "cologne-vm-04",
       "application_services": [
-        "Endpoint Management - SAP (Application Service)"
+        "Endpoint Management - SAP (Application Service)",
+        "Network Security - SAP (Application Service)"
       ]
     },
     {
       "virtual_machine": "stuttgart-vm-01",
       "application_services": [
-        "Endpoint Management - SAP (Application Service)"
+        "Endpoint Management - SAP (Application Service)",
+        "Network Security - SAP (Application Service)"
       ]
     },
     {
       "virtual_machine": "stuttgart-vm-02",
       "application_services": [
-        "Endpoint Management - SAP (Application Service)"
+        "Endpoint Management - SAP (Application Service)",
+        "Network Security - SAP (Application Service)"
       ]
     },
     {
       "virtual_machine": "stuttgart-vm-03",
       "application_services": [
-        "Endpoint Management - SAP (Application Service)"
+        "Endpoint Management - SAP (Application Service)",
+        "Network Security - SAP (Application Service)"
       ]
     },
     {
       "virtual_machine": "stuttgart-vm-04",
       "application_services": [
-        "Endpoint Management - SAP (Application Service)"
+        "Endpoint Management - SAP (Application Service)",
+        "Network Security - SAP (Application Service)"
       ]
     },
     {
       "virtual_machine": "dusseldorf-vm-01",
       "application_services": [
-        "Helpdesk Support - Google (Application Service)"
+        "Helpdesk Support - Google (Application Service)",
+        "Database Hosting - Google (Application Service)"
       ]
     },
     {
       "virtual_machine": "dusseldorf-vm-02",
       "application_services": [
-        "Helpdesk Support - Google (Application Service)"
+        "Helpdesk Support - Google (Application Service)",
+        "Database Hosting - Google (Application Service)"
       ]
     },
     {
       "virtual_machine": "dusseldorf-vm-03",
       "application_services": [
-        "Helpdesk Support - Google (Application Service)"
+        "Helpdesk Support - Google (Application Service)",
+        "Database Hosting - Google (Application Service)"
       ]
     },
     {
       "virtual_machine": "dusseldorf-vm-04",
       "application_services": [
-        "Helpdesk Support - Google (Application Service)"
+        "Helpdesk Support - Google (Application Service)",
+        "Database Hosting - Google (Application Service)"
       ]
     },
     {
       "virtual_machine": "leipzig-vm-01",
       "application_services": [
-        "Helpdesk Support - Google (Application Service)"
+        "Helpdesk Support - Google (Application Service)",
+        "Database Hosting - Google (Application Service)"
       ]
     },
     {
       "virtual_machine": "leipzig-vm-02",
       "application_services": [
-        "Helpdesk Support - Google (Application Service)"
+        "Helpdesk Support - Google (Application Service)",
+        "Database Hosting - Google (Application Service)"
       ]
     },
     {
       "virtual_machine": "leipzig-vm-03",
       "application_services": [
-        "Helpdesk Support - Google (Application Service)"
+        "Helpdesk Support - Google (Application Service)",
+        "Database Hosting - Google (Application Service)"
       ]
     },
     {
       "virtual_machine": "leipzig-vm-04",
       "application_services": [
-        "Helpdesk Support - Google (Application Service)"
+        "Helpdesk Support - Google (Application Service)",
+        "Database Hosting - Google (Application Service)"
       ]
     },
     {
       "virtual_machine": "dortmund-vm-01",
       "application_services": [
-        "Identity & Access Management - Amazon (Application Service)"
+        "Identity & Access Management - Amazon (Application Service)",
+        "Load Balancing - Amazon (Application Service)"
       ]
     },
     {
       "virtual_machine": "dortmund-vm-02",
       "application_services": [
-        "Identity & Access Management - Amazon (Application Service)"
+        "Identity & Access Management - Amazon (Application Service)",
+        "Load Balancing - Amazon (Application Service)"
       ]
     },
     {
       "virtual_machine": "dortmund-vm-03",
       "application_services": [
-        "Identity & Access Management - Amazon (Application Service)"
+        "Identity & Access Management - Amazon (Application Service)",
+        "Load Balancing - Amazon (Application Service)"
       ]
     },
     {
       "virtual_machine": "dortmund-vm-04",
       "application_services": [
-        "Identity & Access Management - Amazon (Application Service)"
+        "Identity & Access Management - Amazon (Application Service)",
+        "Load Balancing - Amazon (Application Service)"
       ]
     },
     {
       "virtual_machine": "essen-vm-01",
       "application_services": [
-        "Identity & Access Management - Amazon (Application Service)"
+        "Identity & Access Management - Amazon (Application Service)",
+        "Load Balancing - Amazon (Application Service)"
       ]
     },
     {
       "virtual_machine": "essen-vm-02",
       "application_services": [
-        "Identity & Access Management - Amazon (Application Service)"
+        "Identity & Access Management - Amazon (Application Service)",
+        "Load Balancing - Amazon (Application Service)"
       ]
     },
     {
       "virtual_machine": "essen-vm-03",
       "application_services": [
-        "Identity & Access Management - Amazon (Application Service)"
+        "Identity & Access Management - Amazon (Application Service)",
+        "Load Balancing - Amazon (Application Service)"
       ]
     },
     {
       "virtual_machine": "essen-vm-04",
       "application_services": [
-        "Identity & Access Management - Amazon (Application Service)"
+        "Identity & Access Management - Amazon (Application Service)",
+        "Load Balancing - Amazon (Application Service)"
       ]
     },
     {
       "virtual_machine": "vienna-vm-01",
       "application_services": [
-        "Video Conferencing - Microsoft (Application Service)"
+        "Video Conferencing - Microsoft (Application Service)",
+        "Container Orchestration - Microsoft (Application Service)"
       ]
     },
     {
       "virtual_machine": "vienna-vm-02",
       "application_services": [
-        "Video Conferencing - Microsoft (Application Service)"
+        "Video Conferencing - Microsoft (Application Service)",
+        "Container Orchestration - Microsoft (Application Service)"
       ]
     },
     {
       "virtual_machine": "vienna-vm-03",
       "application_services": [
-        "Video Conferencing - Microsoft (Application Service)"
+        "Video Conferencing - Microsoft (Application Service)",
+        "Container Orchestration - Microsoft (Application Service)"
       ]
     },
     {
       "virtual_machine": "vienna-vm-04",
       "application_services": [
-        "Video Conferencing - Microsoft (Application Service)"
+        "Video Conferencing - Microsoft (Application Service)",
+        "Container Orchestration - Microsoft (Application Service)"
       ]
     },
     {
       "virtual_machine": "zurich-vm-01",
       "application_services": [
-        "Video Conferencing - Microsoft (Application Service)"
+        "Video Conferencing - Microsoft (Application Service)",
+        "Container Orchestration - Microsoft (Application Service)"
       ]
     },
     {
       "virtual_machine": "zurich-vm-02",
       "application_services": [
-        "Video Conferencing - Microsoft (Application Service)"
+        "Video Conferencing - Microsoft (Application Service)",
+        "Container Orchestration - Microsoft (Application Service)"
       ]
     },
     {
       "virtual_machine": "zurich-vm-03",
       "application_services": [
-        "Video Conferencing - Microsoft (Application Service)"
+        "Video Conferencing - Microsoft (Application Service)",
+        "Container Orchestration - Microsoft (Application Service)"
       ]
     },
     {
       "virtual_machine": "zurich-vm-04",
       "application_services": [
-        "Video Conferencing - Microsoft (Application Service)"
+        "Video Conferencing - Microsoft (Application Service)",
+        "Container Orchestration - Microsoft (Application Service)"
       ]
     },
     {
       "virtual_machine": "amsterdam-vm-01",
       "application_services": [
-        "File Sharing & Collaboration - IBM (Application Service)"
+        "File Sharing & Collaboration - IBM (Application Service)",
+        "Data Analytics Platform - IBM (Application Service)"
       ]
     },
     {
       "virtual_machine": "amsterdam-vm-02",
       "application_services": [
-        "File Sharing & Collaboration - IBM (Application Service)"
+        "File Sharing & Collaboration - IBM (Application Service)",
+        "Data Analytics Platform - IBM (Application Service)"
       ]
     },
     {
       "virtual_machine": "amsterdam-vm-03",
       "application_services": [
-        "File Sharing & Collaboration - IBM (Application Service)"
+        "File Sharing & Collaboration - IBM (Application Service)",
+        "Data Analytics Platform - IBM (Application Service)"
       ]
     },
     {
       "virtual_machine": "amsterdam-vm-04",
       "application_services": [
-        "File Sharing & Collaboration - IBM (Application Service)"
+        "File Sharing & Collaboration - IBM (Application Service)",
+        "Data Analytics Platform - IBM (Application Service)"
       ]
     },
     {
       "virtual_machine": "brussels-vm-01",
       "application_services": [
-        "File Sharing & Collaboration - IBM (Application Service)"
+        "File Sharing & Collaboration - IBM (Application Service)",
+        "Data Analytics Platform - IBM (Application Service)"
       ]
     },
     {
       "virtual_machine": "brussels-vm-02",
       "application_services": [
-        "File Sharing & Collaboration - IBM (Application Service)"
+        "File Sharing & Collaboration - IBM (Application Service)",
+        "Data Analytics Platform - IBM (Application Service)"
       ]
     },
     {
       "virtual_machine": "brussels-vm-03",
       "application_services": [
-        "File Sharing & Collaboration - IBM (Application Service)"
+        "File Sharing & Collaboration - IBM (Application Service)",
+        "Data Analytics Platform - IBM (Application Service)"
       ]
     },
     {
       "virtual_machine": "brussels-vm-04",
       "application_services": [
-        "File Sharing & Collaboration - IBM (Application Service)"
+        "File Sharing & Collaboration - IBM (Application Service)",
+        "Data Analytics Platform - IBM (Application Service)"
       ]
     },
     {
       "virtual_machine": "paris-vm-01",
       "application_services": [
-        "Mobile Device Management - Oracle (Application Service)"
+        "Mobile Device Management - Oracle (Application Service)",
+        "Storage as a Service - Oracle (Application Service)"
       ]
     },
     {
       "virtual_machine": "paris-vm-02",
       "application_services": [
-        "Mobile Device Management - Oracle (Application Service)"
+        "Mobile Device Management - Oracle (Application Service)",
+        "Storage as a Service - Oracle (Application Service)"
       ]
     },
     {
       "virtual_machine": "paris-vm-03",
       "application_services": [
-        "Mobile Device Management - Oracle (Application Service)"
+        "Mobile Device Management - Oracle (Application Service)",
+        "Storage as a Service - Oracle (Application Service)"
       ]
     },
     {
       "virtual_machine": "paris-vm-04",
       "application_services": [
-        "Mobile Device Management - Oracle (Application Service)"
+        "Mobile Device Management - Oracle (Application Service)",
+        "Storage as a Service - Oracle (Application Service)"
       ]
     },
     {
       "virtual_machine": "london-vm-01",
       "application_services": [
-        "Mobile Device Management - Oracle (Application Service)"
+        "Mobile Device Management - Oracle (Application Service)",
+        "Storage as a Service - Oracle (Application Service)"
       ]
     },
     {
       "virtual_machine": "london-vm-02",
       "application_services": [
-        "Mobile Device Management - Oracle (Application Service)"
+        "Mobile Device Management - Oracle (Application Service)",
+        "Storage as a Service - Oracle (Application Service)"
       ]
     },
     {
       "virtual_machine": "london-vm-03",
       "application_services": [
-        "Mobile Device Management - Oracle (Application Service)"
+        "Mobile Device Management - Oracle (Application Service)",
+        "Storage as a Service - Oracle (Application Service)"
       ]
     },
     {
       "virtual_machine": "london-vm-04",
       "application_services": [
-        "Mobile Device Management - Oracle (Application Service)"
+        "Mobile Device Management - Oracle (Application Service)",
+        "Storage as a Service - Oracle (Application Service)"
       ]
     },
     {
       "virtual_machine": "madrid-vm-01",
       "application_services": [
-        "Print Services - Siemens (Application Service)"
+        "Print Services - Siemens (Application Service)",
+        "Monitoring & Observability - Siemens (Application Service)"
       ]
     },
     {
       "virtual_machine": "madrid-vm-02",
       "application_services": [
-        "Print Services - Siemens (Application Service)"
+        "Print Services - Siemens (Application Service)",
+        "Monitoring & Observability - Siemens (Application Service)"
       ]
     },
     {
       "virtual_machine": "madrid-vm-03",
       "application_services": [
-        "Print Services - Siemens (Application Service)"
+        "Print Services - Siemens (Application Service)",
+        "Monitoring & Observability - Siemens (Application Service)"
       ]
     },
     {
       "virtual_machine": "madrid-vm-04",
       "application_services": [
-        "Print Services - Siemens (Application Service)"
+        "Print Services - Siemens (Application Service)",
+        "Monitoring & Observability - Siemens (Application Service)"
       ]
     },
     {
       "virtual_machine": "milan-vm-01",
       "application_services": [
-        "Print Services - Siemens (Application Service)"
+        "Print Services - Siemens (Application Service)",
+        "Monitoring & Observability - Siemens (Application Service)"
       ]
     },
     {
       "virtual_machine": "milan-vm-02",
       "application_services": [
-        "Print Services - Siemens (Application Service)"
+        "Print Services - Siemens (Application Service)",
+        "Monitoring & Observability - Siemens (Application Service)"
       ]
     },
     {
       "virtual_machine": "milan-vm-03",
       "application_services": [
-        "Print Services - Siemens (Application Service)"
+        "Print Services - Siemens (Application Service)",
+        "Monitoring & Observability - Siemens (Application Service)"
       ]
     },
     {
       "virtual_machine": "milan-vm-04",
       "application_services": [
-        "Print Services - Siemens (Application Service)"
+        "Print Services - Siemens (Application Service)",
+        "Monitoring & Observability - Siemens (Application Service)"
       ]
     },
     {
       "virtual_machine": "rome-vm-01",
       "application_services": [
-        "Virtual Desktop Infrastructure - BMW (Application Service)"
+        "Virtual Desktop Infrastructure - BMW (Application Service)",
+        "DNS & DHCP Management - BMW (Application Service)"
       ]
     },
     {
       "virtual_machine": "rome-vm-02",
       "application_services": [
-        "Virtual Desktop Infrastructure - BMW (Application Service)"
+        "Virtual Desktop Infrastructure - BMW (Application Service)",
+        "DNS & DHCP Management - BMW (Application Service)"
       ]
     },
     {
       "virtual_machine": "rome-vm-03",
       "application_services": [
-        "Virtual Desktop Infrastructure - BMW (Application Service)"
+        "Virtual Desktop Infrastructure - BMW (Application Service)",
+        "DNS & DHCP Management - BMW (Application Service)"
       ]
     },
     {
       "virtual_machine": "rome-vm-04",
       "application_services": [
-        "Virtual Desktop Infrastructure - BMW (Application Service)"
+        "Virtual Desktop Infrastructure - BMW (Application Service)",
+        "DNS & DHCP Management - BMW (Application Service)"
       ]
     },
     {
       "virtual_machine": "lisbon-vm-01",
       "application_services": [
-        "Virtual Desktop Infrastructure - BMW (Application Service)"
+        "Virtual Desktop Infrastructure - BMW (Application Service)",
+        "DNS & DHCP Management - BMW (Application Service)"
       ]
     },
     {
       "virtual_machine": "lisbon-vm-02",
       "application_services": [
-        "Virtual Desktop Infrastructure - BMW (Application Service)"
+        "Virtual Desktop Infrastructure - BMW (Application Service)",
+        "DNS & DHCP Management - BMW (Application Service)"
       ]
     },
     {
       "virtual_machine": "lisbon-vm-03",
       "application_services": [
-        "Virtual Desktop Infrastructure - BMW (Application Service)"
+        "Virtual Desktop Infrastructure - BMW (Application Service)",
+        "DNS & DHCP Management - BMW (Application Service)"
       ]
     },
     {
       "virtual_machine": "lisbon-vm-04",
       "application_services": [
-        "Virtual Desktop Infrastructure - BMW (Application Service)"
+        "Virtual Desktop Infrastructure - BMW (Application Service)",
+        "DNS & DHCP Management - BMW (Application Service)"
       ]
     },
     {
       "virtual_machine": "warsaw-vm-01",
       "application_services": [
-        "Cloud Backup - Volkswagen (Application Service)"
+        "Cloud Backup - Volkswagen (Application Service)",
+        "Managed Email - Volkswagen (Application Service)"
       ]
     },
     {
       "virtual_machine": "warsaw-vm-02",
       "application_services": [
-        "Cloud Backup - Volkswagen (Application Service)"
+        "Cloud Backup - Volkswagen (Application Service)",
+        "Managed Email - Volkswagen (Application Service)"
       ]
     },
     {
       "virtual_machine": "warsaw-vm-03",
       "application_services": [
-        "Cloud Backup - Volkswagen (Application Service)"
+        "Cloud Backup - Volkswagen (Application Service)",
+        "Managed Email - Volkswagen (Application Service)"
       ]
     },
     {
       "virtual_machine": "warsaw-vm-04",
       "application_services": [
-        "Cloud Backup - Volkswagen (Application Service)"
+        "Cloud Backup - Volkswagen (Application Service)",
+        "Managed Email - Volkswagen (Application Service)"
       ]
     },
     {
       "virtual_machine": "prague-vm-01",
       "application_services": [
-        "Cloud Backup - Volkswagen (Application Service)"
+        "Cloud Backup - Volkswagen (Application Service)",
+        "Managed Email - Volkswagen (Application Service)"
       ]
     },
     {
       "virtual_machine": "prague-vm-02",
       "application_services": [
-        "Cloud Backup - Volkswagen (Application Service)"
+        "Cloud Backup - Volkswagen (Application Service)",
+        "Managed Email - Volkswagen (Application Service)"
       ]
     },
     {
       "virtual_machine": "prague-vm-03",
       "application_services": [
-        "Cloud Backup - Volkswagen (Application Service)"
+        "Cloud Backup - Volkswagen (Application Service)",
+        "Managed Email - Volkswagen (Application Service)"
       ]
     },
     {
       "virtual_machine": "prague-vm-04",
       "application_services": [
-        "Cloud Backup - Volkswagen (Application Service)"
+        "Cloud Backup - Volkswagen (Application Service)",
+        "Managed Email - Volkswagen (Application Service)"
       ]
     },
     {
       "virtual_machine": "budapest-vm-01",
       "application_services": [
-        "Disaster Recovery - Deutsche Bank (Application Service)"
+        "Disaster Recovery - Deutsche Bank (Application Service)",
+        "Unified Communications - Deutsche Bank (Application Service)"
       ]
     },
     {
       "virtual_machine": "budapest-vm-02",
       "application_services": [
-        "Disaster Recovery - Deutsche Bank (Application Service)"
+        "Disaster Recovery - Deutsche Bank (Application Service)",
+        "Unified Communications - Deutsche Bank (Application Service)"
       ]
     },
     {
       "virtual_machine": "budapest-vm-03",
       "application_services": [
-        "Disaster Recovery - Deutsche Bank (Application Service)"
+        "Disaster Recovery - Deutsche Bank (Application Service)",
+        "Unified Communications - Deutsche Bank (Application Service)"
       ]
     },
     {
       "virtual_machine": "budapest-vm-04",
       "application_services": [
-        "Disaster Recovery - Deutsche Bank (Application Service)"
+        "Disaster Recovery - Deutsche Bank (Application Service)",
+        "Unified Communications - Deutsche Bank (Application Service)"
       ]
     },
     {
       "virtual_machine": "copenhagen-vm-01",
       "application_services": [
-        "Disaster Recovery - Deutsche Bank (Application Service)"
+        "Disaster Recovery - Deutsche Bank (Application Service)",
+        "Unified Communications - Deutsche Bank (Application Service)"
       ]
     },
     {
       "virtual_machine": "copenhagen-vm-02",
       "application_services": [
-        "Disaster Recovery - Deutsche Bank (Application Service)"
+        "Disaster Recovery - Deutsche Bank (Application Service)",
+        "Unified Communications - Deutsche Bank (Application Service)"
       ]
     },
     {
       "virtual_machine": "copenhagen-vm-03",
       "application_services": [
-        "Disaster Recovery - Deutsche Bank (Application Service)"
+        "Disaster Recovery - Deutsche Bank (Application Service)",
+        "Unified Communications - Deutsche Bank (Application Service)"
       ]
     },
     {
       "virtual_machine": "copenhagen-vm-04",
       "application_services": [
-        "Disaster Recovery - Deutsche Bank (Application Service)"
+        "Disaster Recovery - Deutsche Bank (Application Service)",
+        "Unified Communications - Deutsche Bank (Application Service)"
       ]
     },
     {
       "virtual_machine": "stockholm-vm-01",
       "application_services": [
-        "Network Security - Allianz (Application Service)"
+        "Network Security - Allianz (Application Service)",
+        "Endpoint Management - Allianz (Application Service)"
       ]
     },
     {
       "virtual_machine": "stockholm-vm-02",
       "application_services": [
-        "Network Security - Allianz (Application Service)"
+        "Network Security - Allianz (Application Service)",
+        "Endpoint Management - Allianz (Application Service)"
       ]
     },
     {
       "virtual_machine": "stockholm-vm-03",
       "application_services": [
-        "Network Security - Allianz (Application Service)"
+        "Network Security - Allianz (Application Service)",
+        "Endpoint Management - Allianz (Application Service)"
       ]
     },
     {
       "virtual_machine": "stockholm-vm-04",
       "application_services": [
-        "Network Security - Allianz (Application Service)"
+        "Network Security - Allianz (Application Service)",
+        "Endpoint Management - Allianz (Application Service)"
       ]
     },
     {
       "virtual_machine": "oslo-vm-01",
       "application_services": [
-        "Network Security - Allianz (Application Service)"
+        "Network Security - Allianz (Application Service)",
+        "Endpoint Management - Allianz (Application Service)"
       ]
     },
     {
       "virtual_machine": "oslo-vm-02",
       "application_services": [
-        "Network Security - Allianz (Application Service)"
+        "Network Security - Allianz (Application Service)",
+        "Endpoint Management - Allianz (Application Service)"
       ]
     },
     {
       "virtual_machine": "oslo-vm-03",
       "application_services": [
-        "Network Security - Allianz (Application Service)"
+        "Network Security - Allianz (Application Service)",
+        "Endpoint Management - Allianz (Application Service)"
       ]
     },
     {
       "virtual_machine": "oslo-vm-04",
       "application_services": [
-        "Network Security - Allianz (Application Service)"
+        "Network Security - Allianz (Application Service)",
+        "Endpoint Management - Allianz (Application Service)"
       ]
     },
     {
       "virtual_machine": "dublin-vm-01",
       "application_services": [
-        "Database Hosting - Adidas (Application Service)"
+        "Database Hosting - Adidas (Application Service)",
+        "Helpdesk Support - Adidas (Application Service)"
       ]
     },
     {
       "virtual_machine": "dublin-vm-02",
       "application_services": [
-        "Database Hosting - Adidas (Application Service)"
+        "Database Hosting - Adidas (Application Service)",
+        "Helpdesk Support - Adidas (Application Service)"
       ]
     },
     {
       "virtual_machine": "dublin-vm-03",
       "application_services": [
-        "Database Hosting - Adidas (Application Service)"
+        "Database Hosting - Adidas (Application Service)",
+        "Helpdesk Support - Adidas (Application Service)"
       ]
     },
     {
       "virtual_machine": "dublin-vm-04",
       "application_services": [
-        "Database Hosting - Adidas (Application Service)"
+        "Database Hosting - Adidas (Application Service)",
+        "Helpdesk Support - Adidas (Application Service)"
       ]
     },
     {
       "virtual_machine": "helsinki-vm-01",
       "application_services": [
-        "Database Hosting - Adidas (Application Service)"
+        "Database Hosting - Adidas (Application Service)",
+        "Helpdesk Support - Adidas (Application Service)"
       ]
     },
     {
       "virtual_machine": "helsinki-vm-02",
       "application_services": [
-        "Database Hosting - Adidas (Application Service)"
+        "Database Hosting - Adidas (Application Service)",
+        "Helpdesk Support - Adidas (Application Service)"
       ]
     },
     {
       "virtual_machine": "helsinki-vm-03",
       "application_services": [
-        "Database Hosting - Adidas (Application Service)"
+        "Database Hosting - Adidas (Application Service)",
+        "Helpdesk Support - Adidas (Application Service)"
       ]
     },
     {
       "virtual_machine": "helsinki-vm-04",
       "application_services": [
-        "Database Hosting - Adidas (Application Service)"
+        "Database Hosting - Adidas (Application Service)",
+        "Helpdesk Support - Adidas (Application Service)"
       ]
     },
     {
       "virtual_machine": "athens-vm-01",
       "application_services": [
-        "Load Balancing - Puma (Application Service)"
+        "Load Balancing - Puma (Application Service)",
+        "Identity & Access Management - Puma (Application Service)"
       ]
     },
     {
       "virtual_machine": "athens-vm-02",
       "application_services": [
-        "Load Balancing - Puma (Application Service)"
+        "Load Balancing - Puma (Application Service)",
+        "Identity & Access Management - Puma (Application Service)"
       ]
     },
     {
       "virtual_machine": "athens-vm-03",
       "application_services": [
-        "Load Balancing - Puma (Application Service)"
+        "Load Balancing - Puma (Application Service)",
+        "Identity & Access Management - Puma (Application Service)"
       ]
     },
     {
       "virtual_machine": "athens-vm-04",
       "application_services": [
-        "Load Balancing - Puma (Application Service)"
+        "Load Balancing - Puma (Application Service)",
+        "Identity & Access Management - Puma (Application Service)"
       ]
     },
     {
       "virtual_machine": "geneva-vm-01",
       "application_services": [
-        "Load Balancing - Puma (Application Service)"
+        "Load Balancing - Puma (Application Service)",
+        "Identity & Access Management - Puma (Application Service)"
       ]
     },
     {
       "virtual_machine": "geneva-vm-02",
       "application_services": [
-        "Load Balancing - Puma (Application Service)"
+        "Load Balancing - Puma (Application Service)",
+        "Identity & Access Management - Puma (Application Service)"
       ]
     },
     {
       "virtual_machine": "geneva-vm-03",
       "application_services": [
-        "Load Balancing - Puma (Application Service)"
+        "Load Balancing - Puma (Application Service)",
+        "Identity & Access Management - Puma (Application Service)"
       ]
     },
     {
       "virtual_machine": "geneva-vm-04",
       "application_services": [
-        "Load Balancing - Puma (Application Service)"
+        "Load Balancing - Puma (Application Service)",
+        "Identity & Access Management - Puma (Application Service)"
       ]
     },
     {
       "virtual_machine": "singapore-vm-01",
       "application_services": [
-        "Container Orchestration - Nike (Application Service)"
+        "Container Orchestration - Nike (Application Service)",
+        "Video Conferencing - Nike (Application Service)"
       ]
     },
     {
       "virtual_machine": "singapore-vm-02",
       "application_services": [
-        "Container Orchestration - Nike (Application Service)"
+        "Container Orchestration - Nike (Application Service)",
+        "Video Conferencing - Nike (Application Service)"
       ]
     },
     {
       "virtual_machine": "singapore-vm-03",
       "application_services": [
-        "Container Orchestration - Nike (Application Service)"
+        "Container Orchestration - Nike (Application Service)",
+        "Video Conferencing - Nike (Application Service)"
       ]
     },
     {
       "virtual_machine": "singapore-vm-04",
       "application_services": [
-        "Container Orchestration - Nike (Application Service)"
+        "Container Orchestration - Nike (Application Service)",
+        "Video Conferencing - Nike (Application Service)"
       ]
     },
     {
       "virtual_machine": "tokyo-vm-01",
       "application_services": [
-        "Container Orchestration - Nike (Application Service)"
+        "Container Orchestration - Nike (Application Service)",
+        "Video Conferencing - Nike (Application Service)"
       ]
     },
     {
       "virtual_machine": "tokyo-vm-02",
       "application_services": [
-        "Container Orchestration - Nike (Application Service)"
+        "Container Orchestration - Nike (Application Service)",
+        "Video Conferencing - Nike (Application Service)"
       ]
     },
     {
       "virtual_machine": "tokyo-vm-03",
       "application_services": [
-        "Container Orchestration - Nike (Application Service)"
+        "Container Orchestration - Nike (Application Service)",
+        "Video Conferencing - Nike (Application Service)"
       ]
     },
     {
       "virtual_machine": "tokyo-vm-04",
       "application_services": [
-        "Container Orchestration - Nike (Application Service)"
+        "Container Orchestration - Nike (Application Service)",
+        "Video Conferencing - Nike (Application Service)"
       ]
     },
     {
       "virtual_machine": "sydney-vm-01",
       "application_services": [
-        "Data Analytics Platform - Samsung (Application Service)"
+        "Data Analytics Platform - Samsung (Application Service)",
+        "File Sharing & Collaboration - Samsung (Application Service)"
       ]
     },
     {
       "virtual_machine": "sydney-vm-02",
       "application_services": [
-        "Data Analytics Platform - Samsung (Application Service)"
+        "Data Analytics Platform - Samsung (Application Service)",
+        "File Sharing & Collaboration - Samsung (Application Service)"
       ]
     },
     {
       "virtual_machine": "sydney-vm-03",
       "application_services": [
-        "Data Analytics Platform - Samsung (Application Service)"
+        "Data Analytics Platform - Samsung (Application Service)",
+        "File Sharing & Collaboration - Samsung (Application Service)"
       ]
     },
     {
       "virtual_machine": "sydney-vm-04",
       "application_services": [
-        "Data Analytics Platform - Samsung (Application Service)"
+        "Data Analytics Platform - Samsung (Application Service)",
+        "File Sharing & Collaboration - Samsung (Application Service)"
       ]
     },
     {
       "virtual_machine": "toronto-vm-01",
       "application_services": [
-        "Data Analytics Platform - Samsung (Application Service)"
+        "Data Analytics Platform - Samsung (Application Service)",
+        "File Sharing & Collaboration - Samsung (Application Service)"
       ]
     },
     {
       "virtual_machine": "toronto-vm-02",
       "application_services": [
-        "Data Analytics Platform - Samsung (Application Service)"
+        "Data Analytics Platform - Samsung (Application Service)",
+        "File Sharing & Collaboration - Samsung (Application Service)"
       ]
     },
     {
       "virtual_machine": "toronto-vm-03",
       "application_services": [
-        "Data Analytics Platform - Samsung (Application Service)"
+        "Data Analytics Platform - Samsung (Application Service)",
+        "File Sharing & Collaboration - Samsung (Application Service)"
       ]
     },
     {
       "virtual_machine": "toronto-vm-04",
       "application_services": [
-        "Data Analytics Platform - Samsung (Application Service)"
+        "Data Analytics Platform - Samsung (Application Service)",
+        "File Sharing & Collaboration - Samsung (Application Service)"
       ]
     },
     {
       "virtual_machine": "chicago-vm-01",
       "application_services": [
-        "Storage as a Service - Sony (Application Service)"
+        "Storage as a Service - Sony (Application Service)",
+        "Mobile Device Management - Sony (Application Service)"
       ]
     },
     {
       "virtual_machine": "chicago-vm-02",
       "application_services": [
-        "Storage as a Service - Sony (Application Service)"
+        "Storage as a Service - Sony (Application Service)",
+        "Mobile Device Management - Sony (Application Service)"
       ]
     },
     {
       "virtual_machine": "chicago-vm-03",
       "application_services": [
-        "Storage as a Service - Sony (Application Service)"
+        "Storage as a Service - Sony (Application Service)",
+        "Mobile Device Management - Sony (Application Service)"
       ]
     },
     {
       "virtual_machine": "chicago-vm-04",
       "application_services": [
-        "Storage as a Service - Sony (Application Service)"
+        "Storage as a Service - Sony (Application Service)",
+        "Mobile Device Management - Sony (Application Service)"
       ]
     },
     {
       "virtual_machine": "dallas-vm-01",
       "application_services": [
-        "Storage as a Service - Sony (Application Service)"
+        "Storage as a Service - Sony (Application Service)",
+        "Mobile Device Management - Sony (Application Service)"
       ]
     },
     {
       "virtual_machine": "dallas-vm-02",
       "application_services": [
-        "Storage as a Service - Sony (Application Service)"
+        "Storage as a Service - Sony (Application Service)",
+        "Mobile Device Management - Sony (Application Service)"
       ]
     },
     {
       "virtual_machine": "dallas-vm-03",
       "application_services": [
-        "Storage as a Service - Sony (Application Service)"
+        "Storage as a Service - Sony (Application Service)",
+        "Mobile Device Management - Sony (Application Service)"
       ]
     },
     {
       "virtual_machine": "dallas-vm-04",
       "application_services": [
-        "Storage as a Service - Sony (Application Service)"
+        "Storage as a Service - Sony (Application Service)",
+        "Mobile Device Management - Sony (Application Service)"
       ]
     },
     {
       "virtual_machine": "seattle-vm-01",
       "application_services": [
-        "Monitoring & Observability - Toyota (Application Service)"
+        "Monitoring & Observability - Toyota (Application Service)",
+        "Print Services - Toyota (Application Service)"
       ]
     },
     {
       "virtual_machine": "seattle-vm-02",
       "application_services": [
-        "Monitoring & Observability - Toyota (Application Service)"
+        "Monitoring & Observability - Toyota (Application Service)",
+        "Print Services - Toyota (Application Service)"
       ]
     },
     {
       "virtual_machine": "seattle-vm-03",
       "application_services": [
-        "Monitoring & Observability - Toyota (Application Service)"
+        "Monitoring & Observability - Toyota (Application Service)",
+        "Print Services - Toyota (Application Service)"
       ]
     },
     {
       "virtual_machine": "seattle-vm-04",
       "application_services": [
-        "Monitoring & Observability - Toyota (Application Service)"
+        "Monitoring & Observability - Toyota (Application Service)",
+        "Print Services - Toyota (Application Service)"
       ]
     },
     {
       "virtual_machine": "boston-vm-01",
       "application_services": [
-        "Monitoring & Observability - Toyota (Application Service)"
+        "Monitoring & Observability - Toyota (Application Service)",
+        "Print Services - Toyota (Application Service)"
       ]
     },
     {
       "virtual_machine": "boston-vm-02",
       "application_services": [
-        "Monitoring & Observability - Toyota (Application Service)"
+        "Monitoring & Observability - Toyota (Application Service)",
+        "Print Services - Toyota (Application Service)"
       ]
     },
     {
       "virtual_machine": "boston-vm-03",
       "application_services": [
-        "Monitoring & Observability - Toyota (Application Service)"
+        "Monitoring & Observability - Toyota (Application Service)",
+        "Print Services - Toyota (Application Service)"
       ]
     },
     {
       "virtual_machine": "boston-vm-04",
       "application_services": [
-        "Monitoring & Observability - Toyota (Application Service)"
+        "Monitoring & Observability - Toyota (Application Service)",
+        "Print Services - Toyota (Application Service)"
       ]
     },
     {
       "virtual_machine": "miami-vm-01",
       "application_services": [
-        "DNS & DHCP Management - Shell (Application Service)"
+        "DNS & DHCP Management - Shell (Application Service)",
+        "Virtual Desktop Infrastructure - Shell (Application Service)"
       ]
     },
     {
       "virtual_machine": "miami-vm-02",
       "application_services": [
-        "DNS & DHCP Management - Shell (Application Service)"
+        "DNS & DHCP Management - Shell (Application Service)",
+        "Virtual Desktop Infrastructure - Shell (Application Service)"
       ]
     },
     {
       "virtual_machine": "miami-vm-03",
       "application_services": [
-        "DNS & DHCP Management - Shell (Application Service)"
+        "DNS & DHCP Management - Shell (Application Service)",
+        "Virtual Desktop Infrastructure - Shell (Application Service)"
       ]
     },
     {
       "virtual_machine": "miami-vm-04",
       "application_services": [
-        "DNS & DHCP Management - Shell (Application Service)"
+        "DNS & DHCP Management - Shell (Application Service)",
+        "Virtual Desktop Infrastructure - Shell (Application Service)"
       ]
     },
     {
       "virtual_machine": "denver-vm-01",
       "application_services": [
-        "DNS & DHCP Management - Shell (Application Service)"
+        "DNS & DHCP Management - Shell (Application Service)",
+        "Virtual Desktop Infrastructure - Shell (Application Service)"
       ]
     },
     {
       "virtual_machine": "denver-vm-02",
       "application_services": [
-        "DNS & DHCP Management - Shell (Application Service)"
+        "DNS & DHCP Management - Shell (Application Service)",
+        "Virtual Desktop Infrastructure - Shell (Application Service)"
       ]
     },
     {
       "virtual_machine": "denver-vm-03",
       "application_services": [
-        "DNS & DHCP Management - Shell (Application Service)"
+        "DNS & DHCP Management - Shell (Application Service)",
+        "Virtual Desktop Infrastructure - Shell (Application Service)"
       ]
     },
     {
       "virtual_machine": "denver-vm-04",
       "application_services": [
-        "DNS & DHCP Management - Shell (Application Service)"
+        "DNS & DHCP Management - Shell (Application Service)",
+        "Virtual Desktop Infrastructure - Shell (Application Service)"
       ]
     }
   ]

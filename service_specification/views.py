@@ -9,7 +9,7 @@ from netbox.ui.panels import ObjectsTablePanel
 from netbox.views import generic
 from tenancy.filtersets import TenantFilterSet
 from tenancy.forms import TenantFilterForm
-from tenancy.models import Tenant
+from tenancy.models import Tenant, TenantGroup
 from utilities.views import ViewTab, register_model_view
 from virtualization.models import Cluster, ClusterGroup, VirtualMachine
 
@@ -22,6 +22,8 @@ from .models import (
     CIFunction,
     ClusterGroupServiceInfo,
     ClusterServiceInfo,
+    Contract,
+    ContractRateCard,
     Criticality,
     DeviceServiceInfo,
     Environment,
@@ -189,6 +191,56 @@ def _make_service_info_views(parent_model, info_model, form_cls, fk_name):
     return ServiceInfoView, ServiceInfoEditView
 
 
+ContractListView, ContractView, ContractEditView, ContractDeleteView = _make_views(
+    Contract,
+    filtersets.ContractFilterSet,
+    forms.ContractFilterForm,
+    tables.ContractTable,
+    forms.ContractForm,
+    layout=SimpleLayout(
+        left_panels=[panels.ContractPanel(), panels.ContractContactsPanel()],
+        right_panels=[panels.ContractCustomerPanel()],
+        bottom_panels=[
+            ObjectsTablePanel(
+                model='service_specification.contractratecard',
+                title='Contract Rate Cards',
+                filters={'id': lambda ctx: _rollup_ids(ctx['object'].rate_cards.all())},
+            ),
+            panels.CommentsPanel(),
+        ],
+    ),
+)
+ContractRateCardListView, ContractRateCardView, ContractRateCardEditView, ContractRateCardDeleteView = _make_views(
+    ContractRateCard,
+    filtersets.ContractRateCardFilterSet,
+    forms.ContractRateCardFilterForm,
+    tables.ContractRateCardTable,
+    forms.ContractRateCardForm,
+    layout=SimpleLayout(
+        left_panels=[panels.ContractRateCardPanel()],
+        right_panels=[panels.ContractRateCardCostsPanel()],
+        bottom_panels=[
+            # Customer/Customer Group aren't set on the Rate Card itself
+            # (removed — see models.py) — they live on the parent Contract
+            # and are shown here read-only, one hop further, the same
+            # pattern as AppService's "Customer (from Service Offering)"
+            # rollups below.
+            ObjectsTablePanel(
+                model='tenancy.tenant',
+                title='Customer (from Contract)',
+                filters={'id': lambda ctx: _rollup_ids(Tenant.objects.filter(pk=ctx['object'].contract.tenant_id))},
+            ),
+            ObjectsTablePanel(
+                model='tenancy.tenantgroup',
+                title='Customer Group (from Contract)',
+                filters={
+                    'id': lambda ctx: _rollup_ids(TenantGroup.objects.filter(pk=ctx['object'].contract.tenant_group_id))
+                },
+            ),
+            panels.CommentsPanel(),
+        ],
+    ),
+)
 PortfolioListView, PortfolioView, PortfolioEditView, PortfolioDeleteView = _make_views(
     Portfolio,
     filtersets.PortfolioFilterSet,

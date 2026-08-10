@@ -390,6 +390,154 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.CreateModel(
+            name='Contract',
+            fields=[
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False)),
+                ('created', models.DateTimeField(auto_now_add=True, null=True)),
+                ('last_updated', models.DateTimeField(auto_now=True, null=True)),
+                (
+                    'custom_field_data',
+                    models.JSONField(blank=True, default=dict, encoder=utilities.json.CustomFieldJSONEncoder),
+                ),
+                ('description', models.CharField(blank=True, max_length=200)),
+                ('comments', models.TextField(blank=True)),
+                ('contract_number', models.CharField(max_length=100)),
+                ('external_reference', models.CharField(blank=True, max_length=100)),
+                ('short_description', models.CharField(blank=True, max_length=300)),
+                ('legacy_contract', models.CharField(blank=True, max_length=100)),
+                ('project', models.CharField(blank=True, max_length=150)),
+                ('location', models.CharField(blank=True, max_length=200)),
+                ('contract_starts', models.DateField(blank=True, null=True)),
+                ('contract_ends', models.DateField(blank=True, null=True)),
+                ('tags', taggit.managers.TaggableManager(through='extras.TaggedItem', to='extras.Tag')),
+                (
+                    'owner',
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.PROTECT,
+                        related_name='+',
+                        to='users.owner',
+                    ),
+                ),
+                (
+                    'parent_contract',
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.PROTECT,
+                        related_name='+',
+                        to='service_specification.contract',
+                    ),
+                ),
+                (
+                    'vendor',
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.PROTECT,
+                        related_name='+',
+                        to='dcim.manufacturer',
+                    ),
+                ),
+                (
+                    'tenant',
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.PROTECT,
+                        related_name='+',
+                        to='tenancy.tenant',
+                    ),
+                ),
+                (
+                    'tenant_group',
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.PROTECT,
+                        related_name='+',
+                        to='tenancy.tenantgroup',
+                    ),
+                ),
+                (
+                    'approver',
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.PROTECT,
+                        related_name='+',
+                        to='tenancy.contact',
+                    ),
+                ),
+                (
+                    'business_unit',
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.PROTECT,
+                        related_name='+',
+                        to='tenancy.contactgroup',
+                    ),
+                ),
+            ],
+            options={
+                'verbose_name': 'Contract',
+                'verbose_name_plural': 'Contracts',
+                'ordering': ('contract_number',),
+            },
+        ),
+        migrations.CreateModel(
+            name='ContractRateCard',
+            fields=[
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False)),
+                ('created', models.DateTimeField(auto_now_add=True, null=True)),
+                ('last_updated', models.DateTimeField(auto_now=True, null=True)),
+                (
+                    'custom_field_data',
+                    models.JSONField(blank=True, default=dict, encoder=utilities.json.CustomFieldJSONEncoder),
+                ),
+                ('description', models.CharField(blank=True, max_length=200)),
+                ('comments', models.TextField(blank=True)),
+                ('contract_position_number', models.CharField(max_length=100)),
+                ('active', models.BooleanField(default=True)),
+                ('short_description', models.CharField(blank=True, max_length=300)),
+                ('start_date', models.DateField(blank=True, null=True)),
+                ('end_date', models.DateField(blank=True, null=True)),
+                ('order_number', models.CharField(blank=True, max_length=100)),
+                ('base_costs', models.DecimalField(decimal_places=2, default=0, max_digits=14)),
+                ('hourly_rate', models.DecimalField(decimal_places=2, default=0, max_digits=10)),
+                ('hours_spend', models.DecimalField(decimal_places=2, default=0, max_digits=10)),
+                ('interval', models.CharField(max_length=30)),
+                ('billing', models.BooleanField(default=False)),
+                ('project', models.CharField(blank=True, max_length=150)),
+                ('tags', taggit.managers.TaggableManager(through='extras.TaggedItem', to='extras.Tag')),
+                (
+                    'owner',
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.PROTECT,
+                        related_name='+',
+                        to='users.owner',
+                    ),
+                ),
+                (
+                    'contract',
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name='rate_cards',
+                        to='service_specification.contract',
+                    ),
+                ),
+            ],
+            options={
+                'verbose_name': 'Contract Rate Card',
+                'verbose_name_plural': 'Contract Rate Cards',
+                'ordering': ('contract', 'contract_position_number'),
+            },
+        ),
+        migrations.CreateModel(
             name='ServiceOffering',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False)),
@@ -402,7 +550,6 @@ class Migration(migrations.Migration):
                 ('description', models.CharField(blank=True, max_length=200)),
                 ('comments', models.TextField(blank=True)),
                 ('name', models.CharField(max_length=150)),
-                ('contract_number', models.CharField(max_length=100)),
                 ('tags', taggit.managers.TaggableManager(through='extras.TaggedItem', to='extras.Tag')),
                 (
                     'owner',
@@ -412,6 +559,16 @@ class Migration(migrations.Migration):
                         on_delete=django.db.models.deletion.PROTECT,
                         related_name='+',
                         to='users.owner',
+                    ),
+                ),
+                (
+                    'contract',
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.PROTECT,
+                        related_name='service_offerings',
+                        to='service_specification.contract',
                     ),
                 ),
                 (
@@ -661,6 +818,22 @@ class Migration(migrations.Migration):
         # Many-to-many fields (added after every involved model exists, to
         # avoid ordering issues from the extensive cross-references below)
         #
+        # Contract
+        migrations.AddField(
+            model_name='contract',
+            name='contact_person',
+            field=models.ManyToManyField(blank=True, related_name='+', to='tenancy.contact'),
+        ),
+        migrations.AddField(
+            model_name='contract',
+            name='primary_contact',
+            field=models.ManyToManyField(blank=True, related_name='+', to='tenancy.contact'),
+        ),
+        migrations.AddField(
+            model_name='contract',
+            name='contract_manager',
+            field=models.ManyToManyField(blank=True, related_name='+', to='tenancy.contact'),
+        ),
         # Portfolio
         migrations.AddField(
             model_name='portfolio',

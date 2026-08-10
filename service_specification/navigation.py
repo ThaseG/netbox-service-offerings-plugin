@@ -31,6 +31,8 @@ def _report_item(url_name, link_text):
 
 
 data_model_items = (
+    _item('contract', 'Contracts'),
+    _item('contractratecard', 'Contract Rate Cards'),
     _item('portfolio', 'Service Portfolios'),
     _item('service', 'Services'),
     _item('serviceoffering', 'Service Offerings'),

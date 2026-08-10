@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3 -m ruff check .)",
+      "Bash(python3 -m ruff format --check .)",
+      "Bash(awk '/^class ContractForm/,/^class ServiceOfferingForm/' service_specification/forms.py)",
+      "Bash(awk '/^class ContractRateCardForm/,/^class ServiceOfferingForm/' service_specification/forms.py)",
+      "Bash(python3 -m py_compile service_specification/models.py service_specification/migrations/0001_initial.py service_specification/forms.py service_specification/tables.py service_specification/filtersets.py service_specification/panels.py service_specification/views.py service_specification/tests/test_models.py)",
+      "Bash(python3 -m ruff format service_specification/views.py)",
+      "Bash(python3 -m py_compile service_specification/api/serializers.py service_specification/api/views.py service_specification/graphql.py service_specification/urls.py service_specification/navigation.py)",
+      "Bash(python3 -m ruff check service_specification/forms.py ci/scripts/generate_test_deployment_data.py)",
+      "Bash(python3 -m ruff format --check service_specification/forms.py ci/scripts/generate_test_deployment_data.py)",
+      "Bash(python3 -m ruff check service_specification/ ci/scripts/)",
+      "Bash(python3 -m ruff format --check service_specification/ ci/scripts/)",
+      "Bash(python3 -m py_compile service_specification/tables.py service_specification/views.py service_specification/utils.py)"
+    ]
+  }
+}

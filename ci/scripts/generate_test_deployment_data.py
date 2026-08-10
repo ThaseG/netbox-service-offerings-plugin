@@ -2,10 +2,11 @@
 """Regenerates ci/scripts/test-deployment.json — 20 tenants (realistic
 company names), each with its own HQ/Branch sites (named after real
 cities) and ~20 Technical CIs (devices/cluster/cluster group/VMs), plus 2
-Service Portfolios each realizing 10 Service Offerings (one per tenant,
-covering all 20), each with its own Application Service. Every Application
-Service is assigned the full set of Technical CIs belonging to its own
-offering's tenant.
+Service Portfolios each realizing 20 Service Offerings across two rounds
+(two per tenant, covering all 20 tenants twice with different themes),
+each with its own Application Service. Every one of a tenant's Application
+Services is assigned the full set of Technical CIs belonging to that same
+tenant.
 
 This is a one-off *generator*, not part of the actual deploy pipeline:
 ci/scripts/test-deployment.py itself stays a generic "read JSON, POST it,
@@ -424,8 +425,12 @@ def build_tenants_and_infra(data):
 
 def build_hierarchy(data, tenant_slugs):
     """2 Portfolios, each with one pass-through Service and 10 Service
-    Offerings — together covering all 20 tenants exactly once (10 + 10 =
-    20) — each Offering with its own 1:1 Application Service.
+    Offering themes. Every tenant gets 2 Service Offerings, not 1: the
+    10-theme x 2-portfolio combination (20 combos) is walked twice, the
+    second pass with tenant assignment rotated by half the tenant list
+    (10 of 20) so each tenant's second Offering always lands on a
+    different theme than its first — 40 Offerings total, each with its
+    own 1:1 Application Service.
     """
     lifecycle_slugs = [slug for _name, slug, _desc, _color in LIFECYCLES]
     sla_slugs = [slug for _name, slug in SLAS]
@@ -443,9 +448,6 @@ def build_hierarchy(data, tenant_slugs):
     services = []
     offerings = []
     app_services = []
-
-    offering_index = 0  # global 0..19, also used to mix lifecycles/etc.
-    tenant_by_offering = {}
 
     for portfolio in PORTFOLIOS:
         portfolios.append(
@@ -476,59 +478,70 @@ def build_hierarchy(data, tenant_slugs):
             }
         )
 
-        for theme in portfolio['themes']:
-            tenant_slug = tenant_slugs[offering_index]
-            tenant_name = next(c for c in COMPANIES if slugify(c) == tenant_slug)
-            offering_name = f'{theme} - {tenant_name}'
-            # Mixed on purpose (not all "Available"): cycle through every
-            # one of the 11 lifecycle statuses across the 20 offerings.
-            lifecycle_slug = lifecycle_slugs[offering_index % len(lifecycle_slugs)]
+    # global 0..39 across both rounds, also used to mix lifecycles/etc.
+    offering_index = 0
+    tenant_by_offering = {}
 
-            offerings.append(
-                {
-                    'name': offering_name,
-                    'description': offering_name,
-                    'contract_number': f'CN-{offering_index + 1:04d}',
-                    'lifecycle': lifecycle_slug,
-                    'service': [portfolio['service_name']],
-                    'service_offering_owner_contacts': ['Elena Petrova'],
-                    'service_offering_owner_contact_groups': ['service-offering-owners'],
-                    'service_offering_manager_contacts': ['Franklin Diaz'],
-                    'service_offering_manager_contact_groups': ['service-offering-managers'],
-                    'business_unit': shared_business_unit,
-                    'support_group': shared_support_group,
-                    'change_group': shared_change_group,
-                    'tenant': [tenant_slug],
-                }
-            )
+    for round_num in range(2):
+        for portfolio in PORTFOLIOS:
+            for theme in portfolio['themes']:
+                # Position within this round's 20 (portfolio, theme) combos
+                # maps directly to a tenant in round 0; round 1 shifts that
+                # mapping by 10 tenants so every tenant's second Offering
+                # uses a different theme than its first (see docstring).
+                position_in_round = offering_index % len(tenant_slugs)
+                tenant_slug = tenant_slugs[(position_in_round + round_num * 10) % len(tenant_slugs)]
+                tenant_name = next(c for c in COMPANIES if slugify(c) == tenant_slug)
+                offering_name = f'{theme} - {tenant_name}'
+                # Mixed on purpose (not all "Available"): cycle through
+                # every one of the 11 lifecycle statuses across the 40
+                # offerings.
+                lifecycle_slug = lifecycle_slugs[offering_index % len(lifecycle_slugs)]
 
-            app_service_name = f'{theme} - {tenant_name} (Application Service)'
-            app_services.append(
-                {
-                    'name': app_service_name,
-                    'description': app_service_name,
-                    'environment': environment_slugs[offering_index % len(environment_slugs)],
-                    'lifecycle': lifecycle_slugs[(offering_index + 1) % len(lifecycle_slugs)],
-                    'service_offering': offering_name,
-                    'business_unit': shared_business_unit,
-                    'support_group': shared_support_group,
-                    'change_group': shared_change_group,
-                    'sla': [sla_slugs[offering_index % len(sla_slugs)]],
-                    'owned_by_contact_group': 'app1-owner-group',
-                    'operation_time': [op_time_slugs[offering_index % len(op_time_slugs)]],
-                    'availability': [availability_slugs[offering_index % len(availability_slugs)]],
-                    'mtat': [mtat_slugs[offering_index % len(mtat_slugs)]],
-                    'service_criticality': [criticality_slugs[offering_index % len(criticality_slugs)]],
-                    'accepted_downtime': 1 + (offering_index % 4),
-                    'ttr': 1 + (offering_index % 3),
-                    'rpo': 2 + (offering_index % 3),
-                    'rto': 2 + (offering_index % 4),
-                    'bcm': 1 + (offering_index % 3),
-                }
-            )
+                offerings.append(
+                    {
+                        'name': offering_name,
+                        'description': offering_name,
+                        'lifecycle': lifecycle_slug,
+                        'service': [portfolio['service_name']],
+                        'service_offering_owner_contacts': ['Elena Petrova'],
+                        'service_offering_owner_contact_groups': ['service-offering-owners'],
+                        'service_offering_manager_contacts': ['Franklin Diaz'],
+                        'service_offering_manager_contact_groups': ['service-offering-managers'],
+                        'business_unit': shared_business_unit,
+                        'support_group': shared_support_group,
+                        'change_group': shared_change_group,
+                        'tenant': [tenant_slug],
+                    }
+                )
 
-            tenant_by_offering[app_service_name] = tenant_slug
-            offering_index += 1
+                app_service_name = f'{theme} - {tenant_name} (Application Service)'
+                app_services.append(
+                    {
+                        'name': app_service_name,
+                        'description': app_service_name,
+                        'environment': environment_slugs[offering_index % len(environment_slugs)],
+                        'lifecycle': lifecycle_slugs[(offering_index + 1) % len(lifecycle_slugs)],
+                        'service_offering': offering_name,
+                        'business_unit': shared_business_unit,
+                        'support_group': shared_support_group,
+                        'change_group': shared_change_group,
+                        'sla': [sla_slugs[offering_index % len(sla_slugs)]],
+                        'owned_by_contact_group': 'app1-owner-group',
+                        'operation_time': [op_time_slugs[offering_index % len(op_time_slugs)]],
+                        'availability': [availability_slugs[offering_index % len(availability_slugs)]],
+                        'mtat': [mtat_slugs[offering_index % len(mtat_slugs)]],
+                        'service_criticality': [criticality_slugs[offering_index % len(criticality_slugs)]],
+                        'accepted_downtime': 1 + (offering_index % 4),
+                        'ttr': 1 + (offering_index % 3),
+                        'rpo': 2 + (offering_index % 3),
+                        'rto': 2 + (offering_index % 4),
+                        'bcm': 1 + (offering_index % 3),
+                    }
+                )
+
+                tenant_by_offering[app_service_name] = tenant_slug
+                offering_index += 1
 
     data['plugins/service-specification/portfolios/'] = portfolios
     data['plugins/service-specification/services/'] = services
@@ -539,13 +552,14 @@ def build_hierarchy(data, tenant_slugs):
 
 
 def build_ci_assignments(data, cis_by_tenant, tenant_by_offering):
-    """Each Application Service is 1:1 with a tenant (via its Service
-    Offering), so it gets every Technical CI that belongs to that same
-    tenant — not a cross-tenant pool. application_services is a
-    ManyToMany on each *ServiceInfo row (one row per Device/Cluster/
-    ClusterGroup/VirtualMachine, all 1:1 with their parent object), and
-    every tenant maps to exactly one Application Service here, so each of
-    a tenant's CIs simply gets that one Application Service in its list.
+    """Each Technical CI belongs to exactly one tenant, but each tenant now
+    has 2 Application Services (see build_hierarchy), not 1 — and every
+    *ServiceInfo model is OneToOne with its Device/Cluster/ClusterGroup/
+    VirtualMachine, so a CI can only ever get a single *ServiceInfo row.
+    Both of a tenant's Application Services are therefore listed together
+    in that one row's `application_services` (a ManyToMany field), rather
+    than trying to create a second row for the same CI — which would 400
+    on the OneToOne constraint.
     """
     endpoint_by_kind = {
         'device': 'plugins/service-specification/device-service-infos/',
@@ -562,10 +576,14 @@ def build_ci_assignments(data, cis_by_tenant, tenant_by_offering):
     for endpoint in endpoint_by_kind.values():
         data[endpoint] = []
 
+    app_services_by_tenant = {}
     for app_service_name, tenant_slug in tenant_by_offering.items():
+        app_services_by_tenant.setdefault(tenant_slug, []).append(app_service_name)
+
+    for tenant_slug, app_service_names in app_services_by_tenant.items():
         for kind, ci_name in cis_by_tenant[tenant_slug]:
             data[endpoint_by_kind[kind]].append(
-                {field_by_kind[kind]: ci_name, 'application_services': [app_service_name]}
+                {field_by_kind[kind]: ci_name, 'application_services': app_service_names}
             )
 
 
