@@ -1249,9 +1249,15 @@ class OfferingsTreeFilterForm(forms.Form):
 
 
 class TenantReportFilterForm(TenantFilterForm):
-    """TenantFilterForm as-is (search/group/contact/tags) plus an explicit
-    Tenant picker — see filtersets.TenantReportFilterSet for why the base
-    form's own 'id' needs overriding rather than just being left as-is.
+    """TenantFilterForm trimmed to just the filters that correspond to a
+    column TenantReportTable actually has (or could show via "Configure
+    Table" — see its default_columns comment): Tenant and Tenant Group.
+    TenantFilterForm's own Tags/Ownership/Contacts fieldsets are dropped —
+    none of those are columns on this report's table (Contacts in
+    particular was deliberately removed from it), so offering them as
+    filters would just be dead ends with nothing to show for the result.
+    See filtersets.TenantReportFilterSet for why the base form's own 'id'
+    needs overriding rather than just being left as-is.
     """
 
     id = DynamicModelMultipleChoiceField(
@@ -1260,8 +1266,6 @@ class TenantReportFilterForm(TenantFilterForm):
         label='Tenant',
     )
     fieldsets = (
-        FieldSet('q', 'filter_id', 'tag'),
+        FieldSet('q', 'filter_id'),
         FieldSet('id', 'group_id', name='Tenant'),
-        FieldSet('owner_group_id', 'owner_id', name='Ownership'),
-        FieldSet('contact', 'contact_role', 'contact_group', name='Contacts'),
     )
