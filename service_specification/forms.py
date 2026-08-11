@@ -1251,10 +1251,13 @@ class OfferingsTreeFilterForm(forms.Form):
 class TenantReportFilterForm(TenantFilterForm):
     """TenantFilterForm trimmed to just the filters that correspond to a
     column TenantReportTable actually has (or could show via "Configure
-    Table" — see its default_columns comment): Tenant and Tenant Group.
-    TenantFilterForm's own Tags/Ownership/Contacts fieldsets are dropped —
-    none of those are columns on this report's table (Contacts in
-    particular was deliberately removed from it), so offering them as
+    Table" — see its default_columns comment): Tenant, Tenant Group, and —
+    since they're properties of a Tenant's related Service Offerings, not
+    of Tenant itself, see filtersets.TenantReportFilterSet — Service
+    Offering, Service Offering Lifecycle, Contract, and Application
+    Service. TenantFilterForm's own Tags/Ownership/Contacts fieldsets are
+    dropped — none of those are columns on this report's table (Contacts
+    in particular was deliberately removed from it), so offering them as
     filters would just be dead ends with nothing to show for the result.
     See filtersets.TenantReportFilterSet for why the base form's own 'id'
     needs overriding rather than just being left as-is.
@@ -1265,7 +1268,34 @@ class TenantReportFilterForm(TenantFilterForm):
         required=False,
         label='Tenant',
     )
+    service_offering_id = DynamicModelMultipleChoiceField(
+        queryset=ServiceOffering.objects.all(),
+        required=False,
+        label='Service Offering',
+    )
+    service_offering_lifecycle_id = DynamicModelMultipleChoiceField(
+        queryset=Lifecycle.objects.all(),
+        required=False,
+        label='Service Offering Lifecycle',
+    )
+    contract_id = DynamicModelMultipleChoiceField(
+        queryset=Contract.objects.all(),
+        required=False,
+        label='Contract',
+    )
+    application_service_id = DynamicModelMultipleChoiceField(
+        queryset=AppService.objects.all(),
+        required=False,
+        label='Application Service',
+    )
     fieldsets = (
         FieldSet('q', 'filter_id'),
         FieldSet('id', 'group_id', name='Tenant'),
+        FieldSet(
+            'service_offering_id',
+            'service_offering_lifecycle_id',
+            'contract_id',
+            'application_service_id',
+            name='Service Offering',
+        ),
     )

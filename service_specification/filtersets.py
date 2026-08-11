@@ -717,13 +717,16 @@ class ClusterGroupServiceInfoFilterSet(NetBoxModelFilterSet):
 
 
 class TenantReportFilterSet(TenantFilterSet):
-    """TenantFilterSet as-is (search/group/contact/tags) plus an explicit
-    Tenant picker: TenantFilterSet's own Meta.fields already includes 'id',
-    but django-filter auto-generates a plain numeric filter for a model's
-    own pk field, not a friendly multi-select — this overrides it with a
-    proper ModelMultipleChoiceFilter so views.TenantReportView can be
-    filtered down to specific Tenants directly, not just by searching or
-    filtering by Tenant Group.
+    """TenantFilterSet as-is (search/group/tags) plus filters for every
+    column TenantReportTable actually has (or could show via "Configure
+    Table"): an explicit Tenant picker, and — since Service Offering
+    Lifecycle/Contract/Service Offering/Application Service are all
+    properties of a Tenant's *related* Service Offerings, not of Tenant
+    itself — four `method=` filters that narrow Tenant down to just those
+    with at least one matching Offering (see _filter_by_offerings()).
+    views.TenantReportView._expand_rows() then narrows the actual table
+    *rows* by the same criteria, so a Tenant that only qualifies because of
+    one Offering doesn't still show all its unrelated ones alongside it.
     """
 
     id = django_filters.ModelMultipleChoiceFilter(
@@ -731,6 +734,34 @@ class TenantReportFilterSet(TenantFilterSet):
         label='Tenant',
         method='filter_id',
     )
+    service_offering_lifecycle_id = django_filters.ModelMultipleChoiceFilter(
+        queryset=Lifecycle.objects.all(),
+        label='Service Offering Lifecycle (ID)',
+        method='filter_service_offering_lifecycle',
+    )
+    contract_id = django_filters.ModelMultipleChoiceFilter(
+        queryset=Contract.objects.all(),
+        label='Contract (ID)',
+        method='filter_contract',
+    )
+    service_offering_id = django_filters.ModelMultipleChoiceFilter(
+        queryset=ServiceOffering.objects.all(),
+        label='Service Offering (ID)',
+        method='filter_service_offering',
+    )
+    application_service_id = django_filters.ModelMultipleChoiceFilter(
+        queryset=AppService.objects.all(),
+        label='Application Service (ID)',
+        method='filter_application_service',
+    )
+
+    class Meta(TenantFilterSet.Meta):
+        fields = TenantFilterSet.Meta.fields + (
+            'service_offering_lifecycle_id',
+            'contract_id',
+            'service_offering_id',
+            'application_service_id',
+        )
 
     def filter_id(self, queryset, name, value):
         # ModelMultipleChoiceFilter resolves each submitted pk into a full
@@ -743,3 +774,34 @@ class TenantReportFilterSet(TenantFilterSet):
         if not value:
             return queryset
         return queryset.filter(pk__in=[tenant.pk for tenant in value])
+
+    @staticmethod
+    def _filter_by_offerings(queryset, offerings):
+        # A Tenant relates to a ServiceOffering either directly or via its
+        # own Tenant Group (see utils.tenant_offering_filter — this is that
+        # same "direct-or-group" rule, just run in the opposite direction:
+        # starting from a set of Offerings instead of a single Tenant).
+        return queryset.filter(
+            Q(pk__in=offerings.values_list('tenant', flat=True))
+            | Q(group__in=offerings.values_list('tenant_group', flat=True))
+        ).distinct()
+
+    def filter_service_offering_lifecycle(self, queryset, name, value):
+        if not value:
+            return queryset
+        return self._filter_by_offerings(queryset, ServiceOffering.objects.filter(lifecycle__in=value))
+
+    def filter_contract(self, queryset, name, value):
+        if not value:
+            return queryset
+        return self._filter_by_offerings(queryset, ServiceOffering.objects.filter(contract__in=value))
+
+    def filter_service_offering(self, queryset, name, value):
+        if not value:
+            return queryset
+        return self._filter_by_offerings(queryset, ServiceOffering.objects.filter(pk__in=[o.pk for o in value]))
+
+    def filter_application_service(self, queryset, name, value):
+        if not value:
+            return queryset
+        return self._filter_by_offerings(queryset, ServiceOffering.objects.filter(app_service__in=value))

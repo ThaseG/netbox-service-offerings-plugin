@@ -545,17 +545,38 @@ class TenantReportView(generic.ObjectListView):
     actions = ()
 
     def get_table(self, data, request, bulk_actions=True):
-        return super().get_table(self._expand_rows(data), request, bulk_actions)
+        # filterset (applied earlier, in ObjectListView.get()) already
+        # narrowed `data` down to Tenants with at least one matching
+        # Offering — re-running the same form here additionally narrows
+        # *which* of each qualifying Tenant's Offerings become rows, so a
+        # Tenant that only qualifies because of one Offering doesn't also
+        # drag in all its unrelated ones. Cheap: form validation has no
+        # side effects, and this is only run once per request.
+        form = forms.TenantReportFilterForm(request.GET)
+        filters = form.cleaned_data if form.is_valid() else {}
+        return super().get_table(self._expand_rows(data, filters), request, bulk_actions)
 
     @staticmethod
-    def _expand_rows(tenants):
+    def _expand_rows(tenants, filters=None):
+        filters = filters or {}
+        lifecycles = filters.get('service_offering_lifecycle_id')
+        contracts = filters.get('contract_id')
+        service_offerings = filters.get('service_offering_id')
+        app_services = filters.get('application_service_id')
+
         rows = []
         for tenant in tenants:
-            offerings = list(
-                ServiceOffering.objects.filter(tenant_offering_filter(tenant))
-                .distinct()
-                .select_related('lifecycle', 'app_service')
-            )
+            offerings_qs = ServiceOffering.objects.filter(tenant_offering_filter(tenant)).distinct()
+            if lifecycles:
+                offerings_qs = offerings_qs.filter(lifecycle__in=lifecycles)
+            if contracts:
+                offerings_qs = offerings_qs.filter(contract__in=contracts)
+            if service_offerings:
+                offerings_qs = offerings_qs.filter(pk__in=[o.pk for o in service_offerings])
+            if app_services:
+                offerings_qs = offerings_qs.filter(app_service__in=app_services)
+            offerings = list(offerings_qs.select_related('lifecycle', 'app_service', 'contract'))
+
             if offerings:
                 rows.extend(_TenantOfferingRow(tenant=tenant, service_offering=offering) for offering in offerings)
             else:
