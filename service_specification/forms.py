@@ -1272,7 +1272,21 @@ class TenantReportFilterForm(TenantFilterForm):
         queryset=ServiceOffering.objects.all(),
         required=False,
         label='Service Offering',
+        # Once a Tenant is picked, the live dropdown narrows to just that
+        # tenant's own offerings — same query_params cascading pattern as
+        # e.g. OfferingsTreeFilterForm's service_offering field. '$id'
+        # refers to this form's own Tenant field (named 'id' — see
+        # filtersets.TenantReportFilterSet for why), not the target
+        # endpoint's field.
+        query_params={'tenant_id': '$id'},
     )
+    # Service Offering Lifecycle deliberately doesn't cascade off Service
+    # Offering: Lifecycle is a small, shared lookup list reused across
+    # every model in this plugin, and narrowing it to "whichever single
+    # value this one Offering happens to have" would leave the dropdown
+    # with exactly one option — not useful browsing, unlike Contract/
+    # Application Service below, which are each genuinely scoped to one
+    # Offering.
     service_offering_lifecycle_id = DynamicModelMultipleChoiceField(
         queryset=Lifecycle.objects.all(),
         required=False,
@@ -1282,11 +1296,17 @@ class TenantReportFilterForm(TenantFilterForm):
         queryset=Contract.objects.all(),
         required=False,
         label='Contract',
+        # Cascades off Service Offering (not Tenant directly) — a Contract
+        # belongs to exactly one Offering (see models.py's
+        # ServiceOffering.contract), so once an Offering is picked here,
+        # this is the more precise thing to narrow by.
+        query_params={'service_offering_id': '$service_offering_id'},
     )
     application_service_id = DynamicModelMultipleChoiceField(
         queryset=AppService.objects.all(),
         required=False,
         label='Application Service',
+        query_params={'service_offering_id': '$service_offering_id'},
     )
     fieldsets = (
         FieldSet('q', 'filter_id'),

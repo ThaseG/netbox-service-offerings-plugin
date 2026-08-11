@@ -170,6 +170,11 @@ class ContractFilterSet(NetBoxModelFilterSet):
         queryset=ContactGroup.objects.all(),
         label='Business Unit (ID)',
     )
+    service_offering_id = django_filters.ModelMultipleChoiceFilter(
+        field_name='service_offerings',
+        queryset=ServiceOffering.objects.all(),
+        label='Service Offering (ID)',
+    )
 
     class Meta:
         model = Contract
@@ -188,6 +193,7 @@ class ContractFilterSet(NetBoxModelFilterSet):
             'contract_manager_id',
             'approver_id',
             'business_unit_id',
+            'service_offering_id',
         )
 
     def search(self, queryset, name, value):
