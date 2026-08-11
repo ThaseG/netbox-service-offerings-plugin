@@ -462,6 +462,17 @@ class AppServiceFilterSet(NetBoxModelFilterSet):
         queryset=ServiceOffering.objects.all(),
         label='Service Offering (ID)',
     )
+    # AppService has no tenant field of its own (see models.py — Customer
+    # is set once, on the parent ServiceOffering), so this goes one hop
+    # through it. A simple direct mapping, not the "direct-or-via-Tenant-
+    # Group" logic utils.tenant_offering_filter applies for the Reports
+    # views specifically — matches how ServiceOfferingFilterSet's own
+    # tenant_id is just as direct.
+    tenant_id = django_filters.ModelMultipleChoiceFilter(
+        field_name='service_offering__tenant',
+        queryset=Tenant.objects.all(),
+        label='Customer (ID)',
+    )
     business_unit_id = django_filters.ModelMultipleChoiceFilter(
         field_name='business_unit',
         queryset=ContactGroup.objects.all(),
@@ -521,6 +532,7 @@ class AppServiceFilterSet(NetBoxModelFilterSet):
             'lifecycle_id',
             'environment_id',
             'service_offering_id',
+            'tenant_id',
             'business_unit_id',
             'support_group_id',
             'change_group_id',

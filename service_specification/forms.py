@@ -1076,6 +1076,10 @@ class ServiceOfferingFilterForm(NetBoxModelFilterSetForm):
         queryset=Contract.objects.all(),
         required=False,
         label='Contract',
+        # Once a Tenant is picked below, narrows to just that tenant's own
+        # Contracts (ContractFilterSet's tenant_id) — '$tenant_id' refers
+        # to this form's own tenant_id field further down.
+        query_params={'tenant_id': '$tenant_id'},
     )
     service_id = DynamicModelMultipleChoiceField(
         queryset=Service.objects.all(),
@@ -1296,17 +1300,22 @@ class TenantReportFilterForm(TenantFilterForm):
         queryset=Contract.objects.all(),
         required=False,
         label='Contract',
-        # Cascades off Service Offering (not Tenant directly) — a Contract
-        # belongs to exactly one Offering (see models.py's
-        # ServiceOffering.contract), so once an Offering is picked here,
-        # this is the more precise thing to narrow by.
-        query_params={'service_offering_id': '$service_offering_id'},
+        # Cascades off both — Contract has its own direct tenant field
+        # (models.py's Contract.tenant), and separately belongs to exactly
+        # one Offering (ServiceOffering.contract), so either picked filter
+        # narrows it; picking both narrows by both (query_params entries
+        # for an unset field are simply omitted from the live query, not
+        # sent as empty).
+        query_params={'tenant_id': '$id', 'service_offering_id': '$service_offering_id'},
     )
     application_service_id = DynamicModelMultipleChoiceField(
         queryset=AppService.objects.all(),
         required=False,
         label='Application Service',
-        query_params={'service_offering_id': '$service_offering_id'},
+        # AppService has no tenant field of its own — 'tenant_id' here
+        # goes one hop through its Service Offering (see filtersets.
+        # AppServiceFilterSet's tenant_id for the actual field mapping).
+        query_params={'tenant_id': '$id', 'service_offering_id': '$service_offering_id'},
     )
     fieldsets = (
         FieldSet('q', 'filter_id'),
