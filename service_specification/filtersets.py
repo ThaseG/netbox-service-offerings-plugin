@@ -729,4 +729,17 @@ class TenantReportFilterSet(TenantFilterSet):
     id = django_filters.ModelMultipleChoiceFilter(
         queryset=Tenant.objects.all(),
         label='Tenant',
+        method='filter_id',
     )
+
+    def filter_id(self, queryset, name, value):
+        # ModelMultipleChoiceFilter resolves each submitted pk into a full
+        # Tenant instance before this runs. That's normally fine — for a
+        # real ForeignKey, `qs.filter(some_fk=instance)` auto-extracts its
+        # pk — but 'id' here is Tenant's own plain AutoField, not a
+        # relation, so Django can't coerce a Tenant instance back into an
+        # int on its own ("Field 'id' expected a number but got <Tenant:
+        # ...>"). Extract .pk explicitly instead.
+        if not value:
+            return queryset
+        return queryset.filter(pk__in=[tenant.pk for tenant in value])
