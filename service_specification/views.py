@@ -628,6 +628,7 @@ class OfferingsTreeView(TemplateView):
         edges = []
         seen_edges = set()
         positions = {}  # node_id -> x (already-placed nodes, shared or not)
+        occupied_x = {}  # group -> set of x already claimed by that row
         next_x = 0.0
 
         def estimate_width(name, type_label, extra_line):
@@ -684,6 +685,27 @@ class OfferingsTreeView(TemplateView):
                 seen_edges.add(key)
                 edges.append({'from': from_id, 'to': to_id})
 
+        def claim_x(group, x, name, type_label, extra_line):
+            # A parent's x is normally the midpoint of its own children's
+            # span — but two *different* parents on the same row (e.g. two
+            # Application Services) can legitimately share the exact same
+            # set of children (e.g. both of a tenant's Application Services
+            # are assigned the same pool of Technical CIs — see
+            # ci/scripts/generate_test_deployment_data.py's
+            # build_ci_assignments), which makes their computed midpoints
+            # identical too. Invisible in the full, ~40-offering tree (one
+            # coincidental overlap lost among many spread-out siblings), but
+            # glaring once a tenant filter narrows the tree down to just
+            # that one pair — everything from Application Service upward
+            # collapses onto a single x. Detect same-row collisions and
+            # give the second (and any further) node its own fresh slot
+            # instead of silently overlapping.
+            claimed = occupied_x.setdefault(group, set())
+            if x in claimed:
+                x = take_slot(name, type_label, extra_line)
+            claimed.add(x)
+            return x
+
         def take_slot(name, type_label, extra_line):
             # Claim the next free horizontal slot for a node with no
             # children to center over (a true Technical CI leaf, or a
@@ -737,6 +759,7 @@ class OfferingsTreeView(TemplateView):
                             add_edge(app_service_id, ci_id)
                         ci_xs = [positions[ci_id] for ci_id in ci_ids]
                         app_x = (min(ci_xs) + max(ci_xs)) / 2
+                        app_x = claim_x('appservice', app_x, app_service.name, 'Application Service', None)
                     else:
                         app_x = take_slot(app_service.name, 'Application Service', None)
                     positions[app_service_id] = app_x
@@ -759,6 +782,7 @@ class OfferingsTreeView(TemplateView):
                     add_edge(service_id, offering_id)
                 offering_xs = [positions[offering_id] for offering_id in offering_ids]
                 x = (min(offering_xs) + max(offering_xs)) / 2
+                x = claim_x('service', x, service.name, 'Service', None)
             else:
                 x = take_slot(service.name, 'Service', None)
 
@@ -777,6 +801,7 @@ class OfferingsTreeView(TemplateView):
                     add_edge(portfolio_id, service_id)
                 service_xs = [positions[service_id] for service_id in service_ids]
                 x = (min(service_xs) + max(service_xs)) / 2
+                x = claim_x('portfolio', x, portfolio.name, 'Portfolio', None)
             else:
                 x = take_slot(portfolio.name, 'Portfolio', None)
 
