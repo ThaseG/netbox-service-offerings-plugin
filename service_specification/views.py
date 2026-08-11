@@ -7,8 +7,6 @@ from django.views.generic import TemplateView
 from netbox.ui.layout import SimpleLayout
 from netbox.ui.panels import ObjectsTablePanel
 from netbox.views import generic
-from tenancy.filtersets import TenantFilterSet
-from tenancy.forms import TenantFilterForm
 from tenancy.models import Tenant, TenantGroup
 from utilities.views import ViewTab, register_model_view
 from virtualization.models import Cluster, ClusterGroup, VirtualMachine
@@ -541,8 +539,8 @@ class TenantReportView(generic.ObjectListView):
     """
 
     queryset = Tenant.objects.select_related('group').prefetch_related('sites', 'tags')
-    filterset = TenantFilterSet
-    filterset_form = TenantFilterForm
+    filterset = filtersets.TenantReportFilterSet
+    filterset_form = forms.TenantReportFilterForm
     table = tables.TenantReportTable
     actions = ()
 

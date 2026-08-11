@@ -3,6 +3,7 @@ from django import forms
 from django.core.exceptions import ValidationError
 from django.db.models import Q
 from netbox.forms import NetBoxModelFilterSetForm, NetBoxModelForm, OrganizationalModelForm, PrimaryModelForm
+from tenancy.forms import TenantFilterForm
 from tenancy.models import Contact, ContactGroup, Tenant, TenantGroup
 from utilities.forms.fields import DynamicModelChoiceField, DynamicModelMultipleChoiceField
 from utilities.forms.rendering import FieldSet
@@ -63,6 +64,7 @@ __all__ = (
     'MTATFilterForm',
     'CIFunctionFilterForm',
     'OfferingsTreeFilterForm',
+    'TenantReportFilterForm',
 )
 
 
@@ -1244,3 +1246,22 @@ class OfferingsTreeFilterForm(forms.Form):
     virtual_machine = DynamicModelChoiceField(queryset=VirtualMachine.objects.all(), required=False)
     cluster = DynamicModelChoiceField(queryset=Cluster.objects.all(), required=False)
     cluster_group = DynamicModelChoiceField(queryset=ClusterGroup.objects.all(), required=False)
+
+
+class TenantReportFilterForm(TenantFilterForm):
+    """TenantFilterForm as-is (search/group/contact/tags) plus an explicit
+    Tenant picker — see filtersets.TenantReportFilterSet for why the base
+    form's own 'id' needs overriding rather than just being left as-is.
+    """
+
+    id = DynamicModelMultipleChoiceField(
+        queryset=Tenant.objects.all(),
+        required=False,
+        label='Tenant',
+    )
+    fieldsets = (
+        FieldSet('q', 'filter_id', 'tag'),
+        FieldSet('id', 'group_id', name='Tenant'),
+        FieldSet('owner_group_id', 'owner_id', name='Ownership'),
+        FieldSet('contact', 'contact_role', 'contact_group', name='Contacts'),
+    )

@@ -2,6 +2,7 @@ import django_filters
 from dcim.models import Device, Manufacturer
 from django.db.models import Q
 from netbox.filtersets import NetBoxModelFilterSet
+from tenancy.filtersets import TenantFilterSet
 from tenancy.models import Contact, ContactGroup, Tenant, TenantGroup
 from virtualization.models import Cluster, ClusterGroup, VirtualMachine
 
@@ -45,6 +46,7 @@ __all__ = (
     'VirtualMachineServiceInfoFilterSet',
     'ClusterServiceInfoFilterSet',
     'ClusterGroupServiceInfoFilterSet',
+    'TenantReportFilterSet',
 )
 
 
@@ -707,3 +709,24 @@ class ClusterGroupServiceInfoFilterSet(NetBoxModelFilterSet):
             'support_group_id',
             'change_group_id',
         )
+
+
+#
+# Report filtersets
+#
+
+
+class TenantReportFilterSet(TenantFilterSet):
+    """TenantFilterSet as-is (search/group/contact/tags) plus an explicit
+    Tenant picker: TenantFilterSet's own Meta.fields already includes 'id',
+    but django-filter auto-generates a plain numeric filter for a model's
+    own pk field, not a friendly multi-select — this overrides it with a
+    proper ModelMultipleChoiceFilter so views.TenantReportView can be
+    filtered down to specific Tenants directly, not just by searching or
+    filtering by Tenant Group.
+    """
+
+    id = django_filters.ModelMultipleChoiceFilter(
+        queryset=Tenant.objects.all(),
+        label='Tenant',
+    )
