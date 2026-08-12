@@ -1,13 +1,15 @@
 #!/usr/bin/env python3
 """Regenerates ci/scripts/test-deployment.json — 20 tenants (realistic
-company names), each with its own HQ/Branch sites (named after real
-cities) and ~20 Technical CIs (devices/cluster/cluster group/VMs), plus 2
-Service Portfolios each realizing 20 Service Offerings across two rounds
-(two per tenant, covering all 20 tenants twice with different themes),
-each with its own Application Service, and its own 1:1 Contract (which in
-turn gets 2 Contract Rate Cards of its own). Every one of a tenant's
-Application Services is assigned the full set of Technical CIs belonging
-to that same tenant.
+company names), each with its own site (named after a real city) and a
+small, realistic network (see build_tenants_and_infra: 1 Firewall cabled
+to 2 Switches, each cabled to 2 of 4 Servers, split into 2 Clusters in 1
+Cluster Group, plus 6 VMs), plus 2 Service Portfolios each realizing 20
+Service Offerings across two rounds (two per tenant, covering all 20
+tenants twice with different themes), each with its own Application
+Service, and its own 1:1 Contract (which in turn gets 2 Contract Rate
+Cards of its own). Only VMs are linked to Application Services (not
+Devices/Clusters/Cluster Groups) — each tenant's 6 VMs split 2-and-4
+across its 2 Application Services (see build_ci_assignments).
 
 This is a one-off *generator*, not part of the actual deploy pipeline:
 ci/scripts/test-deployment.py itself stays a generic "read JSON, POST it,
@@ -94,14 +96,14 @@ CITIES = [
     'Denver',
 ]
 
-# (role slug, device type slug, name suffix, count per site) — shared
-# across every tenant's sites.
-DEVICE_ROLES = [
-    ('firewall', 'fortigate-100f', 'FW', 2),
-    ('switch', 'c9300-24t', 'SW', 2),
-    ('server', 'poweredge-r750', 'SRV', 1),
-]
-VMS_PER_CLUSTER = 4
+# Device type per role, shared across every tenant's network (see
+# build_tenants_and_infra): 1 Firewall, 2 Switches, 4 Servers.
+DEVICE_TYPE_BY_ROLE = {
+    'firewall': 'fortigate-100f',
+    'switch': 'c9300-24t',
+    'server': 'poweredge-r750',
+}
+INTERFACE_TYPE = '1000base-t'
 
 # 2 Service Portfolios, each with its own 10 offering themes — the
 # Portfolio/Service layer only exists because a Service Offering can't
@@ -313,7 +315,7 @@ def build_lookups(data):
         {'model': 'Catalyst 9300 24-Port', 'slug': 'c9300-24t', 'manufacturer': 'cisco'},
         {'model': 'PowerEdge R750', 'slug': 'poweredge-r750', 'manufacturer': 'dell'},
     ]
-    data['virtualization/cluster-types/'] = [{'name': 'Proxmox', 'slug': 'proxmox'}]
+    data['virtualization/cluster-types/'] = [{'name': 'VMware', 'slug': 'vmware'}]
 
     data['tenancy/contact-groups/'] = [{'name': name, 'slug': slugify(name)} for name in CONTACT_GROUPS]
     data['tenancy/contacts/'] = [
@@ -355,80 +357,156 @@ def build_lookups(data):
 
 
 def build_tenants_and_infra(data):
-    """One tenant per COMPANIES entry, each with an HQ + Branch site (a
-    distinct real city each — see CITIES — so device/cluster/VM names
-    derived from the city stay globally unique without a tenant prefix)
-    and ~21 Technical CIs: 10 devices (5 per site), 1 tenant-level Cluster
-    Group, 2 Clusters (1 per site) and 8 VMs (4 per cluster).
+    """One tenant per COMPANIES entry, each with a single site (a distinct
+    real city — see CITIES) and a small, realistic network:
 
-    Returns {tenant_slug: [(kind, name), ...]} — every Technical CI that
-    belongs to that tenant, for build_ci_assignments() to hand to that
-    tenant's one Application Service.
+      Firewall --- Switch A --- Server 1 (Cluster A)
+               \\            \\- Server 2 (Cluster A)
+                `- Switch B --- Server 3 (Cluster B)
+                             \\- Server 4 (Cluster B)
+
+    1 Firewall cabled to both Switches, each Switch cabled to 2 of the 4
+    Servers, those Servers split 2-and-2 into 2 Clusters, both Clusters in
+    1 Cluster Group (type VMware). The Firewall's first switch-facing
+    interface gets an IP on its own /24 (10.<tenant index>.0.0/24 — a
+    different one per tenant).
+
+    6 VMs per tenant, not 4: one nominally on each of the 4 Servers (named
+    to match, cluster set to that Server's Cluster) plus 2 extras (one per
+    Cluster) — 6 so build_ci_assignments can split them 2-and-4 across the
+    tenant's 2 Application Services. NetBox's VirtualMachine model has no
+    per-Server "host" field of its own, so Cluster membership is as far as
+    the Server mapping can go.
+
+    Devices/Clusters/Cluster Groups are no longer linked to Application
+    Services at all — see build_ci_assignments — so unlike the old
+    version of this function, nothing here needs to track "every Technical
+    CI belonging to this tenant" any more, only its VMs.
+
+    Returns {tenant_slug: [vm_name, ...]} — that tenant's 6 VM names, in
+    creation order (Servers 1-4 first, then the 2 extras).
     """
     data['tenancy/tenants/'] = []
     data['dcim/sites/'] = []
     data['dcim/devices/'] = []
+    data['dcim/interfaces/'] = []
+    data['dcim/cables/'] = []
+    data['ipam/ip-addresses/'] = []
     data['virtualization/cluster-groups/'] = []
     data['virtualization/clusters/'] = []
     data['virtualization/virtual-machines/'] = []
 
-    cis_by_tenant = {}
+    vms_by_tenant = {}
 
     for i, company in enumerate(COMPANIES):
         tenant_slug = slugify(company)
         data['tenancy/tenants/'].append({'name': company, 'slug': tenant_slug})
-        tenant_cis = []
 
-        hq_city, branch_city = CITIES[2 * i], CITIES[2 * i + 1]
+        # Only the first of each tenant's originally-allocated (HQ, Branch)
+        # city pair is used now that there's a single site per tenant —
+        # the second half of CITIES is simply unused spare capacity.
+        city = CITIES[2 * i]
+        site_name = f'HQ-{city}'
+        site_slug = slugify(site_name)
+        data['dcim/sites/'].append(
+            {
+                'name': site_name,
+                'slug': site_slug,
+                'physical_address': f'{city} Business District',
+                'tenant': tenant_slug,
+            }
+        )
+
         cluster_group_slug = f'{tenant_slug}-infra'
         data['virtualization/cluster-groups/'].append({'name': f'{company} Infrastructure', 'slug': cluster_group_slug})
-        # Referenced by slug, not name: ClusterGroup has a slug field, and
-        # the engine's REFERENCE_FIELDS resolves cluster_group references
-        # against virtualization/cluster-groups/ keyed by slug-else-name —
-        # since this model has a slug, using the name here would 400 with
-        # "not found" the same way an earlier lifecycle/name mixup did.
-        tenant_cis.append(('cluster_group', cluster_group_slug))
 
-        for site_label, city in (('HQ', hq_city), ('Branch', branch_city)):
-            site_name = f'{site_label}-{city}'
-            site_slug = slugify(site_name)
-            data['dcim/sites/'].append(
+        fw_name = f'{city}-FW-01'
+        data['dcim/devices/'].append(
+            {'name': fw_name, 'role': 'firewall', 'device_type': DEVICE_TYPE_BY_ROLE['firewall'], 'site': site_slug}
+        )
+        fw_interfaces = [f'{fw_name} internal{n}' for n in (1, 2)]
+        for fw_iface in fw_interfaces:
+            data['dcim/interfaces/'].append({'name': fw_iface, 'device': fw_name, 'type': INTERFACE_TYPE})
+
+        vm_names = []
+        vm_n = 0
+        cluster_names = []
+        for sw_n, letter in ((1, 'A'), (2, 'B')):
+            sw_name = f'{city}-SW-{sw_n:02d}'
+            data['dcim/devices/'].append(
+                {'name': sw_name, 'role': 'switch', 'device_type': DEVICE_TYPE_BY_ROLE['switch'], 'site': site_slug}
+            )
+            sw_uplink = f'{sw_name} uplink'
+            data['dcim/interfaces/'].append({'name': sw_uplink, 'device': sw_name, 'type': INTERFACE_TYPE})
+            data['dcim/cables/'].append(
                 {
-                    'name': site_name,
-                    'slug': site_slug,
-                    'physical_address': f'{city} Business District',
-                    'tenant': tenant_slug,
+                    'a_terminations': [{'object_type': 'dcim.interface', 'name': fw_interfaces[sw_n - 1]}],
+                    'b_terminations': [{'object_type': 'dcim.interface', 'name': sw_uplink}],
                 }
             )
 
-            for role_slug, device_type_slug, suffix, count in DEVICE_ROLES:
-                for n in range(1, count + 1):
-                    device_name = f'{city}-{suffix}-{n:02d}'
-                    data['dcim/devices/'].append(
-                        {'name': device_name, 'role': role_slug, 'device_type': device_type_slug, 'site': site_slug}
-                    )
-                    tenant_cis.append(('device', device_name))
-
-            cluster_name = f'{city} Cluster'
+            cluster_name = f'{city} Cluster {letter}'
+            cluster_names.append(cluster_name)
             data['virtualization/clusters/'].append(
                 {
                     'name': cluster_name,
-                    'type': 'proxmox',
+                    'type': 'vmware',
                     'group': cluster_group_slug,
                     'scope_type': 'dcim.site',
                     'scope_id': site_slug,
                 }
             )
-            tenant_cis.append(('cluster', cluster_name))
 
-            for n in range(1, VMS_PER_CLUSTER + 1):
-                vm_name = f'{city.lower()}-vm-{n:02d}'
+            for port_n in (1, 2):
+                overall_srv_n = (sw_n - 1) * 2 + port_n
+                srv_name = f'{city}-SRV-{overall_srv_n:02d}'
+                data['dcim/devices/'].append(
+                    {
+                        'name': srv_name,
+                        'role': 'server',
+                        'device_type': DEVICE_TYPE_BY_ROLE['server'],
+                        'site': site_slug,
+                    }
+                )
+                srv_iface = f'{srv_name} nic1'
+                sw_port = f'{sw_name} port{port_n}'
+                data['dcim/interfaces/'].append({'name': srv_iface, 'device': srv_name, 'type': INTERFACE_TYPE})
+                data['dcim/interfaces/'].append({'name': sw_port, 'device': sw_name, 'type': INTERFACE_TYPE})
+                data['dcim/cables/'].append(
+                    {
+                        'a_terminations': [{'object_type': 'dcim.interface', 'name': sw_port}],
+                        'b_terminations': [{'object_type': 'dcim.interface', 'name': srv_iface}],
+                    }
+                )
+
+                # VM nominally hosted on this Server (see docstring — VM
+                # <-> Server is naming/cluster-membership only, NetBox has
+                # no literal per-VM "host" field to assign).
+                vm_n += 1
+                vm_name = f'{city.lower()}-vm-{vm_n:02d}'
                 data['virtualization/virtual-machines/'].append({'name': vm_name, 'cluster': cluster_name})
-                tenant_cis.append(('virtual_machine', vm_name))
+                vm_names.append(vm_name)
 
-        cis_by_tenant[tenant_slug] = tenant_cis
+        # 2 extra VMs (one per Cluster) so this tenant has 6 total, split
+        # 2-and-4 across its 2 Application Services in build_ci_assignments.
+        for cluster_name in cluster_names:
+            vm_n += 1
+            vm_name = f'{city.lower()}-vm-{vm_n:02d}'
+            data['virtualization/virtual-machines/'].append({'name': vm_name, 'cluster': cluster_name})
+            vm_names.append(vm_name)
 
-    return cis_by_tenant
+        # Firewall's switch-facing IP — a distinct /24 per tenant.
+        data['ipam/ip-addresses/'].append(
+            {
+                'address': f'10.{i}.0.1/24',
+                'assigned_object_type': 'dcim.interface',
+                'assigned_object_id': fw_interfaces[0],
+            }
+        )
+
+        vms_by_tenant[tenant_slug] = vm_names
+
+    return vms_by_tenant
 
 
 def build_hierarchy(data, tenant_slugs):
@@ -609,39 +687,29 @@ def build_hierarchy(data, tenant_slugs):
     return tenant_by_offering
 
 
-def build_ci_assignments(data, cis_by_tenant, tenant_by_offering):
-    """Each Technical CI belongs to exactly one tenant, but each tenant now
-    has 2 Application Services (see build_hierarchy), not 1 — and every
-    *ServiceInfo model is OneToOne with its Device/Cluster/ClusterGroup/
-    VirtualMachine, so a CI can only ever get a single *ServiceInfo row.
-    Both of a tenant's Application Services are therefore listed together
-    in that one row's `application_services` (a ManyToMany field), rather
-    than trying to create a second row for the same CI — which would 400
-    on the OneToOne constraint.
+def build_ci_assignments(data, vms_by_tenant, tenant_by_offering):
+    """Only VMs are linked to Application Services now — Devices/Clusters/
+    Cluster Groups aren't (device-service-infos/cluster-service-infos/
+    cluster-group-service-infos are left empty). Each tenant's 6 VMs (see
+    build_tenants_and_infra) split 2-and-4 across its 2 Application
+    Services — first Offering's Application Service gets the first 2 VMs,
+    second Offering's gets the other 4.
     """
-    endpoint_by_kind = {
-        'device': 'plugins/service-specification/device-service-infos/',
-        'cluster': 'plugins/service-specification/cluster-service-infos/',
-        'cluster_group': 'plugins/service-specification/cluster-group-service-infos/',
-        'virtual_machine': 'plugins/service-specification/virtual-machine-service-infos/',
-    }
-    field_by_kind = {
-        'device': 'device',
-        'cluster': 'cluster',
-        'cluster_group': 'cluster_group',
-        'virtual_machine': 'virtual_machine',
-    }
-    for endpoint in endpoint_by_kind.values():
-        data[endpoint] = []
+    data['plugins/service-specification/virtual-machine-service-infos/'] = []
+    data['plugins/service-specification/device-service-infos/'] = []
+    data['plugins/service-specification/cluster-service-infos/'] = []
+    data['plugins/service-specification/cluster-group-service-infos/'] = []
 
     app_services_by_tenant = {}
     for app_service_name, tenant_slug in tenant_by_offering.items():
         app_services_by_tenant.setdefault(tenant_slug, []).append(app_service_name)
 
     for tenant_slug, app_service_names in app_services_by_tenant.items():
-        for kind, ci_name in cis_by_tenant[tenant_slug]:
-            data[endpoint_by_kind[kind]].append(
-                {field_by_kind[kind]: ci_name, 'application_services': app_service_names}
+        first_app_service, second_app_service = app_service_names
+        for i, vm_name in enumerate(vms_by_tenant[tenant_slug]):
+            app_service = first_app_service if i < 2 else second_app_service
+            data['plugins/service-specification/virtual-machine-service-infos/'].append(
+                {'virtual_machine': vm_name, 'application_services': [app_service]}
             )
 
 
@@ -649,10 +717,10 @@ def main():
     data = {}
 
     build_lookups(data)
-    cis_by_tenant = build_tenants_and_infra(data)
+    vms_by_tenant = build_tenants_and_infra(data)
     tenant_slugs = [t['slug'] for t in data['tenancy/tenants/']]
     tenant_by_offering = build_hierarchy(data, tenant_slugs)
-    build_ci_assignments(data, cis_by_tenant, tenant_by_offering)
+    build_ci_assignments(data, vms_by_tenant, tenant_by_offering)
 
     # Re-declare in dependency order: build_* above populated `data` in
     # convenient-for-generation order, not necessarily the order
@@ -669,6 +737,9 @@ def main():
         'dcim/device-roles/',
         'dcim/device-types/',
         'dcim/devices/',
+        'dcim/interfaces/',
+        'dcim/cables/',
+        'ipam/ip-addresses/',
         'virtualization/cluster-groups/',
         'virtualization/cluster-types/',
         'virtualization/clusters/',

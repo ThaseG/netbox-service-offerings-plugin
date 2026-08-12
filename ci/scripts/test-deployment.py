@@ -66,6 +66,16 @@ REFERENCE_FIELDS = {
         'device_type': 'dcim/device-types/',
         'site': 'dcim/sites/',
     },
+    'dcim/interfaces/': {
+        'device': 'dcim/devices/',
+    },
+    'ipam/ip-addresses/': {
+        # Generic-FK-style (assigned_object_type/assigned_object_id), same
+        # pattern as Cluster's scope_type/scope_id below: assigned_object_type
+        # is a literal content-type string ('dcim.interface'), not a
+        # reference; assigned_object_id needs the usual name resolution.
+        'assigned_object_id': 'dcim/interfaces/',
+    },
     'tenancy/contacts/': {
         'groups': 'tenancy/contact-groups/',
     },
@@ -222,6 +232,24 @@ def resolve_field(value, target_endpoint, created_objects):
     return resolve(value, target_endpoint, created_objects)
 
 
+# Cable a_terminations/b_terminations don't fit REFERENCE_FIELDS' flat
+# "field -> single slug/name (or list of them)" shape: NetBox represents a
+# cable termination as {"object_type": <content-type string>, "object_id":
+# <id>}, so each entry here is instead {"object_type": ..., "name": <the
+# interface's own name>} in the JSON, with "name" resolved against this
+# fixed target endpoint (the only termination kind this dataset cables
+# together) and repackaged into the object_id NetBox actually expects.
+CABLE_TERMINATION_FIELDS = ('a_terminations', 'b_terminations')
+CABLE_TERMINATION_ENDPOINT = 'dcim/interfaces/'
+
+
+def resolve_terminations(terminations, created_objects):
+    return [
+        {'object_type': t['object_type'], 'object_id': resolve(t['name'], CABLE_TERMINATION_ENDPOINT, created_objects)}
+        for t in terminations
+    ]
+
+
 def create_all(data):
     created_objects = {}  # endpoint -> {slug-or-name: id}
     for endpoint, payloads in data.items():
@@ -233,6 +261,9 @@ def create_all(data):
             for field, target_endpoint in reference_fields.items():
                 if field in resolved and resolved[field] is not None:
                     resolved[field] = resolve_field(resolved[field], target_endpoint, created_objects)
+            for field in CABLE_TERMINATION_FIELDS:
+                if field in resolved:
+                    resolved[field] = resolve_terminations(resolved[field], created_objects)
             obj = api('POST', endpoint, resolved)
             created(endpoint, obj)
             # Almost everything is keyed by slug-else-name (see resolve()),

@@ -26,7 +26,9 @@
       "Bash(python3 -m ruff format --check service_specification/views.py)",
       "Bash(python3 /private/tmp/claude-501/-Users-andrej-hyben-Documents-Git-nosync-netbox-service-offerings-plugin/011ecd7d-ade9-4717-ac6b-f5cd59f86f5b/scratchpad/verify_layout.py)",
       "Bash(curl -s \"https://raw.githubusercontent.com/netbox-community/netbox/v4.6.5/netbox/netbox/views/generic/bulk_views.py\")",
-      "Bash(python3 -m py_compile service_specification/forms.py service_specification/filtersets.py service_specification/views.py)"
+      "Bash(python3 -m py_compile service_specification/forms.py service_specification/filtersets.py service_specification/views.py)",
+      "Bash(python3 -m ruff format ci/scripts/test-deployment.py)",
+      "Bash(python3 -m ruff format ci/scripts/generate_test_deployment_data.py ci/scripts/test-deployment.py)"
     ]
   }
 }
