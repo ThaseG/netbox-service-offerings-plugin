@@ -8,6 +8,18 @@
 # stable network alias on the shared "netbox-edge" Docker network (set in
 # ci/docker/docker-compose.yml) — resolvable by the front door regardless of
 # which compose project actually created that container.
+#
+# That target is resolved via Docker's embedded DNS (127.0.0.11) through a
+# variable + `resolver` directive, not a plain `proxy_pass http://name:port`
+# — plain proxy_pass resolves its hostname once, at config-load time, and
+# nginx refuses to even start (let alone reload) if that name doesn't
+# resolve yet. Since this repo's own container is torn down by Pre-Clean at
+# the start of every deploy and not recreated until *after* this file is
+# rendered and reloaded (see ci-cd.yml), a plain proxy_pass would crash-loop
+# the whole front door on every single deploy, not just the very first one.
+# Resolving per-request instead means a request that arrives before the
+# container is back up just gets a 502, and the front door itself keeps
+# running throughout.
 
 server {
     listen 80;
@@ -40,7 +52,9 @@ server {
     client_max_body_size 25m;
 
     location / {
-        proxy_pass http://netbox-service-offerings-plugin:8080;
+        resolver 127.0.0.11 valid=10s;
+        set $upstream netbox-service-offerings-plugin;
+        proxy_pass http://$upstream:8080;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
