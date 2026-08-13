@@ -215,14 +215,20 @@ jobs:
           chmod 600 ci/docker/.env
 
       - name: Issue or reuse TLS certificate
+        # Writes into the shared front door's cert directory — see
+        # ci/shared-proxy/README.md. DNS-01, so this doesn't depend on the
+        # front door already routing to this deploy.
         run: ci/scripts/issue-cert.sh
         env:
           NETBOX_DOMAIN: ${{ vars.NETBOX_DOMAIN }}
           ACME_EMAIL: ${{ vars.ACME_EMAIL }}
           WS_ApiKey: ${{ secrets.WS_API_KEY }}
           WS_ApiSecret: ${{ secrets.WS_API_SECRET }}
-          COMPOSE_FILE: ${{ github.workspace }}/ci/docker/docker-compose.yml
-          ENV_FILE: ${{ github.workspace }}/ci/docker/.env
+
+      - name: Render and reload shared front-door routing
+        run: ci/scripts/render-proxy-conf.sh
+        env:
+          NETBOX_DOMAIN: ${{ vars.NETBOX_DOMAIN }}
 
       - name: Deploy stack
         # No --build: Build already produced the image; this just starts it.
@@ -316,6 +322,9 @@ jobs:
           echo "::endgroup::"
           echo "::group::All services (combined, for anything else)"
           docker compose --env-file ci/docker/.env -f ci/docker/docker-compose.yml logs --tail=300
+          echo "::endgroup::"
+          echo "::group::Shared front-door proxy logs"
+          docker logs netbox-edge-proxy --tail=200 2>&1 || echo "front door not found"
           echo "::endgroup::"
 
       - name: Remove runtime environment file

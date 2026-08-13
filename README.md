@@ -110,13 +110,16 @@ Restart NetBox (`systemctl restart netbox netbox-rq` or equivalent).
 This repo includes a full Docker Compose deployment under [`ci/docker/`](ci/docker/) that builds NetBox with this
 plugin (and a few third-party plugins — see [`ci/docker/plugin_requirements.txt`](ci/docker/plugin_requirements.txt))
 baked in via [`ci/docker/Dockerfile-Plugins`](ci/docker/Dockerfile-Plugins). It's what
-[`.github/workflows/ci-cd.yml`](.github/workflows/ci-cd.yml) deploys automatically on every push, complete with
-HTTPS via Let's Encrypt. To run it yourself:
+[`.github/workflows/ci-cd.yml`](.github/workflows/ci-cd.yml) deploys automatically on every push, fronted by a
+[shared HTTPS reverse proxy](ci/shared-proxy/) (see that directory if you're setting this up fresh — it's shared,
+one-time infrastructure, not part of this repo's own automated pipeline). To run it yourself, once the shared front
+door exists:
 
 ```bash
 source versions.sh
 cp ci/docker/.env.example ci/docker/.env   # fill in real values, see comments in the file
 docker compose --env-file ci/docker/.env -f ci/docker/docker-compose.yml up -d --build
+ci/scripts/render-proxy-conf.sh   # wire this deploy into the shared front door, see that script + ci/shared-proxy/
 ```
 
 ## Usage
@@ -173,7 +176,8 @@ Access is controlled by NetBox's standard per-model permissions, e.g. `service_s
 | --- | --- |
 | [`service_specification/`](service_specification/) | The plugin itself — models, REST API, UI views, GraphQL, migrations, tests. |
 | [`ci/docker/`](ci/docker/) | Docker Compose stack + Dockerfile used both for local runs and the CI/CD deploy. |
-| [`ci/scripts/`](ci/scripts/) | Scripts used by the CI/CD pipeline (cert issuance, pre-cleanup, smoke tests, demo data seeding). |
+| [`ci/shared-proxy/`](ci/shared-proxy/) | Shared, one-time-setup HTTPS reverse proxy that fronts this (and any sibling plugin's) demo deployment — see its own README. |
+| [`ci/scripts/`](ci/scripts/) | Scripts used by the CI/CD pipeline (cert issuance, front-door routing, pre-cleanup, smoke tests, demo data seeding). |
 | [`versions.sh`](versions.sh) | Single source of truth for the pinned NetBox version and the plugin's own release version. |
 | [`pyproject.toml`](pyproject.toml) | Package metadata, plus `ruff` lint/format configuration. |
 
@@ -189,14 +193,15 @@ python manage.py test service_specification
 
 [`.github/workflows/ci-cd.yml`](.github/workflows/ci-cd.yml) runs on every push, as six staged jobs:
 
-1. **Pre-Clean** — tears down any previously running stack *and wipes its named volumes*
+1. **Pre-Clean** — tears down this repo's own previously running stack *and wipes its named volumes*
    ([`ci/scripts/pre-cleanup.sh`](ci/scripts/pre-cleanup.sh)), so every deploy starts NetBox from a completely
-   empty database.
+   empty database. Never touches the shared front-door proxy or a sibling plugin's own stack.
 2. **Code-Review** — `ruff`, `shellcheck`, `yamllint`, and a check that `pyproject.toml`'s version matches
    `versions.sh`.
 3. **Build** — builds the NetBox + plugins Docker image per `versions.sh`.
-4. **Test** — deploys the stack, runs `manage.py check`, a migration drift check, the Django test suite, and a
-   live HTTPS smoke test (session login + a full API POST/GET/PATCH/DELETE round trip).
+4. **Test** — issues/renews this deployment's TLS certificate, wires it into the shared front door, deploys the
+   stack, then runs `manage.py check`, a migration drift check, the Django test suite, and a live HTTPS smoke test
+   (session login + a full API POST/GET/PATCH/DELETE round trip).
 5. **Test Deployment** — seeds the now-verified instance with demo data (tenant, contacts, sites, devices,
    clusters, VMs) via the REST API ([`ci/scripts/test-deployment.py`](ci/scripts/test-deployment.py)), so the
    showcase instance has real objects to look at. A work in progress — see that script's own header comment.
@@ -208,6 +213,14 @@ wipes the database, it starts empty each time and never carries data over from a
 why the plugin's own migration ([`service_specification/migrations/0001_initial.py`](service_specification/migrations/0001_initial.py))
 is hand-edited in place for schema changes rather than accumulating incremental migration files: there's never an
 already-migrated instance whose existing data a later migration would need to preserve.
+
+#### Shared front door
+
+Host ports 80/443 can only be bound by one process at a time, so this repo's own stack doesn't run its own nginx —
+TLS termination and domain-based routing happen at a [shared reverse proxy](ci/shared-proxy/) that this (and any
+sibling plugin's) `netbox` container joins over a common Docker network (`netbox-edge`), each under its own stable
+alias. See [`ci/shared-proxy/README.md`](ci/shared-proxy/README.md) for the one-time setup and for what a new plugin
+repo joining the same runner needs to do.
 
 ## License
 

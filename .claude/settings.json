@@ -28,7 +28,12 @@
       "Bash(curl -s \"https://raw.githubusercontent.com/netbox-community/netbox/v4.6.5/netbox/netbox/views/generic/bulk_views.py\")",
       "Bash(python3 -m py_compile service_specification/forms.py service_specification/filtersets.py service_specification/views.py)",
       "Bash(python3 -m ruff format ci/scripts/test-deployment.py)",
-      "Bash(python3 -m ruff format ci/scripts/generate_test_deployment_data.py ci/scripts/test-deployment.py)"
+      "Bash(python3 -m ruff format ci/scripts/generate_test_deployment_data.py ci/scripts/test-deployment.py)",
+      "Bash(ls -la /Users/andrej.hyben/Documents/Git.nosync/ 2>/dev/null)",
+      "Read(//Users/andrej.hyben/Documents/Git.nosync/**)",
+      "Bash(find /Users/andrej.hyben/Documents/Git.nosync/netbox-certificate-plugin/ci -type f | sort)",
+      "Read(//Users/andrej.hyben/Documents/Git.nosync/netbox-certificate-plugin/ci/**)",
+      "Read(//Users/andrej.hyben/Documents/Git.nosync/netbox-certificate-plugin/ci/docker/**)"
     ]
   }
 }

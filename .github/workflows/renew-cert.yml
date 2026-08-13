@@ -12,9 +12,12 @@ on:
   workflow_dispatch: {}
 
 concurrency:
-  # Shares deploy.yml's concurrency group: both touch docker compose / the
-  # nginx container on the same self-hosted runner, so they must not
-  # overlap. If a deploy is running, the renewal check queues behind it.
+  # Shares ci-cd.yml's concurrency group — both used to touch docker
+  # compose / the local nginx container on the same self-hosted runner, so
+  # they must not overlap. Renewal no longer touches this repo's own
+  # compose stack at all (see below), but keeping the shared group is still
+  # correct: a deploy can rebuild/restart this repo's `netbox` container
+  # concurrently with a renewal's reload of the *shared* front door.
   group: netbox-deploy
   cancel-in-progress: false
 
@@ -26,44 +29,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
 
-      - name: Load pinned versions
-        run: |
-          source versions.sh
-          echo "NETBOX_VERSION=$NETBOX_VERSION" >> "$GITHUB_ENV"
-
-      - name: Write runtime environment file
-        # Only actually used if a renewal fires and its reload callback
-        # needs to `docker compose exec` into nginx — but docker-compose.yml's
-        # ${VAR:?err} guards mean that call fails to even parse the file
-        # without this present, so it must exist for every run, not just
-        # renewal days. Same full variable set as deploy.yml's version.
-        run: |
-          umask 077
-          cat > ci/docker/.env <<EOF
-          NETBOX_VERSION=${NETBOX_VERSION}
-          NETBOX_DOMAIN=${{ vars.NETBOX_DOMAIN }}
-          ACME_EMAIL=${{ vars.ACME_EMAIL }}
-          NETBOX_SECRET_KEY=${{ secrets.NETBOX_SECRET_KEY }}
-          POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
-          REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }}
-          REDIS_CACHE_PASSWORD=${{ secrets.REDIS_CACHE_PASSWORD }}
-          NETBOX_SUPERUSER_PASSWORD=${{ secrets.NETBOX_SUPERUSER_PASSWORD }}
-          NETBOX_SUPERUSER_API_TOKEN=${{ secrets.NETBOX_SUPERUSER_API_TOKEN }}
-          NETBOX_SUPERUSER_API_KEY=${{ secrets.NETBOX_SUPERUSER_API_KEY }}
-          API_TOKEN_PEPPER_1=${{ secrets.API_TOKEN_PEPPER_1 }}
-          EOF
-          chmod 600 ci/docker/.env
-
       - name: Issue or renew TLS certificate
+        # Writes directly into the shared front door's cert directory and
+        # reloads that container on change — no local docker compose
+        # involved, since this repo's own stack has no nginx of its own.
+        # See ci/shared-proxy/README.md.
         run: ci/scripts/issue-cert.sh
         env:
           NETBOX_DOMAIN: ${{ vars.NETBOX_DOMAIN }}
           ACME_EMAIL: ${{ vars.ACME_EMAIL }}
           WS_ApiKey: ${{ secrets.WS_API_KEY }}
           WS_ApiSecret: ${{ secrets.WS_API_SECRET }}
-          COMPOSE_FILE: ${{ github.workspace }}/ci/docker/docker-compose.yml
-          ENV_FILE: ${{ github.workspace }}/ci/docker/.env
-
-      - name: Remove runtime environment file
-        if: always()
-        run: rm -f ci/docker/.env

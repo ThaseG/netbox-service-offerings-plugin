@@ -133,13 +133,30 @@ services:
       - netbox-reports-files:/opt/netbox/netbox/reports:rw
       - netbox-scripts-files:/opt/netbox/netbox/scripts:rw
     networks:
-      - netbox
+      netbox:
+      # Joins the shared, persistent front-door reverse proxy's network
+      # under a stable alias so it can be reached as
+      # http://netbox-service-offerings-plugin:8080 regardless of which
+      # compose project (this repo, or a sibling plugin repo sharing the
+      # same runner) created this container. The "edge" network itself is
+      # NOT created or torn down by this repo's pipeline — see
+      # ci/shared-proxy/README.md for the one-time setup. `external: true`
+      # below means `docker compose up` will fail loudly if that setup
+      # hasn't been done yet, rather than silently creating a private
+      # same-named network no other stack can actually see.
+      edge:
+        aliases:
+          - netbox-service-offerings-plugin
 
   netbox-worker:
     <<: *netbox
     depends_on:
       netbox:
         condition: service_healthy
+    networks:
+      # No "edge" here: only the web process needs to be reachable by the
+      # shared front door; the worker doesn't serve HTTP.
+      - netbox
     command:
       - /opt/netbox/venv/bin/python
       - /opt/netbox/netbox/manage.py
@@ -150,26 +167,12 @@ services:
       timeout: 3s
       interval: 15s
 
-  nginx:
-    image: docker.io/nginx:1.27-alpine
-    restart: unless-stopped
-    depends_on:
-      netbox:
-        condition: service_healthy
-    environment:
-      NETBOX_DOMAIN: ${NETBOX_DOMAIN:?NETBOX_DOMAIN must be set}
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./nginx/netbox.conf.template:/etc/nginx/templates/netbox.conf.template:ro
-      - ./nginx/certs:/etc/nginx/certs:ro
-    networks:
-      - netbox
-
 networks:
   netbox:
     driver: bridge
+  edge:
+    name: netbox-edge
+    external: true
 
 volumes:
   netbox-postgres:

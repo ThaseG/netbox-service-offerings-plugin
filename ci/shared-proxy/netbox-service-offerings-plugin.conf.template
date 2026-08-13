@@ -1,7 +1,13 @@
-# Rendered by the nginx:alpine entrypoint via envsubst — only ${NETBOX_DOMAIN}
-# is a real environment variable, so nginx's own $host/$scheme/etc runtime
-# variables below are left untouched (envsubst only replaces names it finds
-# in the container's actual environment).
+# Rendered by ci/scripts/render-proxy-conf.sh (plain `envsubst`, restricted to
+# ${NETBOX_DOMAIN} only) into $EDGE_CONF_DIR/${NETBOX_DOMAIN}.conf on the
+# shared front-door proxy — see ci/shared-proxy/README.md. nginx's own
+# $host/$scheme/etc runtime variables below are left untouched by that
+# restriction.
+#
+# proxy_pass targets `netbox-service-offerings-plugin`, this repo's own
+# stable network alias on the shared "netbox-edge" Docker network (set in
+# ci/docker/docker-compose.yml) — resolvable by the front door regardless of
+# which compose project actually created that container.
 
 server {
     listen 80;
@@ -19,8 +25,8 @@ server {
     http2 on;
     server_name ${NETBOX_DOMAIN};
 
-    ssl_certificate     /etc/nginx/certs/fullchain.pem;
-    ssl_certificate_key /etc/nginx/certs/privkey.pem;
+    ssl_certificate     /etc/nginx/certs/${NETBOX_DOMAIN}/fullchain.pem;
+    ssl_certificate_key /etc/nginx/certs/${NETBOX_DOMAIN}/privkey.pem;
     ssl_protocols TLSv1.2 TLSv1.3;
     ssl_ciphers HIGH:!aNULL:!MD5;
     ssl_prefer_server_ciphers on;
@@ -34,7 +40,7 @@ server {
     client_max_body_size 25m;
 
     location / {
-        proxy_pass http://netbox:8080;
+        proxy_pass http://netbox-service-offerings-plugin:8080;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
