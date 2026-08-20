@@ -65,6 +65,7 @@ REFERENCE_FIELDS = {
         'role': 'dcim/device-roles/',
         'device_type': 'dcim/device-types/',
         'site': 'dcim/sites/',
+        'cluster': 'virtualization/clusters/',
     },
     'dcim/interfaces/': {
         'device': 'dcim/devices/',
@@ -90,6 +91,7 @@ REFERENCE_FIELDS = {
     },
     'virtualization/virtual-machines/': {
         'cluster': 'virtualization/clusters/',
+        'device': 'dcim/devices/',
     },
     'plugins/service-specification/portfolios/': {
         'lifecycle': 'plugins/service-specification/lifecycles/',

@@ -7,9 +7,11 @@ Cluster Group, plus 6 VMs), plus 2 Service Portfolios each realizing 20
 Service Offerings across two rounds (two per tenant, covering all 20
 tenants twice with different themes), each with its own Application
 Service, and its own 1:1 Contract (which in turn gets 2 Contract Rate
-Cards of its own). Only VMs are linked to Application Services (not
-Devices/Clusters/Cluster Groups) — each tenant's 6 VMs split 2-and-4
-across its 2 Application Services (see build_ci_assignments).
+Cards of its own). VMs are the main Technical CI kind linked to
+Application Services — each tenant's 6 VMs split 2-and-4 across its 2
+Application Services — plus a couple of tenants' Firewalls/Switches are
+also linked to one Application Service each, so those kinds have at least
+one real example too (see build_ci_assignments).
 
 This is a one-off *generator*, not part of the actual deploy pipeline:
 ci/scripts/test-deployment.py itself stays a generic "read JSON, POST it,
@@ -371,20 +373,27 @@ def build_tenants_and_infra(data):
     interface gets an IP on its own /24 (10.<tenant index>.0.0/24 — a
     different one per tenant).
 
-    6 VMs per tenant, not 4: one nominally on each of the 4 Servers (named
-    to match, cluster set to that Server's Cluster) plus 2 extras (one per
-    Cluster) — 6 so build_ci_assignments can split them 2-and-4 across the
-    tenant's 2 Application Services. NetBox's VirtualMachine model has no
-    per-Server "host" field of its own, so Cluster membership is as far as
-    the Server mapping can go.
+    6 VMs per tenant, not 4: one on each of the 4 Servers (named to match,
+    both VirtualMachine.device and .cluster set to that Server/its
+    Cluster) plus 2 extras (one per Cluster, cluster-scoped only, no
+    specific host Server) — 6 so build_ci_assignments can split them
+    2-and-4 across the tenant's 2 Application Services. Each Server also
+    gets its own Device.cluster set to match, so Product View's
+    "OtherServersInCluster"/Virtualization branches (see
+    views._extend_ci_infra) have real sibling Devices to find.
 
-    Devices/Clusters/Cluster Groups are no longer linked to Application
-    Services at all — see build_ci_assignments — so unlike the old
-    version of this function, nothing here needs to track "every Technical
-    CI belonging to this tenant" any more, only its VMs.
+    Devices/Clusters/Cluster Groups mostly aren't linked to Application
+    Services — see build_ci_assignments — VMs are the only Technical CI
+    kind assigned at scale. The Firewall/Switch names captured in
+    network_by_tenant below exist so build_ci_assignments can additionally
+    give a couple of tenants' Application Services a Firewall or Switch
+    too (a small, deliberately limited exception — most tenants' Firewalls/
+    Switches stay unassigned).
 
-    Returns {tenant_slug: [vm_name, ...]} — that tenant's 6 VM names, in
-    creation order (Servers 1-4 first, then the 2 extras).
+    Returns (vms_by_tenant, network_by_tenant): vms_by_tenant maps
+    tenant_slug -> that tenant's 6 VM names, in creation order (Servers 1-4
+    first, then the 2 extras); network_by_tenant maps tenant_slug ->
+    {'firewall': fw_name, 'switches': [sw_name, sw_name]}.
     """
     data['tenancy/tenants/'] = []
     data['dcim/sites/'] = []
@@ -397,6 +406,7 @@ def build_tenants_and_infra(data):
     data['virtualization/virtual-machines/'] = []
 
     vms_by_tenant = {}
+    network_by_tenant = {}
 
     for i, company in enumerate(COMPANIES):
         tenant_slug = slugify(company)
@@ -431,8 +441,10 @@ def build_tenants_and_infra(data):
         vm_names = []
         vm_n = 0
         cluster_names = []
+        switch_names = []
         for sw_n, letter in ((1, 'A'), (2, 'B')):
             sw_name = f'{city}-SW-{sw_n:02d}'
+            switch_names.append(sw_name)
             data['dcim/devices/'].append(
                 {'name': sw_name, 'role': 'switch', 'device_type': DEVICE_TYPE_BY_ROLE['switch'], 'site': site_slug}
             )
@@ -466,6 +478,11 @@ def build_tenants_and_infra(data):
                         'role': 'server',
                         'device_type': DEVICE_TYPE_BY_ROLE['server'],
                         'site': site_slug,
+                        # Host of this Cluster (Product View's "OtherServersInCluster"
+                        # / Virtualization branches — see views._extend_ci_infra —
+                        # depend on Device.cluster actually being set here, not
+                        # just on the Cluster and VM sides).
+                        'cluster': cluster_name,
                     }
                 )
                 srv_iface = f'{srv_name} nic1'
@@ -479,12 +496,14 @@ def build_tenants_and_infra(data):
                     }
                 )
 
-                # VM nominally hosted on this Server (see docstring — VM
-                # <-> Server is naming/cluster-membership only, NetBox has
-                # no literal per-VM "host" field to assign).
+                # VM hosted on this Server — VirtualMachine.device is a real
+                # NetBox field (verified against 4.6.5 source while building
+                # Product View), not just a naming convention.
                 vm_n += 1
                 vm_name = f'{city.lower()}-vm-{vm_n:02d}'
-                data['virtualization/virtual-machines/'].append({'name': vm_name, 'cluster': cluster_name})
+                data['virtualization/virtual-machines/'].append(
+                    {'name': vm_name, 'cluster': cluster_name, 'device': srv_name}
+                )
                 vm_names.append(vm_name)
 
         # 2 extra VMs (one per Cluster) so this tenant has 6 total, split
@@ -505,8 +524,9 @@ def build_tenants_and_infra(data):
         )
 
         vms_by_tenant[tenant_slug] = vm_names
+        network_by_tenant[tenant_slug] = {'firewall': fw_name, 'switches': switch_names}
 
-    return vms_by_tenant
+    return vms_by_tenant, network_by_tenant
 
 
 def build_hierarchy(data, tenant_slugs):
@@ -687,14 +707,24 @@ def build_hierarchy(data, tenant_slugs):
     return tenant_by_offering
 
 
-def build_ci_assignments(data, vms_by_tenant, tenant_by_offering):
-    """Only VMs are linked to Application Services now — Devices/Clusters/
-    Cluster Groups aren't (device-service-infos/cluster-service-infos/
-    cluster-group-service-infos are left empty). Each tenant's 6 VMs (see
-    build_tenants_and_infra) split 2-and-4 across its 2 Application
-    Services — first Offering's Application Service gets the first 2 VMs,
-    second Offering's gets the other 4.
+def build_ci_assignments(data, vms_by_tenant, tenant_by_offering, network_by_tenant):
+    """VMs are the main Technical CI kind linked to Application Services —
+    each tenant's 6 VMs (see build_tenants_and_infra) split 2-and-4 across
+    its 2 Application Services, first Offering's Application Service
+    getting the first 2 VMs, second Offering's getting the other 4.
+
+    On top of that, a couple of tenants' Firewalls/Switches are *also*
+    linked to an Application Service (cluster-service-infos/
+    cluster-group-service-infos stay empty — nothing asked for those):
+    FIREWALL_TENANT_COUNT tenants' first Application Service additionally
+    gets that tenant's Firewall, and SWITCH_TENANT_COUNT tenants' second
+    Application Service additionally gets one of that tenant's Switches —
+    so there's at least one real example of each Technical CI kind besides
+    VMs to look at, without doing it at the same scale as VMs.
     """
+    FIREWALL_TENANT_COUNT = 2
+    SWITCH_TENANT_COUNT = 2
+
     data['plugins/service-specification/virtual-machine-service-infos/'] = []
     data['plugins/service-specification/device-service-infos/'] = []
     data['plugins/service-specification/cluster-service-infos/'] = []
@@ -704,6 +734,8 @@ def build_ci_assignments(data, vms_by_tenant, tenant_by_offering):
     for app_service_name, tenant_slug in tenant_by_offering.items():
         app_services_by_tenant.setdefault(tenant_slug, []).append(app_service_name)
 
+    tenant_slugs_in_order = list(app_services_by_tenant)
+
     for tenant_slug, app_service_names in app_services_by_tenant.items():
         first_app_service, second_app_service = app_service_names
         for i, vm_name in enumerate(vms_by_tenant[tenant_slug]):
@@ -712,15 +744,29 @@ def build_ci_assignments(data, vms_by_tenant, tenant_by_offering):
                 {'virtual_machine': vm_name, 'application_services': [app_service]}
             )
 
+    for tenant_slug in tenant_slugs_in_order[:FIREWALL_TENANT_COUNT]:
+        first_app_service = app_services_by_tenant[tenant_slug][0]
+        firewall_name = network_by_tenant[tenant_slug]['firewall']
+        data['plugins/service-specification/device-service-infos/'].append(
+            {'device': firewall_name, 'application_services': [first_app_service]}
+        )
+
+    for tenant_slug in tenant_slugs_in_order[:SWITCH_TENANT_COUNT]:
+        second_app_service = app_services_by_tenant[tenant_slug][1]
+        switch_name = network_by_tenant[tenant_slug]['switches'][0]
+        data['plugins/service-specification/device-service-infos/'].append(
+            {'device': switch_name, 'application_services': [second_app_service]}
+        )
+
 
 def main():
     data = {}
 
     build_lookups(data)
-    vms_by_tenant = build_tenants_and_infra(data)
+    vms_by_tenant, network_by_tenant = build_tenants_and_infra(data)
     tenant_slugs = [t['slug'] for t in data['tenancy/tenants/']]
     tenant_by_offering = build_hierarchy(data, tenant_slugs)
-    build_ci_assignments(data, vms_by_tenant, tenant_by_offering)
+    build_ci_assignments(data, vms_by_tenant, tenant_by_offering, network_by_tenant)
 
     # Re-declare in dependency order: build_* above populated `data` in
     # convenient-for-generation order, not necessarily the order
@@ -736,13 +782,19 @@ def main():
         'dcim/manufacturers/',
         'dcim/device-roles/',
         'dcim/device-types/',
+        # Clusters (and what they depend on) now have to precede Devices:
+        # Device.cluster (see build_tenants_and_infra) references a Cluster,
+        # which itself only needs Sites (already above), not Devices.
+        'virtualization/cluster-groups/',
+        'virtualization/cluster-types/',
+        'virtualization/clusters/',
         'dcim/devices/',
         'dcim/interfaces/',
         'dcim/cables/',
         'ipam/ip-addresses/',
-        'virtualization/cluster-groups/',
-        'virtualization/cluster-types/',
-        'virtualization/clusters/',
+        # ...and Virtual Machines now come after Devices too:
+        # VirtualMachine.device (see build_tenants_and_infra) references a
+        # Device.
         'virtualization/virtual-machines/',
         'plugins/service-specification/lifecycles/',
         'plugins/service-specification/slas/',

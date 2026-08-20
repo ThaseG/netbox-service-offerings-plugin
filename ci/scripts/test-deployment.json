@@ -375,6 +375,376 @@
       "manufacturer": "dell"
     }
   ],
+  "virtualization/cluster-groups/": [
+    {
+      "name": "Coca Cola Infrastructure",
+      "slug": "coca-cola-infra"
+    },
+    {
+      "name": "Cisco Infrastructure",
+      "slug": "cisco-infra"
+    },
+    {
+      "name": "SAP Infrastructure",
+      "slug": "sap-infra"
+    },
+    {
+      "name": "Google Infrastructure",
+      "slug": "google-infra"
+    },
+    {
+      "name": "Amazon Infrastructure",
+      "slug": "amazon-infra"
+    },
+    {
+      "name": "Microsoft Infrastructure",
+      "slug": "microsoft-infra"
+    },
+    {
+      "name": "IBM Infrastructure",
+      "slug": "ibm-infra"
+    },
+    {
+      "name": "Oracle Infrastructure",
+      "slug": "oracle-infra"
+    },
+    {
+      "name": "Siemens Infrastructure",
+      "slug": "siemens-infra"
+    },
+    {
+      "name": "BMW Infrastructure",
+      "slug": "bmw-infra"
+    },
+    {
+      "name": "Volkswagen Infrastructure",
+      "slug": "volkswagen-infra"
+    },
+    {
+      "name": "Deutsche Bank Infrastructure",
+      "slug": "deutsche-bank-infra"
+    },
+    {
+      "name": "Allianz Infrastructure",
+      "slug": "allianz-infra"
+    },
+    {
+      "name": "Adidas Infrastructure",
+      "slug": "adidas-infra"
+    },
+    {
+      "name": "Puma Infrastructure",
+      "slug": "puma-infra"
+    },
+    {
+      "name": "Nike Infrastructure",
+      "slug": "nike-infra"
+    },
+    {
+      "name": "Samsung Infrastructure",
+      "slug": "samsung-infra"
+    },
+    {
+      "name": "Sony Infrastructure",
+      "slug": "sony-infra"
+    },
+    {
+      "name": "Toyota Infrastructure",
+      "slug": "toyota-infra"
+    },
+    {
+      "name": "Shell Infrastructure",
+      "slug": "shell-infra"
+    }
+  ],
+  "virtualization/cluster-types/": [
+    {
+      "name": "VMware",
+      "slug": "vmware"
+    }
+  ],
+  "virtualization/clusters/": [
+    {
+      "name": "Munich Cluster A",
+      "type": "vmware",
+      "group": "coca-cola-infra",
+      "scope_type": "dcim.site",
+      "scope_id": "hq-munich"
+    },
+    {
+      "name": "Munich Cluster B",
+      "type": "vmware",
+      "group": "coca-cola-infra",
+      "scope_type": "dcim.site",
+      "scope_id": "hq-munich"
+    },
+    {
+      "name": "Berlin Cluster A",
+      "type": "vmware",
+      "group": "cisco-infra",
+      "scope_type": "dcim.site",
+      "scope_id": "hq-berlin"
+    },
+    {
+      "name": "Berlin Cluster B",
+      "type": "vmware",
+      "group": "cisco-infra",
+      "scope_type": "dcim.site",
+      "scope_id": "hq-berlin"
+    },
+    {
+      "name": "Cologne Cluster A",
+      "type": "vmware",
+      "group": "sap-infra",
+      "scope_type": "dcim.site",
+      "scope_id": "hq-cologne"
+    },
+    {
+      "name": "Cologne Cluster B",
+      "type": "vmware",
+      "group": "sap-infra",
+      "scope_type": "dcim.site",
+      "scope_id": "hq-cologne"
+    },
+    {
+      "name": "Dusseldorf Cluster A",
+      "type": "vmware",
+      "group": "google-infra",
+      "scope_type": "dcim.site",
+      "scope_id": "hq-dusseldorf"
+    },
+    {
+      "name": "Dusseldorf Cluster B",
+      "type": "vmware",
+      "group": "google-infra",
+      "scope_type": "dcim.site",
+      "scope_id": "hq-dusseldorf"
+    },
+    {
+      "name": "Dortmund Cluster A",
+      "type": "vmware",
+      "group": "amazon-infra",
+      "scope_type": "dcim.site",
+      "scope_id": "hq-dortmund"
+    },
+    {
+      "name": "Dortmund Cluster B",
+      "type": "vmware",
+      "group": "amazon-infra",
+      "scope_type": "dcim.site",
+      "scope_id": "hq-dortmund"
+    },
+    {
+      "name": "Vienna Cluster A",
+      "type": "vmware",
+      "group": "microsoft-infra",
+      "scope_type": "dcim.site",
+      "scope_id": "hq-vienna"
+    },
+    {
+      "name": "Vienna Cluster B",
+      "type": "vmware",
+      "group": "microsoft-infra",
+      "scope_type": "dcim.site",
+      "scope_id": "hq-vienna"
+    },
+    {
+      "name": "Amsterdam Cluster A",
+      "type": "vmware",
+      "group": "ibm-infra",
+      "scope_type": "dcim.site",
+      "scope_id": "hq-amsterdam"
+    },
+    {
+      "name": "Amsterdam Cluster B",
+      "type": "vmware",
+      "group": "ibm-infra",
+      "scope_type": "dcim.site",
+      "scope_id": "hq-amsterdam"
+    },
+    {
+      "name": "Paris Cluster A",
+      "type": "vmware",
+      "group": "oracle-infra",
+      "scope_type": "dcim.site",
+      "scope_id": "hq-paris"
+    },
+    {
+      "name": "Paris Cluster B",
+      "type": "vmware",
+      "group": "oracle-infra",
+      "scope_type": "dcim.site",
+      "scope_id": "hq-paris"
+    },
+    {
+      "name": "Madrid Cluster A",
+      "type": "vmware",
+      "group": "siemens-infra",
+      "scope_type": "dcim.site",
+      "scope_id": "hq-madrid"
+    },
+    {
+      "name": "Madrid Cluster B",
+      "type": "vmware",
+      "group": "siemens-infra",
+      "scope_type": "dcim.site",
+      "scope_id": "hq-madrid"
+    },
+    {
+      "name": "Rome Cluster A",
+      "type": "vmware",
+      "group": "bmw-infra",
+      "scope_type": "dcim.site",
+      "scope_id": "hq-rome"
+    },
+    {
+      "name": "Rome Cluster B",
+      "type": "vmware",
+      "group": "bmw-infra",
+      "scope_type": "dcim.site",
+      "scope_id": "hq-rome"
+    },
+    {
+      "name": "Warsaw Cluster A",
+      "type": "vmware",
+      "group": "volkswagen-infra",
+      "scope_type": "dcim.site",
+      "scope_id": "hq-warsaw"
+    },
+    {
+      "name": "Warsaw Cluster B",
+      "type": "vmware",
+      "group": "volkswagen-infra",
+      "scope_type": "dcim.site",
+      "scope_id": "hq-warsaw"
+    },
+    {
+      "name": "Budapest Cluster A",
+      "type": "vmware",
+      "group": "deutsche-bank-infra",
+      "scope_type": "dcim.site",
+      "scope_id": "hq-budapest"
+    },
+    {
+      "name": "Budapest Cluster B",
+      "type": "vmware",
+      "group": "deutsche-bank-infra",
+      "scope_type": "dcim.site",
+      "scope_id": "hq-budapest"
+    },
+    {
+      "name": "Stockholm Cluster A",
+      "type": "vmware",
+      "group": "allianz-infra",
+      "scope_type": "dcim.site",
+      "scope_id": "hq-stockholm"
+    },
+    {
+      "name": "Stockholm Cluster B",
+      "type": "vmware",
+      "group": "allianz-infra",
+      "scope_type": "dcim.site",
+      "scope_id": "hq-stockholm"
+    },
+    {
+      "name": "Dublin Cluster A",
+      "type": "vmware",
+      "group": "adidas-infra",
+      "scope_type": "dcim.site",
+      "scope_id": "hq-dublin"
+    },
+    {
+      "name": "Dublin Cluster B",
+      "type": "vmware",
+      "group": "adidas-infra",
+      "scope_type": "dcim.site",
+      "scope_id": "hq-dublin"
+    },
+    {
+      "name": "Athens Cluster A",
+      "type": "vmware",
+      "group": "puma-infra",
+      "scope_type": "dcim.site",
+      "scope_id": "hq-athens"
+    },
+    {
+      "name": "Athens Cluster B",
+      "type": "vmware",
+      "group": "puma-infra",
+      "scope_type": "dcim.site",
+      "scope_id": "hq-athens"
+    },
+    {
+      "name": "Singapore Cluster A",
+      "type": "vmware",
+      "group": "nike-infra",
+      "scope_type": "dcim.site",
+      "scope_id": "hq-singapore"
+    },
+    {
+      "name": "Singapore Cluster B",
+      "type": "vmware",
+      "group": "nike-infra",
+      "scope_type": "dcim.site",
+      "scope_id": "hq-singapore"
+    },
+    {
+      "name": "Sydney Cluster A",
+      "type": "vmware",
+      "group": "samsung-infra",
+      "scope_type": "dcim.site",
+      "scope_id": "hq-sydney"
+    },
+    {
+      "name": "Sydney Cluster B",
+      "type": "vmware",
+      "group": "samsung-infra",
+      "scope_type": "dcim.site",
+      "scope_id": "hq-sydney"
+    },
+    {
+      "name": "Chicago Cluster A",
+      "type": "vmware",
+      "group": "sony-infra",
+      "scope_type": "dcim.site",
+      "scope_id": "hq-chicago"
+    },
+    {
+      "name": "Chicago Cluster B",
+      "type": "vmware",
+      "group": "sony-infra",
+      "scope_type": "dcim.site",
+      "scope_id": "hq-chicago"
+    },
+    {
+      "name": "Seattle Cluster A",
+      "type": "vmware",
+      "group": "toyota-infra",
+      "scope_type": "dcim.site",
+      "scope_id": "hq-seattle"
+    },
+    {
+      "name": "Seattle Cluster B",
+      "type": "vmware",
+      "group": "toyota-infra",
+      "scope_type": "dcim.site",
+      "scope_id": "hq-seattle"
+    },
+    {
+      "name": "Miami Cluster A",
+      "type": "vmware",
+      "group": "shell-infra",
+      "scope_type": "dcim.site",
+      "scope_id": "hq-miami"
+    },
+    {
+      "name": "Miami Cluster B",
+      "type": "vmware",
+      "group": "shell-infra",
+      "scope_type": "dcim.site",
+      "scope_id": "hq-miami"
+    }
+  ],
   "dcim/devices/": [
     {
       "name": "Munich-FW-01",
@@ -392,13 +762,15 @@
       "name": "Munich-SRV-01",
       "role": "server",
       "device_type": "poweredge-r750",
-      "site": "hq-munich"
+      "site": "hq-munich",
+      "cluster": "Munich Cluster A"
     },
     {
       "name": "Munich-SRV-02",
       "role": "server",
       "device_type": "poweredge-r750",
-      "site": "hq-munich"
+      "site": "hq-munich",
+      "cluster": "Munich Cluster A"
     },
     {
       "name": "Munich-SW-02",
@@ -410,13 +782,15 @@
       "name": "Munich-SRV-03",
       "role": "server",
       "device_type": "poweredge-r750",
-      "site": "hq-munich"
+      "site": "hq-munich",
+      "cluster": "Munich Cluster B"
     },
     {
       "name": "Munich-SRV-04",
       "role": "server",
       "device_type": "poweredge-r750",
-      "site": "hq-munich"
+      "site": "hq-munich",
+      "cluster": "Munich Cluster B"
     },
     {
       "name": "Berlin-FW-01",
@@ -434,13 +808,15 @@
       "name": "Berlin-SRV-01",
       "role": "server",
       "device_type": "poweredge-r750",
-      "site": "hq-berlin"
+      "site": "hq-berlin",
+      "cluster": "Berlin Cluster A"
     },
     {
       "name": "Berlin-SRV-02",
       "role": "server",
       "device_type": "poweredge-r750",
-      "site": "hq-berlin"
+      "site": "hq-berlin",
+      "cluster": "Berlin Cluster A"
     },
     {
       "name": "Berlin-SW-02",
@@ -452,13 +828,15 @@
       "name": "Berlin-SRV-03",
       "role": "server",
       "device_type": "poweredge-r750",
-      "site": "hq-berlin"
+      "site": "hq-berlin",
+      "cluster": "Berlin Cluster B"
     },
     {
       "name": "Berlin-SRV-04",
       "role": "server",
       "device_type": "poweredge-r750",
-      "site": "hq-berlin"
+      "site": "hq-berlin",
+      "cluster": "Berlin Cluster B"
     },
     {
       "name": "Cologne-FW-01",
@@ -476,13 +854,15 @@
       "name": "Cologne-SRV-01",
       "role": "server",
       "device_type": "poweredge-r750",
-      "site": "hq-cologne"
+      "site": "hq-cologne",
+      "cluster": "Cologne Cluster A"
     },
     {
       "name": "Cologne-SRV-02",
       "role": "server",
       "device_type": "poweredge-r750",
-      "site": "hq-cologne"
+      "site": "hq-cologne",
+      "cluster": "Cologne Cluster A"
     },
     {
       "name": "Cologne-SW-02",
@@ -494,13 +874,15 @@
       "name": "Cologne-SRV-03",
       "role": "server",
       "device_type": "poweredge-r750",
-      "site": "hq-cologne"
+      "site": "hq-cologne",
+      "cluster": "Cologne Cluster B"
     },
     {
       "name": "Cologne-SRV-04",
       "role": "server",
       "device_type": "poweredge-r750",
-      "site": "hq-cologne"
+      "site": "hq-cologne",
+      "cluster": "Cologne Cluster B"
     },
     {
       "name": "Dusseldorf-FW-01",
@@ -518,13 +900,15 @@
       "name": "Dusseldorf-SRV-01",
       "role": "server",
       "device_type": "poweredge-r750",
-      "site": "hq-dusseldorf"
+      "site": "hq-dusseldorf",
+      "cluster": "Dusseldorf Cluster A"
     },
     {
       "name": "Dusseldorf-SRV-02",
       "role": "server",
       "device_type": "poweredge-r750",
-      "site": "hq-dusseldorf"
+      "site": "hq-dusseldorf",
+      "cluster": "Dusseldorf Cluster A"
     },
     {
       "name": "Dusseldorf-SW-02",
@@ -536,13 +920,15 @@
       "name": "Dusseldorf-SRV-03",
       "role": "server",
       "device_type": "poweredge-r750",
-      "site": "hq-dusseldorf"
+      "site": "hq-dusseldorf",
+      "cluster": "Dusseldorf Cluster B"
     },
     {
       "name": "Dusseldorf-SRV-04",
       "role": "server",
       "device_type": "poweredge-r750",
-      "site": "hq-dusseldorf"
+      "site": "hq-dusseldorf",
+      "cluster": "Dusseldorf Cluster B"
     },
     {
       "name": "Dortmund-FW-01",
@@ -560,13 +946,15 @@
       "name": "Dortmund-SRV-01",
       "role": "server",
       "device_type": "poweredge-r750",
-      "site": "hq-dortmund"
+      "site": "hq-dortmund",
+      "cluster": "Dortmund Cluster A"
     },
     {
       "name": "Dortmund-SRV-02",
       "role": "server",
       "device_type": "poweredge-r750",
-      "site": "hq-dortmund"
+      "site": "hq-dortmund",
+      "cluster": "Dortmund Cluster A"
     },
     {
       "name": "Dortmund-SW-02",
@@ -578,13 +966,15 @@
       "name": "Dortmund-SRV-03",
       "role": "server",
       "device_type": "poweredge-r750",
-      "site": "hq-dortmund"
+      "site": "hq-dortmund",
+      "cluster": "Dortmund Cluster B"
     },
     {
       "name": "Dortmund-SRV-04",
       "role": "server",
       "device_type": "poweredge-r750",
-      "site": "hq-dortmund"
+      "site": "hq-dortmund",
+      "cluster": "Dortmund Cluster B"
     },
     {
       "name": "Vienna-FW-01",
@@ -602,13 +992,15 @@
       "name": "Vienna-SRV-01",
       "role": "server",
       "device_type": "poweredge-r750",
-      "site": "hq-vienna"
+      "site": "hq-vienna",
+      "cluster": "Vienna Cluster A"
     },
     {
       "name": "Vienna-SRV-02",
       "role": "server",
       "device_type": "poweredge-r750",
-      "site": "hq-vienna"
+      "site": "hq-vienna",
+      "cluster": "Vienna Cluster A"
     },
     {
       "name": "Vienna-SW-02",
@@ -620,13 +1012,15 @@
       "name": "Vienna-SRV-03",
       "role": "server",
       "device_type": "poweredge-r750",
-      "site": "hq-vienna"
+      "site": "hq-vienna",
+      "cluster": "Vienna Cluster B"
     },
     {
       "name": "Vienna-SRV-04",
       "role": "server",
       "device_type": "poweredge-r750",
-      "site": "hq-vienna"
+      "site": "hq-vienna",
+      "cluster": "Vienna Cluster B"
     },
     {
       "name": "Amsterdam-FW-01",
@@ -644,13 +1038,15 @@
       "name": "Amsterdam-SRV-01",
       "role": "server",
       "device_type": "poweredge-r750",
-      "site": "hq-amsterdam"
+      "site": "hq-amsterdam",
+      "cluster": "Amsterdam Cluster A"
     },
     {
       "name": "Amsterdam-SRV-02",
       "role": "server",
       "device_type": "poweredge-r750",
-      "site": "hq-amsterdam"
+      "site": "hq-amsterdam",
+      "cluster": "Amsterdam Cluster A"
     },
     {
       "name": "Amsterdam-SW-02",
@@ -662,13 +1058,15 @@
       "name": "Amsterdam-SRV-03",
       "role": "server",
       "device_type": "poweredge-r750",
-      "site": "hq-amsterdam"
+      "site": "hq-amsterdam",
+      "cluster": "Amsterdam Cluster B"
     },
     {
       "name": "Amsterdam-SRV-04",
       "role": "server",
       "device_type": "poweredge-r750",
-      "site": "hq-amsterdam"
+      "site": "hq-amsterdam",
+      "cluster": "Amsterdam Cluster B"
     },
     {
       "name": "Paris-FW-01",
@@ -686,13 +1084,15 @@
       "name": "Paris-SRV-01",
       "role": "server",
       "device_type": "poweredge-r750",
-      "site": "hq-paris"
+      "site": "hq-paris",
+      "cluster": "Paris Cluster A"
     },
     {
       "name": "Paris-SRV-02",
       "role": "server",
       "device_type": "poweredge-r750",
-      "site": "hq-paris"
+      "site": "hq-paris",
+      "cluster": "Paris Cluster A"
     },
     {
       "name": "Paris-SW-02",
@@ -704,13 +1104,15 @@
       "name": "Paris-SRV-03",
       "role": "server",
       "device_type": "poweredge-r750",
-      "site": "hq-paris"
+      "site": "hq-paris",
+      "cluster": "Paris Cluster B"
     },
     {
       "name": "Paris-SRV-04",
       "role": "server",
       "device_type": "poweredge-r750",
-      "site": "hq-paris"
+      "site": "hq-paris",
+      "cluster": "Paris Cluster B"
     },
     {
       "name": "Madrid-FW-01",
@@ -728,13 +1130,15 @@
       "name": "Madrid-SRV-01",
       "role": "server",
       "device_type": "poweredge-r750",
-      "site": "hq-madrid"
+      "site": "hq-madrid",
+      "cluster": "Madrid Cluster A"
     },
     {
       "name": "Madrid-SRV-02",
       "role": "server",
       "device_type": "poweredge-r750",
-      "site": "hq-madrid"
+      "site": "hq-madrid",
+      "cluster": "Madrid Cluster A"
     },
     {
       "name": "Madrid-SW-02",
@@ -746,13 +1150,15 @@
       "name": "Madrid-SRV-03",
       "role": "server",
       "device_type": "poweredge-r750",
-      "site": "hq-madrid"
+      "site": "hq-madrid",
+      "cluster": "Madrid Cluster B"
     },
     {
       "name": "Madrid-SRV-04",
       "role": "server",
       "device_type": "poweredge-r750",
-      "site": "hq-madrid"
+      "site": "hq-madrid",
+      "cluster": "Madrid Cluster B"
     },
     {
       "name": "Rome-FW-01",
@@ -770,13 +1176,15 @@
       "name": "Rome-SRV-01",
       "role": "server",
       "device_type": "poweredge-r750",
-      "site": "hq-rome"
+      "site": "hq-rome",
+      "cluster": "Rome Cluster A"
     },
     {
       "name": "Rome-SRV-02",
       "role": "server",
       "device_type": "poweredge-r750",
-      "site": "hq-rome"
+      "site": "hq-rome",
+      "cluster": "Rome Cluster A"
     },
     {
       "name": "Rome-SW-02",
@@ -788,13 +1196,15 @@
       "name": "Rome-SRV-03",
       "role": "server",
       "device_type": "poweredge-r750",
-      "site": "hq-rome"
+      "site": "hq-rome",
+      "cluster": "Rome Cluster B"
     },
     {
       "name": "Rome-SRV-04",
       "role": "server",
       "device_type": "poweredge-r750",
-      "site": "hq-rome"
+      "site": "hq-rome",
+      "cluster": "Rome Cluster B"
     },
     {
       "name": "Warsaw-FW-01",
@@ -812,13 +1222,15 @@
       "name": "Warsaw-SRV-01",
       "role": "server",
       "device_type": "poweredge-r750",
-      "site": "hq-warsaw"
+      "site": "hq-warsaw",
+      "cluster": "Warsaw Cluster A"
     },
     {
       "name": "Warsaw-SRV-02",
       "role": "server",
       "device_type": "poweredge-r750",
-      "site": "hq-warsaw"
+      "site": "hq-warsaw",
+      "cluster": "Warsaw Cluster A"
     },
     {
       "name": "Warsaw-SW-02",
@@ -830,13 +1242,15 @@
       "name": "Warsaw-SRV-03",
       "role": "server",
       "device_type": "poweredge-r750",
-      "site": "hq-warsaw"
+      "site": "hq-warsaw",
+      "cluster": "Warsaw Cluster B"
     },
     {
       "name": "Warsaw-SRV-04",
       "role": "server",
       "device_type": "poweredge-r750",
-      "site": "hq-warsaw"
+      "site": "hq-warsaw",
+      "cluster": "Warsaw Cluster B"
     },
     {
       "name": "Budapest-FW-01",
@@ -854,13 +1268,15 @@
       "name": "Budapest-SRV-01",
       "role": "server",
       "device_type": "poweredge-r750",
-      "site": "hq-budapest"
+      "site": "hq-budapest",
+      "cluster": "Budapest Cluster A"
     },
     {
       "name": "Budapest-SRV-02",
       "role": "server",
       "device_type": "poweredge-r750",
-      "site": "hq-budapest"
+      "site": "hq-budapest",
+      "cluster": "Budapest Cluster A"
     },
     {
       "name": "Budapest-SW-02",
@@ -872,13 +1288,15 @@
       "name": "Budapest-SRV-03",
       "role": "server",
       "device_type": "poweredge-r750",
-      "site": "hq-budapest"
+      "site": "hq-budapest",
+      "cluster": "Budapest Cluster B"
     },
     {
       "name": "Budapest-SRV-04",
       "role": "server",
       "device_type": "poweredge-r750",
-      "site": "hq-budapest"
+      "site": "hq-budapest",
+      "cluster": "Budapest Cluster B"
     },
     {
       "name": "Stockholm-FW-01",
@@ -896,13 +1314,15 @@
       "name": "Stockholm-SRV-01",
       "role": "server",
       "device_type": "poweredge-r750",
-      "site": "hq-stockholm"
+      "site": "hq-stockholm",
+      "cluster": "Stockholm Cluster A"
     },
     {
       "name": "Stockholm-SRV-02",
       "role": "server",
       "device_type": "poweredge-r750",
-      "site": "hq-stockholm"
+      "site": "hq-stockholm",
+      "cluster": "Stockholm Cluster A"
     },
     {
       "name": "Stockholm-SW-02",
@@ -914,13 +1334,15 @@
       "name": "Stockholm-SRV-03",
       "role": "server",
       "device_type": "poweredge-r750",
-      "site": "hq-stockholm"
+      "site": "hq-stockholm",
+      "cluster": "Stockholm Cluster B"
     },
     {
       "name": "Stockholm-SRV-04",
       "role": "server",
       "device_type": "poweredge-r750",
-      "site": "hq-stockholm"
+      "site": "hq-stockholm",
+      "cluster": "Stockholm Cluster B"
     },
     {
       "name": "Dublin-FW-01",
@@ -938,13 +1360,15 @@
       "name": "Dublin-SRV-01",
       "role": "server",
       "device_type": "poweredge-r750",
-      "site": "hq-dublin"
+      "site": "hq-dublin",
+      "cluster": "Dublin Cluster A"
     },
     {
       "name": "Dublin-SRV-02",
       "role": "server",
       "device_type": "poweredge-r750",
-      "site": "hq-dublin"
+      "site": "hq-dublin",
+      "cluster": "Dublin Cluster A"
     },
     {
       "name": "Dublin-SW-02",
@@ -956,13 +1380,15 @@
       "name": "Dublin-SRV-03",
       "role": "server",
       "device_type": "poweredge-r750",
-      "site": "hq-dublin"
+      "site": "hq-dublin",
+      "cluster": "Dublin Cluster B"
     },
     {
       "name": "Dublin-SRV-04",
       "role": "server",
       "device_type": "poweredge-r750",
-      "site": "hq-dublin"
+      "site": "hq-dublin",
+      "cluster": "Dublin Cluster B"
     },
     {
       "name": "Athens-FW-01",
@@ -980,13 +1406,15 @@
       "name": "Athens-SRV-01",
       "role": "server",
       "device_type": "poweredge-r750",
-      "site": "hq-athens"
+      "site": "hq-athens",
+      "cluster": "Athens Cluster A"
     },
     {
       "name": "Athens-SRV-02",
       "role": "server",
       "device_type": "poweredge-r750",
-      "site": "hq-athens"
+      "site": "hq-athens",
+      "cluster": "Athens Cluster A"
     },
     {
       "name": "Athens-SW-02",
@@ -998,13 +1426,15 @@
       "name": "Athens-SRV-03",
       "role": "server",
       "device_type": "poweredge-r750",
-      "site": "hq-athens"
+      "site": "hq-athens",
+      "cluster": "Athens Cluster B"
     },
     {
       "name": "Athens-SRV-04",
       "role": "server",
       "device_type": "poweredge-r750",
-      "site": "hq-athens"
+      "site": "hq-athens",
+      "cluster": "Athens Cluster B"
     },
     {
       "name": "Singapore-FW-01",
@@ -1022,13 +1452,15 @@
       "name": "Singapore-SRV-01",
       "role": "server",
       "device_type": "poweredge-r750",
-      "site": "hq-singapore"
+      "site": "hq-singapore",
+      "cluster": "Singapore Cluster A"
     },
     {
       "name": "Singapore-SRV-02",
       "role": "server",
       "device_type": "poweredge-r750",
-      "site": "hq-singapore"
+      "site": "hq-singapore",
+      "cluster": "Singapore Cluster A"
     },
     {
       "name": "Singapore-SW-02",
@@ -1040,13 +1472,15 @@
       "name": "Singapore-SRV-03",
       "role": "server",
       "device_type": "poweredge-r750",
-      "site": "hq-singapore"
+      "site": "hq-singapore",
+      "cluster": "Singapore Cluster B"
     },
     {
       "name": "Singapore-SRV-04",
       "role": "server",
       "device_type": "poweredge-r750",
-      "site": "hq-singapore"
+      "site": "hq-singapore",
+      "cluster": "Singapore Cluster B"
     },
     {
       "name": "Sydney-FW-01",
@@ -1064,13 +1498,15 @@
       "name": "Sydney-SRV-01",
       "role": "server",
       "device_type": "poweredge-r750",
-      "site": "hq-sydney"
+      "site": "hq-sydney",
+      "cluster": "Sydney Cluster A"
     },
     {
       "name": "Sydney-SRV-02",
       "role": "server",
       "device_type": "poweredge-r750",
-      "site": "hq-sydney"
+      "site": "hq-sydney",
+      "cluster": "Sydney Cluster A"
     },
     {
       "name": "Sydney-SW-02",
@@ -1082,13 +1518,15 @@
       "name": "Sydney-SRV-03",
       "role": "server",
       "device_type": "poweredge-r750",
-      "site": "hq-sydney"
+      "site": "hq-sydney",
+      "cluster": "Sydney Cluster B"
     },
     {
       "name": "Sydney-SRV-04",
       "role": "server",
       "device_type": "poweredge-r750",
-      "site": "hq-sydney"
+      "site": "hq-sydney",
+      "cluster": "Sydney Cluster B"
     },
     {
       "name": "Chicago-FW-01",
@@ -1106,13 +1544,15 @@
       "name": "Chicago-SRV-01",
       "role": "server",
       "device_type": "poweredge-r750",
-      "site": "hq-chicago"
+      "site": "hq-chicago",
+      "cluster": "Chicago Cluster A"
     },
     {
       "name": "Chicago-SRV-02",
       "role": "server",
       "device_type": "poweredge-r750",
-      "site": "hq-chicago"
+      "site": "hq-chicago",
+      "cluster": "Chicago Cluster A"
     },
     {
       "name": "Chicago-SW-02",
@@ -1124,13 +1564,15 @@
       "name": "Chicago-SRV-03",
       "role": "server",
       "device_type": "poweredge-r750",
-      "site": "hq-chicago"
+      "site": "hq-chicago",
+      "cluster": "Chicago Cluster B"
     },
     {
       "name": "Chicago-SRV-04",
       "role": "server",
       "device_type": "poweredge-r750",
-      "site": "hq-chicago"
+      "site": "hq-chicago",
+      "cluster": "Chicago Cluster B"
     },
     {
       "name": "Seattle-FW-01",
@@ -1148,13 +1590,15 @@
       "name": "Seattle-SRV-01",
       "role": "server",
       "device_type": "poweredge-r750",
-      "site": "hq-seattle"
+      "site": "hq-seattle",
+      "cluster": "Seattle Cluster A"
     },
     {
       "name": "Seattle-SRV-02",
       "role": "server",
       "device_type": "poweredge-r750",
-      "site": "hq-seattle"
+      "site": "hq-seattle",
+      "cluster": "Seattle Cluster A"
     },
     {
       "name": "Seattle-SW-02",
@@ -1166,13 +1610,15 @@
       "name": "Seattle-SRV-03",
       "role": "server",
       "device_type": "poweredge-r750",
-      "site": "hq-seattle"
+      "site": "hq-seattle",
+      "cluster": "Seattle Cluster B"
     },
     {
       "name": "Seattle-SRV-04",
       "role": "server",
       "device_type": "poweredge-r750",
-      "site": "hq-seattle"
+      "site": "hq-seattle",
+      "cluster": "Seattle Cluster B"
     },
     {
       "name": "Miami-FW-01",
@@ -1190,13 +1636,15 @@
       "name": "Miami-SRV-01",
       "role": "server",
       "device_type": "poweredge-r750",
-      "site": "hq-miami"
+      "site": "hq-miami",
+      "cluster": "Miami Cluster A"
     },
     {
       "name": "Miami-SRV-02",
       "role": "server",
       "device_type": "poweredge-r750",
-      "site": "hq-miami"
+      "site": "hq-miami",
+      "cluster": "Miami Cluster A"
     },
     {
       "name": "Miami-SW-02",
@@ -1208,13 +1656,15 @@
       "name": "Miami-SRV-03",
       "role": "server",
       "device_type": "poweredge-r750",
-      "site": "hq-miami"
+      "site": "hq-miami",
+      "cluster": "Miami Cluster B"
     },
     {
       "name": "Miami-SRV-04",
       "role": "server",
       "device_type": "poweredge-r750",
-      "site": "hq-miami"
+      "site": "hq-miami",
+      "cluster": "Miami Cluster B"
     }
   ],
   "dcim/interfaces/": [
@@ -4203,392 +4653,26 @@
       "assigned_object_id": "Miami-FW-01 internal1"
     }
   ],
-  "virtualization/cluster-groups/": [
-    {
-      "name": "Coca Cola Infrastructure",
-      "slug": "coca-cola-infra"
-    },
-    {
-      "name": "Cisco Infrastructure",
-      "slug": "cisco-infra"
-    },
-    {
-      "name": "SAP Infrastructure",
-      "slug": "sap-infra"
-    },
-    {
-      "name": "Google Infrastructure",
-      "slug": "google-infra"
-    },
-    {
-      "name": "Amazon Infrastructure",
-      "slug": "amazon-infra"
-    },
-    {
-      "name": "Microsoft Infrastructure",
-      "slug": "microsoft-infra"
-    },
-    {
-      "name": "IBM Infrastructure",
-      "slug": "ibm-infra"
-    },
-    {
-      "name": "Oracle Infrastructure",
-      "slug": "oracle-infra"
-    },
-    {
-      "name": "Siemens Infrastructure",
-      "slug": "siemens-infra"
-    },
-    {
-      "name": "BMW Infrastructure",
-      "slug": "bmw-infra"
-    },
-    {
-      "name": "Volkswagen Infrastructure",
-      "slug": "volkswagen-infra"
-    },
-    {
-      "name": "Deutsche Bank Infrastructure",
-      "slug": "deutsche-bank-infra"
-    },
-    {
-      "name": "Allianz Infrastructure",
-      "slug": "allianz-infra"
-    },
-    {
-      "name": "Adidas Infrastructure",
-      "slug": "adidas-infra"
-    },
-    {
-      "name": "Puma Infrastructure",
-      "slug": "puma-infra"
-    },
-    {
-      "name": "Nike Infrastructure",
-      "slug": "nike-infra"
-    },
-    {
-      "name": "Samsung Infrastructure",
-      "slug": "samsung-infra"
-    },
-    {
-      "name": "Sony Infrastructure",
-      "slug": "sony-infra"
-    },
-    {
-      "name": "Toyota Infrastructure",
-      "slug": "toyota-infra"
-    },
-    {
-      "name": "Shell Infrastructure",
-      "slug": "shell-infra"
-    }
-  ],
-  "virtualization/cluster-types/": [
-    {
-      "name": "VMware",
-      "slug": "vmware"
-    }
-  ],
-  "virtualization/clusters/": [
-    {
-      "name": "Munich Cluster A",
-      "type": "vmware",
-      "group": "coca-cola-infra",
-      "scope_type": "dcim.site",
-      "scope_id": "hq-munich"
-    },
-    {
-      "name": "Munich Cluster B",
-      "type": "vmware",
-      "group": "coca-cola-infra",
-      "scope_type": "dcim.site",
-      "scope_id": "hq-munich"
-    },
-    {
-      "name": "Berlin Cluster A",
-      "type": "vmware",
-      "group": "cisco-infra",
-      "scope_type": "dcim.site",
-      "scope_id": "hq-berlin"
-    },
-    {
-      "name": "Berlin Cluster B",
-      "type": "vmware",
-      "group": "cisco-infra",
-      "scope_type": "dcim.site",
-      "scope_id": "hq-berlin"
-    },
-    {
-      "name": "Cologne Cluster A",
-      "type": "vmware",
-      "group": "sap-infra",
-      "scope_type": "dcim.site",
-      "scope_id": "hq-cologne"
-    },
-    {
-      "name": "Cologne Cluster B",
-      "type": "vmware",
-      "group": "sap-infra",
-      "scope_type": "dcim.site",
-      "scope_id": "hq-cologne"
-    },
-    {
-      "name": "Dusseldorf Cluster A",
-      "type": "vmware",
-      "group": "google-infra",
-      "scope_type": "dcim.site",
-      "scope_id": "hq-dusseldorf"
-    },
-    {
-      "name": "Dusseldorf Cluster B",
-      "type": "vmware",
-      "group": "google-infra",
-      "scope_type": "dcim.site",
-      "scope_id": "hq-dusseldorf"
-    },
-    {
-      "name": "Dortmund Cluster A",
-      "type": "vmware",
-      "group": "amazon-infra",
-      "scope_type": "dcim.site",
-      "scope_id": "hq-dortmund"
-    },
-    {
-      "name": "Dortmund Cluster B",
-      "type": "vmware",
-      "group": "amazon-infra",
-      "scope_type": "dcim.site",
-      "scope_id": "hq-dortmund"
-    },
-    {
-      "name": "Vienna Cluster A",
-      "type": "vmware",
-      "group": "microsoft-infra",
-      "scope_type": "dcim.site",
-      "scope_id": "hq-vienna"
-    },
-    {
-      "name": "Vienna Cluster B",
-      "type": "vmware",
-      "group": "microsoft-infra",
-      "scope_type": "dcim.site",
-      "scope_id": "hq-vienna"
-    },
-    {
-      "name": "Amsterdam Cluster A",
-      "type": "vmware",
-      "group": "ibm-infra",
-      "scope_type": "dcim.site",
-      "scope_id": "hq-amsterdam"
-    },
-    {
-      "name": "Amsterdam Cluster B",
-      "type": "vmware",
-      "group": "ibm-infra",
-      "scope_type": "dcim.site",
-      "scope_id": "hq-amsterdam"
-    },
-    {
-      "name": "Paris Cluster A",
-      "type": "vmware",
-      "group": "oracle-infra",
-      "scope_type": "dcim.site",
-      "scope_id": "hq-paris"
-    },
-    {
-      "name": "Paris Cluster B",
-      "type": "vmware",
-      "group": "oracle-infra",
-      "scope_type": "dcim.site",
-      "scope_id": "hq-paris"
-    },
-    {
-      "name": "Madrid Cluster A",
-      "type": "vmware",
-      "group": "siemens-infra",
-      "scope_type": "dcim.site",
-      "scope_id": "hq-madrid"
-    },
-    {
-      "name": "Madrid Cluster B",
-      "type": "vmware",
-      "group": "siemens-infra",
-      "scope_type": "dcim.site",
-      "scope_id": "hq-madrid"
-    },
-    {
-      "name": "Rome Cluster A",
-      "type": "vmware",
-      "group": "bmw-infra",
-      "scope_type": "dcim.site",
-      "scope_id": "hq-rome"
-    },
-    {
-      "name": "Rome Cluster B",
-      "type": "vmware",
-      "group": "bmw-infra",
-      "scope_type": "dcim.site",
-      "scope_id": "hq-rome"
-    },
-    {
-      "name": "Warsaw Cluster A",
-      "type": "vmware",
-      "group": "volkswagen-infra",
-      "scope_type": "dcim.site",
-      "scope_id": "hq-warsaw"
-    },
-    {
-      "name": "Warsaw Cluster B",
-      "type": "vmware",
-      "group": "volkswagen-infra",
-      "scope_type": "dcim.site",
-      "scope_id": "hq-warsaw"
-    },
-    {
-      "name": "Budapest Cluster A",
-      "type": "vmware",
-      "group": "deutsche-bank-infra",
-      "scope_type": "dcim.site",
-      "scope_id": "hq-budapest"
-    },
-    {
-      "name": "Budapest Cluster B",
-      "type": "vmware",
-      "group": "deutsche-bank-infra",
-      "scope_type": "dcim.site",
-      "scope_id": "hq-budapest"
-    },
-    {
-      "name": "Stockholm Cluster A",
-      "type": "vmware",
-      "group": "allianz-infra",
-      "scope_type": "dcim.site",
-      "scope_id": "hq-stockholm"
-    },
-    {
-      "name": "Stockholm Cluster B",
-      "type": "vmware",
-      "group": "allianz-infra",
-      "scope_type": "dcim.site",
-      "scope_id": "hq-stockholm"
-    },
-    {
-      "name": "Dublin Cluster A",
-      "type": "vmware",
-      "group": "adidas-infra",
-      "scope_type": "dcim.site",
-      "scope_id": "hq-dublin"
-    },
-    {
-      "name": "Dublin Cluster B",
-      "type": "vmware",
-      "group": "adidas-infra",
-      "scope_type": "dcim.site",
-      "scope_id": "hq-dublin"
-    },
-    {
-      "name": "Athens Cluster A",
-      "type": "vmware",
-      "group": "puma-infra",
-      "scope_type": "dcim.site",
-      "scope_id": "hq-athens"
-    },
-    {
-      "name": "Athens Cluster B",
-      "type": "vmware",
-      "group": "puma-infra",
-      "scope_type": "dcim.site",
-      "scope_id": "hq-athens"
-    },
-    {
-      "name": "Singapore Cluster A",
-      "type": "vmware",
-      "group": "nike-infra",
-      "scope_type": "dcim.site",
-      "scope_id": "hq-singapore"
-    },
-    {
-      "name": "Singapore Cluster B",
-      "type": "vmware",
-      "group": "nike-infra",
-      "scope_type": "dcim.site",
-      "scope_id": "hq-singapore"
-    },
-    {
-      "name": "Sydney Cluster A",
-      "type": "vmware",
-      "group": "samsung-infra",
-      "scope_type": "dcim.site",
-      "scope_id": "hq-sydney"
-    },
-    {
-      "name": "Sydney Cluster B",
-      "type": "vmware",
-      "group": "samsung-infra",
-      "scope_type": "dcim.site",
-      "scope_id": "hq-sydney"
-    },
-    {
-      "name": "Chicago Cluster A",
-      "type": "vmware",
-      "group": "sony-infra",
-      "scope_type": "dcim.site",
-      "scope_id": "hq-chicago"
-    },
-    {
-      "name": "Chicago Cluster B",
-      "type": "vmware",
-      "group": "sony-infra",
-      "scope_type": "dcim.site",
-      "scope_id": "hq-chicago"
-    },
-    {
-      "name": "Seattle Cluster A",
-      "type": "vmware",
-      "group": "toyota-infra",
-      "scope_type": "dcim.site",
-      "scope_id": "hq-seattle"
-    },
-    {
-      "name": "Seattle Cluster B",
-      "type": "vmware",
-      "group": "toyota-infra",
-      "scope_type": "dcim.site",
-      "scope_id": "hq-seattle"
-    },
-    {
-      "name": "Miami Cluster A",
-      "type": "vmware",
-      "group": "shell-infra",
-      "scope_type": "dcim.site",
-      "scope_id": "hq-miami"
-    },
-    {
-      "name": "Miami Cluster B",
-      "type": "vmware",
-      "group": "shell-infra",
-      "scope_type": "dcim.site",
-      "scope_id": "hq-miami"
-    }
-  ],
   "virtualization/virtual-machines/": [
     {
       "name": "munich-vm-01",
-      "cluster": "Munich Cluster A"
+      "cluster": "Munich Cluster A",
+      "device": "Munich-SRV-01"
     },
     {
       "name": "munich-vm-02",
-      "cluster": "Munich Cluster A"
+      "cluster": "Munich Cluster A",
+      "device": "Munich-SRV-02"
     },
     {
       "name": "munich-vm-03",
-      "cluster": "Munich Cluster B"
+      "cluster": "Munich Cluster B",
+      "device": "Munich-SRV-03"
     },
     {
       "name": "munich-vm-04",
-      "cluster": "Munich Cluster B"
+      "cluster": "Munich Cluster B",
+      "device": "Munich-SRV-04"
     },
     {
       "name": "munich-vm-05",
@@ -4600,19 +4684,23 @@
     },
     {
       "name": "berlin-vm-01",
-      "cluster": "Berlin Cluster A"
+      "cluster": "Berlin Cluster A",
+      "device": "Berlin-SRV-01"
     },
     {
       "name": "berlin-vm-02",
-      "cluster": "Berlin Cluster A"
+      "cluster": "Berlin Cluster A",
+      "device": "Berlin-SRV-02"
     },
     {
       "name": "berlin-vm-03",
-      "cluster": "Berlin Cluster B"
+      "cluster": "Berlin Cluster B",
+      "device": "Berlin-SRV-03"
     },
     {
       "name": "berlin-vm-04",
-      "cluster": "Berlin Cluster B"
+      "cluster": "Berlin Cluster B",
+      "device": "Berlin-SRV-04"
     },
     {
       "name": "berlin-vm-05",
@@ -4624,19 +4712,23 @@
     },
     {
       "name": "cologne-vm-01",
-      "cluster": "Cologne Cluster A"
+      "cluster": "Cologne Cluster A",
+      "device": "Cologne-SRV-01"
     },
     {
       "name": "cologne-vm-02",
-      "cluster": "Cologne Cluster A"
+      "cluster": "Cologne Cluster A",
+      "device": "Cologne-SRV-02"
     },
     {
       "name": "cologne-vm-03",
-      "cluster": "Cologne Cluster B"
+      "cluster": "Cologne Cluster B",
+      "device": "Cologne-SRV-03"
     },
     {
       "name": "cologne-vm-04",
-      "cluster": "Cologne Cluster B"
+      "cluster": "Cologne Cluster B",
+      "device": "Cologne-SRV-04"
     },
     {
       "name": "cologne-vm-05",
@@ -4648,19 +4740,23 @@
     },
     {
       "name": "dusseldorf-vm-01",
-      "cluster": "Dusseldorf Cluster A"
+      "cluster": "Dusseldorf Cluster A",
+      "device": "Dusseldorf-SRV-01"
     },
     {
       "name": "dusseldorf-vm-02",
-      "cluster": "Dusseldorf Cluster A"
+      "cluster": "Dusseldorf Cluster A",
+      "device": "Dusseldorf-SRV-02"
     },
     {
       "name": "dusseldorf-vm-03",
-      "cluster": "Dusseldorf Cluster B"
+      "cluster": "Dusseldorf Cluster B",
+      "device": "Dusseldorf-SRV-03"
     },
     {
       "name": "dusseldorf-vm-04",
-      "cluster": "Dusseldorf Cluster B"
+      "cluster": "Dusseldorf Cluster B",
+      "device": "Dusseldorf-SRV-04"
     },
     {
       "name": "dusseldorf-vm-05",
@@ -4672,19 +4768,23 @@
     },
     {
       "name": "dortmund-vm-01",
-      "cluster": "Dortmund Cluster A"
+      "cluster": "Dortmund Cluster A",
+      "device": "Dortmund-SRV-01"
     },
     {
       "name": "dortmund-vm-02",
-      "cluster": "Dortmund Cluster A"
+      "cluster": "Dortmund Cluster A",
+      "device": "Dortmund-SRV-02"
     },
     {
       "name": "dortmund-vm-03",
-      "cluster": "Dortmund Cluster B"
+      "cluster": "Dortmund Cluster B",
+      "device": "Dortmund-SRV-03"
     },
     {
       "name": "dortmund-vm-04",
-      "cluster": "Dortmund Cluster B"
+      "cluster": "Dortmund Cluster B",
+      "device": "Dortmund-SRV-04"
     },
     {
       "name": "dortmund-vm-05",
@@ -4696,19 +4796,23 @@
     },
     {
       "name": "vienna-vm-01",
-      "cluster": "Vienna Cluster A"
+      "cluster": "Vienna Cluster A",
+      "device": "Vienna-SRV-01"
     },
     {
       "name": "vienna-vm-02",
-      "cluster": "Vienna Cluster A"
+      "cluster": "Vienna Cluster A",
+      "device": "Vienna-SRV-02"
     },
     {
       "name": "vienna-vm-03",
-      "cluster": "Vienna Cluster B"
+      "cluster": "Vienna Cluster B",
+      "device": "Vienna-SRV-03"
     },
     {
       "name": "vienna-vm-04",
-      "cluster": "Vienna Cluster B"
+      "cluster": "Vienna Cluster B",
+      "device": "Vienna-SRV-04"
     },
     {
       "name": "vienna-vm-05",
@@ -4720,19 +4824,23 @@
     },
     {
       "name": "amsterdam-vm-01",
-      "cluster": "Amsterdam Cluster A"
+      "cluster": "Amsterdam Cluster A",
+      "device": "Amsterdam-SRV-01"
     },
     {
       "name": "amsterdam-vm-02",
-      "cluster": "Amsterdam Cluster A"
+      "cluster": "Amsterdam Cluster A",
+      "device": "Amsterdam-SRV-02"
     },
     {
       "name": "amsterdam-vm-03",
-      "cluster": "Amsterdam Cluster B"
+      "cluster": "Amsterdam Cluster B",
+      "device": "Amsterdam-SRV-03"
     },
     {
       "name": "amsterdam-vm-04",
-      "cluster": "Amsterdam Cluster B"
+      "cluster": "Amsterdam Cluster B",
+      "device": "Amsterdam-SRV-04"
     },
     {
       "name": "amsterdam-vm-05",
@@ -4744,19 +4852,23 @@
     },
     {
       "name": "paris-vm-01",
-      "cluster": "Paris Cluster A"
+      "cluster": "Paris Cluster A",
+      "device": "Paris-SRV-01"
     },
     {
       "name": "paris-vm-02",
-      "cluster": "Paris Cluster A"
+      "cluster": "Paris Cluster A",
+      "device": "Paris-SRV-02"
     },
     {
       "name": "paris-vm-03",
-      "cluster": "Paris Cluster B"
+      "cluster": "Paris Cluster B",
+      "device": "Paris-SRV-03"
     },
     {
       "name": "paris-vm-04",
-      "cluster": "Paris Cluster B"
+      "cluster": "Paris Cluster B",
+      "device": "Paris-SRV-04"
     },
     {
       "name": "paris-vm-05",
@@ -4768,19 +4880,23 @@
     },
     {
       "name": "madrid-vm-01",
-      "cluster": "Madrid Cluster A"
+      "cluster": "Madrid Cluster A",
+      "device": "Madrid-SRV-01"
     },
     {
       "name": "madrid-vm-02",
-      "cluster": "Madrid Cluster A"
+      "cluster": "Madrid Cluster A",
+      "device": "Madrid-SRV-02"
     },
     {
       "name": "madrid-vm-03",
-      "cluster": "Madrid Cluster B"
+      "cluster": "Madrid Cluster B",
+      "device": "Madrid-SRV-03"
     },
     {
       "name": "madrid-vm-04",
-      "cluster": "Madrid Cluster B"
+      "cluster": "Madrid Cluster B",
+      "device": "Madrid-SRV-04"
     },
     {
       "name": "madrid-vm-05",
@@ -4792,19 +4908,23 @@
     },
     {
       "name": "rome-vm-01",
-      "cluster": "Rome Cluster A"
+      "cluster": "Rome Cluster A",
+      "device": "Rome-SRV-01"
     },
     {
       "name": "rome-vm-02",
-      "cluster": "Rome Cluster A"
+      "cluster": "Rome Cluster A",
+      "device": "Rome-SRV-02"
     },
     {
       "name": "rome-vm-03",
-      "cluster": "Rome Cluster B"
+      "cluster": "Rome Cluster B",
+      "device": "Rome-SRV-03"
     },
     {
       "name": "rome-vm-04",
-      "cluster": "Rome Cluster B"
+      "cluster": "Rome Cluster B",
+      "device": "Rome-SRV-04"
     },
     {
       "name": "rome-vm-05",
@@ -4816,19 +4936,23 @@
     },
     {
       "name": "warsaw-vm-01",
-      "cluster": "Warsaw Cluster A"
+      "cluster": "Warsaw Cluster A",
+      "device": "Warsaw-SRV-01"
     },
     {
       "name": "warsaw-vm-02",
-      "cluster": "Warsaw Cluster A"
+      "cluster": "Warsaw Cluster A",
+      "device": "Warsaw-SRV-02"
     },
     {
       "name": "warsaw-vm-03",
-      "cluster": "Warsaw Cluster B"
+      "cluster": "Warsaw Cluster B",
+      "device": "Warsaw-SRV-03"
     },
     {
       "name": "warsaw-vm-04",
-      "cluster": "Warsaw Cluster B"
+      "cluster": "Warsaw Cluster B",
+      "device": "Warsaw-SRV-04"
     },
     {
       "name": "warsaw-vm-05",
@@ -4840,19 +4964,23 @@
     },
     {
       "name": "budapest-vm-01",
-      "cluster": "Budapest Cluster A"
+      "cluster": "Budapest Cluster A",
+      "device": "Budapest-SRV-01"
     },
     {
       "name": "budapest-vm-02",
-      "cluster": "Budapest Cluster A"
+      "cluster": "Budapest Cluster A",
+      "device": "Budapest-SRV-02"
     },
     {
       "name": "budapest-vm-03",
-      "cluster": "Budapest Cluster B"
+      "cluster": "Budapest Cluster B",
+      "device": "Budapest-SRV-03"
     },
     {
       "name": "budapest-vm-04",
-      "cluster": "Budapest Cluster B"
+      "cluster": "Budapest Cluster B",
+      "device": "Budapest-SRV-04"
     },
     {
       "name": "budapest-vm-05",
@@ -4864,19 +4992,23 @@
     },
     {
       "name": "stockholm-vm-01",
-      "cluster": "Stockholm Cluster A"
+      "cluster": "Stockholm Cluster A",
+      "device": "Stockholm-SRV-01"
     },
     {
       "name": "stockholm-vm-02",
-      "cluster": "Stockholm Cluster A"
+      "cluster": "Stockholm Cluster A",
+      "device": "Stockholm-SRV-02"
     },
     {
       "name": "stockholm-vm-03",
-      "cluster": "Stockholm Cluster B"
+      "cluster": "Stockholm Cluster B",
+      "device": "Stockholm-SRV-03"
     },
     {
       "name": "stockholm-vm-04",
-      "cluster": "Stockholm Cluster B"
+      "cluster": "Stockholm Cluster B",
+      "device": "Stockholm-SRV-04"
     },
     {
       "name": "stockholm-vm-05",
@@ -4888,19 +5020,23 @@
     },
     {
       "name": "dublin-vm-01",
-      "cluster": "Dublin Cluster A"
+      "cluster": "Dublin Cluster A",
+      "device": "Dublin-SRV-01"
     },
     {
       "name": "dublin-vm-02",
-      "cluster": "Dublin Cluster A"
+      "cluster": "Dublin Cluster A",
+      "device": "Dublin-SRV-02"
     },
     {
       "name": "dublin-vm-03",
-      "cluster": "Dublin Cluster B"
+      "cluster": "Dublin Cluster B",
+      "device": "Dublin-SRV-03"
     },
     {
       "name": "dublin-vm-04",
-      "cluster": "Dublin Cluster B"
+      "cluster": "Dublin Cluster B",
+      "device": "Dublin-SRV-04"
     },
     {
       "name": "dublin-vm-05",
@@ -4912,19 +5048,23 @@
     },
     {
       "name": "athens-vm-01",
-      "cluster": "Athens Cluster A"
+      "cluster": "Athens Cluster A",
+      "device": "Athens-SRV-01"
     },
     {
       "name": "athens-vm-02",
-      "cluster": "Athens Cluster A"
+      "cluster": "Athens Cluster A",
+      "device": "Athens-SRV-02"
     },
     {
       "name": "athens-vm-03",
-      "cluster": "Athens Cluster B"
+      "cluster": "Athens Cluster B",
+      "device": "Athens-SRV-03"
     },
     {
       "name": "athens-vm-04",
-      "cluster": "Athens Cluster B"
+      "cluster": "Athens Cluster B",
+      "device": "Athens-SRV-04"
     },
     {
       "name": "athens-vm-05",
@@ -4936,19 +5076,23 @@
     },
     {
       "name": "singapore-vm-01",
-      "cluster": "Singapore Cluster A"
+      "cluster": "Singapore Cluster A",
+      "device": "Singapore-SRV-01"
     },
     {
       "name": "singapore-vm-02",
-      "cluster": "Singapore Cluster A"
+      "cluster": "Singapore Cluster A",
+      "device": "Singapore-SRV-02"
     },
     {
       "name": "singapore-vm-03",
-      "cluster": "Singapore Cluster B"
+      "cluster": "Singapore Cluster B",
+      "device": "Singapore-SRV-03"
     },
     {
       "name": "singapore-vm-04",
-      "cluster": "Singapore Cluster B"
+      "cluster": "Singapore Cluster B",
+      "device": "Singapore-SRV-04"
     },
     {
       "name": "singapore-vm-05",
@@ -4960,19 +5104,23 @@
     },
     {
       "name": "sydney-vm-01",
-      "cluster": "Sydney Cluster A"
+      "cluster": "Sydney Cluster A",
+      "device": "Sydney-SRV-01"
     },
     {
       "name": "sydney-vm-02",
-      "cluster": "Sydney Cluster A"
+      "cluster": "Sydney Cluster A",
+      "device": "Sydney-SRV-02"
     },
     {
       "name": "sydney-vm-03",
-      "cluster": "Sydney Cluster B"
+      "cluster": "Sydney Cluster B",
+      "device": "Sydney-SRV-03"
     },
     {
       "name": "sydney-vm-04",
-      "cluster": "Sydney Cluster B"
+      "cluster": "Sydney Cluster B",
+      "device": "Sydney-SRV-04"
     },
     {
       "name": "sydney-vm-05",
@@ -4984,19 +5132,23 @@
     },
     {
       "name": "chicago-vm-01",
-      "cluster": "Chicago Cluster A"
+      "cluster": "Chicago Cluster A",
+      "device": "Chicago-SRV-01"
     },
     {
       "name": "chicago-vm-02",
-      "cluster": "Chicago Cluster A"
+      "cluster": "Chicago Cluster A",
+      "device": "Chicago-SRV-02"
     },
     {
       "name": "chicago-vm-03",
-      "cluster": "Chicago Cluster B"
+      "cluster": "Chicago Cluster B",
+      "device": "Chicago-SRV-03"
     },
     {
       "name": "chicago-vm-04",
-      "cluster": "Chicago Cluster B"
+      "cluster": "Chicago Cluster B",
+      "device": "Chicago-SRV-04"
     },
     {
       "name": "chicago-vm-05",
@@ -5008,19 +5160,23 @@
     },
     {
       "name": "seattle-vm-01",
-      "cluster": "Seattle Cluster A"
+      "cluster": "Seattle Cluster A",
+      "device": "Seattle-SRV-01"
     },
     {
       "name": "seattle-vm-02",
-      "cluster": "Seattle Cluster A"
+      "cluster": "Seattle Cluster A",
+      "device": "Seattle-SRV-02"
     },
     {
       "name": "seattle-vm-03",
-      "cluster": "Seattle Cluster B"
+      "cluster": "Seattle Cluster B",
+      "device": "Seattle-SRV-03"
     },
     {
       "name": "seattle-vm-04",
-      "cluster": "Seattle Cluster B"
+      "cluster": "Seattle Cluster B",
+      "device": "Seattle-SRV-04"
     },
     {
       "name": "seattle-vm-05",
@@ -5032,19 +5188,23 @@
     },
     {
       "name": "miami-vm-01",
-      "cluster": "Miami Cluster A"
+      "cluster": "Miami Cluster A",
+      "device": "Miami-SRV-01"
     },
     {
       "name": "miami-vm-02",
-      "cluster": "Miami Cluster A"
+      "cluster": "Miami Cluster A",
+      "device": "Miami-SRV-02"
     },
     {
       "name": "miami-vm-03",
-      "cluster": "Miami Cluster B"
+      "cluster": "Miami Cluster B",
+      "device": "Miami-SRV-03"
     },
     {
       "name": "miami-vm-04",
-      "cluster": "Miami Cluster B"
+      "cluster": "Miami Cluster B",
+      "device": "Miami-SRV-04"
     },
     {
       "name": "miami-vm-05",
@@ -10314,7 +10474,32 @@
       "bcm": 1
     }
   ],
-  "plugins/service-specification/device-service-infos/": [],
+  "plugins/service-specification/device-service-infos/": [
+    {
+      "device": "Munich-FW-01",
+      "application_services": [
+        "Managed Email - Coca Cola (Application Service)"
+      ]
+    },
+    {
+      "device": "Berlin-FW-01",
+      "application_services": [
+        "Unified Communications - Cisco (Application Service)"
+      ]
+    },
+    {
+      "device": "Munich-SW-01",
+      "application_services": [
+        "Cloud Backup - Coca Cola (Application Service)"
+      ]
+    },
+    {
+      "device": "Berlin-SW-01",
+      "application_services": [
+        "Disaster Recovery - Cisco (Application Service)"
+      ]
+    }
+  ],
   "plugins/service-specification/cluster-service-infos/": [],
   "plugins/service-specification/cluster-group-service-infos/": [],
   "plugins/service-specification/virtual-machine-service-infos/": [
