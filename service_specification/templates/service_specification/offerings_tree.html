@@ -3,7 +3,7 @@
 {% load i18n %}
 {% load static %}
 
-{% block title %}{% trans "Service Offering Tree" %}{% endblock %}
+{% block title %}{{ page_title }}{% endblock %}
 
 {% block tabs %}
   <ul class="nav nav-tabs">
@@ -71,7 +71,7 @@
               <button type="submit" class="btn btn-primary">
                 <span class="mdi mdi-filter" aria-hidden="true"></span> {% trans "Filter" %}
               </button>
-              <a href="{% url 'plugins:service_specification:offerings_tree' %}" class="btn btn-outline-secondary">
+              <a href="{% url clear_url_name %}" class="btn btn-outline-secondary">
                 {% trans "Clear" %}
               </a>
             </div>
@@ -96,6 +96,13 @@
           offering: { background: 'rgba(255, 152, 0, 0.18)', border: '#ff9800' },
           appservice: { background: 'rgba(156, 39, 176, 0.18)', border: '#9c27b0' },
           technicalci: { background: 'rgba(0, 150, 136, 0.18)', border: '#009688' },
+          // Product View only (views.ProductView / _extend_ci_infra): the
+          // synthetic Physical/Logical/Virtualization category labels —
+          // neutral grey since they're not real CMDB objects, unlike every
+          // other node here (including related Devices/Clusters/etc. one
+          // or more hops out from a Technical CI, which reuse 'technicalci'
+          // above since they're genuinely the same kind of thing).
+          relation: { background: 'rgba(158, 158, 158, 0.18)', border: '#9e9e9e' },
         };
 
         // NetBox itself sets data-bs-theme="dark"/"light" on <html> (see

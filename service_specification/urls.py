@@ -44,4 +44,5 @@ urlpatterns = [
     # are wired directly rather than via get_model_urls().
     path('reports/tenants/', views.TenantReportView.as_view(), name='tenant_report'),
     path('reports/offerings-tree/', views.OfferingsTreeView.as_view(), name='offerings_tree'),
+    path('reports/product-view/', views.ProductView.as_view(), name='product_view'),
 ]

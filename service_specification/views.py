@@ -593,25 +593,37 @@ class OfferingsTreeView(TemplateView):
     heavy lifting here is just producing vis-network's nodes/edges JSON
     shape; the underlying tree traversal/filtering/pruning in _build_tree()
     is unchanged from before.
+
+    page_title/clear_url_name/extend_ci are class attributes, not
+    hardcoded in get(), specifically so ProductView (below) can be a thin
+    subclass that only overrides these three — same tree, same filters,
+    same template, the *only* difference is what (if anything) gets drawn
+    below each Technical CI. See _flatten_to_graph's own docstring for
+    what extend_ci is handed.
     """
 
     template_name = 'service_specification/offerings_tree.html'
+    page_title = 'Service Offering Tree'
+    clear_url_name = 'plugins:service_specification:offerings_tree'
+    extend_ci = None
 
     def get(self, request, *args, **kwargs):
         form = forms.OfferingsTreeFilterForm(request.GET or None)
         filters = form.cleaned_data if form.is_valid() else {}
-        nodes, edges = self._flatten_to_graph(self._build_tree(filters))
+        nodes, edges = self._flatten_to_graph(self._build_tree(filters), extend_ci=self.extend_ci)
         return self.render_to_response(
             {
                 'filter_form': form,
                 'has_results': bool(nodes),
                 'nodes_json': json.dumps(nodes),
                 'edges_json': json.dumps(edges),
+                'page_title': self.page_title,
+                'clear_url_name': self.clear_url_name,
             }
         )
 
     @staticmethod
-    def _flatten_to_graph(tree):
+    def _flatten_to_graph(tree, extend_ci=None):
         """Walk _build_tree()'s nested (portfolio, [(service, [(offering,
         app_service_or_None, [(ci, type_label, icon_class), ...]), ...]),
         ...]) structure into vis-network's flat nodes/edges lists, laying
@@ -640,6 +652,17 @@ class OfferingsTreeView(TemplateView):
         that also points to it — vis.DataSet.add() would raise on a
         duplicate id if it were re-added, and repositioning it a second
         time makes no sense anyway since it's the same object on screen.
+
+        `extend_ci`, if given, is called as `extend_ci(ci, ci_id, level,
+        place=..., add_edge=..., take_slot=..., claim_x=..., positions=...)`
+        immediately after each Technical CI is first placed — see
+        ProductView, which uses this to keep the graph going below the
+        Technical CI row into real infrastructure relationships (cabling,
+        shared subnets, cluster membership). It's handed the same
+        closures/state every other level already uses, so collision
+        avoidance and shared-node dedup work identically for whatever it
+        adds. Service View itself passes nothing, so its own output is
+        completely unaffected by this hook's existence.
         """
         LEVEL_HEIGHT = 120
         NODE_GAP = 60
@@ -649,7 +672,7 @@ class OfferingsTreeView(TemplateView):
         edges = []
         seen_edges = set()
         positions = {}  # node_id -> x (already-placed nodes, shared or not)
-        occupied_x = {}  # group -> set of x already claimed by that row
+        occupied_x = {}  # level -> set of x already claimed by that row
         next_x = 0.0
 
         def estimate_width(name, type_label, extra_line):
@@ -666,7 +689,7 @@ class OfferingsTreeView(TemplateView):
                 lines.append(len(extra_line) * 6.5)
             return max(120.0, max(lines)) + 24
 
-        def place(node_id, name, group, obj, x, type_label=None, extra_line=None):
+        def place(node_id, name, group, obj, x, level, type_label=None, extra_line=None):
             # Two-line on-node label: object type on top, name below, plus
             # an optional third line (currently just Service Offering's
             # Customer). <code>/<b>/<i> are vis-network's own
@@ -686,10 +709,13 @@ class OfferingsTreeView(TemplateView):
                     'id': node_id,
                     'label': label,
                     'group': group,
-                    'url': obj.get_absolute_url(),
+                    # obj is None for synthetic, non-database nodes (Product
+                    # View's Physical/Logical/Virtualization category
+                    # labels — see ProductView) — nothing to link to.
+                    'url': obj.get_absolute_url() if obj else None,
                     'title': title,
                     'x': x,
-                    'y': LEVELS[group] * LEVEL_HEIGHT,
+                    'y': level * LEVEL_HEIGHT,
                     # y stays pinned — that's what keeps every node of a
                     # type on the same row — but x is left free so users
                     # can drag nodes sideways (vis-network's `fixed` blocks
@@ -706,7 +732,7 @@ class OfferingsTreeView(TemplateView):
                 seen_edges.add(key)
                 edges.append({'from': from_id, 'to': to_id})
 
-        def claim_x(group, x, name, type_label, extra_line):
+        def claim_x(level, x, name, type_label, extra_line):
             # A parent's x is normally the midpoint of its own children's
             # span — but two *different* parents on the same row (e.g. two
             # Application Services) can legitimately share the exact same
@@ -720,8 +746,12 @@ class OfferingsTreeView(TemplateView):
             # that one pair — everything from Application Service upward
             # collapses onto a single x. Detect same-row collisions and
             # give the second (and any further) node its own fresh slot
-            # instead of silently overlapping.
-            claimed = occupied_x.setdefault(group, set())
+            # instead of silently overlapping. Scoped by `level`, not
+            # `group`: Product View reuses the 'technicalci' group at
+            # several different levels (a Device can be the tree's own
+            # anchor at one level and someone else's related CI two rows
+            # down), and only same-row nodes can ever actually overlap.
+            claimed = occupied_x.setdefault(level, set())
             if x in claimed:
                 x = take_slot(name, type_label, extra_line)
             claimed.add(x)
@@ -749,7 +779,18 @@ class OfferingsTreeView(TemplateView):
             if ci_id not in positions:
                 x = take_slot(ci.name, type_label, None)
                 positions[ci_id] = x
-                place(ci_id, ci.name, 'technicalci', ci, x, type_label)
+                place(ci_id, ci.name, 'technicalci', ci, x, LEVELS['technicalci'], type_label)
+                if extend_ci:
+                    extend_ci(
+                        ci,
+                        ci_id,
+                        LEVELS['technicalci'],
+                        place=place,
+                        add_edge=add_edge,
+                        take_slot=take_slot,
+                        claim_x=claim_x,
+                        positions=positions,
+                    )
             return ci_id
 
         def layout_offering(offering, app_service, technical_cis):
@@ -780,16 +821,33 @@ class OfferingsTreeView(TemplateView):
                             add_edge(app_service_id, ci_id)
                         ci_xs = [positions[ci_id] for ci_id in ci_ids]
                         app_x = (min(ci_xs) + max(ci_xs)) / 2
-                        app_x = claim_x('appservice', app_x, app_service.name, 'Application Service', None)
+                        app_x = claim_x(LEVELS['appservice'], app_x, app_service.name, 'Application Service', None)
                     else:
                         app_x = take_slot(app_service.name, 'Application Service', None)
                     positions[app_service_id] = app_x
-                    place(app_service_id, app_service.name, 'appservice', app_service, app_x, 'Application Service')
+                    place(
+                        app_service_id,
+                        app_service.name,
+                        'appservice',
+                        app_service,
+                        app_x,
+                        LEVELS['appservice'],
+                        'Application Service',
+                    )
                 x = positions[app_service_id]
                 add_edge(offering_id, app_service_id)
 
             positions[offering_id] = x
-            place(offering_id, offering.name, 'offering', offering, x, 'Service Offering', tenant_names)
+            place(
+                offering_id,
+                offering.name,
+                'offering',
+                offering,
+                x,
+                LEVELS['offering'],
+                'Service Offering',
+                tenant_names,
+            )
             return offering_id
 
         def layout_service(service, offerings):
@@ -803,12 +861,12 @@ class OfferingsTreeView(TemplateView):
                     add_edge(service_id, offering_id)
                 offering_xs = [positions[offering_id] for offering_id in offering_ids]
                 x = (min(offering_xs) + max(offering_xs)) / 2
-                x = claim_x('service', x, service.name, 'Service', None)
+                x = claim_x(LEVELS['service'], x, service.name, 'Service', None)
             else:
                 x = take_slot(service.name, 'Service', None)
 
             positions[service_id] = x
-            place(service_id, service.name, 'service', service, x, 'Service')
+            place(service_id, service.name, 'service', service, x, LEVELS['service'], 'Service')
             return service_id
 
         def layout_portfolio(portfolio, services):
@@ -822,12 +880,12 @@ class OfferingsTreeView(TemplateView):
                     add_edge(portfolio_id, service_id)
                 service_xs = [positions[service_id] for service_id in service_ids]
                 x = (min(service_xs) + max(service_xs)) / 2
-                x = claim_x('portfolio', x, portfolio.name, 'Portfolio', None)
+                x = claim_x(LEVELS['portfolio'], x, portfolio.name, 'Portfolio', None)
             else:
                 x = take_slot(portfolio.name, 'Portfolio', None)
 
             positions[portfolio_id] = x
-            place(portfolio_id, portfolio.name, 'portfolio', portfolio, x, 'Portfolio')
+            place(portfolio_id, portfolio.name, 'portfolio', portfolio, x, LEVELS['portfolio'], 'Portfolio')
             return portfolio_id
 
         for portfolio, services in tree:
@@ -931,3 +989,194 @@ class OfferingsTreeView(TemplateView):
                 tree.append((portfolio_obj, service_nodes))
 
         return tree
+
+
+def _extend_ci_infra(ci, ci_id, level, *, place, add_edge, take_slot, claim_x, positions):
+    """extend_ci hook for ProductView (see OfferingsTreeView._flatten_to_graph
+    and ProductView below) — draws each Technical CI's real infrastructure
+    relationships below it. Dispatches on the CI's actual model:
+
+    Virtual Machine: its host Device ("Server") and its Cluster's
+    ClusterGroup as siblings one row down, its Cluster one row below that
+    (centered over the *other* Devices sharing that Cluster) — including
+    the Server<->ClusterGroup<->Cluster cross-edges, not just a strict
+    tree (Cluster has two real parents here: Server and ClusterGroup).
+
+    Cluster: its own member Devices, plus its ClusterGroup — also drawn
+    centered over that same member list (claim_x bumps it to its own slot
+    if that exact centroid is already taken by the Cluster itself).
+
+    Cluster Group: each member Cluster, each in turn centered over its own
+    member Devices.
+
+    Device: up to three labeled category rows (Physical/Logical/
+    Virtualization — synthetic pseudo-nodes, no underlying object), each
+    only added if it would have at least one child:
+      - Physical: Devices this one is directly cabled to (Interface.link_peers).
+      - Logical: Devices with an interface IP in the same subnet
+        (IPAddress.get_related_ips() — NetBox's own "same subnet/VRF" method).
+      - Virtualization: this Device's own Cluster, if it belongs to one,
+        itself centered over the *other* Devices in that Cluster.
+
+    Every node/edge added here goes through the same place()/add_edge()/
+    take_slot()/claim_x()/positions primitives _flatten_to_graph's own
+    levels use, so shared objects (e.g. two different CIs' branches both
+    reaching the same Cluster) dedup automatically — a second reference
+    just reuses the first one's already-computed position instead of
+    re-placing or re-centering it.
+    """
+
+    def leaf(obj, group, type_label, lvl):
+        node_id = f'{group}-{obj.pk}'
+        if node_id not in positions:
+            x = take_slot(obj.name, type_label, None)
+            positions[node_id] = x
+            place(node_id, obj.name, 'technicalci', obj, x, lvl, type_label)
+        return node_id
+
+    def centered(node_id, name, group, obj, child_ids, lvl, type_label):
+        if node_id not in positions:
+            if child_ids:
+                child_xs = [positions[c] for c in child_ids]
+                x = (min(child_xs) + max(child_xs)) / 2
+                x = claim_x(lvl, x, name, type_label, None)
+            else:
+                x = take_slot(name, type_label, None)
+            positions[node_id] = x
+            place(node_id, name, group, obj, x, lvl, type_label)
+        return node_id
+
+    def category(label, child_ids, lvl):
+        # Synthetic pseudo-node — no underlying database object, no URL
+        # (see place()). Scoped per-CI, not just per-label: the same
+        # "Physical" label recurs under every Device CI in the graph.
+        return centered(f'{ci_id}-{label.lower()}', label, 'relation', None, child_ids, lvl, None)
+
+    if isinstance(ci, VirtualMachine):
+        server_id = leaf(ci.device, 'device', 'Device', level + 1) if ci.device else None
+        if server_id:
+            add_edge(ci_id, server_id)
+
+        group_id = None
+        if ci.cluster and ci.cluster.group:
+            group_id = leaf(ci.cluster.group, 'clustergroup', 'Cluster Group', level + 1)
+            add_edge(ci_id, group_id)
+
+        if ci.cluster:
+            other_members = Device.objects.filter(cluster=ci.cluster)
+            if ci.device_id:
+                other_members = other_members.exclude(pk=ci.device_id)
+            member_ids = [leaf(d, 'device', 'Device', level + 3) for d in other_members]
+            cluster_id = centered(
+                f'cluster-{ci.cluster.pk}',
+                ci.cluster.name,
+                'technicalci',
+                ci.cluster,
+                member_ids,
+                level + 2,
+                'Virtualization Cluster',
+            )
+            if server_id:
+                add_edge(server_id, cluster_id)
+            if group_id:
+                add_edge(group_id, cluster_id)
+                if server_id:
+                    add_edge(group_id, server_id)
+            for member_id in member_ids:
+                add_edge(cluster_id, member_id)
+
+    elif isinstance(ci, Cluster):
+        member_ids = [leaf(d, 'device', 'Device', level + 1) for d in Device.objects.filter(cluster=ci)]
+        for member_id in member_ids:
+            add_edge(ci_id, member_id)
+        if ci.group:
+            group_id = centered(
+                f'clustergroup-{ci.group.pk}',
+                ci.group.name,
+                'technicalci',
+                ci.group,
+                member_ids,
+                level + 1,
+                'Cluster Group',
+            )
+            add_edge(ci_id, group_id)
+            for member_id in member_ids:
+                add_edge(group_id, member_id)
+
+    elif isinstance(ci, ClusterGroup):
+        for cluster in Cluster.objects.filter(group=ci):
+            member_ids = [leaf(d, 'device', 'Device', level + 2) for d in Device.objects.filter(cluster=cluster)]
+            cluster_id = centered(
+                f'cluster-{cluster.pk}',
+                cluster.name,
+                'technicalci',
+                cluster,
+                member_ids,
+                level + 1,
+                'Virtualization Cluster',
+            )
+            add_edge(ci_id, cluster_id)
+            for member_id in member_ids:
+                add_edge(cluster_id, member_id)
+
+    elif isinstance(ci, Device):
+        interfaces = list(ci.interfaces.all())
+
+        connected = {}
+        for iface in interfaces:
+            for peer in iface.link_peers:
+                peer_device = getattr(peer, 'device', None)
+                if peer_device and peer_device.pk != ci.pk:
+                    connected[peer_device.pk] = peer_device
+        if connected:
+            conn_ids = [leaf(d, 'device', 'Device', level + 2) for d in connected.values()]
+            physical_id = category('Physical', conn_ids, level + 1)
+            add_edge(ci_id, physical_id)
+            for conn_id in conn_ids:
+                add_edge(physical_id, conn_id)
+
+        same_subnet = {}
+        for iface in interfaces:
+            for ip in iface.ip_addresses.all():
+                for related_ip in ip.get_related_ips():
+                    related_device = getattr(related_ip.assigned_object, 'device', None)
+                    if related_device and related_device.pk != ci.pk:
+                        same_subnet[related_device.pk] = related_device
+        if same_subnet:
+            subnet_ids = [leaf(d, 'device', 'Device', level + 2) for d in same_subnet.values()]
+            logical_id = category('Logical', subnet_ids, level + 1)
+            add_edge(ci_id, logical_id)
+            for subnet_id in subnet_ids:
+                add_edge(logical_id, subnet_id)
+
+        if ci.cluster:
+            other_members = Device.objects.filter(cluster=ci.cluster).exclude(pk=ci.pk)
+            member_ids = [leaf(d, 'device', 'Device', level + 3) for d in other_members]
+            cluster_id = centered(
+                f'cluster-{ci.cluster.pk}',
+                ci.cluster.name,
+                'technicalci',
+                ci.cluster,
+                member_ids,
+                level + 2,
+                'Virtualization Cluster',
+            )
+            virtualization_id = category('Virtualization', [cluster_id], level + 1)
+            add_edge(ci_id, virtualization_id)
+            add_edge(virtualization_id, cluster_id)
+            for member_id in member_ids:
+                add_edge(cluster_id, member_id)
+
+
+class ProductView(OfferingsTreeView):
+    """Same Portfolio -> Service -> Service Offering -> Application Service
+    -> Technical CI graph as OfferingsTreeView — same tree-building, same
+    filters (forms.OfferingsTreeFilterForm), same template, all inherited
+    unchanged — except the graph keeps going below each Technical CI into
+    its real infrastructure relationships. See _extend_ci_infra for what
+    gets drawn there.
+    """
+
+    page_title = 'Product View'
+    clear_url_name = 'plugins:service_specification:product_view'
+    extend_ci = staticmethod(_extend_ci_infra)

@@ -33,7 +33,11 @@
       "Read(//Users/andrej.hyben/Documents/Git.nosync/**)",
       "Bash(find /Users/andrej.hyben/Documents/Git.nosync/netbox-certificate-plugin/ci -type f | sort)",
       "Read(//Users/andrej.hyben/Documents/Git.nosync/netbox-certificate-plugin/ci/**)",
-      "Read(//Users/andrej.hyben/Documents/Git.nosync/netbox-certificate-plugin/ci/docker/**)"
+      "Read(//Users/andrej.hyben/Documents/Git.nosync/netbox-certificate-plugin/ci/docker/**)",
+      "Bash(python3 -m py_compile service_specification/views.py service_specification/urls.py service_specification/navigation.py)",
+      "Bash(python3 -m ruff check service_specification/views.py service_specification/urls.py service_specification/navigation.py)",
+      "Bash(python3 -m ruff format --check service_specification/views.py service_specification/urls.py service_specification/navigation.py)",
+      "Bash(python3 /private/tmp/claude-501/-Users-andrej-hyben-Documents-Git-nosync-netbox-service-offerings-plugin/011ecd7d-ade9-4717-ac6b-f5cd59f86f5b/scratchpad/verify_product_view.py)"
     ]
   }
 }
