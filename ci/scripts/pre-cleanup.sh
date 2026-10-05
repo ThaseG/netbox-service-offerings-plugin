@@ -6,8 +6,7 @@
 # migrations/0001_initial.py. There is never an "already migrated" instance
 # to preserve, which is also why this plugin hand-edits 0001_initial.py in
 # place for schema changes instead of accumulating incremental migrations —
-# see that file's own header comment. (The acme.sh certificate directory is
-# untouched; TLS certs aren't part of the app stack's data.)
+# see that file's own header comment.
 set -euo pipefail
 
 # .. here is ci/ (this script lives in ci/scripts/), not the repo root

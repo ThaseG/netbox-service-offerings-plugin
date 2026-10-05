@@ -6,8 +6,8 @@ against when showcasing/testing it manually.
 
 Every CI deploy wipes the database (ci/scripts/pre-cleanup.sh), so this
 always runs against an empty instance — no need to worry about existing
-data or idempotency. Run after smoke-test.sh, against the same live HTTPS
-instance and superuser token.
+data or idempotency. Run after smoke-test.sh, against the same live
+instance (NETBOX_URL, default http://localhost:8080) and superuser token.
 
 Covers core NetBox inventory (contacts, sites, devices, clusters, VMs) plus
 the Service Specification plugin's own objects (lookup values, one
@@ -280,7 +280,7 @@ def create_all(data):
 
 def main():
     global BASE_URL, API_AUTH_HEADER
-    BASE_URL = f'https://{env("NETBOX_DOMAIN")}'
+    BASE_URL = os.environ.get('NETBOX_URL', 'http://localhost:8080').rstrip('/')
     # Same v2-token bearer scheme as smoke-test.sh: Bearer nbt_<key>.<secret>
     API_AUTH_HEADER = f'Bearer nbt_{env("NETBOX_SUPERUSER_API_KEY")}.{env("NETBOX_SUPERUSER_API_TOKEN")}'
 

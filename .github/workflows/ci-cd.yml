@@ -12,8 +12,8 @@ on:
   workflow_dispatch: {}
 
 concurrency:
-  # Shared with renew-cert.yml: both touch docker compose / the nginx
-  # container on the same self-hosted runner, so they must not overlap.
+  # Deploys share the single self-hosted runner's docker compose stack and
+  # host port 8080, so they must not overlap.
   group: netbox-deploy
   cancel-in-progress: false
 
@@ -47,7 +47,7 @@ jobs:
           cat > ci/docker/.env <<EOF
           NETBOX_VERSION=${NETBOX_VERSION}
           NETBOX_DOMAIN=${{ vars.NETBOX_DOMAIN }}
-          ACME_EMAIL=${{ vars.ACME_EMAIL }}
+          NETBOX_SUPERUSER_EMAIL=${{ vars.NETBOX_SUPERUSER_EMAIL }}
           NETBOX_SECRET_KEY=${{ secrets.NETBOX_SECRET_KEY }}
           POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
           REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }}
@@ -153,7 +153,7 @@ jobs:
           cat > ci/docker/.env <<EOF
           NETBOX_VERSION=${NETBOX_VERSION}
           NETBOX_DOMAIN=${{ vars.NETBOX_DOMAIN }}
-          ACME_EMAIL=${{ vars.ACME_EMAIL }}
+          NETBOX_SUPERUSER_EMAIL=${{ vars.NETBOX_SUPERUSER_EMAIL }}
           NETBOX_SECRET_KEY=${{ secrets.NETBOX_SECRET_KEY }}
           POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
           REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }}
@@ -202,7 +202,7 @@ jobs:
           cat > ci/docker/.env <<EOF
           NETBOX_VERSION=${NETBOX_VERSION}
           NETBOX_DOMAIN=${{ vars.NETBOX_DOMAIN }}
-          ACME_EMAIL=${{ vars.ACME_EMAIL }}
+          NETBOX_SUPERUSER_EMAIL=${{ vars.NETBOX_SUPERUSER_EMAIL }}
           NETBOX_SECRET_KEY=${{ secrets.NETBOX_SECRET_KEY }}
           POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
           REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }}
@@ -214,22 +214,6 @@ jobs:
           EOF
           chmod 600 ci/docker/.env
 
-      - name: Issue or reuse TLS certificate
-        # Writes into the shared front door's cert directory — see
-        # ci/shared-proxy/README.md. DNS-01, so this doesn't depend on the
-        # front door already routing to this deploy.
-        run: ci/scripts/issue-cert.sh
-        env:
-          NETBOX_DOMAIN: ${{ vars.NETBOX_DOMAIN }}
-          ACME_EMAIL: ${{ vars.ACME_EMAIL }}
-          WS_ApiKey: ${{ secrets.WS_API_KEY }}
-          WS_ApiSecret: ${{ secrets.WS_API_SECRET }}
-
-      - name: Render and reload shared front-door routing
-        run: ci/scripts/render-proxy-conf.sh
-        env:
-          NETBOX_DOMAIN: ${{ vars.NETBOX_DOMAIN }}
-
       - name: Deploy stack
         # No --build: Build already produced the image; this just starts it.
         run: docker compose --env-file ci/docker/.env -f ci/docker/docker-compose.yml up -d --remove-orphans
@@ -237,7 +221,9 @@ jobs:
       - name: Wait for NetBox to become healthy
         run: |
           for i in $(seq 1 30); do
-            if curl -fsS -o /dev/null "https://${{ vars.NETBOX_DOMAIN }}/login/"; then
+            # Directly against the published port, not through the external
+            # nginx — TLS/routing is that repo's concern, not this pipeline's.
+            if curl -fsS -o /dev/null "http://localhost:8080/login/"; then
               echo "NetBox is up."
               exit 0
             fi
@@ -298,7 +284,7 @@ jobs:
       - name: Live smoke test (web + API POST/GET/PATCH/DELETE)
         run: ci/scripts/smoke-test.sh
         env:
-          NETBOX_DOMAIN: ${{ vars.NETBOX_DOMAIN }}
+          NETBOX_URL: http://localhost:8080
           NETBOX_SUPERUSER_API_TOKEN: ${{ secrets.NETBOX_SUPERUSER_API_TOKEN }}
           NETBOX_SUPERUSER_API_KEY: ${{ secrets.NETBOX_SUPERUSER_API_KEY }}
           NETBOX_SUPERUSER_PASSWORD: ${{ secrets.NETBOX_SUPERUSER_PASSWORD }}
@@ -323,9 +309,6 @@ jobs:
           echo "::group::All services (combined, for anything else)"
           docker compose --env-file ci/docker/.env -f ci/docker/docker-compose.yml logs --tail=300
           echo "::endgroup::"
-          echo "::group::Shared front-door proxy logs"
-          docker logs netbox-edge-proxy --tail=200 2>&1 || echo "front door not found"
-          echo "::endgroup::"
 
       - name: Remove runtime environment file
         if: always()
@@ -349,7 +332,7 @@ jobs:
       - name: Seed demo data
         run: python3 ci/scripts/test-deployment.py
         env:
-          NETBOX_DOMAIN: ${{ vars.NETBOX_DOMAIN }}
+          NETBOX_URL: http://localhost:8080
           NETBOX_SUPERUSER_API_TOKEN: ${{ secrets.NETBOX_SUPERUSER_API_TOKEN }}
           NETBOX_SUPERUSER_API_KEY: ${{ secrets.NETBOX_SUPERUSER_API_KEY }}
 

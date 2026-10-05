@@ -1,11 +1,13 @@
 #!/usr/bin/env bash
 # Live end-to-end smoke test against the actually-deployed instance over
-# real HTTPS — deliberately separate from service_specification's Django test suite
+# real HTTP — deliberately separate from service_specification's Django test suite
 # (`manage.py test service_specification`, run earlier in the Test stage), which only
 # exercises the app in-process and can't see problems in the real
-# nginx -> TLS -> WSGI path (misconfigured proxying, a cert that didn't
-# actually get installed, etc). This script is what would actually notice
-# those.
+# published-port -> WSGI path (container not listening, port not published,
+# ALLOWED_HOSTS/CSRF misconfiguration, etc). This script is what would
+# actually notice those. It targets the container's published port
+# directly (NETBOX_URL, default http://localhost:8080), not the external
+# nginx in front of it — TLS and routing live in that separate repo.
 #
 # Covers:
 #   - web:  /login/ reachable anonymously; an authenticated-only plugin
@@ -16,12 +18,11 @@
 #           instance isn't left with leftover test rows after a pass.
 set -euo pipefail
 
-: "${NETBOX_DOMAIN:?NETBOX_DOMAIN must be set}"
 : "${NETBOX_SUPERUSER_API_TOKEN:?NETBOX_SUPERUSER_API_TOKEN must be set}"
 : "${NETBOX_SUPERUSER_API_KEY:?NETBOX_SUPERUSER_API_KEY must be set}"
 : "${NETBOX_SUPERUSER_PASSWORD:?NETBOX_SUPERUSER_PASSWORD must be set}"
 
-BASE_URL="https://${NETBOX_DOMAIN}"
+BASE_URL="${NETBOX_URL:-http://localhost:8080}"
 # The superuser's bootstrap token is a v2 token (netbox-docker's
 # super_user.py default), which authenticates completely differently from
 # the classic single-opaque-string v1 scheme: Bearer <TOKEN_PREFIX><key>.<secret>,

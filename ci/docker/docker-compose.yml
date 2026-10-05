@@ -105,7 +105,7 @@ services:
       REDIS_CACHE_DATABASE: 1
       SKIP_SUPERUSER: "false"
       SUPERUSER_NAME: admin
-      SUPERUSER_EMAIL: ${ACME_EMAIL:?ACME_EMAIL must be set}
+      SUPERUSER_EMAIL: ${NETBOX_SUPERUSER_EMAIL:-admin@example.com}
       SUPERUSER_PASSWORD: ${NETBOX_SUPERUSER_PASSWORD:?NETBOX_SUPERUSER_PASSWORD must be set}
       SUPERUSER_API_TOKEN: ${NETBOX_SUPERUSER_API_TOKEN:?NETBOX_SUPERUSER_API_TOKEN must be set}
       # netbox-docker's super_user.py only creates a token for the
@@ -139,30 +139,23 @@ services:
       - netbox-media-files:/opt/netbox/netbox/media:rw
       - netbox-reports-files:/opt/netbox/netbox/reports:rw
       - netbox-scripts-files:/opt/netbox/netbox/scripts:rw
+    ports:
+      # Published on the runner's host port 8080 — the upstream port the
+      # external nginx reverse proxy (managed in its own, independent repo)
+      # forwards to. TLS termination happens there, not in this stack.
+      - "${NETBOX_HOST_PORT:-8080}:8080"
     networks:
-      netbox:
-      # Joins the shared, persistent front-door reverse proxy's network
-      # under a stable alias so it can be reached as
-      # http://netbox-service-offerings-plugin:8080 regardless of which
-      # compose project (this repo, or a sibling plugin repo sharing the
-      # same runner) created this container. The "edge" network itself is
-      # NOT created or torn down by this repo's pipeline — see
-      # ci/shared-proxy/README.md for the one-time setup. `external: true`
-      # below means `docker compose up` will fail loudly if that setup
-      # hasn't been done yet, rather than silently creating a private
-      # same-named network no other stack can actually see.
-      edge:
-        aliases:
-          - netbox-service-offerings-plugin
+      - netbox
 
   netbox-worker:
     <<: *netbox
     depends_on:
       netbox:
         condition: service_healthy
+    # Overrides the published port inherited from the netbox anchor: the
+    # worker doesn't serve HTTP, and two containers can't bind host 8080.
+    ports: []
     networks:
-      # No "edge" here: only the web process needs to be reachable by the
-      # shared front door; the worker doesn't serve HTTP.
       - netbox
     command:
       - /opt/netbox/venv/bin/python
@@ -177,9 +170,6 @@ services:
 networks:
   netbox:
     driver: bridge
-  edge:
-    name: netbox-edge
-    external: true
 
 volumes:
   netbox-postgres:
