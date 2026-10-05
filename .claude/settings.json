@@ -40,7 +40,8 @@
       "Bash(python3 /private/tmp/claude-501/-Users-andrej-hyben-Documents-Git-nosync-netbox-service-offerings-plugin/011ecd7d-ade9-4717-ac6b-f5cd59f86f5b/scratchpad/verify_product_view.py)",
       "Bash(grep -v -E '^\\(netbox_service_offerings|src\\)/.*\\\\.py$')",
       "Bash(git rm *)",
-      "Bash(python3 -c ' *)"
+      "Bash(python3 -c ' *)",
+      "Bash(python3 -c \"import yaml;[yaml.safe_load\\(open\\(f\\)\\) for f in ['.github/workflows/ci-cd.yml','ci/docker/docker-compose.yml']];print\\('yaml ok'\\)\")"
     ]
   }
 }

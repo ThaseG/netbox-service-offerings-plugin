@@ -46,7 +46,6 @@ jobs:
           umask 077
           cat > ci/docker/.env <<EOF
           NETBOX_VERSION=${NETBOX_VERSION}
-          NETBOX_DOMAIN=${{ vars.NETBOX_DOMAIN }}
           NETBOX_SUPERUSER_EMAIL=${{ vars.NETBOX_SUPERUSER_EMAIL }}
           NETBOX_SECRET_KEY=${{ secrets.NETBOX_SECRET_KEY }}
           POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
@@ -152,7 +151,6 @@ jobs:
           umask 077
           cat > ci/docker/.env <<EOF
           NETBOX_VERSION=${NETBOX_VERSION}
-          NETBOX_DOMAIN=${{ vars.NETBOX_DOMAIN }}
           NETBOX_SUPERUSER_EMAIL=${{ vars.NETBOX_SUPERUSER_EMAIL }}
           NETBOX_SECRET_KEY=${{ secrets.NETBOX_SECRET_KEY }}
           POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
@@ -201,7 +199,6 @@ jobs:
           umask 077
           cat > ci/docker/.env <<EOF
           NETBOX_VERSION=${NETBOX_VERSION}
-          NETBOX_DOMAIN=${{ vars.NETBOX_DOMAIN }}
           NETBOX_SUPERUSER_EMAIL=${{ vars.NETBOX_SUPERUSER_EMAIL }}
           NETBOX_SECRET_KEY=${{ secrets.NETBOX_SECRET_KEY }}
           POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}

@@ -215,7 +215,7 @@ already-migrated instance whose existing data a later migration would need to pr
 #### Reverse proxy
 
 This repo's stack doesn't run nginx or manage TLS certificates. The runner sits behind an nginx reverse proxy
-configured in a separate, independent repository, which terminates HTTPS for `NETBOX_DOMAIN` and forwards to
+configured in a separate, independent repository, which terminates HTTPS for `cmdbaas.hyben.net` and forwards to
 NetBox on the runner's port **8080**. The pipeline's own checks talk to `http://localhost:8080` directly, so they
 don't depend on that proxy.
 
