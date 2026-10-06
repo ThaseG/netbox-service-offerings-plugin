@@ -172,6 +172,32 @@ REFERENCE_FIELDS = {
         'cluster_group': 'virtualization/cluster-groups/',
         'application_services': 'plugins/service-specification/app-services/',
     },
+    # Hardware Lifecycle plugin (netbox-lifecycle)
+    'plugins/lifecycle/sku/': {
+        'manufacturer': 'dcim/manufacturers/',
+    },
+    'plugins/lifecycle/license/': {
+        'manufacturer': 'dcim/manufacturers/',
+    },
+    'plugins/lifecycle/hardwarelifecycle/': {
+        # Generic-FK-style, like Cluster's scope_type/scope_id:
+        # assigned_object_type is a literal 'dcim.devicetype'.
+        'assigned_object_id': 'dcim/device-types/',
+    },
+    'plugins/lifecycle/supportcontract/': {
+        'vendor': 'plugins/lifecycle/vendor/',
+    },
+    'plugins/lifecycle/licenseassignment/': {
+        'license': 'plugins/lifecycle/license/',
+        'vendor': 'plugins/lifecycle/vendor/',
+        'device': 'dcim/devices/',
+    },
+    'plugins/lifecycle/supportcontractassignment/': {
+        'contract': 'plugins/lifecycle/supportcontract/',
+        'sku': 'plugins/lifecycle/sku/',
+        'device': 'dcim/devices/',
+        'license': 'plugins/lifecycle/licenseassignment/',
+    },
 }
 
 
@@ -255,6 +281,17 @@ def resolve_terminations(terminations, created_objects):
     ]
 
 
+# Endpoints whose objects have neither a slug nor a name, and the field
+# that identifies them instead. Per endpoint, not a global fallback chain:
+# e.g. a Support Contract Assignment's 'sku' is a reference to a SKU, not
+# its own identity.
+IDENTITY_FIELDS = {
+    'plugins/service-specification/contracts/': 'contract_number',  # see models.py's Contract.__str__
+    'plugins/lifecycle/supportcontract/': 'contract_id',
+    'plugins/lifecycle/sku/': 'sku',
+}
+
+
 def create_all(data):
     created_objects = {}  # endpoint -> {slug-or-name: id}
     for endpoint, payloads in data.items():
@@ -263,6 +300,9 @@ def create_all(data):
         cache = created_objects.setdefault(endpoint, {})
         for payload in payloads:
             resolved = dict(payload)
+            # '_key' is a JSON-only identity for objects with no slug/name
+            # of their own (e.g. a License Assignment) — never sent to NetBox.
+            resolved.pop('_key', None)
             for field, target_endpoint in reference_fields.items():
                 if field in resolved and resolved[field] is not None:
                     resolved[field] = resolve_field(resolved[field], target_endpoint, created_objects)
@@ -271,10 +311,10 @@ def create_all(data):
                     resolved[field] = resolve_terminations(resolved[field], created_objects)
             obj = api('POST', endpoint, resolved)
             created(endpoint, obj)
-            # Almost everything is keyed by slug-else-name (see resolve()),
-            # but Contract has neither — its own identity field is
-            # contract_number instead (see models.py's Contract.__str__).
-            key = payload.get('slug') or payload.get('name') or payload.get('contract_number')
+            # Almost everything is keyed by slug-else-name (see resolve());
+            # see IDENTITY_FIELDS for the exceptions, and '_key' for objects
+            # with no identity field at all.
+            key = payload.get('_key') or payload.get(IDENTITY_FIELDS.get(endpoint, 'slug')) or payload.get('name')
             if key is not None:
                 if key in cache:
                     fail(f'Duplicate slug/name {key!r} for {endpoint} in {DATA_FILE.name}')

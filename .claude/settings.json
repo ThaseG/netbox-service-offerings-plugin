@@ -50,7 +50,9 @@
       "Bash(curl -sf https://raw.githubusercontent.com/netbox-community/netbox/v4.6.5/netbox/utilities/testing/api.py)",
       "Bash(python3 -m ruff format --diff service_specification/tests/test_api.py)",
       "Bash(which docker *)",
-      "Read(//Users/andrej.hyben/.docker/**)"
+      "Read(//Users/andrej.hyben/.docker/**)",
+      "Bash(python3 -c \"import json,sys;[print\\(u['url']\\) for u in json.load\\(sys.stdin\\)['urls']]\")",
+      "Bash(grep -v \"^\\\\s*$\")"
     ]
   }
 }

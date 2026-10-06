@@ -11343,5 +11343,3172 @@
         "Virtual Desktop Infrastructure - Shell (Application Service)"
       ]
     }
+  ],
+  "plugins/lifecycle/vendor/": [
+    {
+      "name": "Cisco Services",
+      "description": "Hardware support and maintenance vendor for Cisco equipment",
+      "comments": "Primary escalation path for Cisco support cases."
+    },
+    {
+      "name": "Fortinet Support",
+      "description": "Hardware support and maintenance vendor for Fortinet equipment",
+      "comments": "Primary escalation path for Fortinet support cases."
+    },
+    {
+      "name": "Dell ProSupport",
+      "description": "Hardware support and maintenance vendor for Dell equipment",
+      "comments": "Primary escalation path for Dell support cases."
+    }
+  ],
+  "plugins/lifecycle/sku/": [
+    {
+      "manufacturer": "cisco",
+      "sku": "CON-SNT-C9300-24T",
+      "description": "Smart Net Total Care 8x5xNBD for Catalyst 9300 24-Port",
+      "comments": "Standard support SKU for all demo deployments."
+    },
+    {
+      "manufacturer": "fortinet",
+      "sku": "FC-10-F100F-950-02-36",
+      "description": "FortiCare Premium 24x7 + UTP bundle for FortiGate-100F, 3 years",
+      "comments": "Standard support SKU for all demo deployments."
+    },
+    {
+      "manufacturer": "dell",
+      "sku": "PS-PLUS-R750-4H-60M",
+      "description": "ProSupport Plus with 4-hour Mission Critical onsite, 5 years",
+      "comments": "Standard support SKU for all demo deployments."
+    }
+  ],
+  "plugins/lifecycle/license/": [
+    {
+      "manufacturer": "cisco",
+      "name": "Cisco DNA Advantage",
+      "description": "Cisco DNA Advantage term license for Catalyst 9300",
+      "comments": "One license per device."
+    },
+    {
+      "manufacturer": "fortinet",
+      "name": "FortiGuard Unified Threat Protection",
+      "description": "FortiGuard UTP subscription (IPS, AV, web/DNS filtering, antispam)",
+      "comments": "One license per device."
+    },
+    {
+      "manufacturer": "dell",
+      "name": "iDRAC9 Enterprise",
+      "description": "iDRAC9 Enterprise out-of-band management license",
+      "comments": "One license per device."
+    }
+  ],
+  "plugins/lifecycle/hardwarelifecycle/": [
+    {
+      "assigned_object_type": "dcim.devicetype",
+      "assigned_object_id": "c9300-24t",
+      "end_of_sale": "2025-10-30",
+      "end_of_maintenance": "2026-10-30",
+      "end_of_security": "2028-10-30",
+      "last_contract_attach": "2026-10-30",
+      "last_contract_renewal": "2029-07-28",
+      "end_of_support": "2030-10-31",
+      "notice": "EOL6500 - End-of-Sale and End-of-Life Announcement for the Catalyst 9300 24-Port",
+      "documentation": "https://www.cisco.com/c/en/us/products/switches/catalyst-9300-series-switches/eos-eol-notice-listing.html",
+      "description": "Lifecycle milestones for Catalyst 9300 24-Port",
+      "comments": "Dates taken from the manufacturer EoL notice; review yearly."
+    },
+    {
+      "assigned_object_type": "dcim.devicetype",
+      "assigned_object_id": "fortigate-100f",
+      "end_of_sale": "2027-03-31",
+      "end_of_maintenance": "2029-03-31",
+      "end_of_security": "2030-03-31",
+      "last_contract_attach": "2028-03-31",
+      "last_contract_renewal": "2031-03-31",
+      "end_of_support": "2032-03-31",
+      "notice": "PN-2027-014 - FortiGate-100F End of Order notice",
+      "documentation": "https://support.fortinet.com/Information/ProductLifeCycle.aspx",
+      "description": "Lifecycle milestones for FortiGate-100F",
+      "comments": "Dates taken from the manufacturer EoL notice; review yearly."
+    },
+    {
+      "assigned_object_type": "dcim.devicetype",
+      "assigned_object_id": "poweredge-r750",
+      "end_of_sale": "2028-06-30",
+      "end_of_maintenance": "2031-06-30",
+      "end_of_security": "2032-06-30",
+      "last_contract_attach": "2030-06-30",
+      "last_contract_renewal": "2032-06-30",
+      "end_of_support": "2033-06-30",
+      "notice": "PowerEdge R750 planned end of life (Dell product lifecycle policy)",
+      "documentation": "https://www.dell.com/support/kbdoc/en-us/000178013/dell-emc-poweredge-server-end-of-life-information",
+      "description": "Lifecycle milestones for PowerEdge R750",
+      "comments": "Dates taken from the manufacturer EoL notice; review yearly."
+    }
+  ],
+  "plugins/lifecycle/supportcontract/": [
+    {
+      "vendor": "Cisco Services",
+      "contract_id": "CSCO-001-COCA-COLA",
+      "start": "2025-01-01",
+      "renewal": "2028-09-30",
+      "end": "2028-12-31",
+      "description": "Cisco Services contract for Coca Cola",
+      "comments": "Covers all Cisco devices at Coca Cola."
+    },
+    {
+      "vendor": "Fortinet Support",
+      "contract_id": "FTNT-001-COCA-COLA",
+      "start": "2025-01-01",
+      "renewal": "2028-09-30",
+      "end": "2028-12-31",
+      "description": "Fortinet Support contract for Coca Cola",
+      "comments": "Covers all Fortinet devices at Coca Cola."
+    },
+    {
+      "vendor": "Dell ProSupport",
+      "contract_id": "DELL-001-COCA-COLA",
+      "start": "2025-01-01",
+      "renewal": "2028-09-30",
+      "end": "2028-12-31",
+      "description": "Dell ProSupport contract for Coca Cola",
+      "comments": "Covers all Dell devices at Coca Cola."
+    },
+    {
+      "vendor": "Cisco Services",
+      "contract_id": "CSCO-002-CISCO",
+      "start": "2025-02-01",
+      "renewal": "2028-09-30",
+      "end": "2028-12-31",
+      "description": "Cisco Services contract for Cisco",
+      "comments": "Covers all Cisco devices at Cisco."
+    },
+    {
+      "vendor": "Fortinet Support",
+      "contract_id": "FTNT-002-CISCO",
+      "start": "2025-02-01",
+      "renewal": "2028-09-30",
+      "end": "2028-12-31",
+      "description": "Fortinet Support contract for Cisco",
+      "comments": "Covers all Fortinet devices at Cisco."
+    },
+    {
+      "vendor": "Dell ProSupport",
+      "contract_id": "DELL-002-CISCO",
+      "start": "2025-02-01",
+      "renewal": "2028-09-30",
+      "end": "2028-12-31",
+      "description": "Dell ProSupport contract for Cisco",
+      "comments": "Covers all Dell devices at Cisco."
+    },
+    {
+      "vendor": "Cisco Services",
+      "contract_id": "CSCO-003-SAP",
+      "start": "2025-03-01",
+      "renewal": "2028-09-30",
+      "end": "2028-12-31",
+      "description": "Cisco Services contract for SAP",
+      "comments": "Covers all Cisco devices at SAP."
+    },
+    {
+      "vendor": "Fortinet Support",
+      "contract_id": "FTNT-003-SAP",
+      "start": "2025-03-01",
+      "renewal": "2028-09-30",
+      "end": "2028-12-31",
+      "description": "Fortinet Support contract for SAP",
+      "comments": "Covers all Fortinet devices at SAP."
+    },
+    {
+      "vendor": "Dell ProSupport",
+      "contract_id": "DELL-003-SAP",
+      "start": "2025-03-01",
+      "renewal": "2028-09-30",
+      "end": "2028-12-31",
+      "description": "Dell ProSupport contract for SAP",
+      "comments": "Covers all Dell devices at SAP."
+    },
+    {
+      "vendor": "Cisco Services",
+      "contract_id": "CSCO-004-GOOGLE",
+      "start": "2025-04-01",
+      "renewal": "2028-09-30",
+      "end": "2028-12-31",
+      "description": "Cisco Services contract for Google",
+      "comments": "Covers all Cisco devices at Google."
+    },
+    {
+      "vendor": "Fortinet Support",
+      "contract_id": "FTNT-004-GOOGLE",
+      "start": "2025-04-01",
+      "renewal": "2028-09-30",
+      "end": "2028-12-31",
+      "description": "Fortinet Support contract for Google",
+      "comments": "Covers all Fortinet devices at Google."
+    },
+    {
+      "vendor": "Dell ProSupport",
+      "contract_id": "DELL-004-GOOGLE",
+      "start": "2025-04-01",
+      "renewal": "2028-09-30",
+      "end": "2028-12-31",
+      "description": "Dell ProSupport contract for Google",
+      "comments": "Covers all Dell devices at Google."
+    },
+    {
+      "vendor": "Cisco Services",
+      "contract_id": "CSCO-005-AMAZON",
+      "start": "2025-05-01",
+      "renewal": "2028-09-30",
+      "end": "2028-12-31",
+      "description": "Cisco Services contract for Amazon",
+      "comments": "Covers all Cisco devices at Amazon."
+    },
+    {
+      "vendor": "Fortinet Support",
+      "contract_id": "FTNT-005-AMAZON",
+      "start": "2025-05-01",
+      "renewal": "2028-09-30",
+      "end": "2028-12-31",
+      "description": "Fortinet Support contract for Amazon",
+      "comments": "Covers all Fortinet devices at Amazon."
+    },
+    {
+      "vendor": "Dell ProSupport",
+      "contract_id": "DELL-005-AMAZON",
+      "start": "2025-05-01",
+      "renewal": "2028-09-30",
+      "end": "2028-12-31",
+      "description": "Dell ProSupport contract for Amazon",
+      "comments": "Covers all Dell devices at Amazon."
+    },
+    {
+      "vendor": "Cisco Services",
+      "contract_id": "CSCO-006-MICROSOFT",
+      "start": "2025-06-01",
+      "renewal": "2028-09-30",
+      "end": "2028-12-31",
+      "description": "Cisco Services contract for Microsoft",
+      "comments": "Covers all Cisco devices at Microsoft."
+    },
+    {
+      "vendor": "Fortinet Support",
+      "contract_id": "FTNT-006-MICROSOFT",
+      "start": "2025-06-01",
+      "renewal": "2028-09-30",
+      "end": "2028-12-31",
+      "description": "Fortinet Support contract for Microsoft",
+      "comments": "Covers all Fortinet devices at Microsoft."
+    },
+    {
+      "vendor": "Dell ProSupport",
+      "contract_id": "DELL-006-MICROSOFT",
+      "start": "2025-06-01",
+      "renewal": "2028-09-30",
+      "end": "2028-12-31",
+      "description": "Dell ProSupport contract for Microsoft",
+      "comments": "Covers all Dell devices at Microsoft."
+    },
+    {
+      "vendor": "Cisco Services",
+      "contract_id": "CSCO-007-IBM",
+      "start": "2025-07-01",
+      "renewal": "2028-09-30",
+      "end": "2028-12-31",
+      "description": "Cisco Services contract for IBM",
+      "comments": "Covers all Cisco devices at IBM."
+    },
+    {
+      "vendor": "Fortinet Support",
+      "contract_id": "FTNT-007-IBM",
+      "start": "2025-07-01",
+      "renewal": "2028-09-30",
+      "end": "2028-12-31",
+      "description": "Fortinet Support contract for IBM",
+      "comments": "Covers all Fortinet devices at IBM."
+    },
+    {
+      "vendor": "Dell ProSupport",
+      "contract_id": "DELL-007-IBM",
+      "start": "2025-07-01",
+      "renewal": "2028-09-30",
+      "end": "2028-12-31",
+      "description": "Dell ProSupport contract for IBM",
+      "comments": "Covers all Dell devices at IBM."
+    },
+    {
+      "vendor": "Cisco Services",
+      "contract_id": "CSCO-008-ORACLE",
+      "start": "2023-07-01",
+      "renewal": "2026-04-01",
+      "end": "2026-06-30",
+      "description": "Cisco Services contract for Oracle",
+      "comments": "Covers all Cisco devices at Oracle."
+    },
+    {
+      "vendor": "Fortinet Support",
+      "contract_id": "FTNT-008-ORACLE",
+      "start": "2023-07-01",
+      "renewal": "2026-04-01",
+      "end": "2026-06-30",
+      "description": "Fortinet Support contract for Oracle",
+      "comments": "Covers all Fortinet devices at Oracle."
+    },
+    {
+      "vendor": "Dell ProSupport",
+      "contract_id": "DELL-008-ORACLE",
+      "start": "2023-07-01",
+      "renewal": "2026-04-01",
+      "end": "2026-06-30",
+      "description": "Dell ProSupport contract for Oracle",
+      "comments": "Covers all Dell devices at Oracle."
+    },
+    {
+      "vendor": "Cisco Services",
+      "contract_id": "CSCO-009-SIEMENS",
+      "start": "2025-09-01",
+      "renewal": "2028-09-30",
+      "end": "2028-12-31",
+      "description": "Cisco Services contract for Siemens",
+      "comments": "Covers all Cisco devices at Siemens."
+    },
+    {
+      "vendor": "Fortinet Support",
+      "contract_id": "FTNT-009-SIEMENS",
+      "start": "2025-09-01",
+      "renewal": "2028-09-30",
+      "end": "2028-12-31",
+      "description": "Fortinet Support contract for Siemens",
+      "comments": "Covers all Fortinet devices at Siemens."
+    },
+    {
+      "vendor": "Dell ProSupport",
+      "contract_id": "DELL-009-SIEMENS",
+      "start": "2025-09-01",
+      "renewal": "2028-09-30",
+      "end": "2028-12-31",
+      "description": "Dell ProSupport contract for Siemens",
+      "comments": "Covers all Dell devices at Siemens."
+    },
+    {
+      "vendor": "Cisco Services",
+      "contract_id": "CSCO-010-BMW",
+      "start": "2027-01-01",
+      "renewal": "2029-10-01",
+      "end": "2029-12-31",
+      "description": "Cisco Services contract for BMW",
+      "comments": "Covers all Cisco devices at BMW."
+    },
+    {
+      "vendor": "Fortinet Support",
+      "contract_id": "FTNT-010-BMW",
+      "start": "2027-01-01",
+      "renewal": "2029-10-01",
+      "end": "2029-12-31",
+      "description": "Fortinet Support contract for BMW",
+      "comments": "Covers all Fortinet devices at BMW."
+    },
+    {
+      "vendor": "Dell ProSupport",
+      "contract_id": "DELL-010-BMW",
+      "start": "2027-01-01",
+      "renewal": "2029-10-01",
+      "end": "2029-12-31",
+      "description": "Dell ProSupport contract for BMW",
+      "comments": "Covers all Dell devices at BMW."
+    },
+    {
+      "vendor": "Cisco Services",
+      "contract_id": "CSCO-011-VOLKSWAGEN",
+      "start": "2025-11-01",
+      "renewal": "2028-09-30",
+      "end": "2028-12-31",
+      "description": "Cisco Services contract for Volkswagen",
+      "comments": "Covers all Cisco devices at Volkswagen."
+    },
+    {
+      "vendor": "Fortinet Support",
+      "contract_id": "FTNT-011-VOLKSWAGEN",
+      "start": "2025-11-01",
+      "renewal": "2028-09-30",
+      "end": "2028-12-31",
+      "description": "Fortinet Support contract for Volkswagen",
+      "comments": "Covers all Fortinet devices at Volkswagen."
+    },
+    {
+      "vendor": "Dell ProSupport",
+      "contract_id": "DELL-011-VOLKSWAGEN",
+      "start": "2025-11-01",
+      "renewal": "2028-09-30",
+      "end": "2028-12-31",
+      "description": "Dell ProSupport contract for Volkswagen",
+      "comments": "Covers all Dell devices at Volkswagen."
+    },
+    {
+      "vendor": "Cisco Services",
+      "contract_id": "CSCO-012-DEUTSCHE-BANK",
+      "start": "2025-12-01",
+      "renewal": "2028-09-30",
+      "end": "2028-12-31",
+      "description": "Cisco Services contract for Deutsche Bank",
+      "comments": "Covers all Cisco devices at Deutsche Bank."
+    },
+    {
+      "vendor": "Fortinet Support",
+      "contract_id": "FTNT-012-DEUTSCHE-BANK",
+      "start": "2025-12-01",
+      "renewal": "2028-09-30",
+      "end": "2028-12-31",
+      "description": "Fortinet Support contract for Deutsche Bank",
+      "comments": "Covers all Fortinet devices at Deutsche Bank."
+    },
+    {
+      "vendor": "Dell ProSupport",
+      "contract_id": "DELL-012-DEUTSCHE-BANK",
+      "start": "2025-12-01",
+      "renewal": "2028-09-30",
+      "end": "2028-12-31",
+      "description": "Dell ProSupport contract for Deutsche Bank",
+      "comments": "Covers all Dell devices at Deutsche Bank."
+    },
+    {
+      "vendor": "Cisco Services",
+      "contract_id": "CSCO-013-ALLIANZ",
+      "start": "2025-01-01",
+      "renewal": "2028-09-30",
+      "end": "2028-12-31",
+      "description": "Cisco Services contract for Allianz",
+      "comments": "Covers all Cisco devices at Allianz."
+    },
+    {
+      "vendor": "Fortinet Support",
+      "contract_id": "FTNT-013-ALLIANZ",
+      "start": "2025-01-01",
+      "renewal": "2028-09-30",
+      "end": "2028-12-31",
+      "description": "Fortinet Support contract for Allianz",
+      "comments": "Covers all Fortinet devices at Allianz."
+    },
+    {
+      "vendor": "Dell ProSupport",
+      "contract_id": "DELL-013-ALLIANZ",
+      "start": "2025-01-01",
+      "renewal": "2028-09-30",
+      "end": "2028-12-31",
+      "description": "Dell ProSupport contract for Allianz",
+      "comments": "Covers all Dell devices at Allianz."
+    },
+    {
+      "vendor": "Cisco Services",
+      "contract_id": "CSCO-014-ADIDAS",
+      "start": "2025-02-01",
+      "renewal": "2028-09-30",
+      "end": "2028-12-31",
+      "description": "Cisco Services contract for Adidas",
+      "comments": "Covers all Cisco devices at Adidas."
+    },
+    {
+      "vendor": "Fortinet Support",
+      "contract_id": "FTNT-014-ADIDAS",
+      "start": "2025-02-01",
+      "renewal": "2028-09-30",
+      "end": "2028-12-31",
+      "description": "Fortinet Support contract for Adidas",
+      "comments": "Covers all Fortinet devices at Adidas."
+    },
+    {
+      "vendor": "Dell ProSupport",
+      "contract_id": "DELL-014-ADIDAS",
+      "start": "2025-02-01",
+      "renewal": "2028-09-30",
+      "end": "2028-12-31",
+      "description": "Dell ProSupport contract for Adidas",
+      "comments": "Covers all Dell devices at Adidas."
+    },
+    {
+      "vendor": "Cisco Services",
+      "contract_id": "CSCO-015-PUMA",
+      "start": "2025-03-01",
+      "renewal": "2028-09-30",
+      "end": "2028-12-31",
+      "description": "Cisco Services contract for Puma",
+      "comments": "Covers all Cisco devices at Puma."
+    },
+    {
+      "vendor": "Fortinet Support",
+      "contract_id": "FTNT-015-PUMA",
+      "start": "2025-03-01",
+      "renewal": "2028-09-30",
+      "end": "2028-12-31",
+      "description": "Fortinet Support contract for Puma",
+      "comments": "Covers all Fortinet devices at Puma."
+    },
+    {
+      "vendor": "Dell ProSupport",
+      "contract_id": "DELL-015-PUMA",
+      "start": "2025-03-01",
+      "renewal": "2028-09-30",
+      "end": "2028-12-31",
+      "description": "Dell ProSupport contract for Puma",
+      "comments": "Covers all Dell devices at Puma."
+    },
+    {
+      "vendor": "Cisco Services",
+      "contract_id": "CSCO-016-NIKE",
+      "start": "2025-04-01",
+      "renewal": "2028-09-30",
+      "end": "2028-12-31",
+      "description": "Cisco Services contract for Nike",
+      "comments": "Covers all Cisco devices at Nike."
+    },
+    {
+      "vendor": "Fortinet Support",
+      "contract_id": "FTNT-016-NIKE",
+      "start": "2025-04-01",
+      "renewal": "2028-09-30",
+      "end": "2028-12-31",
+      "description": "Fortinet Support contract for Nike",
+      "comments": "Covers all Fortinet devices at Nike."
+    },
+    {
+      "vendor": "Dell ProSupport",
+      "contract_id": "DELL-016-NIKE",
+      "start": "2025-04-01",
+      "renewal": "2028-09-30",
+      "end": "2028-12-31",
+      "description": "Dell ProSupport contract for Nike",
+      "comments": "Covers all Dell devices at Nike."
+    },
+    {
+      "vendor": "Cisco Services",
+      "contract_id": "CSCO-017-SAMSUNG",
+      "start": "2025-05-01",
+      "renewal": "2028-09-30",
+      "end": "2028-12-31",
+      "description": "Cisco Services contract for Samsung",
+      "comments": "Covers all Cisco devices at Samsung."
+    },
+    {
+      "vendor": "Fortinet Support",
+      "contract_id": "FTNT-017-SAMSUNG",
+      "start": "2025-05-01",
+      "renewal": "2028-09-30",
+      "end": "2028-12-31",
+      "description": "Fortinet Support contract for Samsung",
+      "comments": "Covers all Fortinet devices at Samsung."
+    },
+    {
+      "vendor": "Dell ProSupport",
+      "contract_id": "DELL-017-SAMSUNG",
+      "start": "2025-05-01",
+      "renewal": "2028-09-30",
+      "end": "2028-12-31",
+      "description": "Dell ProSupport contract for Samsung",
+      "comments": "Covers all Dell devices at Samsung."
+    },
+    {
+      "vendor": "Cisco Services",
+      "contract_id": "CSCO-018-SONY",
+      "start": "2023-07-01",
+      "renewal": "2026-04-01",
+      "end": "2026-06-30",
+      "description": "Cisco Services contract for Sony",
+      "comments": "Covers all Cisco devices at Sony."
+    },
+    {
+      "vendor": "Fortinet Support",
+      "contract_id": "FTNT-018-SONY",
+      "start": "2023-07-01",
+      "renewal": "2026-04-01",
+      "end": "2026-06-30",
+      "description": "Fortinet Support contract for Sony",
+      "comments": "Covers all Fortinet devices at Sony."
+    },
+    {
+      "vendor": "Dell ProSupport",
+      "contract_id": "DELL-018-SONY",
+      "start": "2023-07-01",
+      "renewal": "2026-04-01",
+      "end": "2026-06-30",
+      "description": "Dell ProSupport contract for Sony",
+      "comments": "Covers all Dell devices at Sony."
+    },
+    {
+      "vendor": "Cisco Services",
+      "contract_id": "CSCO-019-TOYOTA",
+      "start": "2025-07-01",
+      "renewal": "2028-09-30",
+      "end": "2028-12-31",
+      "description": "Cisco Services contract for Toyota",
+      "comments": "Covers all Cisco devices at Toyota."
+    },
+    {
+      "vendor": "Fortinet Support",
+      "contract_id": "FTNT-019-TOYOTA",
+      "start": "2025-07-01",
+      "renewal": "2028-09-30",
+      "end": "2028-12-31",
+      "description": "Fortinet Support contract for Toyota",
+      "comments": "Covers all Fortinet devices at Toyota."
+    },
+    {
+      "vendor": "Dell ProSupport",
+      "contract_id": "DELL-019-TOYOTA",
+      "start": "2025-07-01",
+      "renewal": "2028-09-30",
+      "end": "2028-12-31",
+      "description": "Dell ProSupport contract for Toyota",
+      "comments": "Covers all Dell devices at Toyota."
+    },
+    {
+      "vendor": "Cisco Services",
+      "contract_id": "CSCO-020-SHELL",
+      "start": "2027-01-01",
+      "renewal": "2029-10-01",
+      "end": "2029-12-31",
+      "description": "Cisco Services contract for Shell",
+      "comments": "Covers all Cisco devices at Shell."
+    },
+    {
+      "vendor": "Fortinet Support",
+      "contract_id": "FTNT-020-SHELL",
+      "start": "2027-01-01",
+      "renewal": "2029-10-01",
+      "end": "2029-12-31",
+      "description": "Fortinet Support contract for Shell",
+      "comments": "Covers all Fortinet devices at Shell."
+    },
+    {
+      "vendor": "Dell ProSupport",
+      "contract_id": "DELL-020-SHELL",
+      "start": "2027-01-01",
+      "renewal": "2029-10-01",
+      "end": "2029-12-31",
+      "description": "Dell ProSupport contract for Shell",
+      "comments": "Covers all Dell devices at Shell."
+    }
+  ],
+  "plugins/lifecycle/licenseassignment/": [
+    {
+      "_key": "Munich-FW-01",
+      "license": "FortiGuard Unified Threat Protection",
+      "vendor": "Fortinet Support",
+      "device": "Munich-FW-01",
+      "quantity": 1,
+      "description": "FortiGuard Unified Threat Protection for Munich-FW-01",
+      "comments": "Bought for Coca Cola."
+    },
+    {
+      "_key": "Munich-SW-01",
+      "license": "Cisco DNA Advantage",
+      "vendor": "Cisco Services",
+      "device": "Munich-SW-01",
+      "quantity": 1,
+      "description": "Cisco DNA Advantage for Munich-SW-01",
+      "comments": "Bought for Coca Cola."
+    },
+    {
+      "_key": "Munich-SRV-01",
+      "license": "iDRAC9 Enterprise",
+      "vendor": "Dell ProSupport",
+      "device": "Munich-SRV-01",
+      "quantity": 1,
+      "description": "iDRAC9 Enterprise for Munich-SRV-01",
+      "comments": "Bought for Coca Cola."
+    },
+    {
+      "_key": "Munich-SRV-02",
+      "license": "iDRAC9 Enterprise",
+      "vendor": "Dell ProSupport",
+      "device": "Munich-SRV-02",
+      "quantity": 1,
+      "description": "iDRAC9 Enterprise for Munich-SRV-02",
+      "comments": "Bought for Coca Cola."
+    },
+    {
+      "_key": "Munich-SW-02",
+      "license": "Cisco DNA Advantage",
+      "vendor": "Cisco Services",
+      "device": "Munich-SW-02",
+      "quantity": 1,
+      "description": "Cisco DNA Advantage for Munich-SW-02",
+      "comments": "Bought for Coca Cola."
+    },
+    {
+      "_key": "Munich-SRV-03",
+      "license": "iDRAC9 Enterprise",
+      "vendor": "Dell ProSupport",
+      "device": "Munich-SRV-03",
+      "quantity": 1,
+      "description": "iDRAC9 Enterprise for Munich-SRV-03",
+      "comments": "Bought for Coca Cola."
+    },
+    {
+      "_key": "Munich-SRV-04",
+      "license": "iDRAC9 Enterprise",
+      "vendor": "Dell ProSupport",
+      "device": "Munich-SRV-04",
+      "quantity": 1,
+      "description": "iDRAC9 Enterprise for Munich-SRV-04",
+      "comments": "Bought for Coca Cola."
+    },
+    {
+      "_key": "Berlin-FW-01",
+      "license": "FortiGuard Unified Threat Protection",
+      "vendor": "Fortinet Support",
+      "device": "Berlin-FW-01",
+      "quantity": 1,
+      "description": "FortiGuard Unified Threat Protection for Berlin-FW-01",
+      "comments": "Bought for Cisco."
+    },
+    {
+      "_key": "Berlin-SW-01",
+      "license": "Cisco DNA Advantage",
+      "vendor": "Cisco Services",
+      "device": "Berlin-SW-01",
+      "quantity": 1,
+      "description": "Cisco DNA Advantage for Berlin-SW-01",
+      "comments": "Bought for Cisco."
+    },
+    {
+      "_key": "Berlin-SRV-01",
+      "license": "iDRAC9 Enterprise",
+      "vendor": "Dell ProSupport",
+      "device": "Berlin-SRV-01",
+      "quantity": 1,
+      "description": "iDRAC9 Enterprise for Berlin-SRV-01",
+      "comments": "Bought for Cisco."
+    },
+    {
+      "_key": "Berlin-SRV-02",
+      "license": "iDRAC9 Enterprise",
+      "vendor": "Dell ProSupport",
+      "device": "Berlin-SRV-02",
+      "quantity": 1,
+      "description": "iDRAC9 Enterprise for Berlin-SRV-02",
+      "comments": "Bought for Cisco."
+    },
+    {
+      "_key": "Berlin-SW-02",
+      "license": "Cisco DNA Advantage",
+      "vendor": "Cisco Services",
+      "device": "Berlin-SW-02",
+      "quantity": 1,
+      "description": "Cisco DNA Advantage for Berlin-SW-02",
+      "comments": "Bought for Cisco."
+    },
+    {
+      "_key": "Berlin-SRV-03",
+      "license": "iDRAC9 Enterprise",
+      "vendor": "Dell ProSupport",
+      "device": "Berlin-SRV-03",
+      "quantity": 1,
+      "description": "iDRAC9 Enterprise for Berlin-SRV-03",
+      "comments": "Bought for Cisco."
+    },
+    {
+      "_key": "Berlin-SRV-04",
+      "license": "iDRAC9 Enterprise",
+      "vendor": "Dell ProSupport",
+      "device": "Berlin-SRV-04",
+      "quantity": 1,
+      "description": "iDRAC9 Enterprise for Berlin-SRV-04",
+      "comments": "Bought for Cisco."
+    },
+    {
+      "_key": "Cologne-FW-01",
+      "license": "FortiGuard Unified Threat Protection",
+      "vendor": "Fortinet Support",
+      "device": "Cologne-FW-01",
+      "quantity": 1,
+      "description": "FortiGuard Unified Threat Protection for Cologne-FW-01",
+      "comments": "Bought for SAP."
+    },
+    {
+      "_key": "Cologne-SW-01",
+      "license": "Cisco DNA Advantage",
+      "vendor": "Cisco Services",
+      "device": "Cologne-SW-01",
+      "quantity": 1,
+      "description": "Cisco DNA Advantage for Cologne-SW-01",
+      "comments": "Bought for SAP."
+    },
+    {
+      "_key": "Cologne-SRV-01",
+      "license": "iDRAC9 Enterprise",
+      "vendor": "Dell ProSupport",
+      "device": "Cologne-SRV-01",
+      "quantity": 1,
+      "description": "iDRAC9 Enterprise for Cologne-SRV-01",
+      "comments": "Bought for SAP."
+    },
+    {
+      "_key": "Cologne-SRV-02",
+      "license": "iDRAC9 Enterprise",
+      "vendor": "Dell ProSupport",
+      "device": "Cologne-SRV-02",
+      "quantity": 1,
+      "description": "iDRAC9 Enterprise for Cologne-SRV-02",
+      "comments": "Bought for SAP."
+    },
+    {
+      "_key": "Cologne-SW-02",
+      "license": "Cisco DNA Advantage",
+      "vendor": "Cisco Services",
+      "device": "Cologne-SW-02",
+      "quantity": 1,
+      "description": "Cisco DNA Advantage for Cologne-SW-02",
+      "comments": "Bought for SAP."
+    },
+    {
+      "_key": "Cologne-SRV-03",
+      "license": "iDRAC9 Enterprise",
+      "vendor": "Dell ProSupport",
+      "device": "Cologne-SRV-03",
+      "quantity": 1,
+      "description": "iDRAC9 Enterprise for Cologne-SRV-03",
+      "comments": "Bought for SAP."
+    },
+    {
+      "_key": "Cologne-SRV-04",
+      "license": "iDRAC9 Enterprise",
+      "vendor": "Dell ProSupport",
+      "device": "Cologne-SRV-04",
+      "quantity": 1,
+      "description": "iDRAC9 Enterprise for Cologne-SRV-04",
+      "comments": "Bought for SAP."
+    },
+    {
+      "_key": "Dusseldorf-FW-01",
+      "license": "FortiGuard Unified Threat Protection",
+      "vendor": "Fortinet Support",
+      "device": "Dusseldorf-FW-01",
+      "quantity": 1,
+      "description": "FortiGuard Unified Threat Protection for Dusseldorf-FW-01",
+      "comments": "Bought for Google."
+    },
+    {
+      "_key": "Dusseldorf-SW-01",
+      "license": "Cisco DNA Advantage",
+      "vendor": "Cisco Services",
+      "device": "Dusseldorf-SW-01",
+      "quantity": 1,
+      "description": "Cisco DNA Advantage for Dusseldorf-SW-01",
+      "comments": "Bought for Google."
+    },
+    {
+      "_key": "Dusseldorf-SRV-01",
+      "license": "iDRAC9 Enterprise",
+      "vendor": "Dell ProSupport",
+      "device": "Dusseldorf-SRV-01",
+      "quantity": 1,
+      "description": "iDRAC9 Enterprise for Dusseldorf-SRV-01",
+      "comments": "Bought for Google."
+    },
+    {
+      "_key": "Dusseldorf-SRV-02",
+      "license": "iDRAC9 Enterprise",
+      "vendor": "Dell ProSupport",
+      "device": "Dusseldorf-SRV-02",
+      "quantity": 1,
+      "description": "iDRAC9 Enterprise for Dusseldorf-SRV-02",
+      "comments": "Bought for Google."
+    },
+    {
+      "_key": "Dusseldorf-SW-02",
+      "license": "Cisco DNA Advantage",
+      "vendor": "Cisco Services",
+      "device": "Dusseldorf-SW-02",
+      "quantity": 1,
+      "description": "Cisco DNA Advantage for Dusseldorf-SW-02",
+      "comments": "Bought for Google."
+    },
+    {
+      "_key": "Dusseldorf-SRV-03",
+      "license": "iDRAC9 Enterprise",
+      "vendor": "Dell ProSupport",
+      "device": "Dusseldorf-SRV-03",
+      "quantity": 1,
+      "description": "iDRAC9 Enterprise for Dusseldorf-SRV-03",
+      "comments": "Bought for Google."
+    },
+    {
+      "_key": "Dusseldorf-SRV-04",
+      "license": "iDRAC9 Enterprise",
+      "vendor": "Dell ProSupport",
+      "device": "Dusseldorf-SRV-04",
+      "quantity": 1,
+      "description": "iDRAC9 Enterprise for Dusseldorf-SRV-04",
+      "comments": "Bought for Google."
+    },
+    {
+      "_key": "Dortmund-FW-01",
+      "license": "FortiGuard Unified Threat Protection",
+      "vendor": "Fortinet Support",
+      "device": "Dortmund-FW-01",
+      "quantity": 1,
+      "description": "FortiGuard Unified Threat Protection for Dortmund-FW-01",
+      "comments": "Bought for Amazon."
+    },
+    {
+      "_key": "Dortmund-SW-01",
+      "license": "Cisco DNA Advantage",
+      "vendor": "Cisco Services",
+      "device": "Dortmund-SW-01",
+      "quantity": 1,
+      "description": "Cisco DNA Advantage for Dortmund-SW-01",
+      "comments": "Bought for Amazon."
+    },
+    {
+      "_key": "Dortmund-SRV-01",
+      "license": "iDRAC9 Enterprise",
+      "vendor": "Dell ProSupport",
+      "device": "Dortmund-SRV-01",
+      "quantity": 1,
+      "description": "iDRAC9 Enterprise for Dortmund-SRV-01",
+      "comments": "Bought for Amazon."
+    },
+    {
+      "_key": "Dortmund-SRV-02",
+      "license": "iDRAC9 Enterprise",
+      "vendor": "Dell ProSupport",
+      "device": "Dortmund-SRV-02",
+      "quantity": 1,
+      "description": "iDRAC9 Enterprise for Dortmund-SRV-02",
+      "comments": "Bought for Amazon."
+    },
+    {
+      "_key": "Dortmund-SW-02",
+      "license": "Cisco DNA Advantage",
+      "vendor": "Cisco Services",
+      "device": "Dortmund-SW-02",
+      "quantity": 1,
+      "description": "Cisco DNA Advantage for Dortmund-SW-02",
+      "comments": "Bought for Amazon."
+    },
+    {
+      "_key": "Dortmund-SRV-03",
+      "license": "iDRAC9 Enterprise",
+      "vendor": "Dell ProSupport",
+      "device": "Dortmund-SRV-03",
+      "quantity": 1,
+      "description": "iDRAC9 Enterprise for Dortmund-SRV-03",
+      "comments": "Bought for Amazon."
+    },
+    {
+      "_key": "Dortmund-SRV-04",
+      "license": "iDRAC9 Enterprise",
+      "vendor": "Dell ProSupport",
+      "device": "Dortmund-SRV-04",
+      "quantity": 1,
+      "description": "iDRAC9 Enterprise for Dortmund-SRV-04",
+      "comments": "Bought for Amazon."
+    },
+    {
+      "_key": "Vienna-FW-01",
+      "license": "FortiGuard Unified Threat Protection",
+      "vendor": "Fortinet Support",
+      "device": "Vienna-FW-01",
+      "quantity": 1,
+      "description": "FortiGuard Unified Threat Protection for Vienna-FW-01",
+      "comments": "Bought for Microsoft."
+    },
+    {
+      "_key": "Vienna-SW-01",
+      "license": "Cisco DNA Advantage",
+      "vendor": "Cisco Services",
+      "device": "Vienna-SW-01",
+      "quantity": 1,
+      "description": "Cisco DNA Advantage for Vienna-SW-01",
+      "comments": "Bought for Microsoft."
+    },
+    {
+      "_key": "Vienna-SRV-01",
+      "license": "iDRAC9 Enterprise",
+      "vendor": "Dell ProSupport",
+      "device": "Vienna-SRV-01",
+      "quantity": 1,
+      "description": "iDRAC9 Enterprise for Vienna-SRV-01",
+      "comments": "Bought for Microsoft."
+    },
+    {
+      "_key": "Vienna-SRV-02",
+      "license": "iDRAC9 Enterprise",
+      "vendor": "Dell ProSupport",
+      "device": "Vienna-SRV-02",
+      "quantity": 1,
+      "description": "iDRAC9 Enterprise for Vienna-SRV-02",
+      "comments": "Bought for Microsoft."
+    },
+    {
+      "_key": "Vienna-SW-02",
+      "license": "Cisco DNA Advantage",
+      "vendor": "Cisco Services",
+      "device": "Vienna-SW-02",
+      "quantity": 1,
+      "description": "Cisco DNA Advantage for Vienna-SW-02",
+      "comments": "Bought for Microsoft."
+    },
+    {
+      "_key": "Vienna-SRV-03",
+      "license": "iDRAC9 Enterprise",
+      "vendor": "Dell ProSupport",
+      "device": "Vienna-SRV-03",
+      "quantity": 1,
+      "description": "iDRAC9 Enterprise for Vienna-SRV-03",
+      "comments": "Bought for Microsoft."
+    },
+    {
+      "_key": "Vienna-SRV-04",
+      "license": "iDRAC9 Enterprise",
+      "vendor": "Dell ProSupport",
+      "device": "Vienna-SRV-04",
+      "quantity": 1,
+      "description": "iDRAC9 Enterprise for Vienna-SRV-04",
+      "comments": "Bought for Microsoft."
+    },
+    {
+      "_key": "Amsterdam-FW-01",
+      "license": "FortiGuard Unified Threat Protection",
+      "vendor": "Fortinet Support",
+      "device": "Amsterdam-FW-01",
+      "quantity": 1,
+      "description": "FortiGuard Unified Threat Protection for Amsterdam-FW-01",
+      "comments": "Bought for IBM."
+    },
+    {
+      "_key": "Amsterdam-SW-01",
+      "license": "Cisco DNA Advantage",
+      "vendor": "Cisco Services",
+      "device": "Amsterdam-SW-01",
+      "quantity": 1,
+      "description": "Cisco DNA Advantage for Amsterdam-SW-01",
+      "comments": "Bought for IBM."
+    },
+    {
+      "_key": "Amsterdam-SRV-01",
+      "license": "iDRAC9 Enterprise",
+      "vendor": "Dell ProSupport",
+      "device": "Amsterdam-SRV-01",
+      "quantity": 1,
+      "description": "iDRAC9 Enterprise for Amsterdam-SRV-01",
+      "comments": "Bought for IBM."
+    },
+    {
+      "_key": "Amsterdam-SRV-02",
+      "license": "iDRAC9 Enterprise",
+      "vendor": "Dell ProSupport",
+      "device": "Amsterdam-SRV-02",
+      "quantity": 1,
+      "description": "iDRAC9 Enterprise for Amsterdam-SRV-02",
+      "comments": "Bought for IBM."
+    },
+    {
+      "_key": "Amsterdam-SW-02",
+      "license": "Cisco DNA Advantage",
+      "vendor": "Cisco Services",
+      "device": "Amsterdam-SW-02",
+      "quantity": 1,
+      "description": "Cisco DNA Advantage for Amsterdam-SW-02",
+      "comments": "Bought for IBM."
+    },
+    {
+      "_key": "Amsterdam-SRV-03",
+      "license": "iDRAC9 Enterprise",
+      "vendor": "Dell ProSupport",
+      "device": "Amsterdam-SRV-03",
+      "quantity": 1,
+      "description": "iDRAC9 Enterprise for Amsterdam-SRV-03",
+      "comments": "Bought for IBM."
+    },
+    {
+      "_key": "Amsterdam-SRV-04",
+      "license": "iDRAC9 Enterprise",
+      "vendor": "Dell ProSupport",
+      "device": "Amsterdam-SRV-04",
+      "quantity": 1,
+      "description": "iDRAC9 Enterprise for Amsterdam-SRV-04",
+      "comments": "Bought for IBM."
+    },
+    {
+      "_key": "Paris-FW-01",
+      "license": "FortiGuard Unified Threat Protection",
+      "vendor": "Fortinet Support",
+      "device": "Paris-FW-01",
+      "quantity": 1,
+      "description": "FortiGuard Unified Threat Protection for Paris-FW-01",
+      "comments": "Bought for Oracle."
+    },
+    {
+      "_key": "Paris-SW-01",
+      "license": "Cisco DNA Advantage",
+      "vendor": "Cisco Services",
+      "device": "Paris-SW-01",
+      "quantity": 1,
+      "description": "Cisco DNA Advantage for Paris-SW-01",
+      "comments": "Bought for Oracle."
+    },
+    {
+      "_key": "Paris-SRV-01",
+      "license": "iDRAC9 Enterprise",
+      "vendor": "Dell ProSupport",
+      "device": "Paris-SRV-01",
+      "quantity": 1,
+      "description": "iDRAC9 Enterprise for Paris-SRV-01",
+      "comments": "Bought for Oracle."
+    },
+    {
+      "_key": "Paris-SRV-02",
+      "license": "iDRAC9 Enterprise",
+      "vendor": "Dell ProSupport",
+      "device": "Paris-SRV-02",
+      "quantity": 1,
+      "description": "iDRAC9 Enterprise for Paris-SRV-02",
+      "comments": "Bought for Oracle."
+    },
+    {
+      "_key": "Paris-SW-02",
+      "license": "Cisco DNA Advantage",
+      "vendor": "Cisco Services",
+      "device": "Paris-SW-02",
+      "quantity": 1,
+      "description": "Cisco DNA Advantage for Paris-SW-02",
+      "comments": "Bought for Oracle."
+    },
+    {
+      "_key": "Paris-SRV-03",
+      "license": "iDRAC9 Enterprise",
+      "vendor": "Dell ProSupport",
+      "device": "Paris-SRV-03",
+      "quantity": 1,
+      "description": "iDRAC9 Enterprise for Paris-SRV-03",
+      "comments": "Bought for Oracle."
+    },
+    {
+      "_key": "Paris-SRV-04",
+      "license": "iDRAC9 Enterprise",
+      "vendor": "Dell ProSupport",
+      "device": "Paris-SRV-04",
+      "quantity": 1,
+      "description": "iDRAC9 Enterprise for Paris-SRV-04",
+      "comments": "Bought for Oracle."
+    },
+    {
+      "_key": "Madrid-FW-01",
+      "license": "FortiGuard Unified Threat Protection",
+      "vendor": "Fortinet Support",
+      "device": "Madrid-FW-01",
+      "quantity": 1,
+      "description": "FortiGuard Unified Threat Protection for Madrid-FW-01",
+      "comments": "Bought for Siemens."
+    },
+    {
+      "_key": "Madrid-SW-01",
+      "license": "Cisco DNA Advantage",
+      "vendor": "Cisco Services",
+      "device": "Madrid-SW-01",
+      "quantity": 1,
+      "description": "Cisco DNA Advantage for Madrid-SW-01",
+      "comments": "Bought for Siemens."
+    },
+    {
+      "_key": "Madrid-SRV-01",
+      "license": "iDRAC9 Enterprise",
+      "vendor": "Dell ProSupport",
+      "device": "Madrid-SRV-01",
+      "quantity": 1,
+      "description": "iDRAC9 Enterprise for Madrid-SRV-01",
+      "comments": "Bought for Siemens."
+    },
+    {
+      "_key": "Madrid-SRV-02",
+      "license": "iDRAC9 Enterprise",
+      "vendor": "Dell ProSupport",
+      "device": "Madrid-SRV-02",
+      "quantity": 1,
+      "description": "iDRAC9 Enterprise for Madrid-SRV-02",
+      "comments": "Bought for Siemens."
+    },
+    {
+      "_key": "Madrid-SW-02",
+      "license": "Cisco DNA Advantage",
+      "vendor": "Cisco Services",
+      "device": "Madrid-SW-02",
+      "quantity": 1,
+      "description": "Cisco DNA Advantage for Madrid-SW-02",
+      "comments": "Bought for Siemens."
+    },
+    {
+      "_key": "Madrid-SRV-03",
+      "license": "iDRAC9 Enterprise",
+      "vendor": "Dell ProSupport",
+      "device": "Madrid-SRV-03",
+      "quantity": 1,
+      "description": "iDRAC9 Enterprise for Madrid-SRV-03",
+      "comments": "Bought for Siemens."
+    },
+    {
+      "_key": "Madrid-SRV-04",
+      "license": "iDRAC9 Enterprise",
+      "vendor": "Dell ProSupport",
+      "device": "Madrid-SRV-04",
+      "quantity": 1,
+      "description": "iDRAC9 Enterprise for Madrid-SRV-04",
+      "comments": "Bought for Siemens."
+    },
+    {
+      "_key": "Rome-FW-01",
+      "license": "FortiGuard Unified Threat Protection",
+      "vendor": "Fortinet Support",
+      "device": "Rome-FW-01",
+      "quantity": 1,
+      "description": "FortiGuard Unified Threat Protection for Rome-FW-01",
+      "comments": "Bought for BMW."
+    },
+    {
+      "_key": "Rome-SW-01",
+      "license": "Cisco DNA Advantage",
+      "vendor": "Cisco Services",
+      "device": "Rome-SW-01",
+      "quantity": 1,
+      "description": "Cisco DNA Advantage for Rome-SW-01",
+      "comments": "Bought for BMW."
+    },
+    {
+      "_key": "Rome-SRV-01",
+      "license": "iDRAC9 Enterprise",
+      "vendor": "Dell ProSupport",
+      "device": "Rome-SRV-01",
+      "quantity": 1,
+      "description": "iDRAC9 Enterprise for Rome-SRV-01",
+      "comments": "Bought for BMW."
+    },
+    {
+      "_key": "Rome-SRV-02",
+      "license": "iDRAC9 Enterprise",
+      "vendor": "Dell ProSupport",
+      "device": "Rome-SRV-02",
+      "quantity": 1,
+      "description": "iDRAC9 Enterprise for Rome-SRV-02",
+      "comments": "Bought for BMW."
+    },
+    {
+      "_key": "Rome-SW-02",
+      "license": "Cisco DNA Advantage",
+      "vendor": "Cisco Services",
+      "device": "Rome-SW-02",
+      "quantity": 1,
+      "description": "Cisco DNA Advantage for Rome-SW-02",
+      "comments": "Bought for BMW."
+    },
+    {
+      "_key": "Rome-SRV-03",
+      "license": "iDRAC9 Enterprise",
+      "vendor": "Dell ProSupport",
+      "device": "Rome-SRV-03",
+      "quantity": 1,
+      "description": "iDRAC9 Enterprise for Rome-SRV-03",
+      "comments": "Bought for BMW."
+    },
+    {
+      "_key": "Rome-SRV-04",
+      "license": "iDRAC9 Enterprise",
+      "vendor": "Dell ProSupport",
+      "device": "Rome-SRV-04",
+      "quantity": 1,
+      "description": "iDRAC9 Enterprise for Rome-SRV-04",
+      "comments": "Bought for BMW."
+    },
+    {
+      "_key": "Warsaw-FW-01",
+      "license": "FortiGuard Unified Threat Protection",
+      "vendor": "Fortinet Support",
+      "device": "Warsaw-FW-01",
+      "quantity": 1,
+      "description": "FortiGuard Unified Threat Protection for Warsaw-FW-01",
+      "comments": "Bought for Volkswagen."
+    },
+    {
+      "_key": "Warsaw-SW-01",
+      "license": "Cisco DNA Advantage",
+      "vendor": "Cisco Services",
+      "device": "Warsaw-SW-01",
+      "quantity": 1,
+      "description": "Cisco DNA Advantage for Warsaw-SW-01",
+      "comments": "Bought for Volkswagen."
+    },
+    {
+      "_key": "Warsaw-SRV-01",
+      "license": "iDRAC9 Enterprise",
+      "vendor": "Dell ProSupport",
+      "device": "Warsaw-SRV-01",
+      "quantity": 1,
+      "description": "iDRAC9 Enterprise for Warsaw-SRV-01",
+      "comments": "Bought for Volkswagen."
+    },
+    {
+      "_key": "Warsaw-SRV-02",
+      "license": "iDRAC9 Enterprise",
+      "vendor": "Dell ProSupport",
+      "device": "Warsaw-SRV-02",
+      "quantity": 1,
+      "description": "iDRAC9 Enterprise for Warsaw-SRV-02",
+      "comments": "Bought for Volkswagen."
+    },
+    {
+      "_key": "Warsaw-SW-02",
+      "license": "Cisco DNA Advantage",
+      "vendor": "Cisco Services",
+      "device": "Warsaw-SW-02",
+      "quantity": 1,
+      "description": "Cisco DNA Advantage for Warsaw-SW-02",
+      "comments": "Bought for Volkswagen."
+    },
+    {
+      "_key": "Warsaw-SRV-03",
+      "license": "iDRAC9 Enterprise",
+      "vendor": "Dell ProSupport",
+      "device": "Warsaw-SRV-03",
+      "quantity": 1,
+      "description": "iDRAC9 Enterprise for Warsaw-SRV-03",
+      "comments": "Bought for Volkswagen."
+    },
+    {
+      "_key": "Warsaw-SRV-04",
+      "license": "iDRAC9 Enterprise",
+      "vendor": "Dell ProSupport",
+      "device": "Warsaw-SRV-04",
+      "quantity": 1,
+      "description": "iDRAC9 Enterprise for Warsaw-SRV-04",
+      "comments": "Bought for Volkswagen."
+    },
+    {
+      "_key": "Budapest-FW-01",
+      "license": "FortiGuard Unified Threat Protection",
+      "vendor": "Fortinet Support",
+      "device": "Budapest-FW-01",
+      "quantity": 1,
+      "description": "FortiGuard Unified Threat Protection for Budapest-FW-01",
+      "comments": "Bought for Deutsche Bank."
+    },
+    {
+      "_key": "Budapest-SW-01",
+      "license": "Cisco DNA Advantage",
+      "vendor": "Cisco Services",
+      "device": "Budapest-SW-01",
+      "quantity": 1,
+      "description": "Cisco DNA Advantage for Budapest-SW-01",
+      "comments": "Bought for Deutsche Bank."
+    },
+    {
+      "_key": "Budapest-SRV-01",
+      "license": "iDRAC9 Enterprise",
+      "vendor": "Dell ProSupport",
+      "device": "Budapest-SRV-01",
+      "quantity": 1,
+      "description": "iDRAC9 Enterprise for Budapest-SRV-01",
+      "comments": "Bought for Deutsche Bank."
+    },
+    {
+      "_key": "Budapest-SRV-02",
+      "license": "iDRAC9 Enterprise",
+      "vendor": "Dell ProSupport",
+      "device": "Budapest-SRV-02",
+      "quantity": 1,
+      "description": "iDRAC9 Enterprise for Budapest-SRV-02",
+      "comments": "Bought for Deutsche Bank."
+    },
+    {
+      "_key": "Budapest-SW-02",
+      "license": "Cisco DNA Advantage",
+      "vendor": "Cisco Services",
+      "device": "Budapest-SW-02",
+      "quantity": 1,
+      "description": "Cisco DNA Advantage for Budapest-SW-02",
+      "comments": "Bought for Deutsche Bank."
+    },
+    {
+      "_key": "Budapest-SRV-03",
+      "license": "iDRAC9 Enterprise",
+      "vendor": "Dell ProSupport",
+      "device": "Budapest-SRV-03",
+      "quantity": 1,
+      "description": "iDRAC9 Enterprise for Budapest-SRV-03",
+      "comments": "Bought for Deutsche Bank."
+    },
+    {
+      "_key": "Budapest-SRV-04",
+      "license": "iDRAC9 Enterprise",
+      "vendor": "Dell ProSupport",
+      "device": "Budapest-SRV-04",
+      "quantity": 1,
+      "description": "iDRAC9 Enterprise for Budapest-SRV-04",
+      "comments": "Bought for Deutsche Bank."
+    },
+    {
+      "_key": "Stockholm-FW-01",
+      "license": "FortiGuard Unified Threat Protection",
+      "vendor": "Fortinet Support",
+      "device": "Stockholm-FW-01",
+      "quantity": 1,
+      "description": "FortiGuard Unified Threat Protection for Stockholm-FW-01",
+      "comments": "Bought for Allianz."
+    },
+    {
+      "_key": "Stockholm-SW-01",
+      "license": "Cisco DNA Advantage",
+      "vendor": "Cisco Services",
+      "device": "Stockholm-SW-01",
+      "quantity": 1,
+      "description": "Cisco DNA Advantage for Stockholm-SW-01",
+      "comments": "Bought for Allianz."
+    },
+    {
+      "_key": "Stockholm-SRV-01",
+      "license": "iDRAC9 Enterprise",
+      "vendor": "Dell ProSupport",
+      "device": "Stockholm-SRV-01",
+      "quantity": 1,
+      "description": "iDRAC9 Enterprise for Stockholm-SRV-01",
+      "comments": "Bought for Allianz."
+    },
+    {
+      "_key": "Stockholm-SRV-02",
+      "license": "iDRAC9 Enterprise",
+      "vendor": "Dell ProSupport",
+      "device": "Stockholm-SRV-02",
+      "quantity": 1,
+      "description": "iDRAC9 Enterprise for Stockholm-SRV-02",
+      "comments": "Bought for Allianz."
+    },
+    {
+      "_key": "Stockholm-SW-02",
+      "license": "Cisco DNA Advantage",
+      "vendor": "Cisco Services",
+      "device": "Stockholm-SW-02",
+      "quantity": 1,
+      "description": "Cisco DNA Advantage for Stockholm-SW-02",
+      "comments": "Bought for Allianz."
+    },
+    {
+      "_key": "Stockholm-SRV-03",
+      "license": "iDRAC9 Enterprise",
+      "vendor": "Dell ProSupport",
+      "device": "Stockholm-SRV-03",
+      "quantity": 1,
+      "description": "iDRAC9 Enterprise for Stockholm-SRV-03",
+      "comments": "Bought for Allianz."
+    },
+    {
+      "_key": "Stockholm-SRV-04",
+      "license": "iDRAC9 Enterprise",
+      "vendor": "Dell ProSupport",
+      "device": "Stockholm-SRV-04",
+      "quantity": 1,
+      "description": "iDRAC9 Enterprise for Stockholm-SRV-04",
+      "comments": "Bought for Allianz."
+    },
+    {
+      "_key": "Dublin-FW-01",
+      "license": "FortiGuard Unified Threat Protection",
+      "vendor": "Fortinet Support",
+      "device": "Dublin-FW-01",
+      "quantity": 1,
+      "description": "FortiGuard Unified Threat Protection for Dublin-FW-01",
+      "comments": "Bought for Adidas."
+    },
+    {
+      "_key": "Dublin-SW-01",
+      "license": "Cisco DNA Advantage",
+      "vendor": "Cisco Services",
+      "device": "Dublin-SW-01",
+      "quantity": 1,
+      "description": "Cisco DNA Advantage for Dublin-SW-01",
+      "comments": "Bought for Adidas."
+    },
+    {
+      "_key": "Dublin-SRV-01",
+      "license": "iDRAC9 Enterprise",
+      "vendor": "Dell ProSupport",
+      "device": "Dublin-SRV-01",
+      "quantity": 1,
+      "description": "iDRAC9 Enterprise for Dublin-SRV-01",
+      "comments": "Bought for Adidas."
+    },
+    {
+      "_key": "Dublin-SRV-02",
+      "license": "iDRAC9 Enterprise",
+      "vendor": "Dell ProSupport",
+      "device": "Dublin-SRV-02",
+      "quantity": 1,
+      "description": "iDRAC9 Enterprise for Dublin-SRV-02",
+      "comments": "Bought for Adidas."
+    },
+    {
+      "_key": "Dublin-SW-02",
+      "license": "Cisco DNA Advantage",
+      "vendor": "Cisco Services",
+      "device": "Dublin-SW-02",
+      "quantity": 1,
+      "description": "Cisco DNA Advantage for Dublin-SW-02",
+      "comments": "Bought for Adidas."
+    },
+    {
+      "_key": "Dublin-SRV-03",
+      "license": "iDRAC9 Enterprise",
+      "vendor": "Dell ProSupport",
+      "device": "Dublin-SRV-03",
+      "quantity": 1,
+      "description": "iDRAC9 Enterprise for Dublin-SRV-03",
+      "comments": "Bought for Adidas."
+    },
+    {
+      "_key": "Dublin-SRV-04",
+      "license": "iDRAC9 Enterprise",
+      "vendor": "Dell ProSupport",
+      "device": "Dublin-SRV-04",
+      "quantity": 1,
+      "description": "iDRAC9 Enterprise for Dublin-SRV-04",
+      "comments": "Bought for Adidas."
+    },
+    {
+      "_key": "Athens-FW-01",
+      "license": "FortiGuard Unified Threat Protection",
+      "vendor": "Fortinet Support",
+      "device": "Athens-FW-01",
+      "quantity": 1,
+      "description": "FortiGuard Unified Threat Protection for Athens-FW-01",
+      "comments": "Bought for Puma."
+    },
+    {
+      "_key": "Athens-SW-01",
+      "license": "Cisco DNA Advantage",
+      "vendor": "Cisco Services",
+      "device": "Athens-SW-01",
+      "quantity": 1,
+      "description": "Cisco DNA Advantage for Athens-SW-01",
+      "comments": "Bought for Puma."
+    },
+    {
+      "_key": "Athens-SRV-01",
+      "license": "iDRAC9 Enterprise",
+      "vendor": "Dell ProSupport",
+      "device": "Athens-SRV-01",
+      "quantity": 1,
+      "description": "iDRAC9 Enterprise for Athens-SRV-01",
+      "comments": "Bought for Puma."
+    },
+    {
+      "_key": "Athens-SRV-02",
+      "license": "iDRAC9 Enterprise",
+      "vendor": "Dell ProSupport",
+      "device": "Athens-SRV-02",
+      "quantity": 1,
+      "description": "iDRAC9 Enterprise for Athens-SRV-02",
+      "comments": "Bought for Puma."
+    },
+    {
+      "_key": "Athens-SW-02",
+      "license": "Cisco DNA Advantage",
+      "vendor": "Cisco Services",
+      "device": "Athens-SW-02",
+      "quantity": 1,
+      "description": "Cisco DNA Advantage for Athens-SW-02",
+      "comments": "Bought for Puma."
+    },
+    {
+      "_key": "Athens-SRV-03",
+      "license": "iDRAC9 Enterprise",
+      "vendor": "Dell ProSupport",
+      "device": "Athens-SRV-03",
+      "quantity": 1,
+      "description": "iDRAC9 Enterprise for Athens-SRV-03",
+      "comments": "Bought for Puma."
+    },
+    {
+      "_key": "Athens-SRV-04",
+      "license": "iDRAC9 Enterprise",
+      "vendor": "Dell ProSupport",
+      "device": "Athens-SRV-04",
+      "quantity": 1,
+      "description": "iDRAC9 Enterprise for Athens-SRV-04",
+      "comments": "Bought for Puma."
+    },
+    {
+      "_key": "Singapore-FW-01",
+      "license": "FortiGuard Unified Threat Protection",
+      "vendor": "Fortinet Support",
+      "device": "Singapore-FW-01",
+      "quantity": 1,
+      "description": "FortiGuard Unified Threat Protection for Singapore-FW-01",
+      "comments": "Bought for Nike."
+    },
+    {
+      "_key": "Singapore-SW-01",
+      "license": "Cisco DNA Advantage",
+      "vendor": "Cisco Services",
+      "device": "Singapore-SW-01",
+      "quantity": 1,
+      "description": "Cisco DNA Advantage for Singapore-SW-01",
+      "comments": "Bought for Nike."
+    },
+    {
+      "_key": "Singapore-SRV-01",
+      "license": "iDRAC9 Enterprise",
+      "vendor": "Dell ProSupport",
+      "device": "Singapore-SRV-01",
+      "quantity": 1,
+      "description": "iDRAC9 Enterprise for Singapore-SRV-01",
+      "comments": "Bought for Nike."
+    },
+    {
+      "_key": "Singapore-SRV-02",
+      "license": "iDRAC9 Enterprise",
+      "vendor": "Dell ProSupport",
+      "device": "Singapore-SRV-02",
+      "quantity": 1,
+      "description": "iDRAC9 Enterprise for Singapore-SRV-02",
+      "comments": "Bought for Nike."
+    },
+    {
+      "_key": "Singapore-SW-02",
+      "license": "Cisco DNA Advantage",
+      "vendor": "Cisco Services",
+      "device": "Singapore-SW-02",
+      "quantity": 1,
+      "description": "Cisco DNA Advantage for Singapore-SW-02",
+      "comments": "Bought for Nike."
+    },
+    {
+      "_key": "Singapore-SRV-03",
+      "license": "iDRAC9 Enterprise",
+      "vendor": "Dell ProSupport",
+      "device": "Singapore-SRV-03",
+      "quantity": 1,
+      "description": "iDRAC9 Enterprise for Singapore-SRV-03",
+      "comments": "Bought for Nike."
+    },
+    {
+      "_key": "Singapore-SRV-04",
+      "license": "iDRAC9 Enterprise",
+      "vendor": "Dell ProSupport",
+      "device": "Singapore-SRV-04",
+      "quantity": 1,
+      "description": "iDRAC9 Enterprise for Singapore-SRV-04",
+      "comments": "Bought for Nike."
+    },
+    {
+      "_key": "Sydney-FW-01",
+      "license": "FortiGuard Unified Threat Protection",
+      "vendor": "Fortinet Support",
+      "device": "Sydney-FW-01",
+      "quantity": 1,
+      "description": "FortiGuard Unified Threat Protection for Sydney-FW-01",
+      "comments": "Bought for Samsung."
+    },
+    {
+      "_key": "Sydney-SW-01",
+      "license": "Cisco DNA Advantage",
+      "vendor": "Cisco Services",
+      "device": "Sydney-SW-01",
+      "quantity": 1,
+      "description": "Cisco DNA Advantage for Sydney-SW-01",
+      "comments": "Bought for Samsung."
+    },
+    {
+      "_key": "Sydney-SRV-01",
+      "license": "iDRAC9 Enterprise",
+      "vendor": "Dell ProSupport",
+      "device": "Sydney-SRV-01",
+      "quantity": 1,
+      "description": "iDRAC9 Enterprise for Sydney-SRV-01",
+      "comments": "Bought for Samsung."
+    },
+    {
+      "_key": "Sydney-SRV-02",
+      "license": "iDRAC9 Enterprise",
+      "vendor": "Dell ProSupport",
+      "device": "Sydney-SRV-02",
+      "quantity": 1,
+      "description": "iDRAC9 Enterprise for Sydney-SRV-02",
+      "comments": "Bought for Samsung."
+    },
+    {
+      "_key": "Sydney-SW-02",
+      "license": "Cisco DNA Advantage",
+      "vendor": "Cisco Services",
+      "device": "Sydney-SW-02",
+      "quantity": 1,
+      "description": "Cisco DNA Advantage for Sydney-SW-02",
+      "comments": "Bought for Samsung."
+    },
+    {
+      "_key": "Sydney-SRV-03",
+      "license": "iDRAC9 Enterprise",
+      "vendor": "Dell ProSupport",
+      "device": "Sydney-SRV-03",
+      "quantity": 1,
+      "description": "iDRAC9 Enterprise for Sydney-SRV-03",
+      "comments": "Bought for Samsung."
+    },
+    {
+      "_key": "Sydney-SRV-04",
+      "license": "iDRAC9 Enterprise",
+      "vendor": "Dell ProSupport",
+      "device": "Sydney-SRV-04",
+      "quantity": 1,
+      "description": "iDRAC9 Enterprise for Sydney-SRV-04",
+      "comments": "Bought for Samsung."
+    },
+    {
+      "_key": "Chicago-FW-01",
+      "license": "FortiGuard Unified Threat Protection",
+      "vendor": "Fortinet Support",
+      "device": "Chicago-FW-01",
+      "quantity": 1,
+      "description": "FortiGuard Unified Threat Protection for Chicago-FW-01",
+      "comments": "Bought for Sony."
+    },
+    {
+      "_key": "Chicago-SW-01",
+      "license": "Cisco DNA Advantage",
+      "vendor": "Cisco Services",
+      "device": "Chicago-SW-01",
+      "quantity": 1,
+      "description": "Cisco DNA Advantage for Chicago-SW-01",
+      "comments": "Bought for Sony."
+    },
+    {
+      "_key": "Chicago-SRV-01",
+      "license": "iDRAC9 Enterprise",
+      "vendor": "Dell ProSupport",
+      "device": "Chicago-SRV-01",
+      "quantity": 1,
+      "description": "iDRAC9 Enterprise for Chicago-SRV-01",
+      "comments": "Bought for Sony."
+    },
+    {
+      "_key": "Chicago-SRV-02",
+      "license": "iDRAC9 Enterprise",
+      "vendor": "Dell ProSupport",
+      "device": "Chicago-SRV-02",
+      "quantity": 1,
+      "description": "iDRAC9 Enterprise for Chicago-SRV-02",
+      "comments": "Bought for Sony."
+    },
+    {
+      "_key": "Chicago-SW-02",
+      "license": "Cisco DNA Advantage",
+      "vendor": "Cisco Services",
+      "device": "Chicago-SW-02",
+      "quantity": 1,
+      "description": "Cisco DNA Advantage for Chicago-SW-02",
+      "comments": "Bought for Sony."
+    },
+    {
+      "_key": "Chicago-SRV-03",
+      "license": "iDRAC9 Enterprise",
+      "vendor": "Dell ProSupport",
+      "device": "Chicago-SRV-03",
+      "quantity": 1,
+      "description": "iDRAC9 Enterprise for Chicago-SRV-03",
+      "comments": "Bought for Sony."
+    },
+    {
+      "_key": "Chicago-SRV-04",
+      "license": "iDRAC9 Enterprise",
+      "vendor": "Dell ProSupport",
+      "device": "Chicago-SRV-04",
+      "quantity": 1,
+      "description": "iDRAC9 Enterprise for Chicago-SRV-04",
+      "comments": "Bought for Sony."
+    },
+    {
+      "_key": "Seattle-FW-01",
+      "license": "FortiGuard Unified Threat Protection",
+      "vendor": "Fortinet Support",
+      "device": "Seattle-FW-01",
+      "quantity": 1,
+      "description": "FortiGuard Unified Threat Protection for Seattle-FW-01",
+      "comments": "Bought for Toyota."
+    },
+    {
+      "_key": "Seattle-SW-01",
+      "license": "Cisco DNA Advantage",
+      "vendor": "Cisco Services",
+      "device": "Seattle-SW-01",
+      "quantity": 1,
+      "description": "Cisco DNA Advantage for Seattle-SW-01",
+      "comments": "Bought for Toyota."
+    },
+    {
+      "_key": "Seattle-SRV-01",
+      "license": "iDRAC9 Enterprise",
+      "vendor": "Dell ProSupport",
+      "device": "Seattle-SRV-01",
+      "quantity": 1,
+      "description": "iDRAC9 Enterprise for Seattle-SRV-01",
+      "comments": "Bought for Toyota."
+    },
+    {
+      "_key": "Seattle-SRV-02",
+      "license": "iDRAC9 Enterprise",
+      "vendor": "Dell ProSupport",
+      "device": "Seattle-SRV-02",
+      "quantity": 1,
+      "description": "iDRAC9 Enterprise for Seattle-SRV-02",
+      "comments": "Bought for Toyota."
+    },
+    {
+      "_key": "Seattle-SW-02",
+      "license": "Cisco DNA Advantage",
+      "vendor": "Cisco Services",
+      "device": "Seattle-SW-02",
+      "quantity": 1,
+      "description": "Cisco DNA Advantage for Seattle-SW-02",
+      "comments": "Bought for Toyota."
+    },
+    {
+      "_key": "Seattle-SRV-03",
+      "license": "iDRAC9 Enterprise",
+      "vendor": "Dell ProSupport",
+      "device": "Seattle-SRV-03",
+      "quantity": 1,
+      "description": "iDRAC9 Enterprise for Seattle-SRV-03",
+      "comments": "Bought for Toyota."
+    },
+    {
+      "_key": "Seattle-SRV-04",
+      "license": "iDRAC9 Enterprise",
+      "vendor": "Dell ProSupport",
+      "device": "Seattle-SRV-04",
+      "quantity": 1,
+      "description": "iDRAC9 Enterprise for Seattle-SRV-04",
+      "comments": "Bought for Toyota."
+    },
+    {
+      "_key": "Miami-FW-01",
+      "license": "FortiGuard Unified Threat Protection",
+      "vendor": "Fortinet Support",
+      "device": "Miami-FW-01",
+      "quantity": 1,
+      "description": "FortiGuard Unified Threat Protection for Miami-FW-01",
+      "comments": "Bought for Shell."
+    },
+    {
+      "_key": "Miami-SW-01",
+      "license": "Cisco DNA Advantage",
+      "vendor": "Cisco Services",
+      "device": "Miami-SW-01",
+      "quantity": 1,
+      "description": "Cisco DNA Advantage for Miami-SW-01",
+      "comments": "Bought for Shell."
+    },
+    {
+      "_key": "Miami-SRV-01",
+      "license": "iDRAC9 Enterprise",
+      "vendor": "Dell ProSupport",
+      "device": "Miami-SRV-01",
+      "quantity": 1,
+      "description": "iDRAC9 Enterprise for Miami-SRV-01",
+      "comments": "Bought for Shell."
+    },
+    {
+      "_key": "Miami-SRV-02",
+      "license": "iDRAC9 Enterprise",
+      "vendor": "Dell ProSupport",
+      "device": "Miami-SRV-02",
+      "quantity": 1,
+      "description": "iDRAC9 Enterprise for Miami-SRV-02",
+      "comments": "Bought for Shell."
+    },
+    {
+      "_key": "Miami-SW-02",
+      "license": "Cisco DNA Advantage",
+      "vendor": "Cisco Services",
+      "device": "Miami-SW-02",
+      "quantity": 1,
+      "description": "Cisco DNA Advantage for Miami-SW-02",
+      "comments": "Bought for Shell."
+    },
+    {
+      "_key": "Miami-SRV-03",
+      "license": "iDRAC9 Enterprise",
+      "vendor": "Dell ProSupport",
+      "device": "Miami-SRV-03",
+      "quantity": 1,
+      "description": "iDRAC9 Enterprise for Miami-SRV-03",
+      "comments": "Bought for Shell."
+    },
+    {
+      "_key": "Miami-SRV-04",
+      "license": "iDRAC9 Enterprise",
+      "vendor": "Dell ProSupport",
+      "device": "Miami-SRV-04",
+      "quantity": 1,
+      "description": "iDRAC9 Enterprise for Miami-SRV-04",
+      "comments": "Bought for Shell."
+    }
+  ],
+  "plugins/lifecycle/supportcontractassignment/": [
+    {
+      "contract": "FTNT-001-COCA-COLA",
+      "sku": "FC-10-F100F-950-02-36",
+      "device": "Munich-FW-01",
+      "license": "Munich-FW-01",
+      "end": "2028-12-31",
+      "description": "FC-10-F100F-950-02-36 coverage for Munich-FW-01",
+      "comments": "Firewall at Coca Cola."
+    },
+    {
+      "contract": "CSCO-001-COCA-COLA",
+      "sku": "CON-SNT-C9300-24T",
+      "device": "Munich-SW-01",
+      "license": "Munich-SW-01",
+      "end": "2028-12-31",
+      "description": "CON-SNT-C9300-24T coverage for Munich-SW-01",
+      "comments": "Switch at Coca Cola."
+    },
+    {
+      "contract": "DELL-001-COCA-COLA",
+      "sku": "PS-PLUS-R750-4H-60M",
+      "device": "Munich-SRV-01",
+      "license": "Munich-SRV-01",
+      "end": "2028-12-31",
+      "description": "PS-PLUS-R750-4H-60M coverage for Munich-SRV-01",
+      "comments": "Server at Coca Cola."
+    },
+    {
+      "contract": "DELL-001-COCA-COLA",
+      "sku": "PS-PLUS-R750-4H-60M",
+      "device": "Munich-SRV-02",
+      "license": "Munich-SRV-02",
+      "end": "2028-12-31",
+      "description": "PS-PLUS-R750-4H-60M coverage for Munich-SRV-02",
+      "comments": "Server at Coca Cola."
+    },
+    {
+      "contract": "CSCO-001-COCA-COLA",
+      "sku": "CON-SNT-C9300-24T",
+      "device": "Munich-SW-02",
+      "license": "Munich-SW-02",
+      "end": "2028-12-31",
+      "description": "CON-SNT-C9300-24T coverage for Munich-SW-02",
+      "comments": "Switch at Coca Cola."
+    },
+    {
+      "contract": "DELL-001-COCA-COLA",
+      "sku": "PS-PLUS-R750-4H-60M",
+      "device": "Munich-SRV-03",
+      "license": "Munich-SRV-03",
+      "end": "2028-12-31",
+      "description": "PS-PLUS-R750-4H-60M coverage for Munich-SRV-03",
+      "comments": "Server at Coca Cola."
+    },
+    {
+      "contract": "DELL-001-COCA-COLA",
+      "sku": "PS-PLUS-R750-4H-60M",
+      "device": "Munich-SRV-04",
+      "license": "Munich-SRV-04",
+      "end": "2028-12-31",
+      "description": "PS-PLUS-R750-4H-60M coverage for Munich-SRV-04",
+      "comments": "Server at Coca Cola."
+    },
+    {
+      "contract": "FTNT-002-CISCO",
+      "sku": "FC-10-F100F-950-02-36",
+      "device": "Berlin-FW-01",
+      "license": "Berlin-FW-01",
+      "end": "2028-12-31",
+      "description": "FC-10-F100F-950-02-36 coverage for Berlin-FW-01",
+      "comments": "Firewall at Cisco."
+    },
+    {
+      "contract": "CSCO-002-CISCO",
+      "sku": "CON-SNT-C9300-24T",
+      "device": "Berlin-SW-01",
+      "license": "Berlin-SW-01",
+      "end": "2028-12-31",
+      "description": "CON-SNT-C9300-24T coverage for Berlin-SW-01",
+      "comments": "Switch at Cisco."
+    },
+    {
+      "contract": "DELL-002-CISCO",
+      "sku": "PS-PLUS-R750-4H-60M",
+      "device": "Berlin-SRV-01",
+      "license": "Berlin-SRV-01",
+      "end": "2028-12-31",
+      "description": "PS-PLUS-R750-4H-60M coverage for Berlin-SRV-01",
+      "comments": "Server at Cisco."
+    },
+    {
+      "contract": "DELL-002-CISCO",
+      "sku": "PS-PLUS-R750-4H-60M",
+      "device": "Berlin-SRV-02",
+      "license": "Berlin-SRV-02",
+      "end": "2028-12-31",
+      "description": "PS-PLUS-R750-4H-60M coverage for Berlin-SRV-02",
+      "comments": "Server at Cisco."
+    },
+    {
+      "contract": "CSCO-002-CISCO",
+      "sku": "CON-SNT-C9300-24T",
+      "device": "Berlin-SW-02",
+      "license": "Berlin-SW-02",
+      "end": "2028-12-31",
+      "description": "CON-SNT-C9300-24T coverage for Berlin-SW-02",
+      "comments": "Switch at Cisco."
+    },
+    {
+      "contract": "DELL-002-CISCO",
+      "sku": "PS-PLUS-R750-4H-60M",
+      "device": "Berlin-SRV-03",
+      "license": "Berlin-SRV-03",
+      "end": "2028-12-31",
+      "description": "PS-PLUS-R750-4H-60M coverage for Berlin-SRV-03",
+      "comments": "Server at Cisco."
+    },
+    {
+      "contract": "DELL-002-CISCO",
+      "sku": "PS-PLUS-R750-4H-60M",
+      "device": "Berlin-SRV-04",
+      "license": "Berlin-SRV-04",
+      "end": "2028-12-31",
+      "description": "PS-PLUS-R750-4H-60M coverage for Berlin-SRV-04",
+      "comments": "Server at Cisco."
+    },
+    {
+      "contract": "FTNT-003-SAP",
+      "sku": "FC-10-F100F-950-02-36",
+      "device": "Cologne-FW-01",
+      "license": "Cologne-FW-01",
+      "end": "2028-12-31",
+      "description": "FC-10-F100F-950-02-36 coverage for Cologne-FW-01",
+      "comments": "Firewall at SAP."
+    },
+    {
+      "contract": "CSCO-003-SAP",
+      "sku": "CON-SNT-C9300-24T",
+      "device": "Cologne-SW-01",
+      "license": "Cologne-SW-01",
+      "end": "2028-12-31",
+      "description": "CON-SNT-C9300-24T coverage for Cologne-SW-01",
+      "comments": "Switch at SAP."
+    },
+    {
+      "contract": "DELL-003-SAP",
+      "sku": "PS-PLUS-R750-4H-60M",
+      "device": "Cologne-SRV-01",
+      "license": "Cologne-SRV-01",
+      "end": "2028-12-31",
+      "description": "PS-PLUS-R750-4H-60M coverage for Cologne-SRV-01",
+      "comments": "Server at SAP."
+    },
+    {
+      "contract": "DELL-003-SAP",
+      "sku": "PS-PLUS-R750-4H-60M",
+      "device": "Cologne-SRV-02",
+      "license": "Cologne-SRV-02",
+      "end": "2028-12-31",
+      "description": "PS-PLUS-R750-4H-60M coverage for Cologne-SRV-02",
+      "comments": "Server at SAP."
+    },
+    {
+      "contract": "CSCO-003-SAP",
+      "sku": "CON-SNT-C9300-24T",
+      "device": "Cologne-SW-02",
+      "license": "Cologne-SW-02",
+      "end": "2028-12-31",
+      "description": "CON-SNT-C9300-24T coverage for Cologne-SW-02",
+      "comments": "Switch at SAP."
+    },
+    {
+      "contract": "DELL-003-SAP",
+      "sku": "PS-PLUS-R750-4H-60M",
+      "device": "Cologne-SRV-03",
+      "license": "Cologne-SRV-03",
+      "end": "2028-12-31",
+      "description": "PS-PLUS-R750-4H-60M coverage for Cologne-SRV-03",
+      "comments": "Server at SAP."
+    },
+    {
+      "contract": "DELL-003-SAP",
+      "sku": "PS-PLUS-R750-4H-60M",
+      "device": "Cologne-SRV-04",
+      "license": "Cologne-SRV-04",
+      "end": "2028-12-31",
+      "description": "PS-PLUS-R750-4H-60M coverage for Cologne-SRV-04",
+      "comments": "Server at SAP."
+    },
+    {
+      "contract": "FTNT-004-GOOGLE",
+      "sku": "FC-10-F100F-950-02-36",
+      "device": "Dusseldorf-FW-01",
+      "license": "Dusseldorf-FW-01",
+      "end": "2028-12-31",
+      "description": "FC-10-F100F-950-02-36 coverage for Dusseldorf-FW-01",
+      "comments": "Firewall at Google."
+    },
+    {
+      "contract": "CSCO-004-GOOGLE",
+      "sku": "CON-SNT-C9300-24T",
+      "device": "Dusseldorf-SW-01",
+      "license": "Dusseldorf-SW-01",
+      "end": "2028-12-31",
+      "description": "CON-SNT-C9300-24T coverage for Dusseldorf-SW-01",
+      "comments": "Switch at Google."
+    },
+    {
+      "contract": "DELL-004-GOOGLE",
+      "sku": "PS-PLUS-R750-4H-60M",
+      "device": "Dusseldorf-SRV-01",
+      "license": "Dusseldorf-SRV-01",
+      "end": "2028-12-31",
+      "description": "PS-PLUS-R750-4H-60M coverage for Dusseldorf-SRV-01",
+      "comments": "Server at Google."
+    },
+    {
+      "contract": "DELL-004-GOOGLE",
+      "sku": "PS-PLUS-R750-4H-60M",
+      "device": "Dusseldorf-SRV-02",
+      "license": "Dusseldorf-SRV-02",
+      "end": "2028-12-31",
+      "description": "PS-PLUS-R750-4H-60M coverage for Dusseldorf-SRV-02",
+      "comments": "Server at Google."
+    },
+    {
+      "contract": "CSCO-004-GOOGLE",
+      "sku": "CON-SNT-C9300-24T",
+      "device": "Dusseldorf-SW-02",
+      "license": "Dusseldorf-SW-02",
+      "end": "2028-12-31",
+      "description": "CON-SNT-C9300-24T coverage for Dusseldorf-SW-02",
+      "comments": "Switch at Google."
+    },
+    {
+      "contract": "DELL-004-GOOGLE",
+      "sku": "PS-PLUS-R750-4H-60M",
+      "device": "Dusseldorf-SRV-03",
+      "license": "Dusseldorf-SRV-03",
+      "end": "2028-12-31",
+      "description": "PS-PLUS-R750-4H-60M coverage for Dusseldorf-SRV-03",
+      "comments": "Server at Google."
+    },
+    {
+      "contract": "DELL-004-GOOGLE",
+      "sku": "PS-PLUS-R750-4H-60M",
+      "device": "Dusseldorf-SRV-04",
+      "license": "Dusseldorf-SRV-04",
+      "end": "2028-12-31",
+      "description": "PS-PLUS-R750-4H-60M coverage for Dusseldorf-SRV-04",
+      "comments": "Server at Google."
+    },
+    {
+      "contract": "FTNT-005-AMAZON",
+      "sku": "FC-10-F100F-950-02-36",
+      "device": "Dortmund-FW-01",
+      "license": "Dortmund-FW-01",
+      "end": "2028-12-31",
+      "description": "FC-10-F100F-950-02-36 coverage for Dortmund-FW-01",
+      "comments": "Firewall at Amazon."
+    },
+    {
+      "contract": "CSCO-005-AMAZON",
+      "sku": "CON-SNT-C9300-24T",
+      "device": "Dortmund-SW-01",
+      "license": "Dortmund-SW-01",
+      "end": "2028-12-31",
+      "description": "CON-SNT-C9300-24T coverage for Dortmund-SW-01",
+      "comments": "Switch at Amazon."
+    },
+    {
+      "contract": "DELL-005-AMAZON",
+      "sku": "PS-PLUS-R750-4H-60M",
+      "device": "Dortmund-SRV-01",
+      "license": "Dortmund-SRV-01",
+      "end": "2028-12-31",
+      "description": "PS-PLUS-R750-4H-60M coverage for Dortmund-SRV-01",
+      "comments": "Server at Amazon."
+    },
+    {
+      "contract": "DELL-005-AMAZON",
+      "sku": "PS-PLUS-R750-4H-60M",
+      "device": "Dortmund-SRV-02",
+      "license": "Dortmund-SRV-02",
+      "end": "2028-12-31",
+      "description": "PS-PLUS-R750-4H-60M coverage for Dortmund-SRV-02",
+      "comments": "Server at Amazon."
+    },
+    {
+      "contract": "CSCO-005-AMAZON",
+      "sku": "CON-SNT-C9300-24T",
+      "device": "Dortmund-SW-02",
+      "license": "Dortmund-SW-02",
+      "end": "2028-12-31",
+      "description": "CON-SNT-C9300-24T coverage for Dortmund-SW-02",
+      "comments": "Switch at Amazon."
+    },
+    {
+      "contract": "DELL-005-AMAZON",
+      "sku": "PS-PLUS-R750-4H-60M",
+      "device": "Dortmund-SRV-03",
+      "license": "Dortmund-SRV-03",
+      "end": "2028-12-31",
+      "description": "PS-PLUS-R750-4H-60M coverage for Dortmund-SRV-03",
+      "comments": "Server at Amazon."
+    },
+    {
+      "contract": "DELL-005-AMAZON",
+      "sku": "PS-PLUS-R750-4H-60M",
+      "device": "Dortmund-SRV-04",
+      "license": "Dortmund-SRV-04",
+      "end": "2028-12-31",
+      "description": "PS-PLUS-R750-4H-60M coverage for Dortmund-SRV-04",
+      "comments": "Server at Amazon."
+    },
+    {
+      "contract": "FTNT-006-MICROSOFT",
+      "sku": "FC-10-F100F-950-02-36",
+      "device": "Vienna-FW-01",
+      "license": "Vienna-FW-01",
+      "end": "2028-12-31",
+      "description": "FC-10-F100F-950-02-36 coverage for Vienna-FW-01",
+      "comments": "Firewall at Microsoft."
+    },
+    {
+      "contract": "CSCO-006-MICROSOFT",
+      "sku": "CON-SNT-C9300-24T",
+      "device": "Vienna-SW-01",
+      "license": "Vienna-SW-01",
+      "end": "2028-12-31",
+      "description": "CON-SNT-C9300-24T coverage for Vienna-SW-01",
+      "comments": "Switch at Microsoft."
+    },
+    {
+      "contract": "DELL-006-MICROSOFT",
+      "sku": "PS-PLUS-R750-4H-60M",
+      "device": "Vienna-SRV-01",
+      "license": "Vienna-SRV-01",
+      "end": "2028-12-31",
+      "description": "PS-PLUS-R750-4H-60M coverage for Vienna-SRV-01",
+      "comments": "Server at Microsoft."
+    },
+    {
+      "contract": "DELL-006-MICROSOFT",
+      "sku": "PS-PLUS-R750-4H-60M",
+      "device": "Vienna-SRV-02",
+      "license": "Vienna-SRV-02",
+      "end": "2028-12-31",
+      "description": "PS-PLUS-R750-4H-60M coverage for Vienna-SRV-02",
+      "comments": "Server at Microsoft."
+    },
+    {
+      "contract": "CSCO-006-MICROSOFT",
+      "sku": "CON-SNT-C9300-24T",
+      "device": "Vienna-SW-02",
+      "license": "Vienna-SW-02",
+      "end": "2028-12-31",
+      "description": "CON-SNT-C9300-24T coverage for Vienna-SW-02",
+      "comments": "Switch at Microsoft."
+    },
+    {
+      "contract": "DELL-006-MICROSOFT",
+      "sku": "PS-PLUS-R750-4H-60M",
+      "device": "Vienna-SRV-03",
+      "license": "Vienna-SRV-03",
+      "end": "2028-12-31",
+      "description": "PS-PLUS-R750-4H-60M coverage for Vienna-SRV-03",
+      "comments": "Server at Microsoft."
+    },
+    {
+      "contract": "DELL-006-MICROSOFT",
+      "sku": "PS-PLUS-R750-4H-60M",
+      "device": "Vienna-SRV-04",
+      "license": "Vienna-SRV-04",
+      "end": "2028-12-31",
+      "description": "PS-PLUS-R750-4H-60M coverage for Vienna-SRV-04",
+      "comments": "Server at Microsoft."
+    },
+    {
+      "contract": "FTNT-007-IBM",
+      "sku": "FC-10-F100F-950-02-36",
+      "device": "Amsterdam-FW-01",
+      "license": "Amsterdam-FW-01",
+      "end": "2028-12-31",
+      "description": "FC-10-F100F-950-02-36 coverage for Amsterdam-FW-01",
+      "comments": "Firewall at IBM."
+    },
+    {
+      "contract": "CSCO-007-IBM",
+      "sku": "CON-SNT-C9300-24T",
+      "device": "Amsterdam-SW-01",
+      "license": "Amsterdam-SW-01",
+      "end": "2028-12-31",
+      "description": "CON-SNT-C9300-24T coverage for Amsterdam-SW-01",
+      "comments": "Switch at IBM."
+    },
+    {
+      "contract": "DELL-007-IBM",
+      "sku": "PS-PLUS-R750-4H-60M",
+      "device": "Amsterdam-SRV-01",
+      "license": "Amsterdam-SRV-01",
+      "end": "2028-12-31",
+      "description": "PS-PLUS-R750-4H-60M coverage for Amsterdam-SRV-01",
+      "comments": "Server at IBM."
+    },
+    {
+      "contract": "DELL-007-IBM",
+      "sku": "PS-PLUS-R750-4H-60M",
+      "device": "Amsterdam-SRV-02",
+      "license": "Amsterdam-SRV-02",
+      "end": "2028-12-31",
+      "description": "PS-PLUS-R750-4H-60M coverage for Amsterdam-SRV-02",
+      "comments": "Server at IBM."
+    },
+    {
+      "contract": "CSCO-007-IBM",
+      "sku": "CON-SNT-C9300-24T",
+      "device": "Amsterdam-SW-02",
+      "license": "Amsterdam-SW-02",
+      "end": "2028-12-31",
+      "description": "CON-SNT-C9300-24T coverage for Amsterdam-SW-02",
+      "comments": "Switch at IBM."
+    },
+    {
+      "contract": "DELL-007-IBM",
+      "sku": "PS-PLUS-R750-4H-60M",
+      "device": "Amsterdam-SRV-03",
+      "license": "Amsterdam-SRV-03",
+      "end": "2028-12-31",
+      "description": "PS-PLUS-R750-4H-60M coverage for Amsterdam-SRV-03",
+      "comments": "Server at IBM."
+    },
+    {
+      "contract": "DELL-007-IBM",
+      "sku": "PS-PLUS-R750-4H-60M",
+      "device": "Amsterdam-SRV-04",
+      "license": "Amsterdam-SRV-04",
+      "end": "2028-12-31",
+      "description": "PS-PLUS-R750-4H-60M coverage for Amsterdam-SRV-04",
+      "comments": "Server at IBM."
+    },
+    {
+      "contract": "FTNT-008-ORACLE",
+      "sku": "FC-10-F100F-950-02-36",
+      "device": "Paris-FW-01",
+      "license": "Paris-FW-01",
+      "end": "2028-12-31",
+      "description": "FC-10-F100F-950-02-36 coverage for Paris-FW-01",
+      "comments": "Firewall at Oracle."
+    },
+    {
+      "contract": "CSCO-008-ORACLE",
+      "sku": "CON-SNT-C9300-24T",
+      "device": "Paris-SW-01",
+      "license": "Paris-SW-01",
+      "end": "2028-12-31",
+      "description": "CON-SNT-C9300-24T coverage for Paris-SW-01",
+      "comments": "Switch at Oracle."
+    },
+    {
+      "contract": "DELL-008-ORACLE",
+      "sku": "PS-PLUS-R750-4H-60M",
+      "device": "Paris-SRV-01",
+      "license": "Paris-SRV-01",
+      "end": "2028-12-31",
+      "description": "PS-PLUS-R750-4H-60M coverage for Paris-SRV-01",
+      "comments": "Server at Oracle."
+    },
+    {
+      "contract": "DELL-008-ORACLE",
+      "sku": "PS-PLUS-R750-4H-60M",
+      "device": "Paris-SRV-02",
+      "license": "Paris-SRV-02",
+      "end": "2028-12-31",
+      "description": "PS-PLUS-R750-4H-60M coverage for Paris-SRV-02",
+      "comments": "Server at Oracle."
+    },
+    {
+      "contract": "CSCO-008-ORACLE",
+      "sku": "CON-SNT-C9300-24T",
+      "device": "Paris-SW-02",
+      "license": "Paris-SW-02",
+      "end": "2028-12-31",
+      "description": "CON-SNT-C9300-24T coverage for Paris-SW-02",
+      "comments": "Switch at Oracle."
+    },
+    {
+      "contract": "DELL-008-ORACLE",
+      "sku": "PS-PLUS-R750-4H-60M",
+      "device": "Paris-SRV-03",
+      "license": "Paris-SRV-03",
+      "end": "2028-12-31",
+      "description": "PS-PLUS-R750-4H-60M coverage for Paris-SRV-03",
+      "comments": "Server at Oracle."
+    },
+    {
+      "contract": "DELL-008-ORACLE",
+      "sku": "PS-PLUS-R750-4H-60M",
+      "device": "Paris-SRV-04",
+      "license": "Paris-SRV-04",
+      "end": "2028-12-31",
+      "description": "PS-PLUS-R750-4H-60M coverage for Paris-SRV-04",
+      "comments": "Server at Oracle."
+    },
+    {
+      "contract": "FTNT-009-SIEMENS",
+      "sku": "FC-10-F100F-950-02-36",
+      "device": "Madrid-FW-01",
+      "license": "Madrid-FW-01",
+      "end": "2028-12-31",
+      "description": "FC-10-F100F-950-02-36 coverage for Madrid-FW-01",
+      "comments": "Firewall at Siemens."
+    },
+    {
+      "contract": "CSCO-009-SIEMENS",
+      "sku": "CON-SNT-C9300-24T",
+      "device": "Madrid-SW-01",
+      "license": "Madrid-SW-01",
+      "end": "2028-12-31",
+      "description": "CON-SNT-C9300-24T coverage for Madrid-SW-01",
+      "comments": "Switch at Siemens."
+    },
+    {
+      "contract": "DELL-009-SIEMENS",
+      "sku": "PS-PLUS-R750-4H-60M",
+      "device": "Madrid-SRV-01",
+      "license": "Madrid-SRV-01",
+      "end": "2028-12-31",
+      "description": "PS-PLUS-R750-4H-60M coverage for Madrid-SRV-01",
+      "comments": "Server at Siemens."
+    },
+    {
+      "contract": "DELL-009-SIEMENS",
+      "sku": "PS-PLUS-R750-4H-60M",
+      "device": "Madrid-SRV-02",
+      "license": "Madrid-SRV-02",
+      "end": "2028-12-31",
+      "description": "PS-PLUS-R750-4H-60M coverage for Madrid-SRV-02",
+      "comments": "Server at Siemens."
+    },
+    {
+      "contract": "CSCO-009-SIEMENS",
+      "sku": "CON-SNT-C9300-24T",
+      "device": "Madrid-SW-02",
+      "license": "Madrid-SW-02",
+      "end": "2028-12-31",
+      "description": "CON-SNT-C9300-24T coverage for Madrid-SW-02",
+      "comments": "Switch at Siemens."
+    },
+    {
+      "contract": "DELL-009-SIEMENS",
+      "sku": "PS-PLUS-R750-4H-60M",
+      "device": "Madrid-SRV-03",
+      "license": "Madrid-SRV-03",
+      "end": "2028-12-31",
+      "description": "PS-PLUS-R750-4H-60M coverage for Madrid-SRV-03",
+      "comments": "Server at Siemens."
+    },
+    {
+      "contract": "DELL-009-SIEMENS",
+      "sku": "PS-PLUS-R750-4H-60M",
+      "device": "Madrid-SRV-04",
+      "license": "Madrid-SRV-04",
+      "end": "2028-12-31",
+      "description": "PS-PLUS-R750-4H-60M coverage for Madrid-SRV-04",
+      "comments": "Server at Siemens."
+    },
+    {
+      "contract": "FTNT-010-BMW",
+      "sku": "FC-10-F100F-950-02-36",
+      "device": "Rome-FW-01",
+      "license": "Rome-FW-01",
+      "end": "2028-12-31",
+      "description": "FC-10-F100F-950-02-36 coverage for Rome-FW-01",
+      "comments": "Firewall at BMW."
+    },
+    {
+      "contract": "CSCO-010-BMW",
+      "sku": "CON-SNT-C9300-24T",
+      "device": "Rome-SW-01",
+      "license": "Rome-SW-01",
+      "end": "2028-12-31",
+      "description": "CON-SNT-C9300-24T coverage for Rome-SW-01",
+      "comments": "Switch at BMW."
+    },
+    {
+      "contract": "DELL-010-BMW",
+      "sku": "PS-PLUS-R750-4H-60M",
+      "device": "Rome-SRV-01",
+      "license": "Rome-SRV-01",
+      "end": "2028-12-31",
+      "description": "PS-PLUS-R750-4H-60M coverage for Rome-SRV-01",
+      "comments": "Server at BMW."
+    },
+    {
+      "contract": "DELL-010-BMW",
+      "sku": "PS-PLUS-R750-4H-60M",
+      "device": "Rome-SRV-02",
+      "license": "Rome-SRV-02",
+      "end": "2028-12-31",
+      "description": "PS-PLUS-R750-4H-60M coverage for Rome-SRV-02",
+      "comments": "Server at BMW."
+    },
+    {
+      "contract": "CSCO-010-BMW",
+      "sku": "CON-SNT-C9300-24T",
+      "device": "Rome-SW-02",
+      "license": "Rome-SW-02",
+      "end": "2028-12-31",
+      "description": "CON-SNT-C9300-24T coverage for Rome-SW-02",
+      "comments": "Switch at BMW."
+    },
+    {
+      "contract": "DELL-010-BMW",
+      "sku": "PS-PLUS-R750-4H-60M",
+      "device": "Rome-SRV-03",
+      "license": "Rome-SRV-03",
+      "end": "2028-12-31",
+      "description": "PS-PLUS-R750-4H-60M coverage for Rome-SRV-03",
+      "comments": "Server at BMW."
+    },
+    {
+      "contract": "DELL-010-BMW",
+      "sku": "PS-PLUS-R750-4H-60M",
+      "device": "Rome-SRV-04",
+      "license": "Rome-SRV-04",
+      "end": "2028-12-31",
+      "description": "PS-PLUS-R750-4H-60M coverage for Rome-SRV-04",
+      "comments": "Server at BMW."
+    },
+    {
+      "contract": "FTNT-011-VOLKSWAGEN",
+      "sku": "FC-10-F100F-950-02-36",
+      "device": "Warsaw-FW-01",
+      "license": "Warsaw-FW-01",
+      "end": "2028-12-31",
+      "description": "FC-10-F100F-950-02-36 coverage for Warsaw-FW-01",
+      "comments": "Firewall at Volkswagen."
+    },
+    {
+      "contract": "CSCO-011-VOLKSWAGEN",
+      "sku": "CON-SNT-C9300-24T",
+      "device": "Warsaw-SW-01",
+      "license": "Warsaw-SW-01",
+      "end": "2028-12-31",
+      "description": "CON-SNT-C9300-24T coverage for Warsaw-SW-01",
+      "comments": "Switch at Volkswagen."
+    },
+    {
+      "contract": "DELL-011-VOLKSWAGEN",
+      "sku": "PS-PLUS-R750-4H-60M",
+      "device": "Warsaw-SRV-01",
+      "license": "Warsaw-SRV-01",
+      "end": "2028-12-31",
+      "description": "PS-PLUS-R750-4H-60M coverage for Warsaw-SRV-01",
+      "comments": "Server at Volkswagen."
+    },
+    {
+      "contract": "DELL-011-VOLKSWAGEN",
+      "sku": "PS-PLUS-R750-4H-60M",
+      "device": "Warsaw-SRV-02",
+      "license": "Warsaw-SRV-02",
+      "end": "2028-12-31",
+      "description": "PS-PLUS-R750-4H-60M coverage for Warsaw-SRV-02",
+      "comments": "Server at Volkswagen."
+    },
+    {
+      "contract": "CSCO-011-VOLKSWAGEN",
+      "sku": "CON-SNT-C9300-24T",
+      "device": "Warsaw-SW-02",
+      "license": "Warsaw-SW-02",
+      "end": "2028-12-31",
+      "description": "CON-SNT-C9300-24T coverage for Warsaw-SW-02",
+      "comments": "Switch at Volkswagen."
+    },
+    {
+      "contract": "DELL-011-VOLKSWAGEN",
+      "sku": "PS-PLUS-R750-4H-60M",
+      "device": "Warsaw-SRV-03",
+      "license": "Warsaw-SRV-03",
+      "end": "2028-12-31",
+      "description": "PS-PLUS-R750-4H-60M coverage for Warsaw-SRV-03",
+      "comments": "Server at Volkswagen."
+    },
+    {
+      "contract": "DELL-011-VOLKSWAGEN",
+      "sku": "PS-PLUS-R750-4H-60M",
+      "device": "Warsaw-SRV-04",
+      "license": "Warsaw-SRV-04",
+      "end": "2028-12-31",
+      "description": "PS-PLUS-R750-4H-60M coverage for Warsaw-SRV-04",
+      "comments": "Server at Volkswagen."
+    },
+    {
+      "contract": "FTNT-012-DEUTSCHE-BANK",
+      "sku": "FC-10-F100F-950-02-36",
+      "device": "Budapest-FW-01",
+      "license": "Budapest-FW-01",
+      "end": "2028-12-31",
+      "description": "FC-10-F100F-950-02-36 coverage for Budapest-FW-01",
+      "comments": "Firewall at Deutsche Bank."
+    },
+    {
+      "contract": "CSCO-012-DEUTSCHE-BANK",
+      "sku": "CON-SNT-C9300-24T",
+      "device": "Budapest-SW-01",
+      "license": "Budapest-SW-01",
+      "end": "2028-12-31",
+      "description": "CON-SNT-C9300-24T coverage for Budapest-SW-01",
+      "comments": "Switch at Deutsche Bank."
+    },
+    {
+      "contract": "DELL-012-DEUTSCHE-BANK",
+      "sku": "PS-PLUS-R750-4H-60M",
+      "device": "Budapest-SRV-01",
+      "license": "Budapest-SRV-01",
+      "end": "2028-12-31",
+      "description": "PS-PLUS-R750-4H-60M coverage for Budapest-SRV-01",
+      "comments": "Server at Deutsche Bank."
+    },
+    {
+      "contract": "DELL-012-DEUTSCHE-BANK",
+      "sku": "PS-PLUS-R750-4H-60M",
+      "device": "Budapest-SRV-02",
+      "license": "Budapest-SRV-02",
+      "end": "2028-12-31",
+      "description": "PS-PLUS-R750-4H-60M coverage for Budapest-SRV-02",
+      "comments": "Server at Deutsche Bank."
+    },
+    {
+      "contract": "CSCO-012-DEUTSCHE-BANK",
+      "sku": "CON-SNT-C9300-24T",
+      "device": "Budapest-SW-02",
+      "license": "Budapest-SW-02",
+      "end": "2028-12-31",
+      "description": "CON-SNT-C9300-24T coverage for Budapest-SW-02",
+      "comments": "Switch at Deutsche Bank."
+    },
+    {
+      "contract": "DELL-012-DEUTSCHE-BANK",
+      "sku": "PS-PLUS-R750-4H-60M",
+      "device": "Budapest-SRV-03",
+      "license": "Budapest-SRV-03",
+      "end": "2028-12-31",
+      "description": "PS-PLUS-R750-4H-60M coverage for Budapest-SRV-03",
+      "comments": "Server at Deutsche Bank."
+    },
+    {
+      "contract": "DELL-012-DEUTSCHE-BANK",
+      "sku": "PS-PLUS-R750-4H-60M",
+      "device": "Budapest-SRV-04",
+      "license": "Budapest-SRV-04",
+      "end": "2028-12-31",
+      "description": "PS-PLUS-R750-4H-60M coverage for Budapest-SRV-04",
+      "comments": "Server at Deutsche Bank."
+    },
+    {
+      "contract": "FTNT-013-ALLIANZ",
+      "sku": "FC-10-F100F-950-02-36",
+      "device": "Stockholm-FW-01",
+      "license": "Stockholm-FW-01",
+      "end": "2028-12-31",
+      "description": "FC-10-F100F-950-02-36 coverage for Stockholm-FW-01",
+      "comments": "Firewall at Allianz."
+    },
+    {
+      "contract": "CSCO-013-ALLIANZ",
+      "sku": "CON-SNT-C9300-24T",
+      "device": "Stockholm-SW-01",
+      "license": "Stockholm-SW-01",
+      "end": "2028-12-31",
+      "description": "CON-SNT-C9300-24T coverage for Stockholm-SW-01",
+      "comments": "Switch at Allianz."
+    },
+    {
+      "contract": "DELL-013-ALLIANZ",
+      "sku": "PS-PLUS-R750-4H-60M",
+      "device": "Stockholm-SRV-01",
+      "license": "Stockholm-SRV-01",
+      "end": "2028-12-31",
+      "description": "PS-PLUS-R750-4H-60M coverage for Stockholm-SRV-01",
+      "comments": "Server at Allianz."
+    },
+    {
+      "contract": "DELL-013-ALLIANZ",
+      "sku": "PS-PLUS-R750-4H-60M",
+      "device": "Stockholm-SRV-02",
+      "license": "Stockholm-SRV-02",
+      "end": "2028-12-31",
+      "description": "PS-PLUS-R750-4H-60M coverage for Stockholm-SRV-02",
+      "comments": "Server at Allianz."
+    },
+    {
+      "contract": "CSCO-013-ALLIANZ",
+      "sku": "CON-SNT-C9300-24T",
+      "device": "Stockholm-SW-02",
+      "license": "Stockholm-SW-02",
+      "end": "2028-12-31",
+      "description": "CON-SNT-C9300-24T coverage for Stockholm-SW-02",
+      "comments": "Switch at Allianz."
+    },
+    {
+      "contract": "DELL-013-ALLIANZ",
+      "sku": "PS-PLUS-R750-4H-60M",
+      "device": "Stockholm-SRV-03",
+      "license": "Stockholm-SRV-03",
+      "end": "2028-12-31",
+      "description": "PS-PLUS-R750-4H-60M coverage for Stockholm-SRV-03",
+      "comments": "Server at Allianz."
+    },
+    {
+      "contract": "DELL-013-ALLIANZ",
+      "sku": "PS-PLUS-R750-4H-60M",
+      "device": "Stockholm-SRV-04",
+      "license": "Stockholm-SRV-04",
+      "end": "2028-12-31",
+      "description": "PS-PLUS-R750-4H-60M coverage for Stockholm-SRV-04",
+      "comments": "Server at Allianz."
+    },
+    {
+      "contract": "FTNT-014-ADIDAS",
+      "sku": "FC-10-F100F-950-02-36",
+      "device": "Dublin-FW-01",
+      "license": "Dublin-FW-01",
+      "end": "2028-12-31",
+      "description": "FC-10-F100F-950-02-36 coverage for Dublin-FW-01",
+      "comments": "Firewall at Adidas."
+    },
+    {
+      "contract": "CSCO-014-ADIDAS",
+      "sku": "CON-SNT-C9300-24T",
+      "device": "Dublin-SW-01",
+      "license": "Dublin-SW-01",
+      "end": "2028-12-31",
+      "description": "CON-SNT-C9300-24T coverage for Dublin-SW-01",
+      "comments": "Switch at Adidas."
+    },
+    {
+      "contract": "DELL-014-ADIDAS",
+      "sku": "PS-PLUS-R750-4H-60M",
+      "device": "Dublin-SRV-01",
+      "license": "Dublin-SRV-01",
+      "end": "2028-12-31",
+      "description": "PS-PLUS-R750-4H-60M coverage for Dublin-SRV-01",
+      "comments": "Server at Adidas."
+    },
+    {
+      "contract": "DELL-014-ADIDAS",
+      "sku": "PS-PLUS-R750-4H-60M",
+      "device": "Dublin-SRV-02",
+      "license": "Dublin-SRV-02",
+      "end": "2028-12-31",
+      "description": "PS-PLUS-R750-4H-60M coverage for Dublin-SRV-02",
+      "comments": "Server at Adidas."
+    },
+    {
+      "contract": "CSCO-014-ADIDAS",
+      "sku": "CON-SNT-C9300-24T",
+      "device": "Dublin-SW-02",
+      "license": "Dublin-SW-02",
+      "end": "2028-12-31",
+      "description": "CON-SNT-C9300-24T coverage for Dublin-SW-02",
+      "comments": "Switch at Adidas."
+    },
+    {
+      "contract": "DELL-014-ADIDAS",
+      "sku": "PS-PLUS-R750-4H-60M",
+      "device": "Dublin-SRV-03",
+      "license": "Dublin-SRV-03",
+      "end": "2028-12-31",
+      "description": "PS-PLUS-R750-4H-60M coverage for Dublin-SRV-03",
+      "comments": "Server at Adidas."
+    },
+    {
+      "contract": "DELL-014-ADIDAS",
+      "sku": "PS-PLUS-R750-4H-60M",
+      "device": "Dublin-SRV-04",
+      "license": "Dublin-SRV-04",
+      "end": "2028-12-31",
+      "description": "PS-PLUS-R750-4H-60M coverage for Dublin-SRV-04",
+      "comments": "Server at Adidas."
+    },
+    {
+      "contract": "FTNT-015-PUMA",
+      "sku": "FC-10-F100F-950-02-36",
+      "device": "Athens-FW-01",
+      "license": "Athens-FW-01",
+      "end": "2028-12-31",
+      "description": "FC-10-F100F-950-02-36 coverage for Athens-FW-01",
+      "comments": "Firewall at Puma."
+    },
+    {
+      "contract": "CSCO-015-PUMA",
+      "sku": "CON-SNT-C9300-24T",
+      "device": "Athens-SW-01",
+      "license": "Athens-SW-01",
+      "end": "2028-12-31",
+      "description": "CON-SNT-C9300-24T coverage for Athens-SW-01",
+      "comments": "Switch at Puma."
+    },
+    {
+      "contract": "DELL-015-PUMA",
+      "sku": "PS-PLUS-R750-4H-60M",
+      "device": "Athens-SRV-01",
+      "license": "Athens-SRV-01",
+      "end": "2028-12-31",
+      "description": "PS-PLUS-R750-4H-60M coverage for Athens-SRV-01",
+      "comments": "Server at Puma."
+    },
+    {
+      "contract": "DELL-015-PUMA",
+      "sku": "PS-PLUS-R750-4H-60M",
+      "device": "Athens-SRV-02",
+      "license": "Athens-SRV-02",
+      "end": "2028-12-31",
+      "description": "PS-PLUS-R750-4H-60M coverage for Athens-SRV-02",
+      "comments": "Server at Puma."
+    },
+    {
+      "contract": "CSCO-015-PUMA",
+      "sku": "CON-SNT-C9300-24T",
+      "device": "Athens-SW-02",
+      "license": "Athens-SW-02",
+      "end": "2028-12-31",
+      "description": "CON-SNT-C9300-24T coverage for Athens-SW-02",
+      "comments": "Switch at Puma."
+    },
+    {
+      "contract": "DELL-015-PUMA",
+      "sku": "PS-PLUS-R750-4H-60M",
+      "device": "Athens-SRV-03",
+      "license": "Athens-SRV-03",
+      "end": "2028-12-31",
+      "description": "PS-PLUS-R750-4H-60M coverage for Athens-SRV-03",
+      "comments": "Server at Puma."
+    },
+    {
+      "contract": "DELL-015-PUMA",
+      "sku": "PS-PLUS-R750-4H-60M",
+      "device": "Athens-SRV-04",
+      "license": "Athens-SRV-04",
+      "end": "2028-12-31",
+      "description": "PS-PLUS-R750-4H-60M coverage for Athens-SRV-04",
+      "comments": "Server at Puma."
+    },
+    {
+      "contract": "FTNT-016-NIKE",
+      "sku": "FC-10-F100F-950-02-36",
+      "device": "Singapore-FW-01",
+      "license": "Singapore-FW-01",
+      "end": "2028-12-31",
+      "description": "FC-10-F100F-950-02-36 coverage for Singapore-FW-01",
+      "comments": "Firewall at Nike."
+    },
+    {
+      "contract": "CSCO-016-NIKE",
+      "sku": "CON-SNT-C9300-24T",
+      "device": "Singapore-SW-01",
+      "license": "Singapore-SW-01",
+      "end": "2028-12-31",
+      "description": "CON-SNT-C9300-24T coverage for Singapore-SW-01",
+      "comments": "Switch at Nike."
+    },
+    {
+      "contract": "DELL-016-NIKE",
+      "sku": "PS-PLUS-R750-4H-60M",
+      "device": "Singapore-SRV-01",
+      "license": "Singapore-SRV-01",
+      "end": "2028-12-31",
+      "description": "PS-PLUS-R750-4H-60M coverage for Singapore-SRV-01",
+      "comments": "Server at Nike."
+    },
+    {
+      "contract": "DELL-016-NIKE",
+      "sku": "PS-PLUS-R750-4H-60M",
+      "device": "Singapore-SRV-02",
+      "license": "Singapore-SRV-02",
+      "end": "2028-12-31",
+      "description": "PS-PLUS-R750-4H-60M coverage for Singapore-SRV-02",
+      "comments": "Server at Nike."
+    },
+    {
+      "contract": "CSCO-016-NIKE",
+      "sku": "CON-SNT-C9300-24T",
+      "device": "Singapore-SW-02",
+      "license": "Singapore-SW-02",
+      "end": "2028-12-31",
+      "description": "CON-SNT-C9300-24T coverage for Singapore-SW-02",
+      "comments": "Switch at Nike."
+    },
+    {
+      "contract": "DELL-016-NIKE",
+      "sku": "PS-PLUS-R750-4H-60M",
+      "device": "Singapore-SRV-03",
+      "license": "Singapore-SRV-03",
+      "end": "2028-12-31",
+      "description": "PS-PLUS-R750-4H-60M coverage for Singapore-SRV-03",
+      "comments": "Server at Nike."
+    },
+    {
+      "contract": "DELL-016-NIKE",
+      "sku": "PS-PLUS-R750-4H-60M",
+      "device": "Singapore-SRV-04",
+      "license": "Singapore-SRV-04",
+      "end": "2028-12-31",
+      "description": "PS-PLUS-R750-4H-60M coverage for Singapore-SRV-04",
+      "comments": "Server at Nike."
+    },
+    {
+      "contract": "FTNT-017-SAMSUNG",
+      "sku": "FC-10-F100F-950-02-36",
+      "device": "Sydney-FW-01",
+      "license": "Sydney-FW-01",
+      "end": "2028-12-31",
+      "description": "FC-10-F100F-950-02-36 coverage for Sydney-FW-01",
+      "comments": "Firewall at Samsung."
+    },
+    {
+      "contract": "CSCO-017-SAMSUNG",
+      "sku": "CON-SNT-C9300-24T",
+      "device": "Sydney-SW-01",
+      "license": "Sydney-SW-01",
+      "end": "2028-12-31",
+      "description": "CON-SNT-C9300-24T coverage for Sydney-SW-01",
+      "comments": "Switch at Samsung."
+    },
+    {
+      "contract": "DELL-017-SAMSUNG",
+      "sku": "PS-PLUS-R750-4H-60M",
+      "device": "Sydney-SRV-01",
+      "license": "Sydney-SRV-01",
+      "end": "2028-12-31",
+      "description": "PS-PLUS-R750-4H-60M coverage for Sydney-SRV-01",
+      "comments": "Server at Samsung."
+    },
+    {
+      "contract": "DELL-017-SAMSUNG",
+      "sku": "PS-PLUS-R750-4H-60M",
+      "device": "Sydney-SRV-02",
+      "license": "Sydney-SRV-02",
+      "end": "2028-12-31",
+      "description": "PS-PLUS-R750-4H-60M coverage for Sydney-SRV-02",
+      "comments": "Server at Samsung."
+    },
+    {
+      "contract": "CSCO-017-SAMSUNG",
+      "sku": "CON-SNT-C9300-24T",
+      "device": "Sydney-SW-02",
+      "license": "Sydney-SW-02",
+      "end": "2028-12-31",
+      "description": "CON-SNT-C9300-24T coverage for Sydney-SW-02",
+      "comments": "Switch at Samsung."
+    },
+    {
+      "contract": "DELL-017-SAMSUNG",
+      "sku": "PS-PLUS-R750-4H-60M",
+      "device": "Sydney-SRV-03",
+      "license": "Sydney-SRV-03",
+      "end": "2028-12-31",
+      "description": "PS-PLUS-R750-4H-60M coverage for Sydney-SRV-03",
+      "comments": "Server at Samsung."
+    },
+    {
+      "contract": "DELL-017-SAMSUNG",
+      "sku": "PS-PLUS-R750-4H-60M",
+      "device": "Sydney-SRV-04",
+      "license": "Sydney-SRV-04",
+      "end": "2028-12-31",
+      "description": "PS-PLUS-R750-4H-60M coverage for Sydney-SRV-04",
+      "comments": "Server at Samsung."
+    },
+    {
+      "contract": "FTNT-018-SONY",
+      "sku": "FC-10-F100F-950-02-36",
+      "device": "Chicago-FW-01",
+      "license": "Chicago-FW-01",
+      "end": "2028-12-31",
+      "description": "FC-10-F100F-950-02-36 coverage for Chicago-FW-01",
+      "comments": "Firewall at Sony."
+    },
+    {
+      "contract": "CSCO-018-SONY",
+      "sku": "CON-SNT-C9300-24T",
+      "device": "Chicago-SW-01",
+      "license": "Chicago-SW-01",
+      "end": "2028-12-31",
+      "description": "CON-SNT-C9300-24T coverage for Chicago-SW-01",
+      "comments": "Switch at Sony."
+    },
+    {
+      "contract": "DELL-018-SONY",
+      "sku": "PS-PLUS-R750-4H-60M",
+      "device": "Chicago-SRV-01",
+      "license": "Chicago-SRV-01",
+      "end": "2028-12-31",
+      "description": "PS-PLUS-R750-4H-60M coverage for Chicago-SRV-01",
+      "comments": "Server at Sony."
+    },
+    {
+      "contract": "DELL-018-SONY",
+      "sku": "PS-PLUS-R750-4H-60M",
+      "device": "Chicago-SRV-02",
+      "license": "Chicago-SRV-02",
+      "end": "2028-12-31",
+      "description": "PS-PLUS-R750-4H-60M coverage for Chicago-SRV-02",
+      "comments": "Server at Sony."
+    },
+    {
+      "contract": "CSCO-018-SONY",
+      "sku": "CON-SNT-C9300-24T",
+      "device": "Chicago-SW-02",
+      "license": "Chicago-SW-02",
+      "end": "2028-12-31",
+      "description": "CON-SNT-C9300-24T coverage for Chicago-SW-02",
+      "comments": "Switch at Sony."
+    },
+    {
+      "contract": "DELL-018-SONY",
+      "sku": "PS-PLUS-R750-4H-60M",
+      "device": "Chicago-SRV-03",
+      "license": "Chicago-SRV-03",
+      "end": "2028-12-31",
+      "description": "PS-PLUS-R750-4H-60M coverage for Chicago-SRV-03",
+      "comments": "Server at Sony."
+    },
+    {
+      "contract": "DELL-018-SONY",
+      "sku": "PS-PLUS-R750-4H-60M",
+      "device": "Chicago-SRV-04",
+      "license": "Chicago-SRV-04",
+      "end": "2028-12-31",
+      "description": "PS-PLUS-R750-4H-60M coverage for Chicago-SRV-04",
+      "comments": "Server at Sony."
+    },
+    {
+      "contract": "FTNT-019-TOYOTA",
+      "sku": "FC-10-F100F-950-02-36",
+      "device": "Seattle-FW-01",
+      "license": "Seattle-FW-01",
+      "end": "2028-12-31",
+      "description": "FC-10-F100F-950-02-36 coverage for Seattle-FW-01",
+      "comments": "Firewall at Toyota."
+    },
+    {
+      "contract": "CSCO-019-TOYOTA",
+      "sku": "CON-SNT-C9300-24T",
+      "device": "Seattle-SW-01",
+      "license": "Seattle-SW-01",
+      "end": "2028-12-31",
+      "description": "CON-SNT-C9300-24T coverage for Seattle-SW-01",
+      "comments": "Switch at Toyota."
+    },
+    {
+      "contract": "DELL-019-TOYOTA",
+      "sku": "PS-PLUS-R750-4H-60M",
+      "device": "Seattle-SRV-01",
+      "license": "Seattle-SRV-01",
+      "end": "2028-12-31",
+      "description": "PS-PLUS-R750-4H-60M coverage for Seattle-SRV-01",
+      "comments": "Server at Toyota."
+    },
+    {
+      "contract": "DELL-019-TOYOTA",
+      "sku": "PS-PLUS-R750-4H-60M",
+      "device": "Seattle-SRV-02",
+      "license": "Seattle-SRV-02",
+      "end": "2028-12-31",
+      "description": "PS-PLUS-R750-4H-60M coverage for Seattle-SRV-02",
+      "comments": "Server at Toyota."
+    },
+    {
+      "contract": "CSCO-019-TOYOTA",
+      "sku": "CON-SNT-C9300-24T",
+      "device": "Seattle-SW-02",
+      "license": "Seattle-SW-02",
+      "end": "2028-12-31",
+      "description": "CON-SNT-C9300-24T coverage for Seattle-SW-02",
+      "comments": "Switch at Toyota."
+    },
+    {
+      "contract": "DELL-019-TOYOTA",
+      "sku": "PS-PLUS-R750-4H-60M",
+      "device": "Seattle-SRV-03",
+      "license": "Seattle-SRV-03",
+      "end": "2028-12-31",
+      "description": "PS-PLUS-R750-4H-60M coverage for Seattle-SRV-03",
+      "comments": "Server at Toyota."
+    },
+    {
+      "contract": "DELL-019-TOYOTA",
+      "sku": "PS-PLUS-R750-4H-60M",
+      "device": "Seattle-SRV-04",
+      "license": "Seattle-SRV-04",
+      "end": "2028-12-31",
+      "description": "PS-PLUS-R750-4H-60M coverage for Seattle-SRV-04",
+      "comments": "Server at Toyota."
+    },
+    {
+      "contract": "FTNT-020-SHELL",
+      "sku": "FC-10-F100F-950-02-36",
+      "device": "Miami-FW-01",
+      "license": "Miami-FW-01",
+      "end": "2028-12-31",
+      "description": "FC-10-F100F-950-02-36 coverage for Miami-FW-01",
+      "comments": "Firewall at Shell."
+    },
+    {
+      "contract": "CSCO-020-SHELL",
+      "sku": "CON-SNT-C9300-24T",
+      "device": "Miami-SW-01",
+      "license": "Miami-SW-01",
+      "end": "2028-12-31",
+      "description": "CON-SNT-C9300-24T coverage for Miami-SW-01",
+      "comments": "Switch at Shell."
+    },
+    {
+      "contract": "DELL-020-SHELL",
+      "sku": "PS-PLUS-R750-4H-60M",
+      "device": "Miami-SRV-01",
+      "license": "Miami-SRV-01",
+      "end": "2028-12-31",
+      "description": "PS-PLUS-R750-4H-60M coverage for Miami-SRV-01",
+      "comments": "Server at Shell."
+    },
+    {
+      "contract": "DELL-020-SHELL",
+      "sku": "PS-PLUS-R750-4H-60M",
+      "device": "Miami-SRV-02",
+      "license": "Miami-SRV-02",
+      "end": "2028-12-31",
+      "description": "PS-PLUS-R750-4H-60M coverage for Miami-SRV-02",
+      "comments": "Server at Shell."
+    },
+    {
+      "contract": "CSCO-020-SHELL",
+      "sku": "CON-SNT-C9300-24T",
+      "device": "Miami-SW-02",
+      "license": "Miami-SW-02",
+      "end": "2028-12-31",
+      "description": "CON-SNT-C9300-24T coverage for Miami-SW-02",
+      "comments": "Switch at Shell."
+    },
+    {
+      "contract": "DELL-020-SHELL",
+      "sku": "PS-PLUS-R750-4H-60M",
+      "device": "Miami-SRV-03",
+      "license": "Miami-SRV-03",
+      "end": "2028-12-31",
+      "description": "PS-PLUS-R750-4H-60M coverage for Miami-SRV-03",
+      "comments": "Server at Shell."
+    },
+    {
+      "contract": "DELL-020-SHELL",
+      "sku": "PS-PLUS-R750-4H-60M",
+      "device": "Miami-SRV-04",
+      "license": "Miami-SRV-04",
+      "end": "2028-12-31",
+      "description": "PS-PLUS-R750-4H-60M coverage for Miami-SRV-04",
+      "comments": "Server at Shell."
+    }
   ]
 }

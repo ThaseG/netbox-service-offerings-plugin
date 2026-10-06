@@ -761,6 +761,197 @@ def build_ci_assignments(data, vms_by_tenant, tenant_by_offering, network_by_ten
         )
 
 
+# Hardware Lifecycle plugin (netbox-lifecycle, see
+# ci/docker/plugin_requirements.txt) demo data, per manufacturer: the
+# support vendor, its support SKU, and its software license. Keyed by
+# manufacturer slug (see build_lookups).
+LIFECYCLE_BY_MANUFACTURER = {
+    'cisco': {
+        'vendor': 'Cisco Services',
+        'contract_prefix': 'CSCO',
+        'sku': 'CON-SNT-C9300-24T',
+        'sku_description': 'Smart Net Total Care 8x5xNBD for Catalyst 9300 24-Port',
+        'license': 'Cisco DNA Advantage',
+        'license_description': 'Cisco DNA Advantage term license for Catalyst 9300',
+    },
+    'fortinet': {
+        'vendor': 'Fortinet Support',
+        'contract_prefix': 'FTNT',
+        'sku': 'FC-10-F100F-950-02-36',
+        'sku_description': 'FortiCare Premium 24x7 + UTP bundle for FortiGate-100F, 3 years',
+        'license': 'FortiGuard Unified Threat Protection',
+        'license_description': 'FortiGuard UTP subscription (IPS, AV, web/DNS filtering, antispam)',
+    },
+    'dell': {
+        'vendor': 'Dell ProSupport',
+        'contract_prefix': 'DELL',
+        'sku': 'PS-PLUS-R750-4H-60M',
+        'sku_description': 'ProSupport Plus with 4-hour Mission Critical onsite, 5 years',
+        'license': 'iDRAC9 Enterprise',
+        'license_description': 'iDRAC9 Enterprise out-of-band management license',
+    },
+}
+
+# Hardware lifecycle milestones per device type (see build_lookups). Spread
+# around "now" so the plugin shows a mix: the Catalyst is already past end
+# of sale, the FortiGate is approaching it, the PowerEdge is still current.
+HARDWARE_LIFECYCLE_BY_DEVICE_TYPE = {
+    'c9300-24t': {
+        'end_of_sale': '2025-10-30',
+        'end_of_maintenance': '2026-10-30',
+        'end_of_security': '2028-10-30',
+        'last_contract_attach': '2026-10-30',
+        'last_contract_renewal': '2029-07-28',
+        'end_of_support': '2030-10-31',
+        'notice': 'EOL6500 - End-of-Sale and End-of-Life Announcement for the Catalyst 9300 24-Port',
+        'documentation': 'https://www.cisco.com/c/en/us/products/switches/catalyst-9300-series-switches/eos-eol-notice-listing.html',
+    },
+    'fortigate-100f': {
+        'end_of_sale': '2027-03-31',
+        'end_of_maintenance': '2029-03-31',
+        'end_of_security': '2030-03-31',
+        'last_contract_attach': '2028-03-31',
+        'last_contract_renewal': '2031-03-31',
+        'end_of_support': '2032-03-31',
+        'notice': 'PN-2027-014 - FortiGate-100F End of Order notice',
+        'documentation': 'https://support.fortinet.com/Information/ProductLifeCycle.aspx',
+    },
+    'poweredge-r750': {
+        'end_of_sale': '2028-06-30',
+        'end_of_maintenance': '2031-06-30',
+        'end_of_security': '2032-06-30',
+        'last_contract_attach': '2030-06-30',
+        'last_contract_renewal': '2032-06-30',
+        'end_of_support': '2033-06-30',
+        'notice': 'PowerEdge R750 planned end of life (Dell product lifecycle policy)',
+        'documentation': 'https://www.dell.com/support/kbdoc/en-us/000178013/dell-emc-poweredge-server-end-of-life-information',
+    },
+}
+
+
+def build_lifecycle(data):
+    """Hardware Lifecycle plugin data covering every Device, with every
+    field filled in: one HardwareLifecycle per Device Type; one Vendor,
+    Support SKU and License per manufacturer; one Support Contract per
+    tenant and manufacturer; and per Device, one License Assignment plus
+    one Support Contract Assignment tying the Device to its tenant's
+    contract, that manufacturer's SKU and the Device's own License
+    Assignment.
+
+    Contract dates vary by tenant so the plugin's contract status shows a
+    mix: most tenants active, every 10th (index 7) already expired, every
+    10th (index 9) not started yet.
+
+    Not covered: Modules (this dataset has none) and Virtual Machines
+    (an assignment takes a Device or a VM, never both; this covers
+    Devices).
+    """
+    manufacturer_by_device_type = {dt['slug']: dt['manufacturer'] for dt in data['dcim/device-types/']}
+    model_by_device_type = {dt['slug']: dt['model'] for dt in data['dcim/device-types/']}
+    tenant_by_site = {site['slug']: site['tenant'] for site in data['dcim/sites/']}
+    tenant_names = {t['slug']: t['name'] for t in data['tenancy/tenants/']}
+    tenant_index = {t['slug']: i for i, t in enumerate(data['tenancy/tenants/'])}
+
+    data['plugins/lifecycle/vendor/'] = [
+        {
+            'name': info['vendor'],
+            'description': f'Hardware support and maintenance vendor for {manufacturer.title()} equipment',
+            'comments': f'Primary escalation path for {manufacturer.title()} support cases.',
+        }
+        for manufacturer, info in LIFECYCLE_BY_MANUFACTURER.items()
+    ]
+    data['plugins/lifecycle/sku/'] = [
+        {
+            'manufacturer': manufacturer,
+            'sku': info['sku'],
+            'description': info['sku_description'],
+            'comments': 'Standard support SKU for all demo deployments.',
+        }
+        for manufacturer, info in LIFECYCLE_BY_MANUFACTURER.items()
+    ]
+    data['plugins/lifecycle/license/'] = [
+        {
+            'manufacturer': manufacturer,
+            'name': info['license'],
+            'description': info['license_description'],
+            'comments': 'One license per device.',
+        }
+        for manufacturer, info in LIFECYCLE_BY_MANUFACTURER.items()
+    ]
+    data['plugins/lifecycle/hardwarelifecycle/'] = [
+        {
+            'assigned_object_type': 'dcim.devicetype',
+            'assigned_object_id': device_type,
+            **milestones,
+            'description': f'Lifecycle milestones for {model_by_device_type[device_type]}',
+            'comments': 'Dates taken from the manufacturer EoL notice; review yearly.',
+        }
+        for device_type, milestones in HARDWARE_LIFECYCLE_BY_DEVICE_TYPE.items()
+    ]
+
+    def contract_id(tenant_slug, manufacturer):
+        prefix = LIFECYCLE_BY_MANUFACTURER[manufacturer]['contract_prefix']
+        return f'{prefix}-{tenant_index[tenant_slug] + 1:03d}-{tenant_slug.upper()}'
+
+    data['plugins/lifecycle/supportcontract/'] = []
+    for tenant_slug, i in tenant_index.items():
+        if i % 10 == 7:
+            start, renewal, end = '2023-07-01', '2026-04-01', '2026-06-30'
+        elif i % 10 == 9:
+            start, renewal, end = '2027-01-01', '2029-10-01', '2029-12-31'
+        else:
+            start, renewal, end = f'2025-{i % 12 + 1:02d}-01', '2028-09-30', '2028-12-31'
+        for manufacturer, info in LIFECYCLE_BY_MANUFACTURER.items():
+            data['plugins/lifecycle/supportcontract/'].append(
+                {
+                    'vendor': info['vendor'],
+                    'contract_id': contract_id(tenant_slug, manufacturer),
+                    'start': start,
+                    'renewal': renewal,
+                    'end': end,
+                    'description': f'{info["vendor"]} contract for {tenant_names[tenant_slug]}',
+                    'comments': f'Covers all {manufacturer.title()} devices at {tenant_names[tenant_slug]}.',
+                }
+            )
+
+    data['plugins/lifecycle/licenseassignment/'] = []
+    data['plugins/lifecycle/supportcontractassignment/'] = []
+    for device in data['dcim/devices/']:
+        manufacturer = manufacturer_by_device_type[device['device_type']]
+        info = LIFECYCLE_BY_MANUFACTURER[manufacturer]
+        tenant_slug = tenant_by_site[device['site']]
+        data['plugins/lifecycle/licenseassignment/'].append(
+            {
+                # License Assignments have no slug/name of their own;
+                # '_key' is how the Support Contract Assignment below
+                # refers back to this one (see test-deployment.py).
+                '_key': device['name'],
+                'license': info['license'],
+                'vendor': info['vendor'],
+                'device': device['name'],
+                'quantity': 1,
+                'description': f'{info["license"]} for {device["name"]}',
+                'comments': f'Bought for {tenant_names[tenant_slug]}.',
+            }
+        )
+        data['plugins/lifecycle/supportcontractassignment/'].append(
+            {
+                'contract': contract_id(tenant_slug, manufacturer),
+                'sku': info['sku'],
+                'device': device['name'],
+                'license': device['name'],
+                # Assignment-specific end date: the device's coverage ends
+                # with its hardware's end of support at the latest.
+                'end': min(
+                    HARDWARE_LIFECYCLE_BY_DEVICE_TYPE[device['device_type']]['end_of_support'],
+                    '2028-12-31',
+                ),
+                'description': f'{info["sku"]} coverage for {device["name"]}',
+                'comments': f'{device["role"].title()} at {tenant_names[tenant_slug]}.',
+            }
+        )
+
+
 def main():
     data = {}
 
@@ -769,6 +960,7 @@ def main():
     tenant_slugs = [t['slug'] for t in data['tenancy/tenants/']]
     tenant_by_offering = build_hierarchy(data, tenant_slugs)
     build_ci_assignments(data, vms_by_tenant, tenant_by_offering, network_by_tenant)
+    build_lifecycle(data)
 
     # Re-declare in dependency order: build_* above populated `data` in
     # convenient-for-generation order, not necessarily the order
@@ -816,6 +1008,13 @@ def main():
         'plugins/service-specification/cluster-service-infos/',
         'plugins/service-specification/cluster-group-service-infos/',
         'plugins/service-specification/virtual-machine-service-infos/',
+        'plugins/lifecycle/vendor/',
+        'plugins/lifecycle/sku/',
+        'plugins/lifecycle/license/',
+        'plugins/lifecycle/hardwarelifecycle/',
+        'plugins/lifecycle/supportcontract/',
+        'plugins/lifecycle/licenseassignment/',
+        'plugins/lifecycle/supportcontractassignment/',
     ):
         ordered[key] = data[key]
 
