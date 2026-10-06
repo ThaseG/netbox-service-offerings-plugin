@@ -1,4 +1,6 @@
+from dcim.api.views import DeviceViewSet
 from netbox.api.viewsets import NetBoxModelViewSet
+from virtualization.api.views import ClusterGroupViewSet, ClusterViewSet, VirtualMachineViewSet
 
 from service_specification import filtersets, models
 
@@ -111,3 +113,27 @@ class ClusterGroupServiceInfoViewSet(NetBoxModelViewSet):
     queryset = models.ClusterGroupServiceInfo.objects.all()
     serializer_class = serializers.ClusterGroupServiceInfoSerializer
     filterset_class = filtersets.ClusterGroupServiceInfoFilterSet
+
+
+#
+# Technical CI dropdown endpoints: NetBox's own Device/VM/Cluster/
+# ClusterGroup API viewsets (same serializers, brief mode, permissions),
+# swapped onto filtersets that also understand the plugin's AppService/
+# Service Offering/Customer links — see filtersets.TechnicalCIFilterSetMixin.
+#
+
+
+class TechnicalCIDeviceViewSet(DeviceViewSet):
+    filterset_class = filtersets.TechnicalCIDeviceFilterSet
+
+
+class TechnicalCIVirtualMachineViewSet(VirtualMachineViewSet):
+    filterset_class = filtersets.TechnicalCIVirtualMachineFilterSet
+
+
+class TechnicalCIClusterViewSet(ClusterViewSet):
+    filterset_class = filtersets.TechnicalCIClusterFilterSet
+
+
+class TechnicalCIClusterGroupViewSet(ClusterGroupViewSet):
+    filterset_class = filtersets.TechnicalCIClusterGroupFilterSet

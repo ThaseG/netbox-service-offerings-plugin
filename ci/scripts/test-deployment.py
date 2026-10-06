@@ -70,6 +70,9 @@ REFERENCE_FIELDS = {
     'dcim/interfaces/': {
         'device': 'dcim/devices/',
     },
+    'dcim/cables/': {
+        'tenant': 'tenancy/tenants/',
+    },
     'ipam/ip-addresses/': {
         # Generic-FK-style (assigned_object_type/assigned_object_id), same
         # pattern as Cluster's scope_type/scope_id below: assigned_object_type

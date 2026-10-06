@@ -41,7 +41,16 @@
       "Bash(grep -v -E '^\\(netbox_service_offerings|src\\)/.*\\\\.py$')",
       "Bash(git rm *)",
       "Bash(python3 -c ' *)",
-      "Bash(python3 -c \"import yaml;[yaml.safe_load\\(open\\(f\\)\\) for f in ['.github/workflows/ci-cd.yml','ci/docker/docker-compose.yml']];print\\('yaml ok'\\)\")"
+      "Bash(python3 -c \"import yaml;[yaml.safe_load\\(open\\(f\\)\\) for f in ['.github/workflows/ci-cd.yml','ci/docker/docker-compose.yml']];print\\('yaml ok'\\)\")",
+      "Bash(python3 -m ruff check ci/scripts/)",
+      "Bash(python3 -m ruff format --check ci/scripts/)",
+      "Bash(curl -sf https://raw.githubusercontent.com/netbox-community/netbox/v4.6.5/netbox/virtualization/filtersets.py)",
+      "Bash(awk -F: '$1>440 && $1<500')",
+      "Bash(awk '/^class \\(Service|ServiceOffering|Portfolio|CIFunction|Environment\\)\\\\\\(/,/^    class Meta/' service_specification/models.py)",
+      "Bash(curl -sf https://raw.githubusercontent.com/netbox-community/netbox/v4.6.5/netbox/utilities/testing/api.py)",
+      "Bash(python3 -m ruff format --diff service_specification/tests/test_api.py)",
+      "Bash(which docker *)",
+      "Read(//Users/andrej.hyben/.docker/**)"
     ]
   }
 }

@@ -30,5 +30,17 @@ router.register('device-service-infos', views.DeviceServiceInfoViewSet)
 router.register('virtual-machine-service-infos', views.VirtualMachineServiceInfoViewSet)
 router.register('cluster-service-infos', views.ClusterServiceInfoViewSet)
 router.register('cluster-group-service-infos', views.ClusterGroupServiceInfoViewSet)
+# Read-only-in-practice lookups backing the Service Offering Tree / Product
+# View's Technical CI filter dropdowns (see forms.OfferingsTreeFilterForm).
+# Explicit basenames: the default would be the core model's own name
+# ("device", ...), which reads as if these were the core endpoints.
+router.register('technical-ci/devices', views.TechnicalCIDeviceViewSet, basename='technical-ci-device')
+router.register(
+    'technical-ci/virtual-machines', views.TechnicalCIVirtualMachineViewSet, basename='technical-ci-virtual-machine'
+)
+router.register('technical-ci/clusters', views.TechnicalCIClusterViewSet, basename='technical-ci-cluster')
+router.register(
+    'technical-ci/cluster-groups', views.TechnicalCIClusterGroupViewSet, basename='technical-ci-cluster-group'
+)
 
 urlpatterns = router.urls

@@ -1,9 +1,11 @@
 import django_filters
+from dcim import filtersets as dcim_filtersets
 from dcim.models import Device, Manufacturer
 from django.db.models import Q
 from netbox.filtersets import NetBoxModelFilterSet
 from tenancy.filtersets import TenantFilterSet
 from tenancy.models import Contact, ContactGroup, Tenant, TenantGroup
+from virtualization import filtersets as virtualization_filtersets
 from virtualization.models import Cluster, ClusterGroup, VirtualMachine
 
 from .models import (
@@ -47,6 +49,10 @@ __all__ = (
     'ClusterServiceInfoFilterSet',
     'ClusterGroupServiceInfoFilterSet',
     'TenantReportFilterSet',
+    'TechnicalCIDeviceFilterSet',
+    'TechnicalCIVirtualMachineFilterSet',
+    'TechnicalCIClusterFilterSet',
+    'TechnicalCIClusterGroupFilterSet',
 )
 
 
@@ -823,3 +829,55 @@ class TenantReportFilterSet(TenantFilterSet):
         if not value:
             return queryset
         return self._filter_by_offerings(queryset, ServiceOffering.objects.filter(app_service__in=value))
+
+
+#
+# Technical CI dropdown filtersets — NetBox's own Device/VM/Cluster/
+# ClusterGroup filtersets, plus filters that follow the plugin's
+# ServiceInfo -> AppService -> ServiceOffering link, so the Service Offering
+# Tree / Product View filter form (forms.OfferingsTreeFilterForm) can narrow
+# its Technical CI dropdowns to whatever the chosen Customer / Service
+# Offering / Application Service actually uses. Served by the plugin's own
+# technical-ci/* API endpoints (see api/views.py) rather than NetBox's core
+# ones, which have no notion of these plugin relations.
+#
+# offering_tenant_id, not tenant_id: the core filtersets already have their
+# own tenant_id, meaning the CI's own Tenant field. This one is the
+# Customer of the Service Offering the CI supports, the same relation the
+# tree itself filters by. Matched directly, like AppServiceFilterSet's
+# tenant_id and the tree's Service Offering dropdown.
+#
+
+
+class TechnicalCIFilterSetMixin(django_filters.FilterSet):
+    app_service_id = django_filters.ModelMultipleChoiceFilter(
+        field_name='service_specification_info__application_services',
+        queryset=AppService.objects.all(),
+        label='Application Service (ID)',
+    )
+    service_offering_id = django_filters.ModelMultipleChoiceFilter(
+        field_name='service_specification_info__application_services__service_offering',
+        queryset=ServiceOffering.objects.all(),
+        label='Service Offering (ID)',
+    )
+    offering_tenant_id = django_filters.ModelMultipleChoiceFilter(
+        field_name='service_specification_info__application_services__service_offering__tenant',
+        queryset=Tenant.objects.all(),
+        label='Service Offering Customer (ID)',
+    )
+
+
+class TechnicalCIDeviceFilterSet(TechnicalCIFilterSetMixin, dcim_filtersets.DeviceFilterSet):
+    pass
+
+
+class TechnicalCIVirtualMachineFilterSet(TechnicalCIFilterSetMixin, virtualization_filtersets.VirtualMachineFilterSet):
+    pass
+
+
+class TechnicalCIClusterFilterSet(TechnicalCIFilterSetMixin, virtualization_filtersets.ClusterFilterSet):
+    pass
+
+
+class TechnicalCIClusterGroupFilterSet(TechnicalCIFilterSetMixin, virtualization_filtersets.ClusterGroupFilterSet):
+    pass

@@ -7,6 +7,7 @@ from tenancy.forms import TenantFilterForm
 from tenancy.models import Contact, ContactGroup, Tenant, TenantGroup
 from utilities.forms.fields import DynamicModelChoiceField, DynamicModelMultipleChoiceField
 from utilities.forms.rendering import FieldSet
+from utilities.forms.widgets import APISelect
 from virtualization.models import Cluster, ClusterGroup, VirtualMachine
 
 from .models import (
@@ -1217,6 +1218,13 @@ class AppServiceFilterForm(NetBoxModelFilterSetForm):
 #
 
 
+TECHNICAL_CI_QUERY_PARAMS = {
+    'offering_tenant_id': '$tenant',
+    'service_offering_id': '$service_offering',
+    'app_service_id': '$app_service',
+}
+
+
 class OfferingsTreeFilterForm(forms.Form):
     """Filters for the read-only Portfolio -> Service -> Service Offering ->
     Application Service -> Technical CI tree (views.OfferingsTreeView). Not
@@ -1244,12 +1252,42 @@ class OfferingsTreeFilterForm(forms.Form):
         query_params={'tenant_id': '$tenant'},
     )
     app_service = DynamicModelChoiceField(
-        queryset=AppService.objects.all(), required=False, label='Application Service'
+        queryset=AppService.objects.all(),
+        required=False,
+        label='Application Service',
+        query_params={'tenant_id': '$tenant', 'service_offering_id': '$service_offering'},
     )
-    device = DynamicModelChoiceField(queryset=Device.objects.all(), required=False)
-    virtual_machine = DynamicModelChoiceField(queryset=VirtualMachine.objects.all(), required=False)
-    cluster = DynamicModelChoiceField(queryset=Cluster.objects.all(), required=False)
-    cluster_group = DynamicModelChoiceField(queryset=ClusterGroup.objects.all(), required=False)
+    # The four Technical CI dropdowns narrow to just the CIs linked (via
+    # their Service Specification tab's Application Services) to whatever
+    # Customer / Service Offering / Application Service is picked above.
+    # NetBox's core Device/VM/Cluster/ClusterGroup API endpoints don't know
+    # about those plugin relations, so these query the plugin's own
+    # technical-ci/* endpoints instead (core viewsets with an extended
+    # filterset — see filtersets.TechnicalCIFilterSetMixin).
+    device = DynamicModelChoiceField(
+        queryset=Device.objects.all(),
+        required=False,
+        widget=APISelect(api_url='/api/plugins/service-specification/technical-ci/devices/'),
+        query_params=TECHNICAL_CI_QUERY_PARAMS,
+    )
+    virtual_machine = DynamicModelChoiceField(
+        queryset=VirtualMachine.objects.all(),
+        required=False,
+        widget=APISelect(api_url='/api/plugins/service-specification/technical-ci/virtual-machines/'),
+        query_params=TECHNICAL_CI_QUERY_PARAMS,
+    )
+    cluster = DynamicModelChoiceField(
+        queryset=Cluster.objects.all(),
+        required=False,
+        widget=APISelect(api_url='/api/plugins/service-specification/technical-ci/clusters/'),
+        query_params=TECHNICAL_CI_QUERY_PARAMS,
+    )
+    cluster_group = DynamicModelChoiceField(
+        queryset=ClusterGroup.objects.all(),
+        required=False,
+        widget=APISelect(api_url='/api/plugins/service-specification/technical-ci/cluster-groups/'),
+        query_params=TECHNICAL_CI_QUERY_PARAMS,
+    )
 
 
 class TenantReportFilterForm(TenantFilterForm):

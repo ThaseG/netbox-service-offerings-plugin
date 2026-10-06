@@ -454,6 +454,7 @@ def build_tenants_and_infra(data):
                 {
                     'a_terminations': [{'object_type': 'dcim.interface', 'name': fw_interfaces[sw_n - 1]}],
                     'b_terminations': [{'object_type': 'dcim.interface', 'name': sw_uplink}],
+                    'tenant': tenant_slug,
                 }
             )
 
@@ -493,6 +494,7 @@ def build_tenants_and_infra(data):
                     {
                         'a_terminations': [{'object_type': 'dcim.interface', 'name': sw_port}],
                         'b_terminations': [{'object_type': 'dcim.interface', 'name': srv_iface}],
+                        'tenant': tenant_slug,
                     }
                 )
 
