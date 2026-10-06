@@ -52,7 +52,9 @@
       "Bash(which docker *)",
       "Read(//Users/andrej.hyben/.docker/**)",
       "Bash(python3 -c \"import json,sys;[print\\(u['url']\\) for u in json.load\\(sys.stdin\\)['urls']]\")",
-      "Bash(grep -v \"^\\\\s*$\")"
+      "Bash(grep -v \"^\\\\s*$\")",
+      "Bash(awk '/^class \\(Contract|ContractRateCard\\)\\\\\\(/,/^    class Meta/' service_specification/models.py)",
+      "Bash(awk '/^class \\(Portfolio|Service|ServiceOffering|Contract|ContractRateCard|Lifecycle|SLA|MTAT|Environment|CIFunction|OperationTime|Availability|Criticality\\)\\\\\\(/,/^    class Meta/' service_specification/models.py)"
     ]
   }
 }
