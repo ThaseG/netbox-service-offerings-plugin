@@ -339,6 +339,10 @@
     {
       "name": "Dell",
       "slug": "dell"
+    },
+    {
+      "name": "VMware",
+      "slug": "vmware"
     }
   ],
   "dcim/device-roles/": [
@@ -378,31 +382,38 @@
   "virtualization/cluster-groups/": [
     {
       "name": "Coca Cola Infrastructure",
-      "slug": "coca-cola-infra"
+      "slug": "coca-cola-infra",
+      "description": "VMware infrastructure of Coca Cola"
     },
     {
       "name": "Cisco Infrastructure",
-      "slug": "cisco-infra"
+      "slug": "cisco-infra",
+      "description": "VMware infrastructure of Cisco"
     },
     {
       "name": "SAP Infrastructure",
-      "slug": "sap-infra"
+      "slug": "sap-infra",
+      "description": "VMware infrastructure of SAP"
     },
     {
       "name": "Google Infrastructure",
-      "slug": "google-infra"
+      "slug": "google-infra",
+      "description": "VMware infrastructure of Google"
     },
     {
       "name": "Amazon Infrastructure",
-      "slug": "amazon-infra"
+      "slug": "amazon-infra",
+      "description": "VMware infrastructure of Amazon"
     },
     {
       "name": "Microsoft Infrastructure",
-      "slug": "microsoft-infra"
+      "slug": "microsoft-infra",
+      "description": "VMware infrastructure of Microsoft"
     },
     {
       "name": "IBM Infrastructure",
-      "slug": "ibm-infra"
+      "slug": "ibm-infra",
+      "description": "VMware infrastructure of IBM"
     },
     {
       "name": "Oracle Infrastructure",
@@ -410,27 +421,33 @@
     },
     {
       "name": "Siemens Infrastructure",
-      "slug": "siemens-infra"
+      "slug": "siemens-infra",
+      "description": "VMware infrastructure of Siemens"
     },
     {
       "name": "BMW Infrastructure",
-      "slug": "bmw-infra"
+      "slug": "bmw-infra",
+      "description": "VMware infrastructure of BMW"
     },
     {
       "name": "Volkswagen Infrastructure",
-      "slug": "volkswagen-infra"
+      "slug": "volkswagen-infra",
+      "description": "VMware infrastructure of Volkswagen"
     },
     {
       "name": "Deutsche Bank Infrastructure",
-      "slug": "deutsche-bank-infra"
+      "slug": "deutsche-bank-infra",
+      "description": "VMware infrastructure of Deutsche Bank"
     },
     {
       "name": "Allianz Infrastructure",
-      "slug": "allianz-infra"
+      "slug": "allianz-infra",
+      "description": "VMware infrastructure of Allianz"
     },
     {
       "name": "Adidas Infrastructure",
-      "slug": "adidas-infra"
+      "slug": "adidas-infra",
+      "description": "VMware infrastructure of Adidas"
     },
     {
       "name": "Puma Infrastructure",
@@ -438,15 +455,18 @@
     },
     {
       "name": "Nike Infrastructure",
-      "slug": "nike-infra"
+      "slug": "nike-infra",
+      "description": "VMware infrastructure of Nike"
     },
     {
       "name": "Samsung Infrastructure",
-      "slug": "samsung-infra"
+      "slug": "samsung-infra",
+      "description": "VMware infrastructure of Samsung"
     },
     {
       "name": "Sony Infrastructure",
-      "slug": "sony-infra"
+      "slug": "sony-infra",
+      "description": "VMware infrastructure of Sony"
     },
     {
       "name": "Toyota Infrastructure",
@@ -454,7 +474,8 @@
     },
     {
       "name": "Shell Infrastructure",
-      "slug": "shell-infra"
+      "slug": "shell-infra",
+      "description": "VMware infrastructure of Shell"
     }
   ],
   "virtualization/cluster-types/": [
@@ -750,921 +771,1337 @@
       "name": "Munich-FW-01",
       "role": "firewall",
       "device_type": "fortigate-100f",
-      "site": "hq-munich"
+      "site": "hq-munich",
+      "serial": "FG100FTK00000001",
+      "status": "active",
+      "tenant": "coca-cola"
     },
     {
       "name": "Munich-SW-01",
       "role": "switch",
       "device_type": "c9300-24t",
-      "site": "hq-munich"
+      "site": "hq-munich",
+      "serial": "FOC2400X100",
+      "status": "active",
+      "tenant": "coca-cola"
     },
     {
       "name": "Munich-SRV-01",
       "role": "server",
       "device_type": "poweredge-r750",
       "site": "hq-munich",
-      "cluster": "Munich Cluster A"
+      "cluster": "Munich Cluster A",
+      "serial": "00R751Z",
+      "status": "active",
+      "tenant": "coca-cola"
     },
     {
       "name": "Munich-SRV-02",
       "role": "server",
       "device_type": "poweredge-r750",
       "site": "hq-munich",
-      "cluster": "Munich Cluster A"
+      "cluster": "Munich Cluster A",
+      "serial": "00R752Z",
+      "status": "active",
+      "tenant": "coca-cola"
     },
     {
       "name": "Munich-SW-02",
       "role": "switch",
       "device_type": "c9300-24t",
-      "site": "hq-munich"
+      "site": "hq-munich",
+      "serial": "FOC2400X200",
+      "status": "active",
+      "tenant": "coca-cola"
     },
     {
       "name": "Munich-SRV-03",
       "role": "server",
       "device_type": "poweredge-r750",
       "site": "hq-munich",
-      "cluster": "Munich Cluster B"
+      "cluster": "Munich Cluster B",
+      "serial": "00R753Z",
+      "status": "active",
+      "tenant": "coca-cola"
     },
     {
       "name": "Munich-SRV-04",
       "role": "server",
       "device_type": "poweredge-r750",
       "site": "hq-munich",
-      "cluster": "Munich Cluster B"
+      "cluster": "Munich Cluster B",
+      "serial": "00R754Z",
+      "status": "active",
+      "tenant": "coca-cola"
     },
     {
       "name": "Berlin-FW-01",
       "role": "firewall",
       "device_type": "fortigate-100f",
-      "site": "hq-berlin"
+      "site": "hq-berlin",
+      "serial": "FG100FTK01000001",
+      "status": "active",
+      "tenant": "cisco"
     },
     {
       "name": "Berlin-SW-01",
       "role": "switch",
       "device_type": "c9300-24t",
-      "site": "hq-berlin"
+      "site": "hq-berlin",
+      "serial": "FOC2401X101",
+      "status": "active",
+      "tenant": "cisco"
     },
     {
       "name": "Berlin-SRV-01",
       "role": "server",
       "device_type": "poweredge-r750",
       "site": "hq-berlin",
-      "cluster": "Berlin Cluster A"
+      "cluster": "Berlin Cluster A",
+      "serial": "01R751Z",
+      "status": "active",
+      "tenant": "cisco"
     },
     {
       "name": "Berlin-SRV-02",
       "role": "server",
       "device_type": "poweredge-r750",
       "site": "hq-berlin",
-      "cluster": "Berlin Cluster A"
+      "cluster": "Berlin Cluster A",
+      "serial": "01R752Z",
+      "status": "active",
+      "tenant": "cisco"
     },
     {
       "name": "Berlin-SW-02",
       "role": "switch",
       "device_type": "c9300-24t",
-      "site": "hq-berlin"
+      "site": "hq-berlin",
+      "serial": "",
+      "status": "active",
+      "tenant": "cisco"
     },
     {
       "name": "Berlin-SRV-03",
       "role": "server",
       "device_type": "poweredge-r750",
       "site": "hq-berlin",
-      "cluster": "Berlin Cluster B"
+      "cluster": "Berlin Cluster B",
+      "serial": "01R753Z",
+      "status": "active",
+      "tenant": "cisco"
     },
     {
       "name": "Berlin-SRV-04",
       "role": "server",
       "device_type": "poweredge-r750",
       "site": "hq-berlin",
-      "cluster": "Berlin Cluster B"
+      "cluster": "Berlin Cluster B",
+      "serial": "01R754Z",
+      "status": "active",
+      "tenant": "cisco"
     },
     {
       "name": "Cologne-FW-01",
       "role": "firewall",
       "device_type": "fortigate-100f",
-      "site": "hq-cologne"
+      "site": "hq-cologne",
+      "serial": "FG100FTK02000001",
+      "status": "active",
+      "tenant": "sap"
     },
     {
       "name": "Cologne-SW-01",
       "role": "switch",
       "device_type": "c9300-24t",
-      "site": "hq-cologne"
+      "site": "hq-cologne",
+      "serial": "FOC2402X102",
+      "status": "active",
+      "tenant": "sap"
     },
     {
       "name": "Cologne-SRV-01",
       "role": "server",
       "device_type": "poweredge-r750",
       "site": "hq-cologne",
-      "cluster": "Cologne Cluster A"
+      "cluster": "Cologne Cluster A",
+      "serial": "02R751Z",
+      "status": "active",
+      "tenant": "sap"
     },
     {
       "name": "Cologne-SRV-02",
       "role": "server",
       "device_type": "poweredge-r750",
       "site": "hq-cologne",
-      "cluster": "Cologne Cluster A"
+      "cluster": "Cologne Cluster A",
+      "serial": "02R752Z",
+      "status": "active"
     },
     {
       "name": "Cologne-SW-02",
       "role": "switch",
       "device_type": "c9300-24t",
-      "site": "hq-cologne"
+      "site": "hq-cologne",
+      "serial": "FOC2402X202",
+      "status": "active",
+      "tenant": "sap"
     },
     {
       "name": "Cologne-SRV-03",
       "role": "server",
       "device_type": "poweredge-r750",
       "site": "hq-cologne",
-      "cluster": "Cologne Cluster B"
+      "cluster": "Cologne Cluster B",
+      "serial": "02R753Z",
+      "status": "active",
+      "tenant": "sap"
     },
     {
       "name": "Cologne-SRV-04",
       "role": "server",
       "device_type": "poweredge-r750",
       "site": "hq-cologne",
-      "cluster": "Cologne Cluster B"
+      "cluster": "Cologne Cluster B",
+      "serial": "02R754Z",
+      "status": "active",
+      "tenant": "sap"
     },
     {
       "name": "Dusseldorf-FW-01",
       "role": "firewall",
       "device_type": "fortigate-100f",
-      "site": "hq-dusseldorf"
+      "site": "hq-dusseldorf",
+      "serial": "FG100FTK03000001",
+      "status": "active",
+      "tenant": "google"
     },
     {
       "name": "Dusseldorf-SW-01",
       "role": "switch",
       "device_type": "c9300-24t",
-      "site": "hq-dusseldorf"
+      "site": "hq-dusseldorf",
+      "serial": "FOC2403X103",
+      "status": "active",
+      "tenant": "google"
     },
     {
       "name": "Dusseldorf-SRV-01",
       "role": "server",
       "device_type": "poweredge-r750",
       "site": "hq-dusseldorf",
-      "cluster": "Dusseldorf Cluster A"
+      "cluster": "Dusseldorf Cluster A",
+      "serial": "03R751Z",
+      "status": "active",
+      "tenant": "google"
     },
     {
       "name": "Dusseldorf-SRV-02",
       "role": "server",
       "device_type": "poweredge-r750",
       "site": "hq-dusseldorf",
-      "cluster": "Dusseldorf Cluster A"
+      "cluster": "Dusseldorf Cluster A",
+      "serial": "03R752Z",
+      "status": "active",
+      "tenant": "google"
     },
     {
       "name": "Dusseldorf-SW-02",
       "role": "switch",
       "device_type": "c9300-24t",
-      "site": "hq-dusseldorf"
+      "site": "hq-dusseldorf",
+      "serial": "FOC2403X203",
+      "status": "active",
+      "tenant": "google"
     },
     {
       "name": "Dusseldorf-SRV-03",
       "role": "server",
       "device_type": "poweredge-r750",
       "site": "hq-dusseldorf",
-      "cluster": "Dusseldorf Cluster B"
+      "cluster": "Dusseldorf Cluster B",
+      "serial": "03R753Z",
+      "status": "active",
+      "tenant": "google"
     },
     {
       "name": "Dusseldorf-SRV-04",
       "role": "server",
       "device_type": "poweredge-r750",
       "site": "hq-dusseldorf",
-      "cluster": "Dusseldorf Cluster B"
+      "cluster": "Dusseldorf Cluster B",
+      "serial": "03R754Z",
+      "status": "active",
+      "tenant": "google"
     },
     {
       "name": "Dortmund-FW-01",
       "role": "firewall",
       "device_type": "fortigate-100f",
-      "site": "hq-dortmund"
+      "site": "hq-dortmund",
+      "serial": "FG100FTK04000001",
+      "status": "active",
+      "tenant": "amazon"
     },
     {
       "name": "Dortmund-SW-01",
       "role": "switch",
       "device_type": "c9300-24t",
-      "site": "hq-dortmund"
+      "site": "hq-dortmund",
+      "serial": "FOC2404X104",
+      "status": "active",
+      "tenant": "amazon"
     },
     {
       "name": "Dortmund-SRV-01",
       "role": "server",
       "device_type": "poweredge-r750",
       "site": "hq-dortmund",
-      "cluster": "Dortmund Cluster A"
+      "cluster": "Dortmund Cluster A",
+      "serial": "04R751Z",
+      "status": "active",
+      "tenant": "amazon"
     },
     {
       "name": "Dortmund-SRV-02",
       "role": "server",
       "device_type": "poweredge-r750",
       "site": "hq-dortmund",
-      "cluster": "Dortmund Cluster A"
+      "cluster": "Dortmund Cluster A",
+      "serial": "04R752Z",
+      "status": "active",
+      "tenant": "amazon"
     },
     {
       "name": "Dortmund-SW-02",
       "role": "switch",
       "device_type": "c9300-24t",
-      "site": "hq-dortmund"
+      "site": "hq-dortmund",
+      "serial": "FOC2404X204",
+      "status": "active",
+      "tenant": "amazon"
     },
     {
       "name": "Dortmund-SRV-03",
       "role": "server",
       "device_type": "poweredge-r750",
       "site": "hq-dortmund",
-      "cluster": "Dortmund Cluster B"
+      "cluster": "Dortmund Cluster B",
+      "serial": "04R753Z",
+      "status": "active",
+      "tenant": "amazon"
     },
     {
       "name": "Dortmund-SRV-04",
       "role": "server",
       "device_type": "poweredge-r750",
       "site": "hq-dortmund",
-      "cluster": "Dortmund Cluster B"
+      "cluster": "Dortmund Cluster B",
+      "serial": "04R754Z",
+      "status": "active",
+      "tenant": "amazon"
     },
     {
       "name": "Vienna-FW-01",
       "role": "firewall",
       "device_type": "fortigate-100f",
-      "site": "hq-vienna"
+      "site": "hq-vienna",
+      "serial": "FG100FTK05000001",
+      "status": "active",
+      "tenant": "microsoft"
     },
     {
       "name": "Vienna-SW-01",
       "role": "switch",
       "device_type": "c9300-24t",
-      "site": "hq-vienna"
+      "site": "hq-vienna",
+      "serial": "FOC2405X105",
+      "status": "active",
+      "tenant": "microsoft"
     },
     {
       "name": "Vienna-SRV-01",
       "role": "server",
       "device_type": "poweredge-r750",
       "site": "hq-vienna",
-      "cluster": "Vienna Cluster A"
+      "cluster": "Vienna Cluster A",
+      "serial": "05R751Z",
+      "status": "active",
+      "tenant": "microsoft"
     },
     {
       "name": "Vienna-SRV-02",
       "role": "server",
       "device_type": "poweredge-r750",
       "site": "hq-vienna",
-      "cluster": "Vienna Cluster A"
+      "cluster": "Vienna Cluster A",
+      "serial": "05R752Z",
+      "status": "active",
+      "tenant": "microsoft"
     },
     {
       "name": "Vienna-SW-02",
       "role": "switch",
       "device_type": "c9300-24t",
-      "site": "hq-vienna"
+      "site": "hq-vienna",
+      "serial": "FOC2405X205",
+      "status": "active",
+      "tenant": "microsoft"
     },
     {
       "name": "Vienna-SRV-03",
       "role": "server",
       "device_type": "poweredge-r750",
       "site": "hq-vienna",
-      "cluster": "Vienna Cluster B"
+      "cluster": "Vienna Cluster B",
+      "serial": "",
+      "status": "active",
+      "tenant": "microsoft"
     },
     {
       "name": "Vienna-SRV-04",
       "role": "server",
       "device_type": "poweredge-r750",
       "site": "hq-vienna",
-      "cluster": "Vienna Cluster B"
+      "cluster": "Vienna Cluster B",
+      "serial": "05R754Z",
+      "status": "active",
+      "tenant": "microsoft"
     },
     {
       "name": "Amsterdam-FW-01",
       "role": "firewall",
       "device_type": "fortigate-100f",
-      "site": "hq-amsterdam"
+      "site": "hq-amsterdam",
+      "serial": "FG100FTK06000001",
+      "status": "active",
+      "tenant": "ibm"
     },
     {
       "name": "Amsterdam-SW-01",
       "role": "switch",
       "device_type": "c9300-24t",
-      "site": "hq-amsterdam"
+      "site": "hq-amsterdam",
+      "serial": "FOC2406X106",
+      "status": "active",
+      "tenant": "ibm"
     },
     {
       "name": "Amsterdam-SRV-01",
       "role": "server",
       "device_type": "poweredge-r750",
       "site": "hq-amsterdam",
-      "cluster": "Amsterdam Cluster A"
+      "cluster": "Amsterdam Cluster A",
+      "serial": "06R751Z",
+      "status": "active",
+      "tenant": "ibm"
     },
     {
       "name": "Amsterdam-SRV-02",
       "role": "server",
       "device_type": "poweredge-r750",
       "site": "hq-amsterdam",
-      "cluster": "Amsterdam Cluster A"
+      "cluster": "Amsterdam Cluster A",
+      "serial": "06R752Z",
+      "status": "active",
+      "tenant": "ibm"
     },
     {
       "name": "Amsterdam-SW-02",
       "role": "switch",
       "device_type": "c9300-24t",
-      "site": "hq-amsterdam"
+      "site": "hq-amsterdam",
+      "serial": "FOC2406X206",
+      "status": "offline",
+      "tenant": "ibm"
     },
     {
       "name": "Amsterdam-SRV-03",
       "role": "server",
       "device_type": "poweredge-r750",
       "site": "hq-amsterdam",
-      "cluster": "Amsterdam Cluster B"
+      "cluster": "Amsterdam Cluster B",
+      "serial": "06R753Z",
+      "status": "active",
+      "tenant": "ibm"
     },
     {
       "name": "Amsterdam-SRV-04",
       "role": "server",
       "device_type": "poweredge-r750",
       "site": "hq-amsterdam",
-      "cluster": "Amsterdam Cluster B"
+      "cluster": "Amsterdam Cluster B",
+      "serial": "06R754Z",
+      "status": "active",
+      "tenant": "ibm"
     },
     {
       "name": "Paris-FW-01",
       "role": "firewall",
       "device_type": "fortigate-100f",
-      "site": "hq-paris"
+      "site": "hq-paris",
+      "serial": "FG100FTK07000001",
+      "status": "active",
+      "tenant": "oracle"
     },
     {
       "name": "Paris-SW-01",
       "role": "switch",
       "device_type": "c9300-24t",
-      "site": "hq-paris"
+      "site": "hq-paris",
+      "serial": "FOC2407X107",
+      "status": "active",
+      "tenant": "oracle"
     },
     {
       "name": "Paris-SRV-01",
       "role": "server",
       "device_type": "poweredge-r750",
       "site": "hq-paris",
-      "cluster": "Paris Cluster A"
+      "cluster": "Paris Cluster A",
+      "serial": "n/a",
+      "status": "active",
+      "tenant": "oracle"
     },
     {
       "name": "Paris-SRV-02",
       "role": "server",
       "device_type": "poweredge-r750",
       "site": "hq-paris",
-      "cluster": "Paris Cluster A"
+      "cluster": "Paris Cluster A",
+      "serial": "07R752Z",
+      "status": "active",
+      "tenant": "oracle"
     },
     {
       "name": "Paris-SW-02",
       "role": "switch",
       "device_type": "c9300-24t",
-      "site": "hq-paris"
+      "site": "hq-paris",
+      "serial": "FOC2407X207",
+      "status": "active",
+      "tenant": "oracle"
     },
     {
       "name": "Paris-SRV-03",
       "role": "server",
       "device_type": "poweredge-r750",
       "site": "hq-paris",
-      "cluster": "Paris Cluster B"
+      "cluster": "Paris Cluster B",
+      "serial": "07R753Z",
+      "status": "active",
+      "tenant": "oracle"
     },
     {
       "name": "Paris-SRV-04",
       "role": "server",
       "device_type": "poweredge-r750",
       "site": "hq-paris",
-      "cluster": "Paris Cluster B"
+      "cluster": "Paris Cluster B",
+      "serial": "07R754Z",
+      "status": "active",
+      "tenant": "oracle"
     },
     {
       "name": "Madrid-FW-01",
       "role": "firewall",
       "device_type": "fortigate-100f",
-      "site": "hq-madrid"
+      "site": "hq-madrid",
+      "serial": "",
+      "status": "active",
+      "tenant": "siemens"
     },
     {
       "name": "Madrid-SW-01",
       "role": "switch",
       "device_type": "c9300-24t",
-      "site": "hq-madrid"
+      "site": "hq-madrid",
+      "serial": "FOC2408X108",
+      "status": "active",
+      "tenant": "siemens"
     },
     {
       "name": "Madrid-SRV-01",
       "role": "server",
       "device_type": "poweredge-r750",
       "site": "hq-madrid",
-      "cluster": "Madrid Cluster A"
+      "cluster": "Madrid Cluster A",
+      "serial": "08R751Z",
+      "status": "active",
+      "tenant": "siemens"
     },
     {
       "name": "Madrid-SRV-02",
       "role": "server",
       "device_type": "poweredge-r750",
       "site": "hq-madrid",
-      "cluster": "Madrid Cluster A"
+      "cluster": "Madrid Cluster A",
+      "serial": "08R752Z",
+      "status": "active",
+      "tenant": "siemens"
     },
     {
       "name": "Madrid-SW-02",
       "role": "switch",
       "device_type": "c9300-24t",
-      "site": "hq-madrid"
+      "site": "hq-madrid",
+      "serial": "FOC2408X208",
+      "status": "active",
+      "tenant": "siemens"
     },
     {
       "name": "Madrid-SRV-03",
       "role": "server",
       "device_type": "poweredge-r750",
       "site": "hq-madrid",
-      "cluster": "Madrid Cluster B"
+      "cluster": "Madrid Cluster B",
+      "serial": "08R753Z",
+      "status": "active",
+      "tenant": "siemens"
     },
     {
       "name": "Madrid-SRV-04",
       "role": "server",
       "device_type": "poweredge-r750",
       "site": "hq-madrid",
-      "cluster": "Madrid Cluster B"
+      "cluster": "Madrid Cluster B",
+      "serial": "08R754Z",
+      "status": "active",
+      "tenant": "siemens"
     },
     {
       "name": "Rome-FW-01",
       "role": "firewall",
       "device_type": "fortigate-100f",
-      "site": "hq-rome"
+      "site": "hq-rome",
+      "serial": "FG100FTK09000001",
+      "status": "active",
+      "tenant": "bmw"
     },
     {
       "name": "Rome-SW-01",
       "role": "switch",
       "device_type": "c9300-24t",
-      "site": "hq-rome"
+      "site": "hq-rome",
+      "serial": "FOC2409X109",
+      "status": "active"
     },
     {
       "name": "Rome-SRV-01",
       "role": "server",
       "device_type": "poweredge-r750",
       "site": "hq-rome",
-      "cluster": "Rome Cluster A"
+      "cluster": "Rome Cluster A",
+      "serial": "09R751Z",
+      "status": "active",
+      "tenant": "bmw"
     },
     {
       "name": "Rome-SRV-02",
       "role": "server",
       "device_type": "poweredge-r750",
       "site": "hq-rome",
-      "cluster": "Rome Cluster A"
+      "cluster": "Rome Cluster A",
+      "serial": "09R752Z",
+      "status": "active",
+      "tenant": "bmw"
     },
     {
       "name": "Rome-SW-02",
       "role": "switch",
       "device_type": "c9300-24t",
-      "site": "hq-rome"
+      "site": "hq-rome",
+      "serial": "FOC2409X209",
+      "status": "active",
+      "tenant": "bmw"
     },
     {
       "name": "Rome-SRV-03",
       "role": "server",
       "device_type": "poweredge-r750",
       "site": "hq-rome",
-      "cluster": "Rome Cluster B"
+      "cluster": "Rome Cluster B",
+      "serial": "09R753Z",
+      "status": "active",
+      "tenant": "bmw"
     },
     {
       "name": "Rome-SRV-04",
       "role": "server",
       "device_type": "poweredge-r750",
       "site": "hq-rome",
-      "cluster": "Rome Cluster B"
+      "cluster": "Rome Cluster B",
+      "serial": "09R754Z",
+      "status": "active",
+      "tenant": "bmw"
     },
     {
       "name": "Warsaw-FW-01",
       "role": "firewall",
       "device_type": "fortigate-100f",
-      "site": "hq-warsaw"
+      "site": "hq-warsaw",
+      "serial": "FG100FTK10000001",
+      "status": "active",
+      "tenant": "volkswagen"
     },
     {
       "name": "Warsaw-SW-01",
       "role": "switch",
       "device_type": "c9300-24t",
-      "site": "hq-warsaw"
+      "site": "hq-warsaw",
+      "serial": "FOC2410X110",
+      "status": "active",
+      "tenant": "volkswagen"
     },
     {
       "name": "Warsaw-SRV-01",
       "role": "server",
       "device_type": "poweredge-r750",
       "site": "hq-warsaw",
-      "cluster": "Warsaw Cluster A"
+      "cluster": "Warsaw Cluster A",
+      "serial": "10R751Z",
+      "status": "active",
+      "tenant": "volkswagen"
     },
     {
       "name": "Warsaw-SRV-02",
       "role": "server",
       "device_type": "poweredge-r750",
       "site": "hq-warsaw",
-      "cluster": "Warsaw Cluster A"
+      "cluster": "Warsaw Cluster A",
+      "serial": "10R751Z",
+      "status": "active",
+      "tenant": "volkswagen"
     },
     {
       "name": "Warsaw-SW-02",
       "role": "switch",
       "device_type": "c9300-24t",
-      "site": "hq-warsaw"
+      "site": "hq-warsaw",
+      "serial": "FOC2410X210",
+      "status": "active",
+      "tenant": "volkswagen"
     },
     {
       "name": "Warsaw-SRV-03",
       "role": "server",
       "device_type": "poweredge-r750",
       "site": "hq-warsaw",
-      "cluster": "Warsaw Cluster B"
+      "cluster": "Warsaw Cluster B",
+      "serial": "10R753Z",
+      "status": "active",
+      "tenant": "volkswagen"
     },
     {
       "name": "Warsaw-SRV-04",
       "role": "server",
       "device_type": "poweredge-r750",
       "site": "hq-warsaw",
-      "cluster": "Warsaw Cluster B"
+      "cluster": "Warsaw Cluster B",
+      "serial": "10R754Z",
+      "status": "active",
+      "tenant": "volkswagen"
     },
     {
       "name": "Budapest-FW-01",
       "role": "firewall",
       "device_type": "fortigate-100f",
-      "site": "hq-budapest"
+      "site": "hq-budapest",
+      "serial": "FG100FTK11000001",
+      "status": "active",
+      "tenant": "deutsche-bank"
     },
     {
       "name": "Budapest-SW-01",
       "role": "switch",
       "device_type": "c9300-24t",
-      "site": "hq-budapest"
+      "site": "hq-budapest",
+      "serial": "FOC2411X111",
+      "status": "active",
+      "tenant": "deutsche-bank"
     },
     {
       "name": "Budapest-SRV-01",
       "role": "server",
       "device_type": "poweredge-r750",
       "site": "hq-budapest",
-      "cluster": "Budapest Cluster A"
+      "cluster": "Budapest Cluster A",
+      "serial": "",
+      "status": "active",
+      "tenant": "deutsche-bank"
     },
     {
       "name": "Budapest-SRV-02",
       "role": "server",
       "device_type": "poweredge-r750",
       "site": "hq-budapest",
-      "cluster": "Budapest Cluster A"
+      "cluster": "Budapest Cluster A",
+      "serial": "11R752Z",
+      "status": "active",
+      "tenant": "deutsche-bank"
     },
     {
       "name": "Budapest-SW-02",
       "role": "switch",
       "device_type": "c9300-24t",
-      "site": "hq-budapest"
+      "site": "hq-budapest",
+      "serial": "FOC2411X211",
+      "status": "active",
+      "tenant": "deutsche-bank"
     },
     {
       "name": "Budapest-SRV-03",
       "role": "server",
       "device_type": "poweredge-r750",
       "site": "hq-budapest",
-      "cluster": "Budapest Cluster B"
+      "cluster": "Budapest Cluster B",
+      "serial": "11R753Z",
+      "status": "active",
+      "tenant": "deutsche-bank"
     },
     {
       "name": "Budapest-SRV-04",
       "role": "server",
       "device_type": "poweredge-r750",
       "site": "hq-budapest",
-      "cluster": "Budapest Cluster B"
+      "cluster": "Budapest Cluster B",
+      "serial": "11R754Z",
+      "status": "active",
+      "tenant": "deutsche-bank"
     },
     {
       "name": "Stockholm-FW-01",
       "role": "firewall",
       "device_type": "fortigate-100f",
-      "site": "hq-stockholm"
+      "site": "hq-stockholm",
+      "serial": "FG100FTK12000001",
+      "status": "active",
+      "tenant": "allianz"
     },
     {
       "name": "Stockholm-SW-01",
       "role": "switch",
       "device_type": "c9300-24t",
-      "site": "hq-stockholm"
+      "site": "hq-stockholm",
+      "serial": "FOC2412X112",
+      "status": "active",
+      "tenant": "allianz"
     },
     {
       "name": "Stockholm-SRV-01",
       "role": "server",
       "device_type": "poweredge-r750",
       "site": "hq-stockholm",
-      "cluster": "Stockholm Cluster A"
+      "cluster": "Stockholm Cluster A",
+      "serial": "12R751Z",
+      "status": "active",
+      "tenant": "allianz"
     },
     {
       "name": "Stockholm-SRV-02",
       "role": "server",
       "device_type": "poweredge-r750",
       "site": "hq-stockholm",
-      "cluster": "Stockholm Cluster A"
+      "cluster": "Stockholm Cluster A",
+      "serial": "12R752Z",
+      "status": "active",
+      "tenant": "allianz"
     },
     {
       "name": "Stockholm-SW-02",
       "role": "switch",
       "device_type": "c9300-24t",
-      "site": "hq-stockholm"
+      "site": "hq-stockholm",
+      "serial": "FOC2412X212",
+      "status": "active",
+      "tenant": "allianz"
     },
     {
       "name": "Stockholm-SRV-03",
       "role": "server",
       "device_type": "poweredge-r750",
       "site": "hq-stockholm",
-      "cluster": "Stockholm Cluster B"
+      "cluster": "Stockholm Cluster B",
+      "serial": "12R753Z",
+      "status": "active",
+      "tenant": "allianz"
     },
     {
       "name": "Stockholm-SRV-04",
       "role": "server",
       "device_type": "poweredge-r750",
       "site": "hq-stockholm",
-      "cluster": "Stockholm Cluster B"
+      "cluster": "Stockholm Cluster B",
+      "serial": "12R754Z",
+      "status": "active"
     },
     {
       "name": "Dublin-FW-01",
       "role": "firewall",
       "device_type": "fortigate-100f",
-      "site": "hq-dublin"
+      "site": "hq-dublin",
+      "serial": "FG100FTK13000001",
+      "status": "active",
+      "tenant": "adidas"
     },
     {
       "name": "Dublin-SW-01",
       "role": "switch",
       "device_type": "c9300-24t",
-      "site": "hq-dublin"
+      "site": "hq-dublin",
+      "serial": "",
+      "status": "active",
+      "tenant": "adidas"
     },
     {
       "name": "Dublin-SRV-01",
       "role": "server",
       "device_type": "poweredge-r750",
       "site": "hq-dublin",
-      "cluster": "Dublin Cluster A"
+      "cluster": "Dublin Cluster A",
+      "serial": "13R751Z",
+      "status": "active",
+      "tenant": "adidas"
     },
     {
       "name": "Dublin-SRV-02",
       "role": "server",
       "device_type": "poweredge-r750",
       "site": "hq-dublin",
-      "cluster": "Dublin Cluster A"
+      "cluster": "Dublin Cluster A",
+      "serial": "13R752Z",
+      "status": "active",
+      "tenant": "adidas"
     },
     {
       "name": "Dublin-SW-02",
       "role": "switch",
       "device_type": "c9300-24t",
-      "site": "hq-dublin"
+      "site": "hq-dublin",
+      "serial": "FOC2413X213",
+      "status": "active",
+      "tenant": "adidas"
     },
     {
       "name": "Dublin-SRV-03",
       "role": "server",
       "device_type": "poweredge-r750",
       "site": "hq-dublin",
-      "cluster": "Dublin Cluster B"
+      "cluster": "Dublin Cluster B",
+      "serial": "13R753Z",
+      "status": "active",
+      "tenant": "adidas"
     },
     {
       "name": "Dublin-SRV-04",
       "role": "server",
       "device_type": "poweredge-r750",
       "site": "hq-dublin",
-      "cluster": "Dublin Cluster B"
+      "cluster": "Dublin Cluster B",
+      "serial": "13R754Z",
+      "status": "active",
+      "tenant": "adidas"
     },
     {
       "name": "Athens-FW-01",
       "role": "firewall",
       "device_type": "fortigate-100f",
-      "site": "hq-athens"
+      "site": "hq-athens",
+      "serial": "FG100FTK14000001",
+      "status": "active",
+      "tenant": "puma"
     },
     {
       "name": "Athens-SW-01",
       "role": "switch",
       "device_type": "c9300-24t",
-      "site": "hq-athens"
+      "site": "hq-athens",
+      "serial": "FOC2414X114",
+      "status": "active",
+      "tenant": "puma"
     },
     {
       "name": "Athens-SRV-01",
       "role": "server",
       "device_type": "poweredge-r750",
       "site": "hq-athens",
-      "cluster": "Athens Cluster A"
+      "cluster": "Athens Cluster A",
+      "serial": "14R751Z",
+      "status": "active",
+      "tenant": "puma"
     },
     {
       "name": "Athens-SRV-02",
       "role": "server",
       "device_type": "poweredge-r750",
       "site": "hq-athens",
-      "cluster": "Athens Cluster A"
+      "cluster": "Athens Cluster A",
+      "serial": "14R752Z",
+      "status": "active",
+      "tenant": "puma"
     },
     {
       "name": "Athens-SW-02",
       "role": "switch",
       "device_type": "c9300-24t",
-      "site": "hq-athens"
+      "site": "hq-athens",
+      "serial": "TBD",
+      "status": "active",
+      "tenant": "puma"
     },
     {
       "name": "Athens-SRV-03",
       "role": "server",
       "device_type": "poweredge-r750",
       "site": "hq-athens",
-      "cluster": "Athens Cluster B"
+      "cluster": "Athens Cluster B",
+      "serial": "14R753Z",
+      "status": "active",
+      "tenant": "puma"
     },
     {
       "name": "Athens-SRV-04",
       "role": "server",
       "device_type": "poweredge-r750",
       "site": "hq-athens",
-      "cluster": "Athens Cluster B"
+      "cluster": "Athens Cluster B",
+      "serial": "14R754Z",
+      "status": "active",
+      "tenant": "puma"
     },
     {
       "name": "Singapore-FW-01",
       "role": "firewall",
       "device_type": "fortigate-100f",
-      "site": "hq-singapore"
+      "site": "hq-singapore",
+      "serial": "FG100FTK15000001",
+      "status": "active",
+      "tenant": "nike"
     },
     {
       "name": "Singapore-SW-01",
       "role": "switch",
       "device_type": "c9300-24t",
-      "site": "hq-singapore"
+      "site": "hq-singapore",
+      "serial": "FOC2415X115",
+      "status": "active",
+      "tenant": "nike"
     },
     {
       "name": "Singapore-SRV-01",
       "role": "server",
       "device_type": "poweredge-r750",
       "site": "hq-singapore",
-      "cluster": "Singapore Cluster A"
+      "cluster": "Singapore Cluster A",
+      "serial": "15R751Z",
+      "status": "active",
+      "tenant": "nike"
     },
     {
       "name": "Singapore-SRV-02",
       "role": "server",
       "device_type": "poweredge-r750",
       "site": "hq-singapore",
-      "cluster": "Singapore Cluster A"
+      "cluster": "Singapore Cluster A",
+      "serial": "15R752Z",
+      "status": "active",
+      "tenant": "nike"
     },
     {
       "name": "Singapore-SW-02",
       "role": "switch",
       "device_type": "c9300-24t",
-      "site": "hq-singapore"
+      "site": "hq-singapore",
+      "serial": "FOC2415X215",
+      "status": "active",
+      "tenant": "nike"
     },
     {
       "name": "Singapore-SRV-03",
       "role": "server",
       "device_type": "poweredge-r750",
       "site": "hq-singapore",
-      "cluster": "Singapore Cluster B"
+      "cluster": "Singapore Cluster B",
+      "serial": "15R753Z",
+      "status": "offline",
+      "tenant": "nike"
     },
     {
       "name": "Singapore-SRV-04",
       "role": "server",
       "device_type": "poweredge-r750",
       "site": "hq-singapore",
-      "cluster": "Singapore Cluster B"
+      "cluster": "Singapore Cluster B",
+      "serial": "15R754Z",
+      "status": "active",
+      "tenant": "nike"
     },
     {
       "name": "Sydney-FW-01",
       "role": "firewall",
       "device_type": "fortigate-100f",
-      "site": "hq-sydney"
+      "site": "hq-sydney",
+      "serial": "FG100FTK16000001",
+      "status": "active",
+      "tenant": "samsung"
     },
     {
       "name": "Sydney-SW-01",
       "role": "switch",
       "device_type": "c9300-24t",
-      "site": "hq-sydney"
+      "site": "hq-sydney",
+      "serial": "FOC2416X116",
+      "status": "active",
+      "tenant": "samsung"
     },
     {
       "name": "Sydney-SRV-01",
       "role": "server",
       "device_type": "poweredge-r750",
       "site": "hq-sydney",
-      "cluster": "Sydney Cluster A"
+      "cluster": "Sydney Cluster A",
+      "serial": "16R751Z",
+      "status": "active",
+      "tenant": "samsung"
     },
     {
       "name": "Sydney-SRV-02",
       "role": "server",
       "device_type": "poweredge-r750",
       "site": "hq-sydney",
-      "cluster": "Sydney Cluster A"
+      "cluster": "Sydney Cluster A",
+      "serial": "16R752Z",
+      "status": "active",
+      "tenant": "samsung"
     },
     {
       "name": "Sydney-SW-02",
       "role": "switch",
       "device_type": "c9300-24t",
-      "site": "hq-sydney"
+      "site": "hq-sydney",
+      "serial": "FOC2416X216",
+      "status": "active",
+      "tenant": "samsung"
     },
     {
       "name": "Sydney-SRV-03",
       "role": "server",
       "device_type": "poweredge-r750",
       "site": "hq-sydney",
-      "cluster": "Sydney Cluster B"
+      "cluster": "Sydney Cluster B",
+      "serial": "16R753Z",
+      "status": "active",
+      "tenant": "samsung"
     },
     {
       "name": "Sydney-SRV-04",
       "role": "server",
       "device_type": "poweredge-r750",
       "site": "hq-sydney",
-      "cluster": "Sydney Cluster B"
+      "cluster": "Sydney Cluster B",
+      "serial": "",
+      "status": "active",
+      "tenant": "samsung"
     },
     {
       "name": "Chicago-FW-01",
       "role": "firewall",
       "device_type": "fortigate-100f",
-      "site": "hq-chicago"
+      "site": "hq-chicago",
+      "serial": "FG100FTK17000001",
+      "status": "active"
     },
     {
       "name": "Chicago-SW-01",
       "role": "switch",
       "device_type": "c9300-24t",
-      "site": "hq-chicago"
+      "site": "hq-chicago",
+      "serial": "FOC2417X117",
+      "status": "active",
+      "tenant": "sony"
     },
     {
       "name": "Chicago-SRV-01",
       "role": "server",
       "device_type": "poweredge-r750",
       "site": "hq-chicago",
-      "cluster": "Chicago Cluster A"
+      "cluster": "Chicago Cluster A",
+      "serial": "17R751Z",
+      "status": "active",
+      "tenant": "sony"
     },
     {
       "name": "Chicago-SRV-02",
       "role": "server",
       "device_type": "poweredge-r750",
       "site": "hq-chicago",
-      "cluster": "Chicago Cluster A"
+      "cluster": "Chicago Cluster A",
+      "serial": "17R752Z",
+      "status": "active",
+      "tenant": "sony"
     },
     {
       "name": "Chicago-SW-02",
       "role": "switch",
       "device_type": "c9300-24t",
-      "site": "hq-chicago"
+      "site": "hq-chicago",
+      "serial": "FOC2417X217",
+      "status": "active",
+      "tenant": "sony"
     },
     {
       "name": "Chicago-SRV-03",
       "role": "server",
       "device_type": "poweredge-r750",
       "site": "hq-chicago",
-      "cluster": "Chicago Cluster B"
+      "cluster": "Chicago Cluster B",
+      "serial": "17R753Z",
+      "status": "active",
+      "tenant": "sony"
     },
     {
       "name": "Chicago-SRV-04",
       "role": "server",
       "device_type": "poweredge-r750",
       "site": "hq-chicago",
-      "cluster": "Chicago Cluster B"
+      "cluster": "Chicago Cluster B",
+      "serial": "17R754Z",
+      "status": "active",
+      "tenant": "sony"
     },
     {
       "name": "Seattle-FW-01",
       "role": "firewall",
       "device_type": "fortigate-100f",
-      "site": "hq-seattle"
+      "site": "hq-seattle",
+      "serial": "FG100FTK18000001",
+      "status": "failed",
+      "tenant": "toyota"
     },
     {
       "name": "Seattle-SW-01",
       "role": "switch",
       "device_type": "c9300-24t",
-      "site": "hq-seattle"
+      "site": "hq-seattle",
+      "serial": "FOC2418X118",
+      "status": "active",
+      "tenant": "toyota"
     },
     {
       "name": "Seattle-SRV-01",
       "role": "server",
       "device_type": "poweredge-r750",
       "site": "hq-seattle",
-      "cluster": "Seattle Cluster A"
+      "cluster": "Seattle Cluster A",
+      "serial": "18R751Z",
+      "status": "active",
+      "tenant": "toyota"
     },
     {
       "name": "Seattle-SRV-02",
       "role": "server",
       "device_type": "poweredge-r750",
       "site": "hq-seattle",
-      "cluster": "Seattle Cluster A"
+      "cluster": "Seattle Cluster A",
+      "serial": "18R752Z",
+      "status": "active",
+      "tenant": "toyota"
     },
     {
       "name": "Seattle-SW-02",
       "role": "switch",
       "device_type": "c9300-24t",
-      "site": "hq-seattle"
+      "site": "hq-seattle",
+      "serial": "FOC2418X218",
+      "status": "active",
+      "tenant": "toyota"
     },
     {
       "name": "Seattle-SRV-03",
       "role": "server",
       "device_type": "poweredge-r750",
       "site": "hq-seattle",
-      "cluster": "Seattle Cluster B"
+      "cluster": "Seattle Cluster B",
+      "serial": "18R753Z",
+      "status": "active",
+      "tenant": "toyota"
     },
     {
       "name": "Seattle-SRV-04",
       "role": "server",
       "device_type": "poweredge-r750",
       "site": "hq-seattle",
-      "cluster": "Seattle Cluster B"
+      "cluster": "Seattle Cluster B",
+      "serial": "18R754Z",
+      "status": "active",
+      "tenant": "toyota"
     },
     {
       "name": "Miami-FW-01",
       "role": "firewall",
       "device_type": "fortigate-100f",
-      "site": "hq-miami"
+      "site": "hq-miami",
+      "serial": "FG100FTK19000001",
+      "status": "active",
+      "tenant": "shell"
     },
     {
       "name": "Miami-SW-01",
       "role": "switch",
       "device_type": "c9300-24t",
-      "site": "hq-miami"
+      "site": "hq-miami",
+      "serial": "FOC2419X119",
+      "status": "active",
+      "tenant": "shell"
     },
     {
       "name": "Miami-SRV-01",
       "role": "server",
       "device_type": "poweredge-r750",
       "site": "hq-miami",
-      "cluster": "Miami Cluster A"
+      "cluster": "Miami Cluster A",
+      "serial": "19R751Z",
+      "status": "active",
+      "tenant": "shell"
     },
     {
       "name": "Miami-SRV-02",
       "role": "server",
       "device_type": "poweredge-r750",
       "site": "hq-miami",
-      "cluster": "Miami Cluster A"
+      "cluster": "Miami Cluster A",
+      "serial": "",
+      "status": "active",
+      "tenant": "shell"
     },
     {
       "name": "Miami-SW-02",
       "role": "switch",
       "device_type": "c9300-24t",
-      "site": "hq-miami"
+      "site": "hq-miami",
+      "serial": "FOC2419X219",
+      "status": "active",
+      "tenant": "shell"
     },
     {
       "name": "Miami-SRV-03",
       "role": "server",
       "device_type": "poweredge-r750",
       "site": "hq-miami",
-      "cluster": "Miami Cluster B"
+      "cluster": "Miami Cluster B",
+      "serial": "19R753Z",
+      "status": "active",
+      "tenant": "shell"
     },
     {
       "name": "Miami-SRV-04",
       "role": "server",
       "device_type": "poweredge-r750",
       "site": "hq-miami",
-      "cluster": "Miami Cluster B"
+      "cluster": "Miami Cluster B",
+      "serial": "19R754Z",
+      "status": "active",
+      "tenant": "shell"
     }
   ],
   "dcim/interfaces/": [
@@ -4777,562 +5214,894 @@
     {
       "name": "munich-vm-01",
       "cluster": "Munich Cluster A",
-      "device": "Munich-SRV-01"
+      "device": "Munich-SRV-01",
+      "tenant": "coca-cola",
+      "vcpus": 4,
+      "memory": 16384
     },
     {
       "name": "munich-vm-02",
       "cluster": "Munich Cluster A",
-      "device": "Munich-SRV-02"
+      "device": "Munich-SRV-02",
+      "tenant": "coca-cola",
+      "vcpus": 4,
+      "memory": 16384
     },
     {
       "name": "munich-vm-03",
       "cluster": "Munich Cluster B",
-      "device": "Munich-SRV-03"
+      "device": "Munich-SRV-03",
+      "tenant": "coca-cola",
+      "vcpus": 4,
+      "memory": 16384
     },
     {
       "name": "munich-vm-04",
       "cluster": "Munich Cluster B",
-      "device": "Munich-SRV-04"
+      "device": "Munich-SRV-04",
+      "tenant": "coca-cola",
+      "vcpus": 4,
+      "memory": 16384
     },
     {
       "name": "munich-vm-05",
-      "cluster": "Munich Cluster A"
+      "cluster": "Munich Cluster A",
+      "tenant": "coca-cola",
+      "vcpus": 2,
+      "memory": 8192
     },
     {
       "name": "munich-vm-06",
-      "cluster": "Munich Cluster B"
+      "cluster": "Munich Cluster B",
+      "tenant": "coca-cola"
     },
     {
       "name": "berlin-vm-01",
       "cluster": "Berlin Cluster A",
-      "device": "Berlin-SRV-01"
+      "device": "Berlin-SRV-01",
+      "tenant": "cisco",
+      "vcpus": 4,
+      "memory": 16384
     },
     {
       "name": "berlin-vm-02",
       "cluster": "Berlin Cluster A",
-      "device": "Berlin-SRV-02"
+      "device": "Berlin-SRV-02",
+      "tenant": "cisco",
+      "vcpus": 4,
+      "memory": 16384
     },
     {
       "name": "berlin-vm-03",
       "cluster": "Berlin Cluster B",
-      "device": "Berlin-SRV-03"
+      "device": "Berlin-SRV-03",
+      "tenant": "cisco",
+      "vcpus": 4,
+      "memory": 16384
     },
     {
       "name": "berlin-vm-04",
       "cluster": "Berlin Cluster B",
-      "device": "Berlin-SRV-04"
+      "device": "Berlin-SRV-04",
+      "tenant": "cisco",
+      "vcpus": 4,
+      "memory": 16384
     },
     {
       "name": "berlin-vm-05",
-      "cluster": "Berlin Cluster A"
+      "cluster": "Berlin Cluster A",
+      "tenant": "cisco",
+      "vcpus": 2,
+      "memory": 8192
     },
     {
       "name": "berlin-vm-06",
-      "cluster": "Berlin Cluster B"
+      "cluster": "Berlin Cluster B",
+      "tenant": "cisco",
+      "vcpus": 2,
+      "memory": 8192
     },
     {
       "name": "cologne-vm-01",
       "cluster": "Cologne Cluster A",
-      "device": "Cologne-SRV-01"
+      "device": "Cologne-SRV-01",
+      "tenant": "sap",
+      "vcpus": 4,
+      "memory": 16384
     },
     {
       "name": "cologne-vm-02",
       "cluster": "Cologne Cluster A",
-      "device": "Cologne-SRV-02"
+      "device": "Cologne-SRV-02",
+      "tenant": "sap",
+      "vcpus": 4,
+      "memory": 16384
     },
     {
       "name": "cologne-vm-03",
       "cluster": "Cologne Cluster B",
-      "device": "Cologne-SRV-03"
+      "device": "Cologne-SRV-03",
+      "tenant": "sap"
     },
     {
       "name": "cologne-vm-04",
       "cluster": "Cologne Cluster B",
-      "device": "Cologne-SRV-04"
+      "device": "Cologne-SRV-04",
+      "tenant": "sap",
+      "vcpus": 4,
+      "memory": 16384
     },
     {
       "name": "cologne-vm-05",
-      "cluster": "Cologne Cluster A"
+      "cluster": "Cologne Cluster A",
+      "tenant": "sap",
+      "vcpus": 2,
+      "memory": 8192
     },
     {
       "name": "cologne-vm-06",
-      "cluster": "Cologne Cluster B"
+      "cluster": "Cologne Cluster B",
+      "tenant": "sap",
+      "vcpus": 2,
+      "memory": 8192
     },
     {
       "name": "dusseldorf-vm-01",
       "cluster": "Dusseldorf Cluster A",
-      "device": "Dusseldorf-SRV-01"
+      "device": "Dusseldorf-SRV-01",
+      "tenant": "google",
+      "vcpus": 4,
+      "memory": 16384
     },
     {
       "name": "dusseldorf-vm-02",
       "cluster": "Dusseldorf Cluster A",
-      "device": "Dusseldorf-SRV-02"
+      "device": "Dusseldorf-SRV-02",
+      "tenant": "google",
+      "vcpus": 4,
+      "memory": 16384
     },
     {
       "name": "dusseldorf-vm-03",
       "cluster": "Dusseldorf Cluster B",
-      "device": "Dusseldorf-SRV-03"
+      "device": "Dusseldorf-SRV-03",
+      "tenant": "google",
+      "vcpus": 4,
+      "memory": 16384
     },
     {
       "name": "dusseldorf-vm-04",
       "cluster": "Dusseldorf Cluster B",
-      "device": "Dusseldorf-SRV-04"
+      "device": "Dusseldorf-SRV-04",
+      "tenant": "google",
+      "vcpus": 4,
+      "memory": 16384
     },
     {
       "name": "dusseldorf-vm-05",
-      "cluster": "Dusseldorf Cluster A"
+      "cluster": "Dusseldorf Cluster A",
+      "tenant": "google",
+      "vcpus": 2,
+      "memory": 8192
     },
     {
       "name": "dusseldorf-vm-06",
-      "cluster": "Dusseldorf Cluster B"
+      "cluster": "Dusseldorf Cluster B",
+      "tenant": "google",
+      "vcpus": 2,
+      "memory": 8192
     },
     {
       "name": "dortmund-vm-01",
       "cluster": "Dortmund Cluster A",
-      "device": "Dortmund-SRV-01"
+      "device": "Dortmund-SRV-01",
+      "tenant": "amazon",
+      "vcpus": 4,
+      "memory": 16384
     },
     {
       "name": "dortmund-vm-02",
       "cluster": "Dortmund Cluster A",
-      "device": "Dortmund-SRV-02"
+      "device": "Dortmund-SRV-02",
+      "tenant": "amazon",
+      "vcpus": 4,
+      "memory": 16384
     },
     {
       "name": "dortmund-vm-03",
       "cluster": "Dortmund Cluster B",
-      "device": "Dortmund-SRV-03"
+      "device": "Dortmund-SRV-03",
+      "tenant": "amazon",
+      "vcpus": 4,
+      "memory": 16384
     },
     {
       "name": "dortmund-vm-04",
       "cluster": "Dortmund Cluster B",
-      "device": "Dortmund-SRV-04"
+      "device": "Dortmund-SRV-04",
+      "tenant": "amazon",
+      "vcpus": 4,
+      "memory": 16384
     },
     {
       "name": "dortmund-vm-05",
-      "cluster": "Dortmund Cluster A"
+      "cluster": "Dortmund Cluster A",
+      "vcpus": 2,
+      "memory": 8192
     },
     {
       "name": "dortmund-vm-06",
-      "cluster": "Dortmund Cluster B"
+      "cluster": "Dortmund Cluster B",
+      "tenant": "amazon",
+      "vcpus": 2,
+      "memory": 8192
     },
     {
       "name": "vienna-vm-01",
       "cluster": "Vienna Cluster A",
-      "device": "Vienna-SRV-01"
+      "device": "Vienna-SRV-01",
+      "tenant": "microsoft",
+      "vcpus": 4,
+      "memory": 16384
     },
     {
       "name": "vienna-vm-02",
       "cluster": "Vienna Cluster A",
-      "device": "Vienna-SRV-02"
+      "device": "Vienna-SRV-02",
+      "tenant": "microsoft",
+      "vcpus": 4,
+      "memory": 16384
     },
     {
       "name": "vienna-vm-03",
       "cluster": "Vienna Cluster B",
-      "device": "Vienna-SRV-03"
+      "device": "Vienna-SRV-03",
+      "tenant": "microsoft",
+      "vcpus": 4,
+      "memory": 16384
     },
     {
       "name": "vienna-vm-04",
       "cluster": "Vienna Cluster B",
-      "device": "Vienna-SRV-04"
+      "device": "Vienna-SRV-04",
+      "tenant": "microsoft",
+      "vcpus": 4,
+      "memory": 16384
     },
     {
       "name": "vienna-vm-05",
-      "cluster": "Vienna Cluster A"
+      "cluster": "Vienna Cluster A",
+      "tenant": "microsoft",
+      "vcpus": 2,
+      "memory": 8192
     },
     {
       "name": "vienna-vm-06",
-      "cluster": "Vienna Cluster B"
+      "cluster": "Vienna Cluster B",
+      "vcpus": 2,
+      "memory": 8192
     },
     {
       "name": "amsterdam-vm-01",
       "cluster": "Amsterdam Cluster A",
-      "device": "Amsterdam-SRV-01"
+      "device": "Amsterdam-SRV-01",
+      "tenant": "ibm",
+      "vcpus": 4,
+      "memory": 16384
     },
     {
       "name": "amsterdam-vm-02",
       "cluster": "Amsterdam Cluster A",
-      "device": "Amsterdam-SRV-02"
+      "device": "Amsterdam-SRV-02",
+      "tenant": "ibm",
+      "vcpus": 4,
+      "memory": 16384
     },
     {
       "name": "amsterdam-vm-03",
       "cluster": "Amsterdam Cluster B",
-      "device": "Amsterdam-SRV-03"
+      "device": "Amsterdam-SRV-03",
+      "tenant": "ibm",
+      "vcpus": 4,
+      "memory": 16384
     },
     {
       "name": "amsterdam-vm-04",
       "cluster": "Amsterdam Cluster B",
-      "device": "Amsterdam-SRV-04"
+      "device": "Amsterdam-SRV-04",
+      "tenant": "ibm",
+      "vcpus": 4,
+      "memory": 16384
     },
     {
       "name": "amsterdam-vm-05",
-      "cluster": "Amsterdam Cluster A"
+      "cluster": "Amsterdam Cluster A",
+      "tenant": "ibm"
     },
     {
       "name": "amsterdam-vm-06",
-      "cluster": "Amsterdam Cluster B"
+      "cluster": "Amsterdam Cluster B",
+      "tenant": "ibm",
+      "vcpus": 2,
+      "memory": 8192
     },
     {
       "name": "paris-vm-01",
       "cluster": "Paris Cluster A",
-      "device": "Paris-SRV-01"
+      "device": "Paris-SRV-01",
+      "tenant": "oracle",
+      "vcpus": 4,
+      "memory": 16384
     },
     {
       "name": "paris-vm-02",
       "cluster": "Paris Cluster A",
-      "device": "Paris-SRV-02"
+      "device": "Paris-SRV-02",
+      "vcpus": 4,
+      "memory": 16384
     },
     {
       "name": "paris-vm-03",
       "cluster": "Paris Cluster B",
-      "device": "Paris-SRV-03"
+      "device": "Paris-SRV-03",
+      "tenant": "oracle",
+      "vcpus": 4,
+      "memory": 16384
     },
     {
       "name": "paris-vm-04",
       "cluster": "Paris Cluster B",
-      "device": "Paris-SRV-04"
+      "device": "Paris-SRV-04",
+      "tenant": "oracle",
+      "vcpus": 4,
+      "memory": 16384
     },
     {
       "name": "paris-vm-05",
-      "cluster": "Paris Cluster A"
+      "cluster": "Paris Cluster A",
+      "tenant": "oracle",
+      "vcpus": 2,
+      "memory": 8192
     },
     {
       "name": "paris-vm-06",
-      "cluster": "Paris Cluster B"
+      "cluster": "Paris Cluster B",
+      "tenant": "oracle",
+      "vcpus": 2,
+      "memory": 8192
     },
     {
       "name": "madrid-vm-01",
       "cluster": "Madrid Cluster A",
-      "device": "Madrid-SRV-01"
+      "device": "Madrid-SRV-01",
+      "tenant": "siemens"
     },
     {
       "name": "madrid-vm-02",
       "cluster": "Madrid Cluster A",
-      "device": "Madrid-SRV-02"
+      "device": "Madrid-SRV-02",
+      "tenant": "siemens",
+      "vcpus": 4,
+      "memory": 16384
     },
     {
       "name": "madrid-vm-03",
       "cluster": "Madrid Cluster B",
-      "device": "Madrid-SRV-03"
+      "device": "Madrid-SRV-03",
+      "tenant": "siemens",
+      "vcpus": 4,
+      "memory": 16384
     },
     {
       "name": "madrid-vm-04",
       "cluster": "Madrid Cluster B",
-      "device": "Madrid-SRV-04"
+      "device": "Madrid-SRV-04",
+      "tenant": "siemens",
+      "vcpus": 4,
+      "memory": 16384
     },
     {
       "name": "madrid-vm-05",
-      "cluster": "Madrid Cluster A"
+      "cluster": "Madrid Cluster A",
+      "tenant": "siemens",
+      "vcpus": 2,
+      "memory": 8192
     },
     {
       "name": "madrid-vm-06",
-      "cluster": "Madrid Cluster B"
+      "cluster": "Madrid Cluster B",
+      "tenant": "siemens",
+      "vcpus": 2,
+      "memory": 8192
     },
     {
       "name": "rome-vm-01",
       "cluster": "Rome Cluster A",
-      "device": "Rome-SRV-01"
+      "device": "Rome-SRV-01",
+      "tenant": "bmw",
+      "vcpus": 4,
+      "memory": 16384
     },
     {
       "name": "rome-vm-02",
       "cluster": "Rome Cluster A",
-      "device": "Rome-SRV-02"
+      "device": "Rome-SRV-02",
+      "tenant": "bmw",
+      "vcpus": 4,
+      "memory": 16384
     },
     {
       "name": "rome-vm-03",
       "cluster": "Rome Cluster B",
-      "device": "Rome-SRV-03"
+      "device": "Rome-SRV-03",
+      "tenant": "bmw",
+      "vcpus": 4,
+      "memory": 16384
     },
     {
       "name": "rome-vm-04",
       "cluster": "Rome Cluster B",
-      "device": "Rome-SRV-04"
+      "device": "Rome-SRV-04",
+      "vcpus": 4,
+      "memory": 16384
     },
     {
       "name": "rome-vm-05",
-      "cluster": "Rome Cluster A"
+      "cluster": "Rome Cluster A",
+      "tenant": "bmw",
+      "vcpus": 2,
+      "memory": 8192
     },
     {
       "name": "rome-vm-06",
-      "cluster": "Rome Cluster B"
+      "cluster": "Rome Cluster B",
+      "tenant": "bmw",
+      "vcpus": 2,
+      "memory": 8192
     },
     {
       "name": "warsaw-vm-01",
       "cluster": "Warsaw Cluster A",
-      "device": "Warsaw-SRV-01"
+      "device": "Warsaw-SRV-01",
+      "tenant": "volkswagen",
+      "vcpus": 4,
+      "memory": 16384
     },
     {
       "name": "warsaw-vm-02",
       "cluster": "Warsaw Cluster A",
-      "device": "Warsaw-SRV-02"
+      "device": "Warsaw-SRV-02",
+      "tenant": "volkswagen",
+      "vcpus": 4,
+      "memory": 16384
     },
     {
       "name": "warsaw-vm-03",
       "cluster": "Warsaw Cluster B",
-      "device": "Warsaw-SRV-03"
+      "device": "Warsaw-SRV-03",
+      "tenant": "volkswagen",
+      "vcpus": 4,
+      "memory": 16384
     },
     {
       "name": "warsaw-vm-04",
       "cluster": "Warsaw Cluster B",
-      "device": "Warsaw-SRV-04"
+      "device": "Warsaw-SRV-04",
+      "tenant": "volkswagen",
+      "vcpus": 4,
+      "memory": 16384
     },
     {
       "name": "warsaw-vm-05",
-      "cluster": "Warsaw Cluster A"
+      "cluster": "Warsaw Cluster A",
+      "tenant": "volkswagen",
+      "vcpus": 2,
+      "memory": 8192
     },
     {
       "name": "warsaw-vm-06",
-      "cluster": "Warsaw Cluster B"
+      "cluster": "Warsaw Cluster B",
+      "tenant": "volkswagen"
     },
     {
       "name": "budapest-vm-01",
       "cluster": "Budapest Cluster A",
-      "device": "Budapest-SRV-01"
+      "device": "Budapest-SRV-01",
+      "tenant": "deutsche-bank",
+      "vcpus": 4,
+      "memory": 16384
     },
     {
       "name": "budapest-vm-02",
       "cluster": "Budapest Cluster A",
-      "device": "Budapest-SRV-02"
+      "device": "Budapest-SRV-02",
+      "tenant": "deutsche-bank",
+      "vcpus": 4,
+      "memory": 16384
     },
     {
       "name": "budapest-vm-03",
       "cluster": "Budapest Cluster B",
-      "device": "Budapest-SRV-03"
+      "device": "Budapest-SRV-03",
+      "tenant": "deutsche-bank",
+      "vcpus": 4,
+      "memory": 16384
     },
     {
       "name": "budapest-vm-04",
       "cluster": "Budapest Cluster B",
-      "device": "Budapest-SRV-04"
+      "device": "Budapest-SRV-04",
+      "tenant": "deutsche-bank",
+      "vcpus": 4,
+      "memory": 16384
     },
     {
       "name": "budapest-vm-05",
-      "cluster": "Budapest Cluster A"
+      "cluster": "Budapest Cluster A",
+      "tenant": "deutsche-bank",
+      "vcpus": 2,
+      "memory": 8192
     },
     {
       "name": "budapest-vm-06",
-      "cluster": "Budapest Cluster B"
+      "cluster": "Budapest Cluster B",
+      "vcpus": 2,
+      "memory": 8192
     },
     {
       "name": "stockholm-vm-01",
       "cluster": "Stockholm Cluster A",
-      "device": "Stockholm-SRV-01"
+      "device": "Stockholm-SRV-01",
+      "tenant": "allianz",
+      "vcpus": 4,
+      "memory": 16384
     },
     {
       "name": "stockholm-vm-02",
       "cluster": "Stockholm Cluster A",
-      "device": "Stockholm-SRV-02"
+      "device": "Stockholm-SRV-02",
+      "tenant": "allianz"
     },
     {
       "name": "stockholm-vm-03",
       "cluster": "Stockholm Cluster B",
-      "device": "Stockholm-SRV-03"
+      "device": "Stockholm-SRV-03",
+      "tenant": "allianz",
+      "vcpus": 4,
+      "memory": 16384
     },
     {
       "name": "stockholm-vm-04",
       "cluster": "Stockholm Cluster B",
-      "device": "Stockholm-SRV-04"
+      "device": "Stockholm-SRV-04",
+      "tenant": "allianz",
+      "vcpus": 4,
+      "memory": 16384
     },
     {
       "name": "stockholm-vm-05",
-      "cluster": "Stockholm Cluster A"
+      "cluster": "Stockholm Cluster A",
+      "tenant": "allianz",
+      "vcpus": 2,
+      "memory": 8192
     },
     {
       "name": "stockholm-vm-06",
-      "cluster": "Stockholm Cluster B"
+      "cluster": "Stockholm Cluster B",
+      "tenant": "allianz",
+      "vcpus": 2,
+      "memory": 8192
     },
     {
       "name": "dublin-vm-01",
       "cluster": "Dublin Cluster A",
-      "device": "Dublin-SRV-01"
+      "device": "Dublin-SRV-01",
+      "tenant": "adidas",
+      "vcpus": 4,
+      "memory": 16384
     },
     {
       "name": "dublin-vm-02",
       "cluster": "Dublin Cluster A",
-      "device": "Dublin-SRV-02"
+      "device": "Dublin-SRV-02",
+      "tenant": "adidas",
+      "vcpus": 4,
+      "memory": 16384
     },
     {
       "name": "dublin-vm-03",
       "cluster": "Dublin Cluster B",
-      "device": "Dublin-SRV-03"
+      "device": "Dublin-SRV-03",
+      "tenant": "adidas",
+      "vcpus": 4,
+      "memory": 16384
     },
     {
       "name": "dublin-vm-04",
       "cluster": "Dublin Cluster B",
-      "device": "Dublin-SRV-04"
+      "device": "Dublin-SRV-04",
+      "tenant": "adidas"
     },
     {
       "name": "dublin-vm-05",
-      "cluster": "Dublin Cluster A"
+      "cluster": "Dublin Cluster A",
+      "tenant": "adidas",
+      "vcpus": 2,
+      "memory": 8192
     },
     {
       "name": "dublin-vm-06",
-      "cluster": "Dublin Cluster B"
+      "cluster": "Dublin Cluster B",
+      "tenant": "adidas",
+      "vcpus": 2,
+      "memory": 8192
     },
     {
       "name": "athens-vm-01",
       "cluster": "Athens Cluster A",
-      "device": "Athens-SRV-01"
+      "device": "Athens-SRV-01",
+      "vcpus": 4,
+      "memory": 16384
     },
     {
       "name": "athens-vm-02",
       "cluster": "Athens Cluster A",
-      "device": "Athens-SRV-02"
+      "device": "Athens-SRV-02",
+      "tenant": "puma",
+      "vcpus": 4,
+      "memory": 16384
     },
     {
       "name": "athens-vm-03",
       "cluster": "Athens Cluster B",
-      "device": "Athens-SRV-03"
+      "device": "Athens-SRV-03",
+      "tenant": "puma",
+      "vcpus": 4,
+      "memory": 16384
     },
     {
       "name": "athens-vm-04",
       "cluster": "Athens Cluster B",
-      "device": "Athens-SRV-04"
+      "device": "Athens-SRV-04",
+      "tenant": "puma",
+      "vcpus": 4,
+      "memory": 16384
     },
     {
       "name": "athens-vm-05",
-      "cluster": "Athens Cluster A"
+      "cluster": "Athens Cluster A",
+      "tenant": "puma",
+      "vcpus": 2,
+      "memory": 8192
     },
     {
       "name": "athens-vm-06",
-      "cluster": "Athens Cluster B"
+      "cluster": "Athens Cluster B",
+      "tenant": "puma",
+      "vcpus": 2,
+      "memory": 8192
     },
     {
       "name": "singapore-vm-01",
       "cluster": "Singapore Cluster A",
-      "device": "Singapore-SRV-01"
+      "device": "Singapore-SRV-01",
+      "tenant": "nike",
+      "vcpus": 4,
+      "memory": 16384
     },
     {
       "name": "singapore-vm-02",
       "cluster": "Singapore Cluster A",
-      "device": "Singapore-SRV-02"
+      "device": "Singapore-SRV-02",
+      "tenant": "nike",
+      "vcpus": 4,
+      "memory": 16384
     },
     {
       "name": "singapore-vm-03",
       "cluster": "Singapore Cluster B",
-      "device": "Singapore-SRV-03"
+      "device": "Singapore-SRV-03",
+      "tenant": "nike",
+      "vcpus": 4,
+      "memory": 16384
     },
     {
       "name": "singapore-vm-04",
       "cluster": "Singapore Cluster B",
-      "device": "Singapore-SRV-04"
+      "device": "Singapore-SRV-04",
+      "tenant": "nike",
+      "vcpus": 4,
+      "memory": 16384
     },
     {
       "name": "singapore-vm-05",
-      "cluster": "Singapore Cluster A"
+      "cluster": "Singapore Cluster A",
+      "tenant": "nike",
+      "vcpus": 2,
+      "memory": 8192
     },
     {
       "name": "singapore-vm-06",
-      "cluster": "Singapore Cluster B"
+      "cluster": "Singapore Cluster B",
+      "tenant": "nike"
     },
     {
       "name": "sydney-vm-01",
       "cluster": "Sydney Cluster A",
-      "device": "Sydney-SRV-01"
+      "device": "Sydney-SRV-01",
+      "tenant": "samsung",
+      "vcpus": 4,
+      "memory": 16384
     },
     {
       "name": "sydney-vm-02",
       "cluster": "Sydney Cluster A",
-      "device": "Sydney-SRV-02"
+      "device": "Sydney-SRV-02",
+      "tenant": "samsung",
+      "vcpus": 4,
+      "memory": 16384
     },
     {
       "name": "sydney-vm-03",
       "cluster": "Sydney Cluster B",
-      "device": "Sydney-SRV-03"
+      "device": "Sydney-SRV-03",
+      "tenant": "samsung",
+      "vcpus": 4,
+      "memory": 16384
     },
     {
       "name": "sydney-vm-04",
       "cluster": "Sydney Cluster B",
-      "device": "Sydney-SRV-04"
+      "device": "Sydney-SRV-04",
+      "tenant": "samsung",
+      "vcpus": 4,
+      "memory": 16384
     },
     {
       "name": "sydney-vm-05",
-      "cluster": "Sydney Cluster A"
+      "cluster": "Sydney Cluster A",
+      "vcpus": 2,
+      "memory": 8192
     },
     {
       "name": "sydney-vm-06",
-      "cluster": "Sydney Cluster B"
+      "cluster": "Sydney Cluster B",
+      "tenant": "samsung",
+      "vcpus": 2,
+      "memory": 8192
     },
     {
       "name": "chicago-vm-01",
       "cluster": "Chicago Cluster A",
-      "device": "Chicago-SRV-01"
+      "device": "Chicago-SRV-01",
+      "tenant": "sony",
+      "vcpus": 4,
+      "memory": 16384
     },
     {
       "name": "chicago-vm-02",
       "cluster": "Chicago Cluster A",
-      "device": "Chicago-SRV-02"
+      "device": "Chicago-SRV-02",
+      "tenant": "sony",
+      "vcpus": 4,
+      "memory": 16384
     },
     {
       "name": "chicago-vm-03",
       "cluster": "Chicago Cluster B",
-      "device": "Chicago-SRV-03"
+      "device": "Chicago-SRV-03",
+      "tenant": "sony",
+      "vcpus": 4,
+      "memory": 16384
     },
     {
       "name": "chicago-vm-04",
       "cluster": "Chicago Cluster B",
-      "device": "Chicago-SRV-04"
+      "device": "Chicago-SRV-04",
+      "tenant": "sony",
+      "vcpus": 4,
+      "memory": 16384
     },
     {
       "name": "chicago-vm-05",
-      "cluster": "Chicago Cluster A"
+      "cluster": "Chicago Cluster A",
+      "tenant": "sony"
     },
     {
       "name": "chicago-vm-06",
-      "cluster": "Chicago Cluster B"
+      "cluster": "Chicago Cluster B",
+      "tenant": "sony",
+      "vcpus": 2,
+      "memory": 8192
     },
     {
       "name": "seattle-vm-01",
       "cluster": "Seattle Cluster A",
-      "device": "Seattle-SRV-01"
+      "device": "Seattle-SRV-01",
+      "tenant": "toyota"
     },
     {
       "name": "seattle-vm-02",
       "cluster": "Seattle Cluster A",
-      "device": "Seattle-SRV-02"
+      "device": "Seattle-SRV-02",
+      "tenant": "toyota",
+      "vcpus": 4,
+      "memory": 16384
     },
     {
       "name": "seattle-vm-03",
       "cluster": "Seattle Cluster B",
-      "device": "Seattle-SRV-03"
+      "device": "Seattle-SRV-03",
+      "tenant": "toyota",
+      "vcpus": 4,
+      "memory": 16384
     },
     {
       "name": "seattle-vm-04",
       "cluster": "Seattle Cluster B",
-      "device": "Seattle-SRV-04"
+      "device": "Seattle-SRV-04",
+      "tenant": "toyota",
+      "vcpus": 4,
+      "memory": 16384
     },
     {
       "name": "seattle-vm-05",
-      "cluster": "Seattle Cluster A"
+      "cluster": "Seattle Cluster A",
+      "tenant": "toyota",
+      "vcpus": 2,
+      "memory": 8192
     },
     {
       "name": "seattle-vm-06",
-      "cluster": "Seattle Cluster B"
+      "cluster": "Seattle Cluster B",
+      "tenant": "toyota",
+      "vcpus": 2,
+      "memory": 8192
     },
     {
       "name": "miami-vm-01",
       "cluster": "Miami Cluster A",
-      "device": "Miami-SRV-01"
+      "device": "Miami-SRV-01",
+      "tenant": "shell",
+      "vcpus": 4,
+      "memory": 16384
     },
     {
       "name": "miami-vm-02",
       "cluster": "Miami Cluster A",
-      "device": "Miami-SRV-02"
+      "device": "Miami-SRV-02",
+      "tenant": "shell",
+      "vcpus": 4,
+      "memory": 16384
     },
     {
       "name": "miami-vm-03",
       "cluster": "Miami Cluster B",
-      "device": "Miami-SRV-03"
+      "device": "Miami-SRV-03",
+      "vcpus": 4,
+      "memory": 16384
     },
     {
       "name": "miami-vm-04",
       "cluster": "Miami Cluster B",
-      "device": "Miami-SRV-04"
+      "device": "Miami-SRV-04",
+      "tenant": "shell",
+      "vcpus": 4,
+      "memory": 16384
     },
     {
       "name": "miami-vm-05",
-      "cluster": "Miami Cluster A"
+      "cluster": "Miami Cluster A",
+      "tenant": "shell",
+      "vcpus": 2,
+      "memory": 8192
     },
     {
       "name": "miami-vm-06",
-      "cluster": "Miami Cluster B"
+      "cluster": "Miami Cluster B",
+      "tenant": "shell",
+      "vcpus": 2,
+      "memory": 8192
     }
   ],
   "plugins/service-specification/lifecycles/": [
@@ -10618,10 +11387,847 @@
       "application_services": [
         "Disaster Recovery - Cisco (Application Service)"
       ]
+    },
+    {
+      "device": "Munich-SRV-01",
+      "application_services": [
+        "Managed Email - Coca Cola (Application Service)"
+      ]
+    },
+    {
+      "device": "Munich-SRV-02",
+      "application_services": [
+        "Managed Email - Coca Cola (Application Service)"
+      ]
+    },
+    {
+      "device": "Munich-SRV-03",
+      "application_services": [
+        "Cloud Backup - Coca Cola (Application Service)"
+      ]
+    },
+    {
+      "device": "Munich-SRV-04",
+      "application_services": [
+        "Cloud Backup - Coca Cola (Application Service)"
+      ]
+    },
+    {
+      "device": "Berlin-SRV-01",
+      "application_services": [
+        "Unified Communications - Cisco (Application Service)"
+      ]
+    },
+    {
+      "device": "Berlin-SRV-02",
+      "application_services": [
+        "Unified Communications - Cisco (Application Service)"
+      ]
+    },
+    {
+      "device": "Berlin-SRV-03",
+      "application_services": [
+        "Disaster Recovery - Cisco (Application Service)"
+      ]
+    },
+    {
+      "device": "Berlin-SRV-04",
+      "application_services": [
+        "Disaster Recovery - Cisco (Application Service)"
+      ]
+    },
+    {
+      "device": "Cologne-SRV-01",
+      "application_services": [
+        "Endpoint Management - SAP (Application Service)"
+      ]
+    },
+    {
+      "device": "Cologne-SRV-02",
+      "application_services": [
+        "Endpoint Management - SAP (Application Service)"
+      ]
+    },
+    {
+      "device": "Cologne-SRV-03",
+      "application_services": [
+        "Network Security - SAP (Application Service)"
+      ]
+    },
+    {
+      "device": "Cologne-SRV-04",
+      "application_services": [
+        "Network Security - SAP (Application Service)"
+      ]
+    },
+    {
+      "device": "Dusseldorf-SRV-01",
+      "application_services": [
+        "Helpdesk Support - Google (Application Service)"
+      ]
+    },
+    {
+      "device": "Dusseldorf-SRV-02",
+      "application_services": [
+        "Helpdesk Support - Google (Application Service)"
+      ]
+    },
+    {
+      "device": "Dusseldorf-SRV-03",
+      "application_services": [
+        "Database Hosting - Google (Application Service)"
+      ]
+    },
+    {
+      "device": "Dusseldorf-SRV-04",
+      "application_services": [
+        "Database Hosting - Google (Application Service)"
+      ]
+    },
+    {
+      "device": "Dortmund-SRV-01",
+      "application_services": [
+        "Identity & Access Management - Amazon (Application Service)"
+      ]
+    },
+    {
+      "device": "Dortmund-SRV-02",
+      "application_services": [
+        "Identity & Access Management - Amazon (Application Service)"
+      ]
+    },
+    {
+      "device": "Dortmund-SRV-03",
+      "application_services": [
+        "Load Balancing - Amazon (Application Service)"
+      ]
+    },
+    {
+      "device": "Dortmund-SRV-04",
+      "application_services": [
+        "Load Balancing - Amazon (Application Service)"
+      ]
+    },
+    {
+      "device": "Vienna-SRV-01",
+      "application_services": [
+        "Video Conferencing - Microsoft (Application Service)"
+      ]
+    },
+    {
+      "device": "Vienna-SRV-02",
+      "application_services": [
+        "Video Conferencing - Microsoft (Application Service)"
+      ]
+    },
+    {
+      "device": "Vienna-SRV-03",
+      "application_services": [
+        "Container Orchestration - Microsoft (Application Service)"
+      ]
+    },
+    {
+      "device": "Vienna-SRV-04",
+      "application_services": [
+        "Container Orchestration - Microsoft (Application Service)"
+      ]
+    },
+    {
+      "device": "Amsterdam-SRV-01",
+      "application_services": [
+        "File Sharing & Collaboration - IBM (Application Service)"
+      ]
+    },
+    {
+      "device": "Amsterdam-SRV-02",
+      "application_services": [
+        "File Sharing & Collaboration - IBM (Application Service)"
+      ]
+    },
+    {
+      "device": "Amsterdam-SRV-03",
+      "application_services": [
+        "Data Analytics Platform - IBM (Application Service)"
+      ]
+    },
+    {
+      "device": "Amsterdam-SRV-04",
+      "application_services": [
+        "Data Analytics Platform - IBM (Application Service)"
+      ]
+    },
+    {
+      "device": "Paris-SRV-01",
+      "application_services": [
+        "Mobile Device Management - Oracle (Application Service)"
+      ]
+    },
+    {
+      "device": "Paris-SRV-02",
+      "application_services": [
+        "Mobile Device Management - Oracle (Application Service)"
+      ]
+    },
+    {
+      "device": "Paris-SRV-03",
+      "application_services": [
+        "Storage as a Service - Oracle (Application Service)"
+      ]
+    },
+    {
+      "device": "Paris-SRV-04",
+      "application_services": [
+        "Storage as a Service - Oracle (Application Service)"
+      ]
+    },
+    {
+      "device": "Madrid-SRV-01",
+      "application_services": [
+        "Print Services - Siemens (Application Service)"
+      ]
+    },
+    {
+      "device": "Madrid-SRV-02",
+      "application_services": [
+        "Print Services - Siemens (Application Service)"
+      ]
+    },
+    {
+      "device": "Madrid-SRV-03",
+      "application_services": [
+        "Monitoring & Observability - Siemens (Application Service)"
+      ]
+    },
+    {
+      "device": "Madrid-SRV-04",
+      "application_services": [
+        "Monitoring & Observability - Siemens (Application Service)"
+      ]
+    },
+    {
+      "device": "Rome-SRV-01",
+      "application_services": [
+        "Virtual Desktop Infrastructure - BMW (Application Service)"
+      ]
+    },
+    {
+      "device": "Rome-SRV-02",
+      "application_services": [
+        "Virtual Desktop Infrastructure - BMW (Application Service)"
+      ]
+    },
+    {
+      "device": "Rome-SRV-03",
+      "application_services": [
+        "DNS & DHCP Management - BMW (Application Service)"
+      ]
+    },
+    {
+      "device": "Warsaw-SRV-01",
+      "application_services": [
+        "Cloud Backup - Volkswagen (Application Service)"
+      ]
+    },
+    {
+      "device": "Warsaw-SRV-02",
+      "application_services": [
+        "Cloud Backup - Volkswagen (Application Service)"
+      ]
+    },
+    {
+      "device": "Warsaw-SRV-03",
+      "application_services": [
+        "Managed Email - Volkswagen (Application Service)"
+      ]
+    },
+    {
+      "device": "Warsaw-SRV-04",
+      "application_services": [
+        "Managed Email - Volkswagen (Application Service)"
+      ]
+    },
+    {
+      "device": "Budapest-SRV-01",
+      "application_services": [
+        "Disaster Recovery - Deutsche Bank (Application Service)"
+      ]
+    },
+    {
+      "device": "Budapest-SRV-02",
+      "application_services": [
+        "Disaster Recovery - Deutsche Bank (Application Service)"
+      ]
+    },
+    {
+      "device": "Budapest-SRV-03",
+      "application_services": [
+        "Unified Communications - Deutsche Bank (Application Service)"
+      ]
+    },
+    {
+      "device": "Budapest-SRV-04",
+      "application_services": [
+        "Unified Communications - Deutsche Bank (Application Service)"
+      ]
+    },
+    {
+      "device": "Stockholm-SRV-01",
+      "application_services": [
+        "Network Security - Allianz (Application Service)"
+      ]
+    },
+    {
+      "device": "Stockholm-SRV-02",
+      "application_services": [
+        "Network Security - Allianz (Application Service)"
+      ]
+    },
+    {
+      "device": "Stockholm-SRV-03",
+      "application_services": [
+        "Endpoint Management - Allianz (Application Service)"
+      ]
+    },
+    {
+      "device": "Stockholm-SRV-04",
+      "application_services": [
+        "Endpoint Management - Allianz (Application Service)"
+      ]
+    },
+    {
+      "device": "Dublin-SRV-01",
+      "application_services": [
+        "Database Hosting - Adidas (Application Service)"
+      ]
+    },
+    {
+      "device": "Dublin-SRV-02",
+      "application_services": [
+        "Database Hosting - Adidas (Application Service)"
+      ]
+    },
+    {
+      "device": "Dublin-SRV-03",
+      "application_services": [
+        "Helpdesk Support - Adidas (Application Service)"
+      ]
+    },
+    {
+      "device": "Dublin-SRV-04",
+      "application_services": [
+        "Helpdesk Support - Adidas (Application Service)"
+      ]
+    },
+    {
+      "device": "Athens-SRV-01",
+      "application_services": [
+        "Load Balancing - Puma (Application Service)"
+      ]
+    },
+    {
+      "device": "Athens-SRV-02",
+      "application_services": [
+        "Load Balancing - Puma (Application Service)"
+      ]
+    },
+    {
+      "device": "Athens-SRV-03",
+      "application_services": [
+        "Identity & Access Management - Puma (Application Service)"
+      ]
+    },
+    {
+      "device": "Athens-SRV-04",
+      "application_services": [
+        "Identity & Access Management - Puma (Application Service)"
+      ]
+    },
+    {
+      "device": "Singapore-SRV-01",
+      "application_services": [
+        "Container Orchestration - Nike (Application Service)"
+      ]
+    },
+    {
+      "device": "Singapore-SRV-02",
+      "application_services": [
+        "Container Orchestration - Nike (Application Service)"
+      ]
+    },
+    {
+      "device": "Singapore-SRV-03",
+      "application_services": [
+        "Video Conferencing - Nike (Application Service)"
+      ]
+    },
+    {
+      "device": "Singapore-SRV-04",
+      "application_services": [
+        "Video Conferencing - Nike (Application Service)"
+      ]
+    },
+    {
+      "device": "Sydney-SRV-01",
+      "application_services": [
+        "Data Analytics Platform - Samsung (Application Service)"
+      ]
+    },
+    {
+      "device": "Sydney-SRV-02",
+      "application_services": [
+        "Data Analytics Platform - Samsung (Application Service)"
+      ]
+    },
+    {
+      "device": "Sydney-SRV-03",
+      "application_services": [
+        "File Sharing & Collaboration - Samsung (Application Service)"
+      ]
+    },
+    {
+      "device": "Sydney-SRV-04",
+      "application_services": [
+        "File Sharing & Collaboration - Samsung (Application Service)"
+      ]
+    },
+    {
+      "device": "Chicago-SRV-01",
+      "application_services": [
+        "Storage as a Service - Sony (Application Service)"
+      ]
+    },
+    {
+      "device": "Chicago-SRV-03",
+      "application_services": [
+        "Mobile Device Management - Sony (Application Service)"
+      ]
+    },
+    {
+      "device": "Chicago-SRV-04",
+      "application_services": [
+        "Mobile Device Management - Sony (Application Service)"
+      ]
+    },
+    {
+      "device": "Seattle-SRV-01",
+      "application_services": [
+        "Monitoring & Observability - Toyota (Application Service)"
+      ]
+    },
+    {
+      "device": "Seattle-SRV-02",
+      "application_services": [
+        "Monitoring & Observability - Toyota (Application Service)"
+      ]
+    },
+    {
+      "device": "Seattle-SRV-03",
+      "application_services": [
+        "Print Services - Toyota (Application Service)"
+      ]
+    },
+    {
+      "device": "Seattle-SRV-04",
+      "application_services": [
+        "Print Services - Toyota (Application Service)"
+      ]
+    },
+    {
+      "device": "Miami-SRV-01",
+      "application_services": [
+        "DNS & DHCP Management - Shell (Application Service)"
+      ]
+    },
+    {
+      "device": "Miami-SRV-02",
+      "application_services": [
+        "DNS & DHCP Management - Shell (Application Service)"
+      ]
+    },
+    {
+      "device": "Miami-SRV-03",
+      "application_services": [
+        "Virtual Desktop Infrastructure - Shell (Application Service)"
+      ]
+    },
+    {
+      "device": "Miami-SRV-04",
+      "application_services": [
+        "Virtual Desktop Infrastructure - Shell (Application Service)"
+      ]
     }
   ],
-  "plugins/service-specification/cluster-service-infos/": [],
-  "plugins/service-specification/cluster-group-service-infos/": [],
+  "plugins/service-specification/cluster-service-infos/": [
+    {
+      "cluster": "Munich Cluster A",
+      "application_services": [
+        "Managed Email - Coca Cola (Application Service)"
+      ]
+    },
+    {
+      "cluster": "Munich Cluster B",
+      "application_services": [
+        "Cloud Backup - Coca Cola (Application Service)"
+      ]
+    },
+    {
+      "cluster": "Berlin Cluster A",
+      "application_services": [
+        "Unified Communications - Cisco (Application Service)"
+      ]
+    },
+    {
+      "cluster": "Berlin Cluster B",
+      "application_services": [
+        "Disaster Recovery - Cisco (Application Service)"
+      ]
+    },
+    {
+      "cluster": "Cologne Cluster A",
+      "application_services": [
+        "Endpoint Management - SAP (Application Service)"
+      ]
+    },
+    {
+      "cluster": "Cologne Cluster B",
+      "application_services": [
+        "Network Security - SAP (Application Service)"
+      ]
+    },
+    {
+      "cluster": "Dusseldorf Cluster A",
+      "application_services": [
+        "Helpdesk Support - Google (Application Service)"
+      ]
+    },
+    {
+      "cluster": "Dusseldorf Cluster B",
+      "application_services": [
+        "Database Hosting - Google (Application Service)"
+      ]
+    },
+    {
+      "cluster": "Dortmund Cluster A",
+      "application_services": [
+        "Identity & Access Management - Amazon (Application Service)"
+      ]
+    },
+    {
+      "cluster": "Dortmund Cluster B",
+      "application_services": [
+        "Load Balancing - Amazon (Application Service)"
+      ]
+    },
+    {
+      "cluster": "Vienna Cluster A",
+      "application_services": [
+        "Video Conferencing - Microsoft (Application Service)"
+      ]
+    },
+    {
+      "cluster": "Vienna Cluster B",
+      "application_services": [
+        "Container Orchestration - Microsoft (Application Service)"
+      ]
+    },
+    {
+      "cluster": "Amsterdam Cluster A",
+      "application_services": [
+        "File Sharing & Collaboration - IBM (Application Service)"
+      ]
+    },
+    {
+      "cluster": "Amsterdam Cluster B",
+      "application_services": [
+        "Data Analytics Platform - IBM (Application Service)"
+      ]
+    },
+    {
+      "cluster": "Paris Cluster A",
+      "application_services": [
+        "Mobile Device Management - Oracle (Application Service)"
+      ]
+    },
+    {
+      "cluster": "Paris Cluster B",
+      "application_services": [
+        "Storage as a Service - Oracle (Application Service)"
+      ]
+    },
+    {
+      "cluster": "Madrid Cluster A",
+      "application_services": [
+        "Print Services - Siemens (Application Service)"
+      ]
+    },
+    {
+      "cluster": "Madrid Cluster B",
+      "application_services": [
+        "Monitoring & Observability - Siemens (Application Service)"
+      ]
+    },
+    {
+      "cluster": "Rome Cluster A",
+      "application_services": [
+        "Virtual Desktop Infrastructure - BMW (Application Service)"
+      ]
+    },
+    {
+      "cluster": "Rome Cluster B",
+      "application_services": [
+        "DNS & DHCP Management - BMW (Application Service)"
+      ]
+    },
+    {
+      "cluster": "Warsaw Cluster A",
+      "application_services": [
+        "Cloud Backup - Volkswagen (Application Service)"
+      ]
+    },
+    {
+      "cluster": "Warsaw Cluster B",
+      "application_services": [
+        "Managed Email - Volkswagen (Application Service)"
+      ]
+    },
+    {
+      "cluster": "Budapest Cluster A",
+      "application_services": [
+        "Disaster Recovery - Deutsche Bank (Application Service)"
+      ]
+    },
+    {
+      "cluster": "Budapest Cluster B",
+      "application_services": [
+        "Unified Communications - Deutsche Bank (Application Service)"
+      ]
+    },
+    {
+      "cluster": "Stockholm Cluster A",
+      "application_services": [
+        "Network Security - Allianz (Application Service)"
+      ]
+    },
+    {
+      "cluster": "Stockholm Cluster B",
+      "application_services": [
+        "Endpoint Management - Allianz (Application Service)"
+      ]
+    },
+    {
+      "cluster": "Dublin Cluster A",
+      "application_services": [
+        "Database Hosting - Adidas (Application Service)"
+      ]
+    },
+    {
+      "cluster": "Athens Cluster A",
+      "application_services": [
+        "Load Balancing - Puma (Application Service)"
+      ]
+    },
+    {
+      "cluster": "Athens Cluster B",
+      "application_services": [
+        "Identity & Access Management - Puma (Application Service)"
+      ]
+    },
+    {
+      "cluster": "Singapore Cluster A",
+      "application_services": [
+        "Container Orchestration - Nike (Application Service)"
+      ]
+    },
+    {
+      "cluster": "Singapore Cluster B",
+      "application_services": [
+        "Video Conferencing - Nike (Application Service)"
+      ]
+    },
+    {
+      "cluster": "Sydney Cluster A",
+      "application_services": [
+        "Data Analytics Platform - Samsung (Application Service)"
+      ]
+    },
+    {
+      "cluster": "Sydney Cluster B",
+      "application_services": [
+        "File Sharing & Collaboration - Samsung (Application Service)"
+      ]
+    },
+    {
+      "cluster": "Chicago Cluster A",
+      "application_services": [
+        "Storage as a Service - Sony (Application Service)"
+      ]
+    },
+    {
+      "cluster": "Chicago Cluster B",
+      "application_services": [
+        "Mobile Device Management - Sony (Application Service)"
+      ]
+    },
+    {
+      "cluster": "Seattle Cluster A",
+      "application_services": [
+        "Monitoring & Observability - Toyota (Application Service)"
+      ]
+    },
+    {
+      "cluster": "Seattle Cluster B",
+      "application_services": [
+        "Print Services - Toyota (Application Service)"
+      ]
+    },
+    {
+      "cluster": "Miami Cluster A",
+      "application_services": [
+        "DNS & DHCP Management - Shell (Application Service)"
+      ]
+    },
+    {
+      "cluster": "Miami Cluster B",
+      "application_services": [
+        "Virtual Desktop Infrastructure - Shell (Application Service)"
+      ]
+    }
+  ],
+  "plugins/service-specification/cluster-group-service-infos/": [
+    {
+      "cluster_group": "coca-cola-infra",
+      "application_services": [
+        "Managed Email - Coca Cola (Application Service)",
+        "Cloud Backup - Coca Cola (Application Service)"
+      ]
+    },
+    {
+      "cluster_group": "cisco-infra",
+      "application_services": [
+        "Unified Communications - Cisco (Application Service)",
+        "Disaster Recovery - Cisco (Application Service)"
+      ]
+    },
+    {
+      "cluster_group": "sap-infra",
+      "application_services": [
+        "Endpoint Management - SAP (Application Service)",
+        "Network Security - SAP (Application Service)"
+      ]
+    },
+    {
+      "cluster_group": "google-infra",
+      "application_services": [
+        "Helpdesk Support - Google (Application Service)",
+        "Database Hosting - Google (Application Service)"
+      ]
+    },
+    {
+      "cluster_group": "amazon-infra",
+      "application_services": [
+        "Identity & Access Management - Amazon (Application Service)",
+        "Load Balancing - Amazon (Application Service)"
+      ]
+    },
+    {
+      "cluster_group": "microsoft-infra",
+      "application_services": [
+        "Video Conferencing - Microsoft (Application Service)",
+        "Container Orchestration - Microsoft (Application Service)"
+      ]
+    },
+    {
+      "cluster_group": "ibm-infra",
+      "application_services": [
+        "File Sharing & Collaboration - IBM (Application Service)",
+        "Data Analytics Platform - IBM (Application Service)"
+      ]
+    },
+    {
+      "cluster_group": "oracle-infra",
+      "application_services": [
+        "Mobile Device Management - Oracle (Application Service)",
+        "Storage as a Service - Oracle (Application Service)"
+      ]
+    },
+    {
+      "cluster_group": "siemens-infra",
+      "application_services": [
+        "Print Services - Siemens (Application Service)",
+        "Monitoring & Observability - Siemens (Application Service)"
+      ]
+    },
+    {
+      "cluster_group": "bmw-infra",
+      "application_services": [
+        "Virtual Desktop Infrastructure - BMW (Application Service)",
+        "DNS & DHCP Management - BMW (Application Service)"
+      ]
+    },
+    {
+      "cluster_group": "volkswagen-infra",
+      "application_services": [
+        "Cloud Backup - Volkswagen (Application Service)",
+        "Managed Email - Volkswagen (Application Service)"
+      ]
+    },
+    {
+      "cluster_group": "deutsche-bank-infra",
+      "application_services": [
+        "Disaster Recovery - Deutsche Bank (Application Service)",
+        "Unified Communications - Deutsche Bank (Application Service)"
+      ]
+    },
+    {
+      "cluster_group": "allianz-infra",
+      "application_services": [
+        "Network Security - Allianz (Application Service)",
+        "Endpoint Management - Allianz (Application Service)"
+      ]
+    },
+    {
+      "cluster_group": "adidas-infra",
+      "application_services": [
+        "Database Hosting - Adidas (Application Service)",
+        "Helpdesk Support - Adidas (Application Service)"
+      ]
+    },
+    {
+      "cluster_group": "puma-infra",
+      "application_services": [
+        "Load Balancing - Puma (Application Service)",
+        "Identity & Access Management - Puma (Application Service)"
+      ]
+    },
+    {
+      "cluster_group": "nike-infra",
+      "application_services": [
+        "Container Orchestration - Nike (Application Service)",
+        "Video Conferencing - Nike (Application Service)"
+      ]
+    },
+    {
+      "cluster_group": "samsung-infra",
+      "application_services": [
+        "Data Analytics Platform - Samsung (Application Service)",
+        "File Sharing & Collaboration - Samsung (Application Service)"
+      ]
+    },
+    {
+      "cluster_group": "toyota-infra",
+      "application_services": [
+        "Monitoring & Observability - Toyota (Application Service)",
+        "Print Services - Toyota (Application Service)"
+      ]
+    },
+    {
+      "cluster_group": "shell-infra",
+      "application_services": [
+        "DNS & DHCP Management - Shell (Application Service)",
+        "Virtual Desktop Infrastructure - Shell (Application Service)"
+      ]
+    }
+  ],
   "plugins/service-specification/virtual-machine-service-infos/": [
     {
       "virtual_machine": "munich-vm-01",
@@ -11356,6 +12962,11 @@
       "comments": "Primary escalation path for Fortinet support cases."
     },
     {
+      "name": "Broadcom VMware Support",
+      "description": "Hardware support and maintenance vendor for Vmware equipment",
+      "comments": "Primary escalation path for Vmware support cases."
+    },
+    {
       "name": "Dell ProSupport",
       "description": "Hardware support and maintenance vendor for Dell equipment",
       "comments": "Primary escalation path for Dell support cases."
@@ -11372,6 +12983,12 @@
       "manufacturer": "fortinet",
       "sku": "FC-10-F100F-950-02-36",
       "description": "FortiCare Premium 24x7 + UTP bundle for FortiGate-100F, 3 years",
+      "comments": "Standard support SKU for all demo deployments."
+    },
+    {
+      "manufacturer": "vmware",
+      "sku": "VCF-PROD-SUP-3Y",
+      "description": "VMware Cloud Foundation Production Support, 3 years",
       "comments": "Standard support SKU for all demo deployments."
     },
     {
@@ -11392,6 +13009,12 @@
       "manufacturer": "fortinet",
       "name": "FortiGuard Unified Threat Protection",
       "description": "FortiGuard UTP subscription (IPS, AV, web/DNS filtering, antispam)",
+      "comments": "One license per device."
+    },
+    {
+      "manufacturer": "vmware",
+      "name": "VMware Cloud Foundation",
+      "description": "VMware Cloud Foundation per-core subscription",
       "comments": "One license per device."
     },
     {
@@ -11465,6 +13088,15 @@
       "comments": "Covers all Fortinet devices at Coca Cola."
     },
     {
+      "vendor": "Broadcom VMware Support",
+      "contract_id": "VMW-001-COCA-COLA",
+      "start": "2025-01-01",
+      "renewal": "2028-09-30",
+      "end": "2028-12-31",
+      "description": "Broadcom VMware Support contract for Coca Cola",
+      "comments": "Covers all Vmware devices at Coca Cola."
+    },
+    {
       "vendor": "Dell ProSupport",
       "contract_id": "DELL-001-COCA-COLA",
       "start": "2025-01-01",
@@ -11490,6 +13122,15 @@
       "end": "2028-12-31",
       "description": "Fortinet Support contract for Cisco",
       "comments": "Covers all Fortinet devices at Cisco."
+    },
+    {
+      "vendor": "Broadcom VMware Support",
+      "contract_id": "VMW-002-CISCO",
+      "start": "2025-02-01",
+      "renewal": "2028-09-30",
+      "end": "2028-12-31",
+      "description": "Broadcom VMware Support contract for Cisco",
+      "comments": "Covers all Vmware devices at Cisco."
     },
     {
       "vendor": "Dell ProSupport",
@@ -11519,6 +13160,15 @@
       "comments": "Covers all Fortinet devices at SAP."
     },
     {
+      "vendor": "Broadcom VMware Support",
+      "contract_id": "VMW-003-SAP",
+      "start": "2025-03-01",
+      "renewal": "2028-09-30",
+      "end": "2028-12-31",
+      "description": "Broadcom VMware Support contract for SAP",
+      "comments": "Covers all Vmware devices at SAP."
+    },
+    {
       "vendor": "Dell ProSupport",
       "contract_id": "DELL-003-SAP",
       "start": "2025-03-01",
@@ -11544,6 +13194,15 @@
       "end": "2028-12-31",
       "description": "Fortinet Support contract for Google",
       "comments": "Covers all Fortinet devices at Google."
+    },
+    {
+      "vendor": "Broadcom VMware Support",
+      "contract_id": "VMW-004-GOOGLE",
+      "start": "2025-04-01",
+      "renewal": "2028-09-30",
+      "end": "2028-12-31",
+      "description": "Broadcom VMware Support contract for Google",
+      "comments": "Covers all Vmware devices at Google."
     },
     {
       "vendor": "Dell ProSupport",
@@ -11573,6 +13232,15 @@
       "comments": "Covers all Fortinet devices at Amazon."
     },
     {
+      "vendor": "Broadcom VMware Support",
+      "contract_id": "VMW-005-AMAZON",
+      "start": "2025-05-01",
+      "renewal": "2028-09-30",
+      "end": "2028-12-31",
+      "description": "Broadcom VMware Support contract for Amazon",
+      "comments": "Covers all Vmware devices at Amazon."
+    },
+    {
       "vendor": "Dell ProSupport",
       "contract_id": "DELL-005-AMAZON",
       "start": "2025-05-01",
@@ -11598,6 +13266,15 @@
       "end": "2028-12-31",
       "description": "Fortinet Support contract for Microsoft",
       "comments": "Covers all Fortinet devices at Microsoft."
+    },
+    {
+      "vendor": "Broadcom VMware Support",
+      "contract_id": "VMW-006-MICROSOFT",
+      "start": "2025-06-01",
+      "renewal": "2028-09-30",
+      "end": "2028-12-31",
+      "description": "Broadcom VMware Support contract for Microsoft",
+      "comments": "Covers all Vmware devices at Microsoft."
     },
     {
       "vendor": "Dell ProSupport",
@@ -11627,6 +13304,15 @@
       "comments": "Covers all Fortinet devices at IBM."
     },
     {
+      "vendor": "Broadcom VMware Support",
+      "contract_id": "VMW-007-IBM",
+      "start": "2025-07-01",
+      "renewal": "2028-09-30",
+      "end": "2028-12-31",
+      "description": "Broadcom VMware Support contract for IBM",
+      "comments": "Covers all Vmware devices at IBM."
+    },
+    {
       "vendor": "Dell ProSupport",
       "contract_id": "DELL-007-IBM",
       "start": "2025-07-01",
@@ -11652,6 +13338,15 @@
       "end": "2026-06-30",
       "description": "Fortinet Support contract for Oracle",
       "comments": "Covers all Fortinet devices at Oracle."
+    },
+    {
+      "vendor": "Broadcom VMware Support",
+      "contract_id": "VMW-008-ORACLE",
+      "start": "2023-07-01",
+      "renewal": "2026-04-01",
+      "end": "2026-06-30",
+      "description": "Broadcom VMware Support contract for Oracle",
+      "comments": "Covers all Vmware devices at Oracle."
     },
     {
       "vendor": "Dell ProSupport",
@@ -11681,6 +13376,15 @@
       "comments": "Covers all Fortinet devices at Siemens."
     },
     {
+      "vendor": "Broadcom VMware Support",
+      "contract_id": "VMW-009-SIEMENS",
+      "start": "2025-09-01",
+      "renewal": "2028-09-30",
+      "end": "2028-12-31",
+      "description": "Broadcom VMware Support contract for Siemens",
+      "comments": "Covers all Vmware devices at Siemens."
+    },
+    {
       "vendor": "Dell ProSupport",
       "contract_id": "DELL-009-SIEMENS",
       "start": "2025-09-01",
@@ -11706,6 +13410,15 @@
       "end": "2029-12-31",
       "description": "Fortinet Support contract for BMW",
       "comments": "Covers all Fortinet devices at BMW."
+    },
+    {
+      "vendor": "Broadcom VMware Support",
+      "contract_id": "VMW-010-BMW",
+      "start": "2027-01-01",
+      "renewal": "2029-10-01",
+      "end": "2029-12-31",
+      "description": "Broadcom VMware Support contract for BMW",
+      "comments": "Covers all Vmware devices at BMW."
     },
     {
       "vendor": "Dell ProSupport",
@@ -11735,6 +13448,15 @@
       "comments": "Covers all Fortinet devices at Volkswagen."
     },
     {
+      "vendor": "Broadcom VMware Support",
+      "contract_id": "VMW-011-VOLKSWAGEN",
+      "start": "2025-11-01",
+      "renewal": "2028-09-30",
+      "end": "2028-12-31",
+      "description": "Broadcom VMware Support contract for Volkswagen",
+      "comments": "Covers all Vmware devices at Volkswagen."
+    },
+    {
       "vendor": "Dell ProSupport",
       "contract_id": "DELL-011-VOLKSWAGEN",
       "start": "2025-11-01",
@@ -11760,6 +13482,15 @@
       "end": "2028-12-31",
       "description": "Fortinet Support contract for Deutsche Bank",
       "comments": "Covers all Fortinet devices at Deutsche Bank."
+    },
+    {
+      "vendor": "Broadcom VMware Support",
+      "contract_id": "VMW-012-DEUTSCHE-BANK",
+      "start": "2025-12-01",
+      "renewal": "2028-09-30",
+      "end": "2028-12-31",
+      "description": "Broadcom VMware Support contract for Deutsche Bank",
+      "comments": "Covers all Vmware devices at Deutsche Bank."
     },
     {
       "vendor": "Dell ProSupport",
@@ -11789,6 +13520,15 @@
       "comments": "Covers all Fortinet devices at Allianz."
     },
     {
+      "vendor": "Broadcom VMware Support",
+      "contract_id": "VMW-013-ALLIANZ",
+      "start": "2025-01-01",
+      "renewal": "2028-09-30",
+      "end": "2028-12-31",
+      "description": "Broadcom VMware Support contract for Allianz",
+      "comments": "Covers all Vmware devices at Allianz."
+    },
+    {
       "vendor": "Dell ProSupport",
       "contract_id": "DELL-013-ALLIANZ",
       "start": "2025-01-01",
@@ -11814,6 +13554,15 @@
       "end": "2028-12-31",
       "description": "Fortinet Support contract for Adidas",
       "comments": "Covers all Fortinet devices at Adidas."
+    },
+    {
+      "vendor": "Broadcom VMware Support",
+      "contract_id": "VMW-014-ADIDAS",
+      "start": "2025-02-01",
+      "renewal": "2028-09-30",
+      "end": "2028-12-31",
+      "description": "Broadcom VMware Support contract for Adidas",
+      "comments": "Covers all Vmware devices at Adidas."
     },
     {
       "vendor": "Dell ProSupport",
@@ -11843,6 +13592,15 @@
       "comments": "Covers all Fortinet devices at Puma."
     },
     {
+      "vendor": "Broadcom VMware Support",
+      "contract_id": "VMW-015-PUMA",
+      "start": "2025-03-01",
+      "renewal": "2028-09-30",
+      "end": "2028-12-31",
+      "description": "Broadcom VMware Support contract for Puma",
+      "comments": "Covers all Vmware devices at Puma."
+    },
+    {
       "vendor": "Dell ProSupport",
       "contract_id": "DELL-015-PUMA",
       "start": "2025-03-01",
@@ -11868,6 +13626,15 @@
       "end": "2028-12-31",
       "description": "Fortinet Support contract for Nike",
       "comments": "Covers all Fortinet devices at Nike."
+    },
+    {
+      "vendor": "Broadcom VMware Support",
+      "contract_id": "VMW-016-NIKE",
+      "start": "2025-04-01",
+      "renewal": "2028-09-30",
+      "end": "2028-12-31",
+      "description": "Broadcom VMware Support contract for Nike",
+      "comments": "Covers all Vmware devices at Nike."
     },
     {
       "vendor": "Dell ProSupport",
@@ -11897,6 +13664,15 @@
       "comments": "Covers all Fortinet devices at Samsung."
     },
     {
+      "vendor": "Broadcom VMware Support",
+      "contract_id": "VMW-017-SAMSUNG",
+      "start": "2025-05-01",
+      "renewal": "2028-09-30",
+      "end": "2028-12-31",
+      "description": "Broadcom VMware Support contract for Samsung",
+      "comments": "Covers all Vmware devices at Samsung."
+    },
+    {
       "vendor": "Dell ProSupport",
       "contract_id": "DELL-017-SAMSUNG",
       "start": "2025-05-01",
@@ -11922,6 +13698,15 @@
       "end": "2026-06-30",
       "description": "Fortinet Support contract for Sony",
       "comments": "Covers all Fortinet devices at Sony."
+    },
+    {
+      "vendor": "Broadcom VMware Support",
+      "contract_id": "VMW-018-SONY",
+      "start": "2023-07-01",
+      "renewal": "2026-04-01",
+      "end": "2026-06-30",
+      "description": "Broadcom VMware Support contract for Sony",
+      "comments": "Covers all Vmware devices at Sony."
     },
     {
       "vendor": "Dell ProSupport",
@@ -11951,6 +13736,15 @@
       "comments": "Covers all Fortinet devices at Toyota."
     },
     {
+      "vendor": "Broadcom VMware Support",
+      "contract_id": "VMW-019-TOYOTA",
+      "start": "2025-07-01",
+      "renewal": "2028-09-30",
+      "end": "2028-12-31",
+      "description": "Broadcom VMware Support contract for Toyota",
+      "comments": "Covers all Vmware devices at Toyota."
+    },
+    {
       "vendor": "Dell ProSupport",
       "contract_id": "DELL-019-TOYOTA",
       "start": "2025-07-01",
@@ -11976,6 +13770,15 @@
       "end": "2029-12-31",
       "description": "Fortinet Support contract for Shell",
       "comments": "Covers all Fortinet devices at Shell."
+    },
+    {
+      "vendor": "Broadcom VMware Support",
+      "contract_id": "VMW-020-SHELL",
+      "start": "2027-01-01",
+      "renewal": "2029-10-01",
+      "end": "2029-12-31",
+      "description": "Broadcom VMware Support contract for Shell",
+      "comments": "Covers all Vmware devices at Shell."
     },
     {
       "vendor": "Dell ProSupport",
@@ -14509,6 +16312,912 @@
       "end": "2028-12-31",
       "description": "PS-PLUS-R750-4H-60M coverage for Miami-SRV-04",
       "comments": "Server at Shell."
+    },
+    {
+      "contract": "VMW-001-COCA-COLA",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "munich-vm-01",
+      "description": "VCF-PROD-SUP-3Y coverage for munich-vm-01",
+      "comments": "Virtual machine at Coca Cola."
+    },
+    {
+      "contract": "VMW-001-COCA-COLA",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "munich-vm-02",
+      "description": "VCF-PROD-SUP-3Y coverage for munich-vm-02",
+      "comments": "Virtual machine at Coca Cola."
+    },
+    {
+      "contract": "VMW-001-COCA-COLA",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "munich-vm-03",
+      "description": "VCF-PROD-SUP-3Y coverage for munich-vm-03",
+      "comments": "Virtual machine at Coca Cola."
+    },
+    {
+      "contract": "VMW-001-COCA-COLA",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "munich-vm-04",
+      "description": "VCF-PROD-SUP-3Y coverage for munich-vm-04",
+      "comments": "Virtual machine at Coca Cola."
+    },
+    {
+      "contract": "VMW-001-COCA-COLA",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "munich-vm-05",
+      "description": "VCF-PROD-SUP-3Y coverage for munich-vm-05",
+      "comments": "Virtual machine at Coca Cola."
+    },
+    {
+      "contract": "VMW-001-COCA-COLA",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "munich-vm-06",
+      "description": "VCF-PROD-SUP-3Y coverage for munich-vm-06",
+      "comments": "Virtual machine at Coca Cola."
+    },
+    {
+      "contract": "VMW-002-CISCO",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "berlin-vm-01",
+      "description": "VCF-PROD-SUP-3Y coverage for berlin-vm-01",
+      "comments": "Virtual machine at Cisco."
+    },
+    {
+      "contract": "VMW-002-CISCO",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "berlin-vm-03",
+      "description": "VCF-PROD-SUP-3Y coverage for berlin-vm-03",
+      "comments": "Virtual machine at Cisco."
+    },
+    {
+      "contract": "VMW-002-CISCO",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "berlin-vm-04",
+      "description": "VCF-PROD-SUP-3Y coverage for berlin-vm-04",
+      "comments": "Virtual machine at Cisco."
+    },
+    {
+      "contract": "VMW-002-CISCO",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "berlin-vm-05",
+      "description": "VCF-PROD-SUP-3Y coverage for berlin-vm-05",
+      "comments": "Virtual machine at Cisco."
+    },
+    {
+      "contract": "VMW-002-CISCO",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "berlin-vm-06",
+      "description": "VCF-PROD-SUP-3Y coverage for berlin-vm-06",
+      "comments": "Virtual machine at Cisco."
+    },
+    {
+      "contract": "VMW-003-SAP",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "cologne-vm-01",
+      "description": "VCF-PROD-SUP-3Y coverage for cologne-vm-01",
+      "comments": "Virtual machine at SAP."
+    },
+    {
+      "contract": "VMW-003-SAP",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "cologne-vm-02",
+      "description": "VCF-PROD-SUP-3Y coverage for cologne-vm-02",
+      "comments": "Virtual machine at SAP."
+    },
+    {
+      "contract": "VMW-003-SAP",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "cologne-vm-03",
+      "description": "VCF-PROD-SUP-3Y coverage for cologne-vm-03",
+      "comments": "Virtual machine at SAP."
+    },
+    {
+      "contract": "VMW-003-SAP",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "cologne-vm-04",
+      "description": "VCF-PROD-SUP-3Y coverage for cologne-vm-04",
+      "comments": "Virtual machine at SAP."
+    },
+    {
+      "contract": "VMW-003-SAP",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "cologne-vm-05",
+      "description": "VCF-PROD-SUP-3Y coverage for cologne-vm-05",
+      "comments": "Virtual machine at SAP."
+    },
+    {
+      "contract": "VMW-003-SAP",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "cologne-vm-06",
+      "description": "VCF-PROD-SUP-3Y coverage for cologne-vm-06",
+      "comments": "Virtual machine at SAP."
+    },
+    {
+      "contract": "VMW-004-GOOGLE",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "dusseldorf-vm-01",
+      "description": "VCF-PROD-SUP-3Y coverage for dusseldorf-vm-01",
+      "comments": "Virtual machine at Google."
+    },
+    {
+      "contract": "VMW-004-GOOGLE",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "dusseldorf-vm-02",
+      "description": "VCF-PROD-SUP-3Y coverage for dusseldorf-vm-02",
+      "comments": "Virtual machine at Google."
+    },
+    {
+      "contract": "VMW-004-GOOGLE",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "dusseldorf-vm-03",
+      "description": "VCF-PROD-SUP-3Y coverage for dusseldorf-vm-03",
+      "comments": "Virtual machine at Google."
+    },
+    {
+      "contract": "VMW-004-GOOGLE",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "dusseldorf-vm-04",
+      "description": "VCF-PROD-SUP-3Y coverage for dusseldorf-vm-04",
+      "comments": "Virtual machine at Google."
+    },
+    {
+      "contract": "VMW-004-GOOGLE",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "dusseldorf-vm-05",
+      "description": "VCF-PROD-SUP-3Y coverage for dusseldorf-vm-05",
+      "comments": "Virtual machine at Google."
+    },
+    {
+      "contract": "VMW-005-AMAZON",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "dortmund-vm-01",
+      "description": "VCF-PROD-SUP-3Y coverage for dortmund-vm-01",
+      "comments": "Virtual machine at Amazon."
+    },
+    {
+      "contract": "VMW-005-AMAZON",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "dortmund-vm-02",
+      "description": "VCF-PROD-SUP-3Y coverage for dortmund-vm-02",
+      "comments": "Virtual machine at Amazon."
+    },
+    {
+      "contract": "VMW-005-AMAZON",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "dortmund-vm-03",
+      "description": "VCF-PROD-SUP-3Y coverage for dortmund-vm-03",
+      "comments": "Virtual machine at Amazon."
+    },
+    {
+      "contract": "VMW-005-AMAZON",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "dortmund-vm-04",
+      "description": "VCF-PROD-SUP-3Y coverage for dortmund-vm-04",
+      "comments": "Virtual machine at Amazon."
+    },
+    {
+      "contract": "VMW-005-AMAZON",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "dortmund-vm-05",
+      "description": "VCF-PROD-SUP-3Y coverage for dortmund-vm-05",
+      "comments": "Virtual machine at Amazon."
+    },
+    {
+      "contract": "VMW-005-AMAZON",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "dortmund-vm-06",
+      "description": "VCF-PROD-SUP-3Y coverage for dortmund-vm-06",
+      "comments": "Virtual machine at Amazon."
+    },
+    {
+      "contract": "VMW-006-MICROSOFT",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "vienna-vm-01",
+      "description": "VCF-PROD-SUP-3Y coverage for vienna-vm-01",
+      "comments": "Virtual machine at Microsoft."
+    },
+    {
+      "contract": "VMW-006-MICROSOFT",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "vienna-vm-02",
+      "description": "VCF-PROD-SUP-3Y coverage for vienna-vm-02",
+      "comments": "Virtual machine at Microsoft."
+    },
+    {
+      "contract": "VMW-006-MICROSOFT",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "vienna-vm-03",
+      "description": "VCF-PROD-SUP-3Y coverage for vienna-vm-03",
+      "comments": "Virtual machine at Microsoft."
+    },
+    {
+      "contract": "VMW-006-MICROSOFT",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "vienna-vm-04",
+      "description": "VCF-PROD-SUP-3Y coverage for vienna-vm-04",
+      "comments": "Virtual machine at Microsoft."
+    },
+    {
+      "contract": "VMW-006-MICROSOFT",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "vienna-vm-05",
+      "description": "VCF-PROD-SUP-3Y coverage for vienna-vm-05",
+      "comments": "Virtual machine at Microsoft."
+    },
+    {
+      "contract": "VMW-006-MICROSOFT",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "vienna-vm-06",
+      "description": "VCF-PROD-SUP-3Y coverage for vienna-vm-06",
+      "comments": "Virtual machine at Microsoft."
+    },
+    {
+      "contract": "VMW-007-IBM",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "amsterdam-vm-01",
+      "description": "VCF-PROD-SUP-3Y coverage for amsterdam-vm-01",
+      "comments": "Virtual machine at IBM."
+    },
+    {
+      "contract": "VMW-007-IBM",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "amsterdam-vm-02",
+      "description": "VCF-PROD-SUP-3Y coverage for amsterdam-vm-02",
+      "comments": "Virtual machine at IBM."
+    },
+    {
+      "contract": "VMW-007-IBM",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "amsterdam-vm-03",
+      "description": "VCF-PROD-SUP-3Y coverage for amsterdam-vm-03",
+      "comments": "Virtual machine at IBM."
+    },
+    {
+      "contract": "VMW-007-IBM",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "amsterdam-vm-04",
+      "description": "VCF-PROD-SUP-3Y coverage for amsterdam-vm-04",
+      "comments": "Virtual machine at IBM."
+    },
+    {
+      "contract": "VMW-007-IBM",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "amsterdam-vm-05",
+      "description": "VCF-PROD-SUP-3Y coverage for amsterdam-vm-05",
+      "comments": "Virtual machine at IBM."
+    },
+    {
+      "contract": "VMW-007-IBM",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "amsterdam-vm-06",
+      "description": "VCF-PROD-SUP-3Y coverage for amsterdam-vm-06",
+      "comments": "Virtual machine at IBM."
+    },
+    {
+      "contract": "VMW-008-ORACLE",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "paris-vm-01",
+      "description": "VCF-PROD-SUP-3Y coverage for paris-vm-01",
+      "comments": "Virtual machine at Oracle."
+    },
+    {
+      "contract": "VMW-008-ORACLE",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "paris-vm-02",
+      "description": "VCF-PROD-SUP-3Y coverage for paris-vm-02",
+      "comments": "Virtual machine at Oracle."
+    },
+    {
+      "contract": "VMW-008-ORACLE",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "paris-vm-03",
+      "description": "VCF-PROD-SUP-3Y coverage for paris-vm-03",
+      "comments": "Virtual machine at Oracle."
+    },
+    {
+      "contract": "VMW-008-ORACLE",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "paris-vm-04",
+      "description": "VCF-PROD-SUP-3Y coverage for paris-vm-04",
+      "comments": "Virtual machine at Oracle."
+    },
+    {
+      "contract": "VMW-008-ORACLE",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "paris-vm-05",
+      "description": "VCF-PROD-SUP-3Y coverage for paris-vm-05",
+      "comments": "Virtual machine at Oracle."
+    },
+    {
+      "contract": "VMW-008-ORACLE",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "paris-vm-06",
+      "description": "VCF-PROD-SUP-3Y coverage for paris-vm-06",
+      "comments": "Virtual machine at Oracle."
+    },
+    {
+      "contract": "VMW-009-SIEMENS",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "madrid-vm-01",
+      "description": "VCF-PROD-SUP-3Y coverage for madrid-vm-01",
+      "comments": "Virtual machine at Siemens."
+    },
+    {
+      "contract": "VMW-009-SIEMENS",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "madrid-vm-02",
+      "description": "VCF-PROD-SUP-3Y coverage for madrid-vm-02",
+      "comments": "Virtual machine at Siemens."
+    },
+    {
+      "contract": "VMW-009-SIEMENS",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "madrid-vm-03",
+      "description": "VCF-PROD-SUP-3Y coverage for madrid-vm-03",
+      "comments": "Virtual machine at Siemens."
+    },
+    {
+      "contract": "VMW-009-SIEMENS",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "madrid-vm-05",
+      "description": "VCF-PROD-SUP-3Y coverage for madrid-vm-05",
+      "comments": "Virtual machine at Siemens."
+    },
+    {
+      "contract": "VMW-009-SIEMENS",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "madrid-vm-06",
+      "description": "VCF-PROD-SUP-3Y coverage for madrid-vm-06",
+      "comments": "Virtual machine at Siemens."
+    },
+    {
+      "contract": "VMW-010-BMW",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "rome-vm-01",
+      "description": "VCF-PROD-SUP-3Y coverage for rome-vm-01",
+      "comments": "Virtual machine at BMW."
+    },
+    {
+      "contract": "VMW-010-BMW",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "rome-vm-02",
+      "description": "VCF-PROD-SUP-3Y coverage for rome-vm-02",
+      "comments": "Virtual machine at BMW."
+    },
+    {
+      "contract": "VMW-010-BMW",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "rome-vm-03",
+      "description": "VCF-PROD-SUP-3Y coverage for rome-vm-03",
+      "comments": "Virtual machine at BMW."
+    },
+    {
+      "contract": "VMW-010-BMW",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "rome-vm-04",
+      "description": "VCF-PROD-SUP-3Y coverage for rome-vm-04",
+      "comments": "Virtual machine at BMW."
+    },
+    {
+      "contract": "VMW-010-BMW",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "rome-vm-05",
+      "description": "VCF-PROD-SUP-3Y coverage for rome-vm-05",
+      "comments": "Virtual machine at BMW."
+    },
+    {
+      "contract": "VMW-010-BMW",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "rome-vm-06",
+      "description": "VCF-PROD-SUP-3Y coverage for rome-vm-06",
+      "comments": "Virtual machine at BMW."
+    },
+    {
+      "contract": "VMW-011-VOLKSWAGEN",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "warsaw-vm-01",
+      "description": "VCF-PROD-SUP-3Y coverage for warsaw-vm-01",
+      "comments": "Virtual machine at Volkswagen."
+    },
+    {
+      "contract": "VMW-011-VOLKSWAGEN",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "warsaw-vm-02",
+      "description": "VCF-PROD-SUP-3Y coverage for warsaw-vm-02",
+      "comments": "Virtual machine at Volkswagen."
+    },
+    {
+      "contract": "VMW-011-VOLKSWAGEN",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "warsaw-vm-03",
+      "description": "VCF-PROD-SUP-3Y coverage for warsaw-vm-03",
+      "comments": "Virtual machine at Volkswagen."
+    },
+    {
+      "contract": "VMW-011-VOLKSWAGEN",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "warsaw-vm-04",
+      "description": "VCF-PROD-SUP-3Y coverage for warsaw-vm-04",
+      "comments": "Virtual machine at Volkswagen."
+    },
+    {
+      "contract": "VMW-011-VOLKSWAGEN",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "warsaw-vm-05",
+      "description": "VCF-PROD-SUP-3Y coverage for warsaw-vm-05",
+      "comments": "Virtual machine at Volkswagen."
+    },
+    {
+      "contract": "VMW-011-VOLKSWAGEN",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "warsaw-vm-06",
+      "description": "VCF-PROD-SUP-3Y coverage for warsaw-vm-06",
+      "comments": "Virtual machine at Volkswagen."
+    },
+    {
+      "contract": "VMW-012-DEUTSCHE-BANK",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "budapest-vm-01",
+      "description": "VCF-PROD-SUP-3Y coverage for budapest-vm-01",
+      "comments": "Virtual machine at Deutsche Bank."
+    },
+    {
+      "contract": "VMW-012-DEUTSCHE-BANK",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "budapest-vm-02",
+      "description": "VCF-PROD-SUP-3Y coverage for budapest-vm-02",
+      "comments": "Virtual machine at Deutsche Bank."
+    },
+    {
+      "contract": "VMW-012-DEUTSCHE-BANK",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "budapest-vm-03",
+      "description": "VCF-PROD-SUP-3Y coverage for budapest-vm-03",
+      "comments": "Virtual machine at Deutsche Bank."
+    },
+    {
+      "contract": "VMW-012-DEUTSCHE-BANK",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "budapest-vm-04",
+      "description": "VCF-PROD-SUP-3Y coverage for budapest-vm-04",
+      "comments": "Virtual machine at Deutsche Bank."
+    },
+    {
+      "contract": "VMW-012-DEUTSCHE-BANK",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "budapest-vm-05",
+      "description": "VCF-PROD-SUP-3Y coverage for budapest-vm-05",
+      "comments": "Virtual machine at Deutsche Bank."
+    },
+    {
+      "contract": "VMW-012-DEUTSCHE-BANK",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "budapest-vm-06",
+      "description": "VCF-PROD-SUP-3Y coverage for budapest-vm-06",
+      "comments": "Virtual machine at Deutsche Bank."
+    },
+    {
+      "contract": "VMW-013-ALLIANZ",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "stockholm-vm-01",
+      "description": "VCF-PROD-SUP-3Y coverage for stockholm-vm-01",
+      "comments": "Virtual machine at Allianz."
+    },
+    {
+      "contract": "VMW-013-ALLIANZ",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "stockholm-vm-02",
+      "description": "VCF-PROD-SUP-3Y coverage for stockholm-vm-02",
+      "comments": "Virtual machine at Allianz."
+    },
+    {
+      "contract": "VMW-013-ALLIANZ",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "stockholm-vm-03",
+      "description": "VCF-PROD-SUP-3Y coverage for stockholm-vm-03",
+      "comments": "Virtual machine at Allianz."
+    },
+    {
+      "contract": "VMW-013-ALLIANZ",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "stockholm-vm-04",
+      "description": "VCF-PROD-SUP-3Y coverage for stockholm-vm-04",
+      "comments": "Virtual machine at Allianz."
+    },
+    {
+      "contract": "VMW-013-ALLIANZ",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "stockholm-vm-06",
+      "description": "VCF-PROD-SUP-3Y coverage for stockholm-vm-06",
+      "comments": "Virtual machine at Allianz."
+    },
+    {
+      "contract": "VMW-014-ADIDAS",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "dublin-vm-01",
+      "description": "VCF-PROD-SUP-3Y coverage for dublin-vm-01",
+      "comments": "Virtual machine at Adidas."
+    },
+    {
+      "contract": "VMW-014-ADIDAS",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "dublin-vm-02",
+      "description": "VCF-PROD-SUP-3Y coverage for dublin-vm-02",
+      "comments": "Virtual machine at Adidas."
+    },
+    {
+      "contract": "VMW-014-ADIDAS",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "dublin-vm-03",
+      "description": "VCF-PROD-SUP-3Y coverage for dublin-vm-03",
+      "comments": "Virtual machine at Adidas."
+    },
+    {
+      "contract": "VMW-014-ADIDAS",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "dublin-vm-04",
+      "description": "VCF-PROD-SUP-3Y coverage for dublin-vm-04",
+      "comments": "Virtual machine at Adidas."
+    },
+    {
+      "contract": "VMW-014-ADIDAS",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "dublin-vm-05",
+      "description": "VCF-PROD-SUP-3Y coverage for dublin-vm-05",
+      "comments": "Virtual machine at Adidas."
+    },
+    {
+      "contract": "VMW-014-ADIDAS",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "dublin-vm-06",
+      "description": "VCF-PROD-SUP-3Y coverage for dublin-vm-06",
+      "comments": "Virtual machine at Adidas."
+    },
+    {
+      "contract": "VMW-015-PUMA",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "athens-vm-01",
+      "description": "VCF-PROD-SUP-3Y coverage for athens-vm-01",
+      "comments": "Virtual machine at Puma."
+    },
+    {
+      "contract": "VMW-015-PUMA",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "athens-vm-02",
+      "description": "VCF-PROD-SUP-3Y coverage for athens-vm-02",
+      "comments": "Virtual machine at Puma."
+    },
+    {
+      "contract": "VMW-015-PUMA",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "athens-vm-04",
+      "description": "VCF-PROD-SUP-3Y coverage for athens-vm-04",
+      "comments": "Virtual machine at Puma."
+    },
+    {
+      "contract": "VMW-015-PUMA",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "athens-vm-05",
+      "description": "VCF-PROD-SUP-3Y coverage for athens-vm-05",
+      "comments": "Virtual machine at Puma."
+    },
+    {
+      "contract": "VMW-015-PUMA",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "athens-vm-06",
+      "description": "VCF-PROD-SUP-3Y coverage for athens-vm-06",
+      "comments": "Virtual machine at Puma."
+    },
+    {
+      "contract": "VMW-016-NIKE",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "singapore-vm-01",
+      "description": "VCF-PROD-SUP-3Y coverage for singapore-vm-01",
+      "comments": "Virtual machine at Nike."
+    },
+    {
+      "contract": "VMW-016-NIKE",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "singapore-vm-02",
+      "description": "VCF-PROD-SUP-3Y coverage for singapore-vm-02",
+      "comments": "Virtual machine at Nike."
+    },
+    {
+      "contract": "VMW-016-NIKE",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "singapore-vm-03",
+      "description": "VCF-PROD-SUP-3Y coverage for singapore-vm-03",
+      "comments": "Virtual machine at Nike."
+    },
+    {
+      "contract": "VMW-016-NIKE",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "singapore-vm-04",
+      "description": "VCF-PROD-SUP-3Y coverage for singapore-vm-04",
+      "comments": "Virtual machine at Nike."
+    },
+    {
+      "contract": "VMW-016-NIKE",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "singapore-vm-05",
+      "description": "VCF-PROD-SUP-3Y coverage for singapore-vm-05",
+      "comments": "Virtual machine at Nike."
+    },
+    {
+      "contract": "VMW-016-NIKE",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "singapore-vm-06",
+      "description": "VCF-PROD-SUP-3Y coverage for singapore-vm-06",
+      "comments": "Virtual machine at Nike."
+    },
+    {
+      "contract": "VMW-017-SAMSUNG",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "sydney-vm-01",
+      "description": "VCF-PROD-SUP-3Y coverage for sydney-vm-01",
+      "comments": "Virtual machine at Samsung."
+    },
+    {
+      "contract": "VMW-017-SAMSUNG",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "sydney-vm-02",
+      "description": "VCF-PROD-SUP-3Y coverage for sydney-vm-02",
+      "comments": "Virtual machine at Samsung."
+    },
+    {
+      "contract": "VMW-017-SAMSUNG",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "sydney-vm-03",
+      "description": "VCF-PROD-SUP-3Y coverage for sydney-vm-03",
+      "comments": "Virtual machine at Samsung."
+    },
+    {
+      "contract": "VMW-017-SAMSUNG",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "sydney-vm-04",
+      "description": "VCF-PROD-SUP-3Y coverage for sydney-vm-04",
+      "comments": "Virtual machine at Samsung."
+    },
+    {
+      "contract": "VMW-017-SAMSUNG",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "sydney-vm-05",
+      "description": "VCF-PROD-SUP-3Y coverage for sydney-vm-05",
+      "comments": "Virtual machine at Samsung."
+    },
+    {
+      "contract": "VMW-017-SAMSUNG",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "sydney-vm-06",
+      "description": "VCF-PROD-SUP-3Y coverage for sydney-vm-06",
+      "comments": "Virtual machine at Samsung."
+    },
+    {
+      "contract": "VMW-018-SONY",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "chicago-vm-01",
+      "description": "VCF-PROD-SUP-3Y coverage for chicago-vm-01",
+      "comments": "Virtual machine at Sony."
+    },
+    {
+      "contract": "VMW-018-SONY",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "chicago-vm-02",
+      "description": "VCF-PROD-SUP-3Y coverage for chicago-vm-02",
+      "comments": "Virtual machine at Sony."
+    },
+    {
+      "contract": "VMW-018-SONY",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "chicago-vm-03",
+      "description": "VCF-PROD-SUP-3Y coverage for chicago-vm-03",
+      "comments": "Virtual machine at Sony."
+    },
+    {
+      "contract": "VMW-018-SONY",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "chicago-vm-04",
+      "description": "VCF-PROD-SUP-3Y coverage for chicago-vm-04",
+      "comments": "Virtual machine at Sony."
+    },
+    {
+      "contract": "VMW-018-SONY",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "chicago-vm-05",
+      "description": "VCF-PROD-SUP-3Y coverage for chicago-vm-05",
+      "comments": "Virtual machine at Sony."
+    },
+    {
+      "contract": "VMW-018-SONY",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "chicago-vm-06",
+      "description": "VCF-PROD-SUP-3Y coverage for chicago-vm-06",
+      "comments": "Virtual machine at Sony."
+    },
+    {
+      "contract": "VMW-019-TOYOTA",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "seattle-vm-01",
+      "description": "VCF-PROD-SUP-3Y coverage for seattle-vm-01",
+      "comments": "Virtual machine at Toyota."
+    },
+    {
+      "contract": "VMW-019-TOYOTA",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "seattle-vm-02",
+      "description": "VCF-PROD-SUP-3Y coverage for seattle-vm-02",
+      "comments": "Virtual machine at Toyota."
+    },
+    {
+      "contract": "VMW-019-TOYOTA",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "seattle-vm-03",
+      "description": "VCF-PROD-SUP-3Y coverage for seattle-vm-03",
+      "comments": "Virtual machine at Toyota."
+    },
+    {
+      "contract": "VMW-019-TOYOTA",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "seattle-vm-04",
+      "description": "VCF-PROD-SUP-3Y coverage for seattle-vm-04",
+      "comments": "Virtual machine at Toyota."
+    },
+    {
+      "contract": "VMW-019-TOYOTA",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "seattle-vm-05",
+      "description": "VCF-PROD-SUP-3Y coverage for seattle-vm-05",
+      "comments": "Virtual machine at Toyota."
+    },
+    {
+      "contract": "VMW-019-TOYOTA",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "seattle-vm-06",
+      "description": "VCF-PROD-SUP-3Y coverage for seattle-vm-06",
+      "comments": "Virtual machine at Toyota."
+    },
+    {
+      "contract": "VMW-020-SHELL",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "miami-vm-01",
+      "description": "VCF-PROD-SUP-3Y coverage for miami-vm-01",
+      "comments": "Virtual machine at Shell."
+    },
+    {
+      "contract": "VMW-020-SHELL",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "miami-vm-02",
+      "description": "VCF-PROD-SUP-3Y coverage for miami-vm-02",
+      "comments": "Virtual machine at Shell."
+    },
+    {
+      "contract": "VMW-020-SHELL",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "miami-vm-03",
+      "description": "VCF-PROD-SUP-3Y coverage for miami-vm-03",
+      "comments": "Virtual machine at Shell."
+    },
+    {
+      "contract": "VMW-020-SHELL",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "miami-vm-04",
+      "description": "VCF-PROD-SUP-3Y coverage for miami-vm-04",
+      "comments": "Virtual machine at Shell."
+    },
+    {
+      "contract": "VMW-020-SHELL",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "miami-vm-05",
+      "description": "VCF-PROD-SUP-3Y coverage for miami-vm-05",
+      "comments": "Virtual machine at Shell."
+    },
+    {
+      "contract": "VMW-020-SHELL",
+      "sku": "VCF-PROD-SUP-3Y",
+      "virtual_machine": "miami-vm-06",
+      "description": "VCF-PROD-SUP-3Y coverage for miami-vm-06",
+      "comments": "Virtual machine at Shell."
+    }
+  ],
+  "plugins/service-specification/3c-rules/": [
+    {
+      "name": "Device serial number",
+      "rule_type": "required",
+      "ci_type": "device",
+      "parameter": "serial",
+      "condition": "not_empty",
+      "value": "",
+      "description": "Populated by discovery."
+    },
+    {
+      "name": "Device tenant",
+      "rule_type": "required",
+      "ci_type": "device",
+      "parameter": "tenant",
+      "condition": "not_empty",
+      "value": "",
+      "description": ""
+    },
+    {
+      "name": "VM tenant",
+      "rule_type": "required",
+      "ci_type": "virtualmachine",
+      "parameter": "tenant",
+      "condition": "not_empty",
+      "value": "",
+      "description": ""
+    },
+    {
+      "name": "Cluster group",
+      "rule_type": "required",
+      "ci_type": "cluster",
+      "parameter": "group",
+      "condition": "not_empty",
+      "value": "",
+      "description": ""
+    },
+    {
+      "name": "VM vCPUs",
+      "rule_type": "recommended",
+      "ci_type": "virtualmachine",
+      "parameter": "vcpus",
+      "condition": "not_empty",
+      "value": "",
+      "description": ""
+    },
+    {
+      "name": "VM memory",
+      "rule_type": "recommended",
+      "ci_type": "virtualmachine",
+      "parameter": "memory",
+      "condition": "not_empty",
+      "value": "",
+      "description": ""
+    },
+    {
+      "name": "Cluster group description",
+      "rule_type": "recommended",
+      "ci_type": "clustergroup",
+      "parameter": "description",
+      "condition": "not_empty",
+      "value": "",
+      "description": ""
+    },
+    {
+      "name": "Device is active",
+      "rule_type": "compliance",
+      "ci_type": "device",
+      "parameter": "status",
+      "condition": "equals",
+      "value": "active",
+      "description": ""
+    },
+    {
+      "name": "Device serial format",
+      "rule_type": "compliance",
+      "ci_type": "device",
+      "parameter": "serial",
+      "condition": "regex",
+      "value": "^$|^(FG100F[A-Z0-9]{10}|FOC[0-9]{4}[A-Z0-9]{4}|[A-Z0-9]{7})$",
+      "description": "FortiGate, Cisco or Dell service tag format. Empty serials are left to the completeness rule."
+    },
+    {
+      "name": "VM is active or staged",
+      "rule_type": "compliance",
+      "ci_type": "virtualmachine",
+      "parameter": "status",
+      "condition": "in",
+      "value": "active, staged",
+      "description": ""
+    },
+    {
+      "name": "Cluster type is VMware",
+      "rule_type": "compliance",
+      "ci_type": "cluster",
+      "parameter": "type",
+      "condition": "equals",
+      "value": "vmware",
+      "description": ""
     }
   ]
 }

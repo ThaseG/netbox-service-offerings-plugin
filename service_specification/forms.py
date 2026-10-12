@@ -1418,7 +1418,7 @@ class ThreeCRuleForm(NetBoxModelForm):
             'value': (
                 'Compared case-insensitively against the stored value or its label; for related objects against '
                 'their name, ID or slug. "is one of" / "is not one of" take a comma-separated list. Regex is '
-                'matched against the displayed value.'
+                'matched against the displayed value (an empty value as an empty string).'
             ),
         }
 

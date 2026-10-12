@@ -62,6 +62,7 @@ REFERENCE_FIELDS = {
         'manufacturer': 'dcim/manufacturers/',
     },
     'dcim/devices/': {
+        'tenant': 'tenancy/tenants/',
         'role': 'dcim/device-roles/',
         'device_type': 'dcim/device-types/',
         'site': 'dcim/sites/',
@@ -93,6 +94,7 @@ REFERENCE_FIELDS = {
         'scope_id': 'dcim/sites/',
     },
     'virtualization/virtual-machines/': {
+        'tenant': 'tenancy/tenants/',
         'cluster': 'virtualization/clusters/',
         'device': 'dcim/devices/',
     },
@@ -196,6 +198,7 @@ REFERENCE_FIELDS = {
         'contract': 'plugins/lifecycle/supportcontract/',
         'sku': 'plugins/lifecycle/sku/',
         'device': 'dcim/devices/',
+        'virtual_machine': 'virtualization/virtual-machines/',
         'license': 'plugins/lifecycle/licenseassignment/',
     },
 }
@@ -331,6 +334,12 @@ def main():
         data = json.load(f)
 
     create_all(data)
+
+    # Queue the first 3C (CMDB health) calculation now rather than waiting
+    # for the daily job, so the 3C report has a snapshot to show (the
+    # netbox-worker runs it within moments).
+    job = api('POST', 'plugins/service-specification/3c-snapshots/run/', {})
+    print(f'Queued 3C health calculation (job id={job["id"]}).')
 
     print('Test deployment data created successfully.')
 

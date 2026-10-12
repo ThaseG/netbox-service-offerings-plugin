@@ -234,6 +234,7 @@ class ThreeCAPITestCase(APITestCase):
         'service_specification.view_threecsnapshot',
         'service_specification.view_threecsettings',
         'service_specification.change_threecsettings',
+        'service_specification.add_threecsnapshot',
     )
 
     @classmethod
@@ -279,3 +280,10 @@ class ThreeCAPITestCase(APITestCase):
         response = self.client.post(url, {}, format='json', **self.header)
         self.assertIn(response.status_code, (status.HTTP_403_FORBIDDEN, status.HTTP_405_METHOD_NOT_ALLOWED))
         self.assertEqual(ThreeCSettings.objects.count(), 1)
+
+    def test_run_queues_a_health_job(self):
+        url = reverse('plugins-api:service_specification-api:threecsnapshot-run')
+        response = self.client.post(url, {}, format='json', **self.header)
+        self.assertHttpStatus(response, status.HTTP_202_ACCEPTED)
+        self.assertEqual(response.data['name'], '3C Health Calculation')
+        self.assertIsNone(response.data['interval'])

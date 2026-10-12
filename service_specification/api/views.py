@@ -1,9 +1,13 @@
+from core.api.serializers import JobSerializer
 from dcim.api.views import DeviceViewSet
 from netbox.api.viewsets import NetBoxModelViewSet, NetBoxReadOnlyModelViewSet
+from rest_framework import status
+from rest_framework.decorators import action
+from rest_framework.response import Response
 from virtualization.api.views import ClusterGroupViewSet, ClusterViewSet, VirtualMachineViewSet
 
 from service_specification import filtersets, models
-from service_specification.jobs import ensure_scheduled
+from service_specification.jobs import ThreeCHealthJob, ensure_scheduled
 
 from . import serializers
 
@@ -180,6 +184,13 @@ class ThreeCSnapshotViewSet(NetBoxReadOnlyModelViewSet):
     queryset = models.ThreeCSnapshot.objects.all()
     serializer_class = serializers.ThreeCSnapshotSerializer
     filterset_class = filtersets.ThreeCSnapshotFilterSet
+
+    @action(detail=False, methods=['post'])
+    def run(self, request):
+        """Queue a 3C health calculation now (the report's "Run now"),
+        requiring the add-snapshot permission. Returns the queued Job."""
+        job = ThreeCHealthJob.enqueue(user=request.user)
+        return Response(JobSerializer(job, context={'request': request}).data, status=status.HTTP_202_ACCEPTED)
 
 
 class ThreeCFindingViewSet(NetBoxReadOnlyModelViewSet):

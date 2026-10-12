@@ -296,6 +296,79 @@ CONTACTS = [
     ('Jack', 'Thompson', 'App1 Owner Group'),
 ]
 
+# 3C (CMDB health, see the plugin's three_c.py) demo data. Every Device and
+# VM is documented (serial, tenant, sizing) except for the handful of
+# deliberate data-quality problems below, so each 3C KPI has a realistic
+# mix of passing and failing CIs to show. THREE_C_RULES further down are
+# the rules that catch them.
+MISSING_SERIAL = {
+    'Berlin-SW-02',
+    'Vienna-SRV-03',
+    'Madrid-FW-01',
+    'Budapest-SRV-01',
+    'Dublin-SW-01',
+    'Sydney-SRV-04',
+    'Miami-SRV-02',
+}
+MISSING_TENANT = {'Cologne-SRV-02', 'Rome-SW-01', 'Stockholm-SRV-04', 'Chicago-FW-01'}
+# Placeholder serials typed in by hand instead of the real one.
+MALFORMED_SERIAL = {'Paris-SRV-01': 'n/a', 'Athens-SW-02': 'TBD'}
+# Replacement server registered with the old chassis' serial after an RMA.
+DUPLICATE_SERIAL_OF = {'Warsaw-SRV-02': 'Warsaw-SRV-01'}
+# Set by the (simulated) collector when a device stops responding.
+DEVICE_STATUS = {'Amsterdam-SW-02': 'offline', 'Singapore-SRV-03': 'offline', 'Seattle-FW-01': 'failed'}
+VM_MISSING_TENANT = {
+    'dortmund-vm-05',
+    'vienna-vm-06',
+    'paris-vm-02',
+    'rome-vm-04',
+    'budapest-vm-06',
+    'athens-vm-01',
+    'sydney-vm-05',
+    'miami-vm-03',
+}
+VM_UNSIZED = {
+    'munich-vm-06',
+    'cologne-vm-03',
+    'amsterdam-vm-05',
+    'madrid-vm-01',
+    'warsaw-vm-06',
+    'stockholm-vm-02',
+    'dublin-vm-04',
+    'singapore-vm-06',
+    'chicago-vm-05',
+    'seattle-vm-01',
+}
+CLUSTER_GROUP_MISSING_DESCRIPTION = {'Oracle', 'Puma', 'Toyota'}
+# Servers/Clusters/Cluster Groups are otherwise linked to the Application
+# Services whose VMs they host (see build_ci_assignments); these aren't,
+# and VMs otherwise get a VMware support contract (see build_lifecycle).
+UNMAPPED_TECHNICAL_CIS = {'Rome-SRV-04', 'Chicago-SRV-02', 'Dublin Cluster B', 'sony-infra'}
+VM_MISSING_CONTRACT = {'berlin-vm-02', 'dusseldorf-vm-06', 'madrid-vm-04', 'stockholm-vm-05', 'athens-vm-03'}
+
+# (name, rule_type, ci_type, parameter, condition, value, description)
+THREE_C_RULES = [
+    ('Device serial number', 'required', 'device', 'serial', 'not_empty', '', 'Populated by discovery.'),
+    ('Device tenant', 'required', 'device', 'tenant', 'not_empty', '', ''),
+    ('VM tenant', 'required', 'virtualmachine', 'tenant', 'not_empty', '', ''),
+    ('Cluster group', 'required', 'cluster', 'group', 'not_empty', '', ''),
+    ('VM vCPUs', 'recommended', 'virtualmachine', 'vcpus', 'not_empty', '', ''),
+    ('VM memory', 'recommended', 'virtualmachine', 'memory', 'not_empty', '', ''),
+    ('Cluster group description', 'recommended', 'clustergroup', 'description', 'not_empty', '', ''),
+    ('Device is active', 'compliance', 'device', 'status', 'equals', 'active', ''),
+    (
+        'Device serial format',
+        'compliance',
+        'device',
+        'serial',
+        'regex',
+        r'^$|^(FG100F[A-Z0-9]{10}|FOC[0-9]{4}[A-Z0-9]{4}|[A-Z0-9]{7})$',
+        'FortiGate, Cisco or Dell service tag format. Empty serials are left to the completeness rule.',
+    ),
+    ('VM is active or staged', 'compliance', 'virtualmachine', 'status', 'in', 'active, staged', ''),
+    ('Cluster type is VMware', 'compliance', 'cluster', 'type', 'equals', 'vmware', ''),
+]
+
 
 def slugify(name):
     return name.lower().replace(' ', '-').replace('/', '-').replace('&', 'and')
@@ -306,6 +379,9 @@ def build_lookups(data):
         {'name': 'Cisco', 'slug': 'cisco'},
         {'name': 'Fortinet', 'slug': 'fortinet'},
         {'name': 'Dell', 'slug': 'dell'},
+        # No device types — only here as the manufacturer of the VMs'
+        # support SKU/license (see LIFECYCLE_BY_MANUFACTURER).
+        {'name': 'VMware', 'slug': 'vmware'},
     ]
     data['dcim/device-roles/'] = [
         {'name': 'Firewall', 'slug': 'firewall', 'color': 'f44336'},
@@ -358,6 +434,44 @@ def build_lookups(data):
     ]
 
 
+def device_serial(role, tenant_index, n):
+    """A plausible, unique serial per device, in its manufacturer's format
+    (matched by the "Device serial format" 3C rule)."""
+    if role == 'firewall':
+        return f'FG100FTK{tenant_index:02d}{n:06d}'
+    if role == 'switch':
+        return f'FOC{2400 + tenant_index:04d}X{n}{tenant_index:02d}'
+    return f'{tenant_index:02d}R75{n}Z'
+
+
+def device_three_c_fields(name, role, tenant_slug, tenant_index, n, serials):
+    """serial / tenant / status for one Device, applying the deliberate 3C
+    data-quality problems above. `serials` maps the devices created so far
+    to their serial (for DUPLICATE_SERIAL_OF)."""
+    if name in MISSING_SERIAL:
+        serial = ''
+    elif name in MALFORMED_SERIAL:
+        serial = MALFORMED_SERIAL[name]
+    elif name in DUPLICATE_SERIAL_OF:
+        serial = serials[DUPLICATE_SERIAL_OF[name]]
+    else:
+        serial = device_serial(role, tenant_index, n)
+    serials[name] = serial
+    fields = {'serial': serial, 'status': DEVICE_STATUS.get(name, 'active')}
+    if name not in MISSING_TENANT:
+        fields['tenant'] = tenant_slug
+    return fields
+
+
+def vm_three_c_fields(name, tenant_slug, on_server):
+    fields = {}
+    if name not in VM_MISSING_TENANT:
+        fields['tenant'] = tenant_slug
+    if name not in VM_UNSIZED:
+        fields.update({'vcpus': 4, 'memory': 16384} if on_server else {'vcpus': 2, 'memory': 8192})
+    return fields
+
+
 def build_tenants_and_infra(data):
     """One tenant per COMPANIES entry, each with a single site (a distinct
     real city — see CITIES) and a small, realistic network:
@@ -407,6 +521,7 @@ def build_tenants_and_infra(data):
 
     vms_by_tenant = {}
     network_by_tenant = {}
+    serials = {}
 
     for i, company in enumerate(COMPANIES):
         tenant_slug = slugify(company)
@@ -428,11 +543,20 @@ def build_tenants_and_infra(data):
         )
 
         cluster_group_slug = f'{tenant_slug}-infra'
-        data['virtualization/cluster-groups/'].append({'name': f'{company} Infrastructure', 'slug': cluster_group_slug})
+        cluster_group = {'name': f'{company} Infrastructure', 'slug': cluster_group_slug}
+        if company not in CLUSTER_GROUP_MISSING_DESCRIPTION:
+            cluster_group['description'] = f'VMware infrastructure of {company}'
+        data['virtualization/cluster-groups/'].append(cluster_group)
 
         fw_name = f'{city}-FW-01'
         data['dcim/devices/'].append(
-            {'name': fw_name, 'role': 'firewall', 'device_type': DEVICE_TYPE_BY_ROLE['firewall'], 'site': site_slug}
+            {
+                'name': fw_name,
+                'role': 'firewall',
+                'device_type': DEVICE_TYPE_BY_ROLE['firewall'],
+                'site': site_slug,
+                **device_three_c_fields(fw_name, 'firewall', tenant_slug, i, 1, serials),
+            }
         )
         fw_interfaces = [f'{fw_name} internal{n}' for n in (1, 2)]
         for fw_iface in fw_interfaces:
@@ -442,11 +566,18 @@ def build_tenants_and_infra(data):
         vm_n = 0
         cluster_names = []
         switch_names = []
+        server_names = []
         for sw_n, letter in ((1, 'A'), (2, 'B')):
             sw_name = f'{city}-SW-{sw_n:02d}'
             switch_names.append(sw_name)
             data['dcim/devices/'].append(
-                {'name': sw_name, 'role': 'switch', 'device_type': DEVICE_TYPE_BY_ROLE['switch'], 'site': site_slug}
+                {
+                    'name': sw_name,
+                    'role': 'switch',
+                    'device_type': DEVICE_TYPE_BY_ROLE['switch'],
+                    'site': site_slug,
+                    **device_three_c_fields(sw_name, 'switch', tenant_slug, i, sw_n, serials),
+                }
             )
             sw_uplink = f'{sw_name} uplink'
             data['dcim/interfaces/'].append({'name': sw_uplink, 'device': sw_name, 'type': INTERFACE_TYPE})
@@ -473,6 +604,7 @@ def build_tenants_and_infra(data):
             for port_n in (1, 2):
                 overall_srv_n = (sw_n - 1) * 2 + port_n
                 srv_name = f'{city}-SRV-{overall_srv_n:02d}'
+                server_names.append(srv_name)
                 data['dcim/devices/'].append(
                     {
                         'name': srv_name,
@@ -484,6 +616,7 @@ def build_tenants_and_infra(data):
                         # depend on Device.cluster actually being set here, not
                         # just on the Cluster and VM sides).
                         'cluster': cluster_name,
+                        **device_three_c_fields(srv_name, 'server', tenant_slug, i, overall_srv_n, serials),
                     }
                 )
                 srv_iface = f'{srv_name} nic1'
@@ -504,7 +637,12 @@ def build_tenants_and_infra(data):
                 vm_n += 1
                 vm_name = f'{city.lower()}-vm-{vm_n:02d}'
                 data['virtualization/virtual-machines/'].append(
-                    {'name': vm_name, 'cluster': cluster_name, 'device': srv_name}
+                    {
+                        'name': vm_name,
+                        'cluster': cluster_name,
+                        'device': srv_name,
+                        **vm_three_c_fields(vm_name, tenant_slug, on_server=True),
+                    }
                 )
                 vm_names.append(vm_name)
 
@@ -513,7 +651,9 @@ def build_tenants_and_infra(data):
         for cluster_name in cluster_names:
             vm_n += 1
             vm_name = f'{city.lower()}-vm-{vm_n:02d}'
-            data['virtualization/virtual-machines/'].append({'name': vm_name, 'cluster': cluster_name})
+            data['virtualization/virtual-machines/'].append(
+                {'name': vm_name, 'cluster': cluster_name, **vm_three_c_fields(vm_name, tenant_slug, on_server=False)}
+            )
             vm_names.append(vm_name)
 
         # Firewall's switch-facing IP — a distinct /24 per tenant.
@@ -526,7 +666,13 @@ def build_tenants_and_infra(data):
         )
 
         vms_by_tenant[tenant_slug] = vm_names
-        network_by_tenant[tenant_slug] = {'firewall': fw_name, 'switches': switch_names}
+        network_by_tenant[tenant_slug] = {
+            'firewall': fw_name,
+            'switches': switch_names,
+            'servers': server_names,
+            'clusters': cluster_names,
+            'cluster_group': cluster_group_slug,
+        }
 
     return vms_by_tenant, network_by_tenant
 
@@ -716,8 +862,7 @@ def build_ci_assignments(data, vms_by_tenant, tenant_by_offering, network_by_ten
     getting the first 2 VMs, second Offering's getting the other 4.
 
     On top of that, a couple of tenants' Firewalls/Switches are *also*
-    linked to an Application Service (cluster-service-infos/
-    cluster-group-service-infos stay empty — nothing asked for those):
+    linked to an Application Service:
     FIREWALL_TENANT_COUNT tenants' first Application Service additionally
     gets that tenant's Firewall, and SWITCH_TENANT_COUNT tenants' second
     Application Service additionally gets one of that tenant's Switches —
@@ -760,6 +905,32 @@ def build_ci_assignments(data, vms_by_tenant, tenant_by_offering, network_by_ten
             {'device': switch_name, 'application_services': [second_app_service]}
         )
 
+    # The infrastructure under those VMs belongs to the same Application
+    # Services (so 3C doesn't report it as orphaned — except the few in
+    # UNMAPPED_TECHNICAL_CIS): Servers 1-2 / Cluster A host the first
+    # Application Service's VMs, Servers 3-4 / Cluster B the second's, and
+    # the tenant's Cluster Group holds both.
+    for tenant_slug, (first_app_service, second_app_service) in app_services_by_tenant.items():
+        network = network_by_tenant[tenant_slug]
+        for i, server_name in enumerate(network['servers']):
+            if server_name not in UNMAPPED_TECHNICAL_CIS:
+                app_service = second_app_service if i >= 2 else first_app_service
+                data['plugins/service-specification/device-service-infos/'].append(
+                    {'device': server_name, 'application_services': [app_service]}
+                )
+        for cluster_name, app_service in zip(network['clusters'], (first_app_service, second_app_service)):
+            if cluster_name not in UNMAPPED_TECHNICAL_CIS:
+                data['plugins/service-specification/cluster-service-infos/'].append(
+                    {'cluster': cluster_name, 'application_services': [app_service]}
+                )
+        if network['cluster_group'] not in UNMAPPED_TECHNICAL_CIS:
+            data['plugins/service-specification/cluster-group-service-infos/'].append(
+                {
+                    'cluster_group': network['cluster_group'],
+                    'application_services': [first_app_service, second_app_service],
+                }
+            )
+
 
 # Hardware Lifecycle plugin (netbox-lifecycle, see
 # ci/docker/plugin_requirements.txt) demo data, per manufacturer: the
@@ -781,6 +952,14 @@ LIFECYCLE_BY_MANUFACTURER = {
         'sku_description': 'FortiCare Premium 24x7 + UTP bundle for FortiGate-100F, 3 years',
         'license': 'FortiGuard Unified Threat Protection',
         'license_description': 'FortiGuard UTP subscription (IPS, AV, web/DNS filtering, antispam)',
+    },
+    'vmware': {
+        'vendor': 'Broadcom VMware Support',
+        'contract_prefix': 'VMW',
+        'sku': 'VCF-PROD-SUP-3Y',
+        'sku_description': 'VMware Cloud Foundation Production Support, 3 years',
+        'license': 'VMware Cloud Foundation',
+        'license_description': 'VMware Cloud Foundation per-core subscription',
     },
     'dell': {
         'vendor': 'Dell ProSupport',
@@ -951,6 +1130,43 @@ def build_lifecycle(data):
             }
         )
 
+    # VMs are covered by the tenant's VMware support contract (no hardware
+    # lifecycle or license of their own) — all but VM_MISSING_CONTRACT,
+    # which 3C reports as orphaned.
+    site_by_cluster = {cluster['name']: cluster['scope_id'] for cluster in data['virtualization/clusters/']}
+    vmware = LIFECYCLE_BY_MANUFACTURER['vmware']
+    for vm in data['virtualization/virtual-machines/']:
+        if vm['name'] in VM_MISSING_CONTRACT:
+            continue
+        tenant_slug = tenant_by_site[site_by_cluster[vm['cluster']]]
+        data['plugins/lifecycle/supportcontractassignment/'].append(
+            {
+                'contract': contract_id(tenant_slug, 'vmware'),
+                'sku': vmware['sku'],
+                'virtual_machine': vm['name'],
+                'description': f'{vmware["sku"]} coverage for {vm["name"]}',
+                'comments': f'Virtual machine at {tenant_names[tenant_slug]}.',
+            }
+        )
+
+
+def build_three_c_rules(data):
+    """The 3C rules that score the demo data's deliberate gaps (see
+    MISSING_SERIAL etc. above). test-deployment.py then queues a first 3C
+    health calculation, so the 3C report has a snapshot straight away."""
+    data['plugins/service-specification/3c-rules/'] = [
+        {
+            'name': name,
+            'rule_type': rule_type,
+            'ci_type': ci_type,
+            'parameter': parameter,
+            'condition': condition,
+            'value': value,
+            'description': description,
+        }
+        for name, rule_type, ci_type, parameter, condition, value, description in THREE_C_RULES
+    ]
+
 
 def main():
     data = {}
@@ -961,6 +1177,7 @@ def main():
     tenant_by_offering = build_hierarchy(data, tenant_slugs)
     build_ci_assignments(data, vms_by_tenant, tenant_by_offering, network_by_tenant)
     build_lifecycle(data)
+    build_three_c_rules(data)
 
     # Re-declare in dependency order: build_* above populated `data` in
     # convenient-for-generation order, not necessarily the order
@@ -1015,6 +1232,7 @@ def main():
         'plugins/lifecycle/supportcontract/',
         'plugins/lifecycle/licenseassignment/',
         'plugins/lifecycle/supportcontractassignment/',
+        'plugins/service-specification/3c-rules/',
     ):
         ordered[key] = data[key]
 

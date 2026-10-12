@@ -259,7 +259,9 @@ def rule_passes(rule, display, tokens):
     if condition == ThreeCConditionChoices.CONDITION_NOT_IN:
         return not options & tokens
     if condition == ThreeCConditionChoices.CONDITION_REGEX:
-        return any(re.search(value, text) for text in display)
+        # An empty value is matched as '', so a pattern like '^$|...' can
+        # leave blanks to a completeness rule instead of failing them twice.
+        return any(re.search(value, text) for text in display or [''])
     return True
 
 
