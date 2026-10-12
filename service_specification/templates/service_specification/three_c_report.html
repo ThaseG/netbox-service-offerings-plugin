@@ -1,0 +1,226 @@
+{% extends 'generic/_base.html' %}
+{% load form_helpers %}
+{% load helpers %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}3C{% endblock %}
+
+{% block subtitle %}
+  <div class="text-secondary">
+    {% trans "CMDB health: Completeness, Correctness, Compliance" %}
+    {% if latest %}
+      &middot; {% trans "Last snapshot" %} <a href="{{ latest.get_absolute_url }}">{{ latest.created|isodatetime }}</a>
+    {% endif %}
+    {% if scheduled_job %}
+      &middot; {% trans "Next run" %} {{ scheduled_job.scheduled|isodatetime }}
+    {% endif %}
+    {% if last_job.status == 'errored' or last_job.status == 'failed' %}
+      &middot; <a href="{{ last_job.get_absolute_url }}">{% trans "Last job" %}: {{ last_job.get_status_display }}</a>
+    {% endif %}
+  </div>
+{% endblock subtitle %}
+
+{% block controls %}
+  <div class="btn-list">
+    {% if perms.service_specification.add_threecsnapshot %}
+      <form action="{% url 'plugins:service_specification:three_c_run' %}" method="post" class="d-inline">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary">
+          <i class="mdi mdi-play" aria-hidden="true"></i> {% trans "Run now" %}
+        </button>
+      </form>
+    {% endif %}
+    {% if perms.service_specification.view_threecrule %}
+      <a href="{% url 'plugins:service_specification:threecrule_list' %}" class="btn btn-outline-secondary">
+        <i class="mdi mdi-format-list-checks" aria-hidden="true"></i> {% trans "Rules" %}
+      </a>
+    {% endif %}
+    {% if perms.service_specification.change_threecsettings %}
+      <a href="{% url 'plugins:service_specification:three_c_settings' %}" class="btn btn-outline-secondary">
+        <i class="mdi mdi-cog-outline" aria-hidden="true"></i> {% trans "Settings" %}
+      </a>
+    {% endif %}
+  </div>
+{% endblock controls %}
+
+{% block content %}
+  <style>
+    .three-c-score { font-size: 2.5rem; font-weight: 600; line-height: 1; font-variant-numeric: tabular-nums; }
+    .three-c-sparkline { height: 48px; }
+    .three-c-trend { height: 320px; }
+    .three-c-sub { font-size: 0.8rem; font-variant-numeric: tabular-nums; }
+  </style>
+
+  {# Filters #}
+  <div class="card mb-3">
+    <div class="card-body">
+      <form method="get" class="row g-2 align-items-end">
+        <div class="col-md-5">
+          <label class="form-label" for="{{ filter_form.ci_type.id_for_label }}">{{ filter_form.ci_type.label }}</label>
+          {{ filter_form.ci_type }}
+        </div>
+        <div class="col-md-5">
+          <label class="form-label" for="{{ filter_form.tenant_id.id_for_label }}">{{ filter_form.tenant_id.label }}</label>
+          {{ filter_form.tenant_id }}
+        </div>
+        <div class="col-md-2 text-end">
+          <button type="submit" class="btn btn-primary">
+            <i class="mdi mdi-filter" aria-hidden="true"></i> {% trans "Filter" %}
+          </button>
+          <a href="{% url 'plugins:service_specification:three_c_report' %}" class="btn btn-outline-secondary">{% trans "Clear" %}</a>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  {% if not latest %}
+    <div class="alert alert-info">
+      {% trans "No 3C snapshot yet. The health job runs daily; use Run now to calculate the first snapshot." %}
+      {% if perms.service_specification.view_threecrule %}
+        {% trans "Completeness and Compliance stay N/A until at least one enabled 3C rule exists." %}
+      {% endif %}
+    </div>
+  {% else %}
+
+    {% if not latest.lifecycle_checks %}
+      <div class="alert alert-secondary">
+        {% trans "netbox-lifecycle is not installed: the hardware lifecycle and support contract checks are N/A." %}
+      </div>
+    {% endif %}
+
+    {# KPI cards #}
+    <div class="row row-cards mb-3">
+      {% for card in cards %}
+        <div class="col-sm-6 col-lg">
+          <div class="card h-100">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-start gap-2">
+                <div>
+                  <div class="fw-bold">{{ card.label }}</div>
+                  <div class="text-secondary small">{{ card.question }}</div>
+                </div>
+                <span class="badge text-bg-{{ card.state_color }} flex-shrink-0">{{ card.state_label }}</span>
+              </div>
+              <div class="d-flex align-items-baseline gap-2 my-2">
+                <span class="three-c-score text-{{ card.state_color }}">
+                  {% if card.score is None %}N/A{% else %}{{ card.score }}%{% endif %}
+                </span>
+                {% if card.delta is not None %}
+                  <span class="small {% if card.delta > 0 %}text-green{% elif card.delta < 0 %}text-red{% else %}text-secondary{% endif %}"
+                        title="{% trans 'Change since the previous day' %}">
+                    {% if card.delta > 0 %}<i class="mdi mdi-arrow-up" aria-hidden="true"></i>+{{ card.delta }}{% elif card.delta < 0 %}<i class="mdi mdi-arrow-down" aria-hidden="true"></i>{{ card.delta }}{% else %}±0{% endif %}
+                  </span>
+                {% endif %}
+              </div>
+              <div class="three-c-sparkline mb-2">
+                <canvas data-sparkline="{{ forloop.counter0 }}" aria-label="{{ card.label }} {% trans '90-day trend' %}" role="img"></canvas>
+              </div>
+              {% for name, failures, total in card.sub_metrics %}
+                <div class="three-c-sub d-flex justify-content-between text-secondary">
+                  <span>{{ name }}</span>
+                  <span>{% if total %}{{ failures }} / {{ total }} {% trans "failed" %}{% else %}N/A{% endif %}</span>
+                </div>
+              {% endfor %}
+              {% if card.key == 'relationship' and filtered %}
+                <div class="three-c-sub text-secondary fst-italic mt-1">{% trans "Not affected by the filters" %}</div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+    {# Trend #}
+    <div class="card mb-3">
+      <div class="card-header">
+        <h2 class="card-title">{% trans "Health trend (last 90 days)" %}</h2>
+      </div>
+      <div class="card-body">
+        <div class="three-c-trend"><canvas id="three-c-trend" aria-label="{% trans 'Health trend' %}" role="img"></canvas></div>
+      </div>
+    </div>
+
+    {# One findings table per KPI #}
+    {% for findings in findings_tables %}
+      <div class="card mb-3">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <div>
+            <h2 class="card-title mb-0">
+              {{ findings.label }}
+              <span class="badge text-bg-secondary ms-1">{{ findings.count }}</span>
+            </h2>
+            <div class="text-secondary small">{{ findings.question }}</div>
+          </div>
+          <a href="{{ findings.export_url }}" class="btn btn-sm btn-outline-secondary">
+            <i class="mdi mdi-download" aria-hidden="true"></i> {% trans "Export CSV" %}
+          </a>
+        </div>
+        {% htmx_table 'plugins:service_specification:threecfinding_list' kpi=findings.kpi snapshot_id=latest.pk ci_type=ci_types tenant_id=tenant_ids %}
+      </div>
+    {% endfor %}
+
+    {{ chart|json_script:"three-c-chart" }}
+    <script src="{% static 'service_specification/vendor/chart.umd.min.js' %}"></script>
+    <script>
+      (function () {
+        var chart = JSON.parse(document.getElementById('three-c-chart').textContent);
+        // NetBox sets data-bs-theme on <html> (see offerings_tree.html).
+        var dark = document.documentElement.getAttribute('data-bs-theme') === 'dark';
+        var muted = dark ? '#adb5bd' : '#6c757d';
+        var grid = dark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.08)';
+        Chart.defaults.color = muted;
+
+        // One sparkline per KPI card (chart.cards is in card order).
+        document.querySelectorAll('canvas[data-sparkline]').forEach(function (canvas) {
+          var card = chart.cards[parseInt(canvas.dataset.sparkline, 10)];
+          new Chart(canvas, {
+            type: 'line',
+            data: {
+              labels: chart.labels,
+              datasets: [{ data: card.data, borderColor: card.color, borderWidth: 2, pointRadius: 0, tension: 0.3, spanGaps: true }],
+            },
+            options: {
+              maintainAspectRatio: false,
+              animation: false,
+              plugins: { legend: { display: false }, tooltip: { enabled: chart.labels.length > 1, intersect: false, mode: 'index' } },
+              scales: { x: { display: false }, y: { display: false, suggestedMin: 0, suggestedMax: 100 } },
+            },
+          });
+        });
+
+        new Chart(document.getElementById('three-c-trend'), {
+          type: 'line',
+          data: {
+            labels: chart.labels,
+            datasets: chart.series.map(function (s) {
+              return {
+                label: s.label,
+                data: s.data,
+                borderColor: s.color,
+                backgroundColor: s.color,
+                borderWidth: s.label === 'Composite' ? 3 : 2,
+                borderDash: s.label === 'Composite' ? [6, 4] : [],
+                pointRadius: chart.labels.length > 30 ? 0 : 3,
+                tension: 0.2,
+                spanGaps: true,
+              };
+            }),
+          },
+          options: {
+            maintainAspectRatio: false,
+            interaction: { intersect: false, mode: 'index' },
+            plugins: {
+              legend: { position: 'bottom' },
+              tooltip: { callbacks: { label: function (ctx) { return ctx.dataset.label + ': ' + (ctx.parsed.y === null ? 'N/A' : ctx.parsed.y + '%'); } } },
+            },
+            scales: {
+              x: { grid: { color: grid } },
+              y: { min: 0, max: 100, grid: { color: grid }, ticks: { callback: function (v) { return v + '%'; } } },
+            },
+          },
+        });
+      })();
+    </script>
+  {% endif %}
+{% endblock content %}

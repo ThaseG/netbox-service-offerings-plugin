@@ -42,5 +42,11 @@ router.register('technical-ci/clusters', views.TechnicalCIClusterViewSet, basena
 router.register(
     'technical-ci/cluster-groups', views.TechnicalCIClusterGroupViewSet, basename='technical-ci-cluster-group'
 )
+# 3C: rules and the settings singleton are editable; snapshots and
+# findings are written only by the health job, so read-only here.
+router.register('3c-rules', views.ThreeCRuleViewSet)
+router.register('3c-settings', views.ThreeCSettingsViewSet)
+router.register('3c-snapshots', views.ThreeCSnapshotViewSet)
+router.register('3c-findings', views.ThreeCFindingViewSet)
 
 urlpatterns = router.urls

@@ -26,6 +26,8 @@ __all__ = (
     'AppServiceRecoveryPanel',
     'AppServiceOrganizationPanel',
     'ServiceSpecificationInfoPanel',
+    'ThreeCRulePanel',
+    'ThreeCSnapshotPanel',
     'CommentsPanel',
 )
 
@@ -299,3 +301,26 @@ class ServiceSpecificationInfoPanel(ObjectAttributesPanel):
                 ),
             ]
         return ctx
+
+
+class ThreeCRulePanel(ObjectAttributesPanel):
+    name = attrs.TextAttr('name', label=_('Name'))
+    rule_type = attrs.ChoiceAttr('rule_type', label=_('Rule Type'))
+    ci_type = attrs.ChoiceAttr('ci_type', label=_('CI Class'))
+    parameter = attrs.TextAttr('parameter_label', label=_('Parameter'))
+    condition = attrs.ChoiceAttr('condition', label=_('Condition'))
+    value = attrs.TextAttr('value', label=_('Value'))
+    enabled = attrs.BooleanAttr('enabled', label=_('Enabled'))
+    description = attrs.TextAttr('description', label=_('Description'))
+    tags = attrs.RelatedObjectListAttr('tags', label=_('Tags'), linkify=True)
+
+
+class ThreeCSnapshotPanel(ObjectAttributesPanel):
+    created = attrs.DateTimeAttr('created', label=_('Created'))
+    completeness = attrs.NumericAttr('completeness', label=_('Completeness (%)'))
+    correctness = attrs.NumericAttr('correctness', label=_('Correctness (%)'))
+    compliance = attrs.NumericAttr('compliance', label=_('Compliance (%)'))
+    composite = attrs.NumericAttr('composite', label=_('Composite (%)'))
+    relationship_health = attrs.NumericAttr('relationship_health', label=_('Relationship Health (%)'))
+    ci_count = attrs.NumericAttr('ci_count', label=_('CIs Evaluated'))
+    lifecycle_checks = attrs.BooleanAttr('lifecycle_checks', label=_('Lifecycle Checks'))

@@ -1,8 +1,9 @@
 from dcim.api.views import DeviceViewSet
-from netbox.api.viewsets import NetBoxModelViewSet
+from netbox.api.viewsets import NetBoxModelViewSet, NetBoxReadOnlyModelViewSet
 from virtualization.api.views import ClusterGroupViewSet, ClusterViewSet, VirtualMachineViewSet
 
 from service_specification import filtersets, models
+from service_specification.jobs import ensure_scheduled
 
 from . import serializers
 
@@ -137,3 +138,51 @@ class TechnicalCIClusterViewSet(ClusterViewSet):
 
 class TechnicalCIClusterGroupViewSet(ClusterGroupViewSet):
     filterset_class = filtersets.TechnicalCIClusterGroupFilterSet
+
+
+#
+# 3C
+#
+
+
+class ThreeCRuleViewSet(NetBoxModelViewSet):
+    queryset = models.ThreeCRule.objects.all()
+    serializer_class = serializers.ThreeCRuleSerializer
+    filterset_class = filtersets.ThreeCRuleFilterSet
+
+
+class ThreeCSettingsViewSet(NetBoxModelViewSet):
+    """The ThreeCSettings singleton: list/retrieve/update only (it always
+    exists — the first request creates it with defaults)."""
+
+    queryset = models.ThreeCSettings.objects.all()
+    serializer_class = serializers.ThreeCSettingsSerializer
+    filterset_class = filtersets.ThreeCSettingsFilterSet
+    http_method_names = ['get', 'put', 'patch', 'head', 'options']
+
+    def initial(self, request, *args, **kwargs):
+        # After authentication/permission checks, so anonymous requests
+        # can't create the row.
+        super().initial(request, *args, **kwargs)
+        models.ThreeCSettings.load()
+
+    def perform_update(self, serializer):
+        super().perform_update(serializer)
+        # Move the daily job if its run time changed. Best effort: the
+        # report re-checks the schedule on every view anyway.
+        try:
+            ensure_scheduled(serializer.instance)
+        except Exception:
+            pass
+
+
+class ThreeCSnapshotViewSet(NetBoxReadOnlyModelViewSet):
+    queryset = models.ThreeCSnapshot.objects.all()
+    serializer_class = serializers.ThreeCSnapshotSerializer
+    filterset_class = filtersets.ThreeCSnapshotFilterSet
+
+
+class ThreeCFindingViewSet(NetBoxReadOnlyModelViewSet):
+    queryset = models.ThreeCFinding.objects.select_related('tenant', 'snapshot')
+    serializer_class = serializers.ThreeCFindingSerializer
+    filterset_class = filtersets.ThreeCFindingFilterSet

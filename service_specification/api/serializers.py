@@ -19,6 +19,10 @@ from service_specification.models import (
     Portfolio,
     Service,
     ServiceOffering,
+    ThreeCFinding,
+    ThreeCRule,
+    ThreeCSettings,
+    ThreeCSnapshot,
     VirtualMachineServiceInfo,
 )
 
@@ -41,6 +45,10 @@ __all__ = (
     'VirtualMachineServiceInfoSerializer',
     'ClusterServiceInfoSerializer',
     'ClusterGroupServiceInfoSerializer',
+    'ThreeCRuleSerializer',
+    'ThreeCSettingsSerializer',
+    'ThreeCSnapshotSerializer',
+    'ThreeCFindingSerializer',
 )
 
 
@@ -193,3 +201,46 @@ class ClusterGroupServiceInfoSerializer(_NoDisplayURLMixin, NetBoxModelSerialize
         model = ClusterGroupServiceInfo
         fields = '__all__'
         brief_fields = ('id', 'url', 'display', 'cluster_group')
+
+
+#
+# 3C
+#
+
+
+class ThreeCRuleSerializer(NetBoxModelSerializer):
+    class Meta:
+        model = ThreeCRule
+        fields = '__all__'
+        brief_fields = ('id', 'url', 'display', 'name', 'rule_type', 'ci_type')
+
+
+# Neither the settings singleton nor findings have a detail page of their
+# own (see _NoDisplayURLMixin).
+class ThreeCSettingsSerializer(_NoDisplayURLMixin, NetBoxModelSerializer):
+    class Meta:
+        model = ThreeCSettings
+        fields = '__all__'
+        brief_fields = ('id', 'url', 'display')
+
+
+class ThreeCSnapshotSerializer(NetBoxModelSerializer):
+    class Meta:
+        model = ThreeCSnapshot
+        fields = '__all__'
+        brief_fields = ('id', 'url', 'display', 'created', 'composite')
+
+
+class ThreeCFindingSerializer(_NoDisplayURLMixin, NetBoxModelSerializer):
+    # The failing CI's own web page.
+    ci_url = serializers.SerializerMethodField(read_only=True)
+
+    class Meta:
+        model = ThreeCFinding
+        fields = '__all__'
+        brief_fields = ('id', 'url', 'display', 'kpi', 'ci_type', 'ci_id', 'ci_name')
+
+    def get_ci_url(self, obj):
+        request = self.context.get('request')
+        url = obj.get_absolute_url()
+        return request.build_absolute_uri(url) if request else url

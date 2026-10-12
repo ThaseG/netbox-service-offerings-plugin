@@ -1,17 +1,26 @@
 import json
 from dataclasses import dataclass
+from datetime import timedelta
 
 from dcim.models import Device
-from django.shortcuts import get_object_or_404
-from django.views.generic import TemplateView
+from django.contrib import messages
+from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
+from django.utils import timezone
+from django.utils.html import format_html
+from django.views.generic import TemplateView, View
+from netbox.object_actions import BulkExport, DeleteObject
 from netbox.ui.layout import SimpleLayout
 from netbox.ui.panels import ObjectsTablePanel
 from netbox.views import generic
 from tenancy.models import Tenant, TenantGroup
-from utilities.views import ViewTab, register_model_view
+from utilities.querydict import dict_to_querydict
+from utilities.views import ContentTypePermissionRequiredMixin, ViewTab, register_model_view
 from virtualization.models import Cluster, ClusterGroup, VirtualMachine
 
 from . import filtersets, forms, panels, tables
+from .choices import ThreeCKPIChoices
+from .jobs import ThreeCHealthJob, ensure_scheduled
 from .models import (
     MTAT,
     SLA,
@@ -30,8 +39,13 @@ from .models import (
     Portfolio,
     Service,
     ServiceOffering,
+    ThreeCFinding,
+    ThreeCRule,
+    ThreeCSettings,
+    ThreeCSnapshot,
     VirtualMachineServiceInfo,
 )
+from .three_c import KPI_SUB_METRICS, SUB_METRIC_LABELS, aggregate_breakdown, kpi_scores, threshold_state
 from .utils import tenant_offering_filter
 
 
@@ -1180,3 +1194,253 @@ class ProductView(OfferingsTreeView):
     page_title = 'Product View'
     clear_url_name = 'plugins:service_specification:product_view'
     extend_ci = staticmethod(_extend_ci_infra)
+
+
+#
+# 3C (CMDB health)
+#
+
+ThreeCRuleListView, ThreeCRuleView, ThreeCRuleEditView, ThreeCRuleDeleteView = _make_views(
+    ThreeCRule,
+    filtersets.ThreeCRuleFilterSet,
+    forms.ThreeCRuleFilterForm,
+    tables.ThreeCRuleTable,
+    forms.ThreeCRuleForm,
+    layout=SimpleLayout(left_panels=[panels.ThreeCRulePanel()]),
+)
+
+
+# Snapshots and findings are written only by the health job: list/detail/
+# delete for snapshots, list (with CSV export) for findings, nothing else.
+@register_model_view(ThreeCSnapshot, 'list', path='', detail=False)
+class ThreeCSnapshotListView(generic.ObjectListView):
+    queryset = ThreeCSnapshot.objects.all()
+    filterset = filtersets.ThreeCSnapshotFilterSet
+    filterset_form = forms.ThreeCSnapshotFilterForm
+    table = tables.ThreeCSnapshotTable
+    actions = (BulkExport,)
+
+
+@register_model_view(ThreeCSnapshot)
+class ThreeCSnapshotView(generic.ObjectView):
+    queryset = ThreeCSnapshot.objects.all()
+    actions = (DeleteObject,)
+    layout = SimpleLayout(
+        left_panels=[panels.ThreeCSnapshotPanel()],
+        bottom_panels=[
+            ObjectsTablePanel(
+                model='service_specification.threecfinding',
+                title='Findings',
+                filters={'snapshot_id': lambda ctx: ctx['object'].pk},
+                include_columns=['kpi'],
+            ),
+        ],
+    )
+
+
+@register_model_view(ThreeCSnapshot, 'delete')
+class ThreeCSnapshotDeleteView(generic.ObjectDeleteView):
+    queryset = ThreeCSnapshot.objects.all()
+
+
+@register_model_view(ThreeCFinding, 'list', path='', detail=False)
+class ThreeCFindingListView(generic.ObjectListView):
+    queryset = ThreeCFinding.objects.select_related('tenant', 'snapshot')
+    filterset = filtersets.ThreeCFindingFilterSet
+    filterset_form = forms.ThreeCFindingFilterForm
+    table = tables.ThreeCFindingTable
+    actions = (BulkExport,)
+
+
+class ThreeCSettingsEditView(generic.ObjectEditView):
+    """Edits the ThreeCSettings singleton at a fixed URL (no pk) — hence
+    the get_object()/permission overrides: ObjectEditView would otherwise
+    treat a pk-less URL as "add"."""
+
+    queryset = ThreeCSettings.objects.all()
+    form = forms.ThreeCSettingsForm
+
+    def get_required_permission(self):
+        return 'service_specification.change_threecsettings'
+
+    def get_object(self, **kwargs):
+        return ThreeCSettings.load()
+
+    def post(self, request, *args, **kwargs):
+        response = super().post(request, *args, **kwargs)
+        if response.status_code == 302:
+            # Move the daily job if its run time changed.
+            try:
+                ensure_scheduled()
+            except Exception as e:
+                messages.warning(request, f'Settings saved, but the daily 3C job could not be rescheduled: {e}')
+        return response
+
+
+class ThreeCRunView(ContentTypePermissionRequiredMixin, View):
+    """Queue a one-off health job (the 3C report's "Run now" button)."""
+
+    def get_required_permission(self):
+        return 'service_specification.add_threecsnapshot'
+
+    def post(self, request):
+        job = ThreeCHealthJob.enqueue(user=request.user)
+        messages.success(
+            request,
+            format_html(
+                '3C health calculation queued as <a href="{}">job #{}</a>. Reload this page once it has finished.',
+                job.get_absolute_url(),
+                job.pk,
+            ),
+        )
+        return redirect('plugins:service_specification:three_c_report')
+
+
+class ThreeCReportView(ContentTypePermissionRequiredMixin, View):
+    """The 3C report: KPI cards with sparklines, a 90-day trend, and one
+    findings table per KPI, all narrowed by the CI class / tenant filters.
+
+    Everything shown comes from stored snapshots (see three_c.py) — the
+    scores are re-pooled from each snapshot's raw per-class/per-tenant
+    counts for the current filter, so filtering never re-runs the checks.
+    The three tables are the findings list view embedded via HTMX, so each
+    one pages, sorts and exports on its own.
+    """
+
+    template_name = 'service_specification/three_c_report.html'
+    TREND_DAYS = 90
+    KPIS = (
+        (ThreeCKPIChoices.KPI_COMPLETENESS, 'Completeness', 'Do we have all the information we need?', '#2196f3'),
+        (ThreeCKPIChoices.KPI_CORRECTNESS, 'Correctness', 'Is the data up to date and accurate?', '#9c27b0'),
+        (ThreeCKPIChoices.KPI_COMPLIANCE, 'Compliance', 'Does the data adhere to standards?', '#009688'),
+        ('composite', 'Composite', 'Average of the three KPIs', '#ff9800'),
+    )
+    STATES = {
+        'best': ('Best', 'green'),
+        'at_risk': ('At Risk', 'orange'),
+        'critical': ('Critical', 'red'),
+        None: ('N/A', 'secondary'),
+    }
+
+    def get_required_permission(self):
+        return 'service_specification.view_threecsnapshot'
+
+    def get(self, request):
+        form = forms.ThreeCReportFilterForm(request.GET or None)
+        filters = form.cleaned_data if form.is_valid() else {}
+        ci_types = list(filters.get('ci_type') or [])
+        tenant_ids = [str(tenant.pk) for tenant in filters.get('tenant_id') or []]
+        settings = ThreeCSettings.load()
+
+        try:
+            scheduled_job = ensure_scheduled(settings)
+        except Exception as e:
+            # Redis/worker trouble shouldn't take the report itself down.
+            scheduled_job = None
+            messages.warning(request, f'The daily 3C health job could not be scheduled: {e}')
+
+        latest = ThreeCSnapshot.objects.order_by('-created').first()
+        history = self._daily_history()
+        per_snapshot = [
+            (snapshot, aggregate_breakdown(snapshot.breakdown, ci_types, tenant_ids)) for snapshot in history
+        ]
+        scores = [{**kpi_scores(totals), 'relationship': s.relationship_health} for s, totals in per_snapshot]
+
+        cards = []
+        if latest:
+            latest_totals = aggregate_breakdown(latest.breakdown, ci_types, tenant_ids)
+            latest_scores = {**kpi_scores(latest_totals), 'relationship': latest.relationship_health}
+            # Day-over-day change, against the last snapshot of an earlier day.
+            latest_day = timezone.localtime(latest.created).date()
+            previous = None
+            for snapshot, snapshot_scores in zip(history, scores):
+                if timezone.localtime(snapshot.created).date() < latest_day:
+                    previous = snapshot_scores
+            for key, label, question, color in self.KPIS:
+                sub_metrics = [
+                    (SUB_METRIC_LABELS[s], *latest_totals.get(s, (0, 0))) for s in KPI_SUB_METRICS.get(key, ())
+                ]
+                cards.append(
+                    self._card(key, label, question, color, latest_scores[key], previous, settings, scores, sub_metrics)
+                )
+            cards.append(
+                self._card(
+                    'relationship',
+                    'Relationship Health',
+                    'Are the service relationships intact?',
+                    '#607d8b',
+                    latest_scores['relationship'],
+                    previous,
+                    settings,
+                    scores,
+                    [(SUB_METRIC_LABELS[s], *counts) for s, counts in latest.relationship_breakdown.items()],
+                )
+            )
+
+        chart = {
+            'labels': [timezone.localtime(snapshot.created).strftime('%Y-%m-%d') for snapshot in history],
+            'series': [
+                {'label': label, 'color': color, 'data': [s[key] for s in scores]}
+                for key, label, _question, color in self.KPIS
+            ],
+            'cards': [{'color': card['color'], 'data': card['sparkline']} for card in cards],
+        }
+
+        findings_tables = []
+        if latest:
+            for kpi, label, question, _color in self.KPIS[:3]:
+                params = {'snapshot_id': latest.pk, 'kpi': kpi, 'ci_type': ci_types, 'tenant_id': tenant_ids}
+                findings_tables.append(
+                    {
+                        'kpi': kpi,
+                        'label': label,
+                        'question': question,
+                        'count': filtersets.ThreeCFindingFilterSet(
+                            dict_to_querydict(params), ThreeCFinding.objects.all()
+                        ).qs.count(),
+                        'export_url': f'{reverse("plugins:service_specification:threecfinding_list")}?'
+                        f'{dict_to_querydict({**params, "export": "table"}).urlencode()}',
+                    }
+                )
+
+        return render(
+            request,
+            self.template_name,
+            {
+                'filter_form': form,
+                'filtered': bool(ci_types or tenant_ids),
+                'ci_types': ci_types,
+                'tenant_ids': tenant_ids,
+                'latest': latest,
+                'cards': cards,
+                'chart': chart,
+                'findings_tables': findings_tables,
+                'scheduled_job': scheduled_job,
+                'last_job': ThreeCHealthJob.get_jobs().order_by('-created').first(),
+            },
+        )
+
+    def _daily_history(self):
+        """The last snapshot of each day over the trend window, oldest first."""
+        since = timezone.now() - timedelta(days=self.TREND_DAYS)
+        by_day = {}
+        for snapshot in ThreeCSnapshot.objects.filter(created__gte=since).order_by('created'):
+            by_day[timezone.localtime(snapshot.created).date()] = snapshot
+        return list(by_day.values())
+
+    def _card(self, key, label, question, color, score, previous, settings, scores, sub_metrics):
+        threshold_key = key if key in ThreeCSettings.THRESHOLD_KEYS else 'composite'
+        state_label, state_color = self.STATES[threshold_state(score, *settings.thresholds(threshold_key))]
+        previous_score = previous.get(key) if previous else None
+        return {
+            'key': key,
+            'label': label,
+            'question': question,
+            'color': color,
+            'score': score,
+            'state_label': state_label,
+            'state_color': state_color,
+            'delta': score - previous_score if score is not None and previous_score is not None else None,
+            'sparkline': [s[key] for s in scores],
+            'sub_metrics': sub_metrics,
+        }

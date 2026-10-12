@@ -1,4 +1,9 @@
+import datetime
+import re
+
 from dcim.models import Device, Manufacturer
+from django.core.exceptions import ValidationError
+from django.core.validators import MaxValueValidator
 from django.db import models
 from django.urls import reverse
 from netbox.choices import ColorChoices
@@ -7,7 +12,14 @@ from tenancy.models import Contact, ContactGroup, Tenant, TenantGroup
 from utilities.fields import ColorField
 from virtualization.models import Cluster, ClusterGroup, VirtualMachine
 
-from .choices import RateCardIntervalChoices, TimeUnitChoices
+from .choices import (
+    RateCardIntervalChoices,
+    ThreeCCITypeChoices,
+    ThreeCConditionChoices,
+    ThreeCKPIChoices,
+    ThreeCRuleTypeChoices,
+    TimeUnitChoices,
+)
 
 # Every FK/M2M field below uses related_name='+': many of these models point
 # at the same core NetBox models (ContactGroup in particular is targeted by
@@ -44,6 +56,10 @@ __all__ = (
     'VirtualMachineServiceInfo',
     'ClusterServiceInfo',
     'ClusterGroupServiceInfo',
+    'ThreeCRule',
+    'ThreeCSettings',
+    'ThreeCSnapshot',
+    'ThreeCFinding',
 )
 
 
@@ -816,3 +832,268 @@ class ClusterGroupServiceInfo(ServiceSpecificationInfoBase):
 
     def get_absolute_url(self):
         return self.cluster_group.get_absolute_url()
+
+
+#
+# 3C (CMDB health: Completeness, Correctness, Compliance)
+#
+# ThreeCRule and ThreeCSettings are the user-editable setup; ThreeCSnapshot
+# and ThreeCFinding are written only by the scheduled health job (see
+# jobs.py / three_c.py) and are read-only everywhere else. Snapshots are
+# kept for the trend charts; findings (one row per failing CI per KPI) are
+# only kept for the most recent snapshot.
+#
+
+
+def _three_c_rule_kpi(rule_type):
+    if rule_type == ThreeCRuleTypeChoices.TYPE_COMPLIANCE:
+        return ThreeCKPIChoices.KPI_COMPLIANCE
+    return ThreeCKPIChoices.KPI_COMPLETENESS
+
+
+class ThreeCRule(NetBoxModel):
+    name = models.CharField(max_length=100, verbose_name='Name')
+    rule_type = models.CharField(max_length=30, choices=ThreeCRuleTypeChoices, verbose_name='Rule Type')
+    ci_type = models.CharField(max_length=30, choices=ThreeCCITypeChoices, verbose_name='CI Class')
+    # A field path resolved by three_c.resolve_parameter() — a plain model
+    # field name ('serial'), 'cf_<name>' for a custom field, or
+    # 'service_info__<field>' for the CI's Service Specification tab.
+    # Validated against three_c.get_parameter_choices() in clean() rather
+    # than via static `choices`, since custom fields come and go at runtime.
+    parameter = models.CharField(max_length=100, verbose_name='Parameter')
+    condition = models.CharField(
+        max_length=30,
+        choices=ThreeCConditionChoices,
+        default=ThreeCConditionChoices.CONDITION_NOT_EMPTY,
+        verbose_name='Condition',
+    )
+    value = models.CharField(max_length=500, blank=True, verbose_name='Value')
+    enabled = models.BooleanField(default=True, verbose_name='Enabled')
+    description = models.CharField(max_length=200, blank=True, verbose_name='Description')
+
+    class Meta:
+        ordering = ('ci_type', 'rule_type', 'name')
+        verbose_name = '3C Rule'
+        verbose_name_plural = '3C Rules'
+
+    def __str__(self):
+        return self.name
+
+    def get_absolute_url(self):
+        return reverse(f'plugins:service_specification:{self._meta.model_name}', args=[self.pk])
+
+    @property
+    def kpi(self):
+        return _three_c_rule_kpi(self.rule_type)
+
+    def get_rule_type_color(self):
+        return ThreeCRuleTypeChoices.colors.get(self.rule_type)
+
+    @property
+    def parameter_label(self):
+        # Imported here: three_c imports this module.
+        from .three_c import get_parameter_label
+
+        return get_parameter_label(self.ci_type, self.parameter)
+
+    def clean(self):
+        super().clean()
+        from .three_c import get_parameter_choices
+
+        if self.ci_type and self.parameter:
+            valid = {key for key, _label in get_parameter_choices(self.ci_type)}
+            if self.parameter not in valid:
+                raise ValidationError(
+                    {'parameter': f'"{self.parameter}" is not a parameter of {self.get_ci_type_display()}.'}
+                )
+
+        # Completeness rules only ever ask "is this filled in?" — any other
+        # condition/value would silently be ignored, so normalize instead.
+        if self.rule_type in (ThreeCRuleTypeChoices.TYPE_REQUIRED, ThreeCRuleTypeChoices.TYPE_RECOMMENDED):
+            self.condition = ThreeCConditionChoices.CONDITION_NOT_EMPTY
+            self.value = ''
+            return
+
+        if self.condition in ThreeCConditionChoices.VALUE_REQUIRED and not self.value:
+            raise ValidationError({'value': 'This condition needs a value to compare against.'})
+        if self.condition not in ThreeCConditionChoices.VALUE_REQUIRED:
+            self.value = ''
+        if self.condition == ThreeCConditionChoices.CONDITION_REGEX:
+            try:
+                re.compile(self.value)
+            except re.error as e:
+                raise ValidationError({'value': f'Invalid regular expression: {e}'})
+
+
+class ThreeCSettings(NetBoxModel):
+    """Singleton (always pk=1 — see load()). Thresholds are failure-rate
+    percentages: below `lower` is Best, above `upper` is Critical, anything
+    in between (inclusive) is At Risk."""
+
+    completeness_lower = models.PositiveSmallIntegerField(
+        default=5, validators=[MaxValueValidator(100)], verbose_name='Completeness: Lower Threshold (%)'
+    )
+    completeness_upper = models.PositiveSmallIntegerField(
+        default=10, validators=[MaxValueValidator(100)], verbose_name='Completeness: Upper Threshold (%)'
+    )
+    correctness_lower = models.PositiveSmallIntegerField(
+        default=5, validators=[MaxValueValidator(100)], verbose_name='Correctness: Lower Threshold (%)'
+    )
+    correctness_upper = models.PositiveSmallIntegerField(
+        default=10, validators=[MaxValueValidator(100)], verbose_name='Correctness: Upper Threshold (%)'
+    )
+    compliance_lower = models.PositiveSmallIntegerField(
+        default=5, validators=[MaxValueValidator(100)], verbose_name='Compliance: Lower Threshold (%)'
+    )
+    compliance_upper = models.PositiveSmallIntegerField(
+        default=10, validators=[MaxValueValidator(100)], verbose_name='Compliance: Upper Threshold (%)'
+    )
+    composite_lower = models.PositiveSmallIntegerField(
+        default=5, validators=[MaxValueValidator(100)], verbose_name='Composite: Lower Threshold (%)'
+    )
+    composite_upper = models.PositiveSmallIntegerField(
+        default=10, validators=[MaxValueValidator(100)], verbose_name='Composite: Upper Threshold (%)'
+    )
+    relationship_lower = models.PositiveSmallIntegerField(
+        default=5, validators=[MaxValueValidator(100)], verbose_name='Relationship Health: Lower Threshold (%)'
+    )
+    relationship_upper = models.PositiveSmallIntegerField(
+        default=10, validators=[MaxValueValidator(100)], verbose_name='Relationship Health: Upper Threshold (%)'
+    )
+    job_time = models.TimeField(
+        default=datetime.time(2, 0),
+        verbose_name='Daily Run Time',
+        help_text='Local time (NetBox TIME_ZONE) at which the 3C health job runs every day.',
+    )
+    snapshot_retention_days = models.PositiveIntegerField(
+        default=400,
+        verbose_name='Snapshot Retention (days)',
+        help_text='Snapshots older than this are deleted by the health job. The report charts use the last 90 days.',
+    )
+
+    THRESHOLD_KEYS = ('completeness', 'correctness', 'compliance', 'composite', 'relationship')
+
+    class Meta:
+        ordering = ('pk',)
+        verbose_name = '3C Settings'
+        verbose_name_plural = '3C Settings'
+
+    def __str__(self):
+        return '3C Settings'
+
+    def get_absolute_url(self):
+        return reverse('plugins:service_specification:three_c_report')
+
+    def clean(self):
+        super().clean()
+        errors = {}
+        for key in self.THRESHOLD_KEYS:
+            lower, upper = getattr(self, f'{key}_lower'), getattr(self, f'{key}_upper')
+            if lower is not None and upper is not None and lower > upper:
+                errors[f'{key}_upper'] = 'Upper threshold must be greater than or equal to the lower threshold.'
+        if errors:
+            raise ValidationError(errors)
+
+    def save(self, *args, **kwargs):
+        self.pk = 1
+        super().save(*args, **kwargs)
+
+    @classmethod
+    def load(cls):
+        obj, _created = cls.objects.get_or_create(pk=1)
+        return obj
+
+    def thresholds(self, key):
+        return getattr(self, f'{key}_lower'), getattr(self, f'{key}_upper')
+
+
+class ThreeCSnapshot(NetBoxModel):
+    # Health percentages (100 - failure rate), each null when nothing was
+    # evaluated for that KPI (shown as N/A).
+    completeness = models.PositiveSmallIntegerField(blank=True, null=True, verbose_name='Completeness (%)')
+    correctness = models.PositiveSmallIntegerField(blank=True, null=True, verbose_name='Correctness (%)')
+    compliance = models.PositiveSmallIntegerField(blank=True, null=True, verbose_name='Compliance (%)')
+    composite = models.PositiveSmallIntegerField(blank=True, null=True, verbose_name='Composite (%)')
+    relationship_health = models.PositiveSmallIntegerField(
+        blank=True, null=True, verbose_name='Relationship Health (%)'
+    )
+    ci_count = models.PositiveIntegerField(default=0, verbose_name='CIs Evaluated')
+    # {ci_type: {tenant_id or '': {sub_metric: [failures, total]}}} — raw
+    # counts, so the report can re-pool them for any CI class/tenant filter
+    # (the stored percentages above are the unfiltered totals).
+    breakdown = models.JSONField(default=dict, verbose_name='Breakdown')
+    # {sub_metric: [failures, total]} for the plugin's own relationships.
+    relationship_breakdown = models.JSONField(default=dict, verbose_name='Relationship Breakdown')
+    lifecycle_checks = models.BooleanField(
+        default=False,
+        verbose_name='Lifecycle Checks',
+        help_text='Whether netbox-lifecycle was installed, so the lifecycle and support contract checks ran.',
+    )
+
+    class Meta:
+        ordering = ('-created',)
+        verbose_name = '3C Snapshot'
+        verbose_name_plural = '3C Snapshots'
+
+    def __str__(self):
+        return f'3C Snapshot #{self.pk}'
+
+    def get_absolute_url(self):
+        return reverse(f'plugins:service_specification:{self._meta.model_name}', args=[self.pk])
+
+
+class ThreeCFinding(NetBoxModel):
+    """One failing CI for one KPI, with every failure for that KPI joined
+    into a single row (e.g. "Missing (required): Serial number, Site")."""
+
+    snapshot = models.ForeignKey(
+        to=ThreeCSnapshot,
+        on_delete=models.CASCADE,
+        related_name='findings',
+        verbose_name='Snapshot',
+    )
+    kpi = models.CharField(max_length=30, choices=ThreeCKPIChoices, verbose_name='KPI')
+    ci_type = models.CharField(max_length=30, choices=ThreeCCITypeChoices, verbose_name='CI Class')
+    # Plain id + type rather than a GenericForeignKey: the CI may be deleted
+    # before the next run, and the row should still read sensibly until then.
+    ci_id = models.PositiveBigIntegerField(verbose_name='CI ID')
+    ci_name = models.CharField(max_length=255, verbose_name='CI')
+    tenant = models.ForeignKey(
+        to=Tenant,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        blank=True,
+        null=True,
+        verbose_name='Tenant',
+    )
+    support_group = models.CharField(max_length=500, blank=True, verbose_name='Support Group')
+    ci_last_updated = models.DateTimeField(blank=True, null=True, verbose_name='Last Updated')
+    # e.g. ['required', 'recommended'] / ['stale', 'orphan'] / ['audit']
+    sub_metrics = models.JSONField(default=list, verbose_name='Sub-metrics')
+    failures = models.JSONField(default=list, verbose_name='Failures')
+
+    CI_VIEW_NAMES = {
+        ThreeCCITypeChoices.CI_DEVICE: 'dcim:device',
+        ThreeCCITypeChoices.CI_VIRTUAL_MACHINE: 'virtualization:virtualmachine',
+        ThreeCCITypeChoices.CI_CLUSTER: 'virtualization:cluster',
+        ThreeCCITypeChoices.CI_CLUSTER_GROUP: 'virtualization:clustergroup',
+    }
+
+    class Meta:
+        ordering = ('kpi', 'ci_type', 'ci_name')
+        verbose_name = '3C Finding'
+        verbose_name_plural = '3C Findings'
+
+    def __str__(self):
+        return f'{self.ci_name} ({self.get_kpi_display()})'
+
+    def get_absolute_url(self):
+        # Findings have no page of their own — they point at the failing CI.
+        return reverse(self.CI_VIEW_NAMES[self.ci_type], args=[self.ci_id])
+
+    def get_kpi_color(self):
+        return ThreeCKPIChoices.colors.get(self.kpi)
+
+    @property
+    def failures_display(self):
+        return '; '.join(self.failures)

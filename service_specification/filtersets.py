@@ -5,9 +5,11 @@ from django.db.models import Q
 from netbox.filtersets import NetBoxModelFilterSet
 from tenancy.filtersets import TenantFilterSet
 from tenancy.models import Contact, ContactGroup, Tenant, TenantGroup
+from utilities.filters import MultiValueCharFilter
 from virtualization import filtersets as virtualization_filtersets
 from virtualization.models import Cluster, ClusterGroup, VirtualMachine
 
+from .choices import ThreeCCITypeChoices, ThreeCConditionChoices, ThreeCKPIChoices, ThreeCRuleTypeChoices
 from .models import (
     MTAT,
     SLA,
@@ -26,6 +28,10 @@ from .models import (
     Portfolio,
     Service,
     ServiceOffering,
+    ThreeCFinding,
+    ThreeCRule,
+    ThreeCSettings,
+    ThreeCSnapshot,
     VirtualMachineServiceInfo,
 )
 
@@ -53,6 +59,10 @@ __all__ = (
     'TechnicalCIVirtualMachineFilterSet',
     'TechnicalCIClusterFilterSet',
     'TechnicalCIClusterGroupFilterSet',
+    'ThreeCRuleFilterSet',
+    'ThreeCSettingsFilterSet',
+    'ThreeCSnapshotFilterSet',
+    'ThreeCFindingFilterSet',
 )
 
 
@@ -881,3 +891,78 @@ class TechnicalCIClusterFilterSet(TechnicalCIFilterSetMixin, virtualization_filt
 
 class TechnicalCIClusterGroupFilterSet(TechnicalCIFilterSetMixin, virtualization_filtersets.ClusterGroupFilterSet):
     pass
+
+
+#
+# 3C
+#
+
+
+class ThreeCRuleFilterSet(NetBoxModelFilterSet):
+    rule_type = django_filters.MultipleChoiceFilter(choices=ThreeCRuleTypeChoices)
+    ci_type = django_filters.MultipleChoiceFilter(choices=ThreeCCITypeChoices)
+    condition = django_filters.MultipleChoiceFilter(choices=ThreeCConditionChoices)
+
+    class Meta:
+        model = ThreeCRule
+        fields = ('id', 'name', 'rule_type', 'ci_type', 'parameter', 'condition', 'value', 'enabled')
+
+    def search(self, queryset, name, value):
+        return queryset.filter(
+            Q(name__icontains=value)
+            | Q(parameter__icontains=value)
+            | Q(value__icontains=value)
+            | Q(description__icontains=value)
+        )
+
+
+class ThreeCSettingsFilterSet(NetBoxModelFilterSet):
+    class Meta:
+        model = ThreeCSettings
+        fields = ('id',)
+
+    def search(self, queryset, name, value):
+        return queryset
+
+
+class ThreeCSnapshotFilterSet(NetBoxModelFilterSet):
+    class Meta:
+        model = ThreeCSnapshot
+        fields = ('id', 'lifecycle_checks')
+
+    def search(self, queryset, name, value):
+        return queryset
+
+
+class ThreeCFindingFilterSet(NetBoxModelFilterSet):
+    snapshot_id = django_filters.ModelMultipleChoiceFilter(
+        field_name='snapshot',
+        queryset=ThreeCSnapshot.objects.all(),
+        label='Snapshot (ID)',
+    )
+    kpi = django_filters.MultipleChoiceFilter(choices=ThreeCKPIChoices)
+    ci_type = django_filters.MultipleChoiceFilter(choices=ThreeCCITypeChoices)
+    tenant_id = django_filters.ModelMultipleChoiceFilter(
+        field_name='tenant',
+        queryset=Tenant.objects.all(),
+        label='Tenant (ID)',
+    )
+    # e.g. ?sub_metric=stale&sub_metric=duplicate — sub_metrics is a JSON list.
+    sub_metric = MultiValueCharFilter(method='filter_sub_metric', label='Sub-metric')
+
+    class Meta:
+        model = ThreeCFinding
+        fields = ('id', 'kpi', 'ci_type', 'ci_id', 'ci_name', 'support_group')
+
+    def search(self, queryset, name, value):
+        return queryset.filter(
+            Q(ci_name__icontains=value) | Q(support_group__icontains=value) | Q(failures__icontains=value)
+        )
+
+    def filter_sub_metric(self, queryset, name, value):
+        if not value:
+            return queryset
+        query = Q()
+        for sub_metric in value:
+            query |= Q(sub_metrics__contains=[sub_metric])
+        return queryset.filter(query)

@@ -18,7 +18,11 @@ from .models import (
     Portfolio,
     Service,
     ServiceOffering,
+    ThreeCFinding,
+    ThreeCRule,
+    ThreeCSnapshot,
 )
+from .three_c import get_parameter_label
 
 __all__ = (
     'ContractTable',
@@ -36,6 +40,9 @@ __all__ = (
     'MTATTable',
     'CIFunctionTable',
     'TenantReportTable',
+    'ThreeCRuleTable',
+    'ThreeCSnapshotTable',
+    'ThreeCFindingTable',
 )
 
 
@@ -385,3 +392,126 @@ class TenantReportTable(NetBoxTable):
         if not app_service:
             return '—'
         return format_html('<a href="{}">{}</a>', app_service.get_absolute_url(), app_service.name)
+
+
+#
+# 3C tables
+#
+
+
+class ThreeCRuleTable(NetBoxTable):
+    name = tables.Column(linkify=True)
+    rule_type = columns.ChoiceFieldColumn()
+    ci_type = tables.Column(verbose_name='CI Class')
+    parameter = tables.Column()
+    condition = tables.Column()
+    enabled = columns.BooleanColumn()
+    tags = columns.TagColumn(url_name='plugins:service_specification:threecrule_list')
+
+    class Meta(NetBoxTable.Meta):
+        model = ThreeCRule
+        fields = (
+            'pk',
+            'id',
+            'name',
+            'rule_type',
+            'ci_type',
+            'parameter',
+            'condition',
+            'value',
+            'enabled',
+            'description',
+            'tags',
+            'created',
+            'last_updated',
+            'actions',
+        )
+        default_columns = ('pk', 'name', 'rule_type', 'ci_type', 'parameter', 'condition', 'value', 'enabled')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Parameter labels come from each CI class's field list (plus its
+        # custom fields), so look each class up once per table, not per row.
+        self._parameter_labels = {}
+
+    def render_parameter(self, record):
+        return get_parameter_label(record.ci_type, record.parameter, self._parameter_labels)
+
+    def value_parameter(self, record):
+        return record.parameter
+
+
+class ThreeCSnapshotTable(NetBoxTable):
+    id = tables.Column(linkify=True, verbose_name='Snapshot')
+    lifecycle_checks = columns.BooleanColumn()
+    actions = columns.ActionsColumn(actions=('delete',))
+
+    class Meta(NetBoxTable.Meta):
+        model = ThreeCSnapshot
+        fields = (
+            'pk',
+            'id',
+            'created',
+            'completeness',
+            'correctness',
+            'compliance',
+            'composite',
+            'relationship_health',
+            'ci_count',
+            'lifecycle_checks',
+            'actions',
+        )
+        default_columns = (
+            'id',
+            'created',
+            'completeness',
+            'correctness',
+            'compliance',
+            'composite',
+            'relationship_health',
+            'ci_count',
+        )
+
+
+class ThreeCFindingTable(NetBoxTable):
+    """One failing CI per row for one KPI (the 3C report embeds this table
+    three times, filtered by kpi). Rows link to the CI itself — findings
+    have no page of their own and are replaced by every health job run, so
+    there's nothing to edit or delete here."""
+
+    ci_name = tables.Column(linkify=True, verbose_name='CI')
+    ci_type = tables.Column(verbose_name='Class')
+    kpi = columns.ChoiceFieldColumn(verbose_name='KPI')
+    failures = tables.Column(orderable=False, verbose_name='Failed Sub-metric')
+    sub_metrics = tables.Column(orderable=False, verbose_name='Sub-metrics')
+    ci_last_updated = columns.DateTimeColumn(verbose_name='Last Updated')
+    tenant = tables.Column(linkify=True)
+    snapshot = tables.Column(linkify=True)
+    actions = columns.ActionsColumn(actions=())
+
+    class Meta(NetBoxTable.Meta):
+        model = ThreeCFinding
+        fields = (
+            'ci_name',
+            'ci_type',
+            'kpi',
+            'failures',
+            'sub_metrics',
+            'ci_last_updated',
+            'support_group',
+            'tenant',
+            'snapshot',
+        )
+        default_columns = ('ci_name', 'ci_type', 'failures', 'ci_last_updated', 'support_group', 'tenant')
+
+    def render_failures(self, record):
+        return record.failures_display
+
+    def value_failures(self, record):
+        return record.failures_display
+
+    def render_sub_metrics(self, value):
+        return ', '.join(value)
+
+    def value_sub_metrics(self, value):
+        return ', '.join(value)

@@ -19,14 +19,17 @@ def _item(model_name, link_text):
     )
 
 
-def _report_item(url_name, link_text):
+def _report_item(url_name, link_text, permissions=None):
     # Reports are read-only (no backing model, nothing to add/edit/delete),
-    # so unlike _item() above there's no PluginMenuButton and no
+    # so unlike _item() above there's no PluginMenuButton, and usually no
     # model-specific permission — any authenticated user who can reach the
-    # plugin can view them, the same as the data they're derived from.
+    # plugin can view them, the same as the data they're derived from. 3C
+    # is the exception: it reads stored snapshots, so it needs their view
+    # permission.
     return PluginMenuItem(
         link=f'plugins:service_specification:{url_name}',
         link_text=link_text,
+        permissions=permissions or [],
     )
 
 
@@ -57,6 +60,21 @@ reports_items = (
     _report_item('tenant_report', 'Service List'),
     _report_item('offerings_tree', 'Service View'),
     _report_item('product_view', 'Product View'),
+    _report_item('three_c_report', '3C', permissions=['service_specification.view_threecsnapshot']),
+)
+
+three_c_items = (
+    _item('threecrule', '3C Rules'),
+    PluginMenuItem(
+        link='plugins:service_specification:three_c_settings',
+        link_text='3C Settings',
+        permissions=['service_specification.change_threecsettings'],
+    ),
+    PluginMenuItem(
+        link='plugins:service_specification:threecsnapshot_list',
+        link_text='3C Snapshots',
+        permissions=['service_specification.view_threecsnapshot'],
+    ),
 )
 
 menu = PluginMenu(
@@ -67,5 +85,6 @@ menu = PluginMenu(
         ('Contracts', contract_items),
         ('Support', support_items),
         ('Reports', reports_items),
+        ('3C Setup', three_c_items),
     ),
 )

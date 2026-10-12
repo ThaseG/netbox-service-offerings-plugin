@@ -40,9 +40,18 @@ urlpatterns = [
     path('mtats/<int:pk>/', include(get_model_urls('service_specification', 'mtat'))),
     path('ci-functions/', include(get_model_urls('service_specification', 'cifunction', detail=False))),
     path('ci-functions/<int:pk>/', include(get_model_urls('service_specification', 'cifunction'))),
+    path('3c-rules/', include(get_model_urls('service_specification', 'threecrule', detail=False))),
+    path('3c-rules/<int:pk>/', include(get_model_urls('service_specification', 'threecrule'))),
+    path('3c-snapshots/', include(get_model_urls('service_specification', 'threecsnapshot', detail=False))),
+    path('3c-snapshots/<int:pk>/', include(get_model_urls('service_specification', 'threecsnapshot'))),
+    path('3c-findings/', include(get_model_urls('service_specification', 'threecfinding', detail=False))),
+    # Singleton: edited at a fixed URL, see views.ThreeCSettingsEditView.
+    path('3c-settings/', views.ThreeCSettingsEditView.as_view(), name='three_c_settings'),
     # Reports: neither is a registered model view (see views.py), so these
     # are wired directly rather than via get_model_urls().
     path('reports/tenants/', views.TenantReportView.as_view(), name='tenant_report'),
     path('reports/offerings-tree/', views.OfferingsTreeView.as_view(), name='offerings_tree'),
     path('reports/product-view/', views.ProductView.as_view(), name='product_view'),
+    path('reports/3c/', views.ThreeCReportView.as_view(), name='three_c_report'),
+    path('reports/3c/run/', views.ThreeCRunView.as_view(), name='three_c_run'),
 ]

@@ -5,11 +5,14 @@ from django.db.models import Q
 from netbox.forms import NetBoxModelFilterSetForm, NetBoxModelForm, OrganizationalModelForm, PrimaryModelForm
 from tenancy.forms import TenantFilterForm
 from tenancy.models import Contact, ContactGroup, Tenant, TenantGroup
+from utilities.forms import BOOLEAN_WITH_BLANK_CHOICES
 from utilities.forms.fields import DynamicModelChoiceField, DynamicModelMultipleChoiceField
 from utilities.forms.rendering import FieldSet
-from utilities.forms.widgets import APISelect
+from utilities.forms.utils import add_blank_choice, get_field_value
+from utilities.forms.widgets import APISelect, HTMXSelect
 from virtualization.models import Cluster, ClusterGroup, VirtualMachine
 
+from .choices import ThreeCCITypeChoices, ThreeCConditionChoices, ThreeCKPIChoices, ThreeCRuleTypeChoices
 from .models import (
     MTAT,
     SLA,
@@ -28,8 +31,13 @@ from .models import (
     Portfolio,
     Service,
     ServiceOffering,
+    ThreeCFinding,
+    ThreeCRule,
+    ThreeCSettings,
+    ThreeCSnapshot,
     VirtualMachineServiceInfo,
 )
+from .three_c import get_parameter_choices
 
 __all__ = (
     'ContractForm',
@@ -66,6 +74,12 @@ __all__ = (
     'CIFunctionFilterForm',
     'OfferingsTreeFilterForm',
     'TenantReportFilterForm',
+    'ThreeCRuleForm',
+    'ThreeCSettingsForm',
+    'ThreeCRuleFilterForm',
+    'ThreeCSnapshotFilterForm',
+    'ThreeCFindingFilterForm',
+    'ThreeCReportFilterForm',
 )
 
 
@@ -1366,3 +1380,134 @@ class TenantReportFilterForm(TenantFilterForm):
             name='Service Offering',
         ),
     )
+
+
+#
+# 3C forms
+#
+
+
+class ThreeCRuleForm(NetBoxModelForm):
+    # HTMXSelect re-renders the form whenever the CI class changes, so the
+    # Parameter dropdown only ever lists that class's own parameters (same
+    # mechanism NetBox core uses for scope_type -> scope).
+    ci_type = forms.ChoiceField(
+        choices=add_blank_choice(ThreeCCITypeChoices),
+        widget=HTMXSelect(),
+        label='CI Class',
+    )
+    parameter = forms.ChoiceField(
+        choices=(),
+        label='Parameter',
+        help_text='Field of the CI to check: its own fields, its custom fields, or its Service Specification tab.',
+    )
+
+    fieldsets = (
+        FieldSet('name', 'rule_type', 'ci_type', 'parameter', 'enabled', 'description', 'tags', name='Rule'),
+        FieldSet('condition', 'value', name='Compliance Condition'),
+    )
+
+    class Meta:
+        model = ThreeCRule
+        fields = ('name', 'rule_type', 'ci_type', 'parameter', 'condition', 'value', 'enabled', 'description', 'tags')
+        help_texts = {
+            'rule_type': (
+                'Completeness rules (Required / Recommended) fail a CI whose parameter is empty — the condition '
+                'below is ignored for them. Compliance rules fail a CI whose parameter does not meet the condition.'
+            ),
+            'value': (
+                'Compared case-insensitively against the stored value or its label; for related objects against '
+                'their name, ID or slug. "is one of" / "is not one of" take a comma-separated list. Regex is '
+                'matched against the displayed value.'
+            ),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if ci_type := get_field_value(self, 'ci_type'):
+            self.fields['parameter'].choices = add_blank_choice(get_parameter_choices(ci_type))
+        else:
+            self.fields['parameter'].choices = (('', 'Select a CI class first'),)
+
+
+class ThreeCSettingsForm(NetBoxModelForm):
+    fieldsets = (
+        FieldSet('completeness_lower', 'completeness_upper', name='Completeness Thresholds'),
+        FieldSet('correctness_lower', 'correctness_upper', name='Correctness Thresholds'),
+        FieldSet('compliance_lower', 'compliance_upper', name='Compliance Thresholds'),
+        FieldSet('composite_lower', 'composite_upper', name='Composite Thresholds'),
+        FieldSet('relationship_lower', 'relationship_upper', name='Relationship Health Thresholds'),
+        FieldSet('job_time', 'snapshot_retention_days', name='Health Job'),
+        FieldSet('tags', name='Tags'),
+    )
+
+    class Meta:
+        model = ThreeCSettings
+        fields = (
+            'completeness_lower',
+            'completeness_upper',
+            'correctness_lower',
+            'correctness_upper',
+            'compliance_lower',
+            'compliance_upper',
+            'composite_lower',
+            'composite_upper',
+            'relationship_lower',
+            'relationship_upper',
+            'job_time',
+            'snapshot_retention_days',
+            'tags',
+        )
+        help_texts = {
+            'completeness_lower': 'Failure rate (%) below which the KPI is Best. Above the upper threshold it is '
+            'Critical; in between it is At Risk.',
+        }
+        widgets = {
+            'job_time': forms.TimeInput(attrs={'type': 'time'}),
+        }
+
+
+class ThreeCRuleFilterForm(NetBoxModelFilterSetForm):
+    model = ThreeCRule
+    rule_type = forms.MultipleChoiceField(choices=ThreeCRuleTypeChoices, required=False, label='Rule Type')
+    ci_type = forms.MultipleChoiceField(choices=ThreeCCITypeChoices, required=False, label='CI Class')
+    condition = forms.MultipleChoiceField(choices=ThreeCConditionChoices, required=False, label='Condition')
+    enabled = forms.NullBooleanField(
+        required=False,
+        label='Enabled',
+        widget=forms.Select(choices=BOOLEAN_WITH_BLANK_CHOICES),
+    )
+    fieldsets = (
+        FieldSet('q', 'filter_id', 'tag'),
+        FieldSet('rule_type', 'ci_type', 'condition', 'enabled', name='Rule'),
+    )
+
+
+class ThreeCSnapshotFilterForm(NetBoxModelFilterSetForm):
+    model = ThreeCSnapshot
+
+
+class ThreeCFindingFilterForm(NetBoxModelFilterSetForm):
+    model = ThreeCFinding
+    kpi = forms.MultipleChoiceField(choices=ThreeCKPIChoices, required=False, label='KPI')
+    ci_type = forms.MultipleChoiceField(choices=ThreeCCITypeChoices, required=False, label='CI Class')
+    tenant_id = DynamicModelMultipleChoiceField(queryset=Tenant.objects.all(), required=False, label='Tenant')
+    snapshot_id = DynamicModelMultipleChoiceField(
+        queryset=ThreeCSnapshot.objects.all(),
+        required=False,
+        label='Snapshot',
+    )
+    fieldsets = (
+        FieldSet('q', 'filter_id'),
+        FieldSet('kpi', 'ci_type', 'tenant_id', 'snapshot_id', name='Finding'),
+    )
+
+
+class ThreeCReportFilterForm(forms.Form):
+    """Filters for the 3C report (views.ThreeCReportView): narrow the KPI
+    cards, the trend and the three tables to some CI classes and/or
+    tenants. Cluster Groups have no tenant, so a tenant filter leaves them
+    out."""
+
+    ci_type = forms.MultipleChoiceField(choices=ThreeCCITypeChoices, required=False, label='CI Class')
+    tenant_id = DynamicModelMultipleChoiceField(queryset=Tenant.objects.all(), required=False, label='Tenant')
