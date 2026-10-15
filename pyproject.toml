@@ -6,9 +6,16 @@ build-backend = "setuptools.build_meta"
 name = "netbox-service-specification"
 # Kept in sync with SERVICE_SPECIFICATION_PLUGIN_VERSION in versions.sh — the
 # Code-Review stage of ci-cd.yml fails the build if these two drift apart.
-version = "1.0.1"
+version = "1.0.2"
 description = "Business/Technical Service Offerings (Service Specification) plugin for NetBox"
 requires-python = ">=3.10"
+# Imported directly by jobs.py (advisory lock around the 3C job schedule).
+# NetBox itself already ships it (pinned in its requirements.txt), so it's
+# deliberately unpinned here — a pin of our own could only conflict with
+# whatever version the target NetBox release uses.
+dependencies = [
+    "django-pglocks",
+]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",

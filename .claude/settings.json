@@ -111,7 +111,10 @@
       "Bash(curl -s -o /dev/null -w '%{http_code}\\\\n' \"http://127.0.0.1:8765/plugins/service-specification/reports/3c/?ci_type=device\")",
       "Bash(NETBOX_URL=http://127.0.0.1:8765 NETBOX_SUPERUSER_API_KEY=scratchkey01 NETBOX_SUPERUSER_API_TOKEN=scratchtokensecret0123456789abcdefghijklmn python3 ci/scripts/test-deployment.py)",
       "Bash(echo \"exit=$?\")",
-      "Bash(grep -v \"W004\\\\|WARN\\\\|System check\\\\|imported automatically\\\\|^$\")"
+      "Bash(grep -v \"W004\\\\|WARN\\\\|System check\\\\|imported automatically\\\\|^$\")",
+      "Bash(rm -rf buildcheck)",
+      "Bash(nbvenv/bin/pip wheel *)",
+      "Bash(unzip -p *.whl '*/METADATA')"
     ]
   }
 }
