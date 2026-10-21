@@ -1,4 +1,4 @@
-from dcim.models import Device, DeviceRole, DeviceType, Manufacturer, Site
+from dcim.models import Device, DeviceRole, DeviceType, Manufacturer, Site, VirtualDeviceContext
 from django.urls import reverse
 from rest_framework import status
 from tenancy.models import Tenant
@@ -14,6 +14,7 @@ from service_specification.models import (
     Environment,
     Lifecycle,
     ServiceOffering,
+    VirtualDeviceContextServiceInfo,
     VirtualMachineServiceInfo,
 )
 
@@ -108,6 +109,7 @@ class TechnicalCIAPITestCase(APITestCase):
         'virtualization.view_virtualmachine',
         'virtualization.view_cluster',
         'virtualization.view_clustergroup',
+        'dcim.view_virtualdevicecontext',
     )
 
     # (endpoint basename, ServiceInfo model, its FK field to the CI)
@@ -116,6 +118,7 @@ class TechnicalCIAPITestCase(APITestCase):
         ('technical-ci-virtual-machine', VirtualMachineServiceInfo, 'virtual_machine'),
         ('technical-ci-cluster', ClusterServiceInfo, 'cluster'),
         ('technical-ci-cluster-group', ClusterGroupServiceInfo, 'cluster_group'),
+        ('technical-ci-virtual-device-context', VirtualDeviceContextServiceInfo, 'virtual_device_context'),
     )
 
     @classmethod
@@ -147,11 +150,13 @@ class TechnicalCIAPITestCase(APITestCase):
             )
             group = ClusterGroup.objects.create(name=f'Group {n}', slug=f'group-{n}')
             cluster = Cluster.objects.create(name=f'Cluster {n}', type=cluster_type, group=group)
+            device = Device.objects.create(name=f'Device {n}', site=site, device_type=device_type, role=role)
             cis = {
-                'device': Device.objects.create(name=f'Device {n}', site=site, device_type=device_type, role=role),
+                'device': device,
                 'virtual_machine': VirtualMachine.objects.create(name=f'VM {n}', cluster=cluster),
                 'cluster': cluster,
                 'cluster_group': group,
+                'virtual_device_context': VirtualDeviceContext.objects.create(device=device, name=f'VDC {n}'),
             }
             for _, info_model, field in cls.ENDPOINTS:
                 info_model.objects.create(**{field: cis[field]}).application_services.add(app_service)

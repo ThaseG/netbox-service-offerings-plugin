@@ -1,6 +1,6 @@
 import django_filters
 from dcim import filtersets as dcim_filtersets
-from dcim.models import Device, Manufacturer
+from dcim.models import Device, Manufacturer, VirtualDeviceContext
 from django.db.models import Q
 from netbox.filtersets import NetBoxModelFilterSet
 from tenancy.filtersets import TenantFilterSet
@@ -32,8 +32,10 @@ from .models import (
     ThreeCRule,
     ThreeCSettings,
     ThreeCSnapshot,
+    VirtualDeviceContextServiceInfo,
     VirtualMachineServiceInfo,
 )
+from .utils import tenant_offering_filter
 
 __all__ = (
     'ContractFilterSet',
@@ -54,11 +56,13 @@ __all__ = (
     'VirtualMachineServiceInfoFilterSet',
     'ClusterServiceInfoFilterSet',
     'ClusterGroupServiceInfoFilterSet',
+    'VirtualDeviceContextServiceInfoFilterSet',
     'TenantReportFilterSet',
     'TechnicalCIDeviceFilterSet',
     'TechnicalCIVirtualMachineFilterSet',
     'TechnicalCIClusterFilterSet',
     'TechnicalCIClusterGroupFilterSet',
+    'TechnicalCIVirtualDeviceContextFilterSet',
     'ThreeCRuleFilterSet',
     'ThreeCSettingsFilterSet',
     'ThreeCSnapshotFilterSet',
@@ -489,6 +493,16 @@ class AppServiceFilterSet(NetBoxModelFilterSet):
         queryset=Tenant.objects.all(),
         label='Customer (ID)',
     )
+    # The Application Services a given Tenant's CIs may be assigned to: its
+    # Service Offering is for that Tenant directly *or* via the Tenant's
+    # Group (utils.tenant_offering_filter). Backs the Application Services
+    # dropdown on a CI's Service Specification tab (see
+    # forms._make_service_info_form).
+    available_for_tenant_id = django_filters.ModelChoiceFilter(
+        queryset=Tenant.objects.all(),
+        method='filter_available_for_tenant',
+        label='Available for Tenant (ID)',
+    )
     business_unit_id = django_filters.ModelMultipleChoiceFilter(
         field_name='business_unit',
         queryset=ContactGroup.objects.all(),
@@ -563,6 +577,11 @@ class AppServiceFilterSet(NetBoxModelFilterSet):
 
     def search(self, queryset, name, value):
         return queryset.filter(Q(name__icontains=value) | Q(description__icontains=value))
+
+    def filter_available_for_tenant(self, queryset, name, value):
+        if not value:
+            return queryset
+        return queryset.filter(service_offering__in=ServiceOffering.objects.filter(tenant_offering_filter(value)))
 
 
 class DeviceServiceInfoFilterSet(NetBoxModelFilterSet):
@@ -745,6 +764,51 @@ class ClusterGroupServiceInfoFilterSet(NetBoxModelFilterSet):
         )
 
 
+class VirtualDeviceContextServiceInfoFilterSet(NetBoxModelFilterSet):
+    virtual_device_context_id = django_filters.ModelMultipleChoiceFilter(
+        field_name='virtual_device_context',
+        queryset=VirtualDeviceContext.objects.all(),
+        label='Virtual Device Context (ID)',
+    )
+    application_services_id = django_filters.ModelMultipleChoiceFilter(
+        field_name='application_services',
+        queryset=AppService.objects.all(),
+        label='Application Service (ID)',
+    )
+    lifecycle_id = django_filters.ModelMultipleChoiceFilter(
+        field_name='lifecycle',
+        queryset=Lifecycle.objects.all(),
+        label='Lifecycle (ID)',
+    )
+    business_unit_id = django_filters.ModelMultipleChoiceFilter(
+        field_name='business_unit',
+        queryset=ContactGroup.objects.all(),
+        label='Business Unit (ID)',
+    )
+    support_group_id = django_filters.ModelMultipleChoiceFilter(
+        field_name='support_group',
+        queryset=ContactGroup.objects.all(),
+        label='Support Group (ID)',
+    )
+    change_group_id = django_filters.ModelMultipleChoiceFilter(
+        field_name='change_group',
+        queryset=ContactGroup.objects.all(),
+        label='Change Group (ID)',
+    )
+
+    class Meta:
+        model = VirtualDeviceContextServiceInfo
+        fields = (
+            'id',
+            'virtual_device_context_id',
+            'application_services_id',
+            'lifecycle_id',
+            'business_unit_id',
+            'support_group_id',
+            'change_group_id',
+        )
+
+
 #
 # Report filtersets
 #
@@ -843,7 +907,7 @@ class TenantReportFilterSet(TenantFilterSet):
 
 #
 # Technical CI dropdown filtersets — NetBox's own Device/VM/Cluster/
-# ClusterGroup filtersets, plus filters that follow the plugin's
+# ClusterGroup/VirtualDeviceContext filtersets, plus filters that follow the plugin's
 # ServiceInfo -> AppService -> ServiceOffering link, so the Service Offering
 # Tree / Product View filter form (forms.OfferingsTreeFilterForm) can narrow
 # its Technical CI dropdowns to whatever the chosen Customer / Service
@@ -890,6 +954,12 @@ class TechnicalCIClusterFilterSet(TechnicalCIFilterSetMixin, virtualization_filt
 
 
 class TechnicalCIClusterGroupFilterSet(TechnicalCIFilterSetMixin, virtualization_filtersets.ClusterGroupFilterSet):
+    pass
+
+
+class TechnicalCIVirtualDeviceContextFilterSet(
+    TechnicalCIFilterSetMixin, dcim_filtersets.VirtualDeviceContextFilterSet
+):
     pass
 
 

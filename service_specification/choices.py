@@ -45,12 +45,14 @@ class ThreeCCITypeChoices(ChoiceSet):
     CI_VIRTUAL_MACHINE = 'virtualmachine'
     CI_CLUSTER = 'cluster'
     CI_CLUSTER_GROUP = 'clustergroup'
+    CI_VIRTUAL_DEVICE_CONTEXT = 'virtualdevicecontext'
 
     CHOICES = (
         (CI_DEVICE, 'Device'),
         (CI_VIRTUAL_MACHINE, 'Virtual Machine'),
         (CI_CLUSTER, 'Cluster'),
         (CI_CLUSTER_GROUP, 'Cluster Group'),
+        (CI_VIRTUAL_DEVICE_CONTEXT, 'Virtual Device Context'),
     )
 
 

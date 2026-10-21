@@ -1,7 +1,7 @@
 import datetime
 import re
 
-from dcim.models import Device, Manufacturer
+from dcim.models import Device, Manufacturer, VirtualDeviceContext
 from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator
 from django.db import models
@@ -56,6 +56,7 @@ __all__ = (
     'VirtualMachineServiceInfo',
     'ClusterServiceInfo',
     'ClusterGroupServiceInfo',
+    'VirtualDeviceContextServiceInfo',
     'ThreeCRule',
     'ThreeCSettings',
     'ThreeCSnapshot',
@@ -682,7 +683,7 @@ class AppService(PrimaryModel):
 
 #
 # Service Specification info attached directly to core NetBox infrastructure
-# objects (Device, VirtualMachine, Cluster, ClusterGroup). Plugins can't add
+# objects (Device, VirtualMachine, Cluster, ClusterGroup, VirtualDeviceContext). Plugins can't add
 # real database fields to NetBox's own models, so each of these is a
 # separate table in a OneToOne relationship with its core object, surfaced
 # as a "Service Specification" tab on that object's own detail page (see
@@ -744,6 +745,8 @@ class ServiceSpecificationInfoBase(NetBoxModel):
 
     class Meta:
         abstract = True
+        # Explicit: the REST API refuses to paginate an unordered queryset.
+        ordering = ('pk',)
 
 
 class DeviceServiceInfo(ServiceSpecificationInfoBase):
@@ -753,7 +756,7 @@ class DeviceServiceInfo(ServiceSpecificationInfoBase):
         related_name='service_specification_info',
     )
 
-    class Meta:
+    class Meta(ServiceSpecificationInfoBase.Meta):
         verbose_name = 'Device Service Info'
         verbose_name_plural = 'Device Service Info'
 
@@ -775,7 +778,7 @@ class VirtualMachineServiceInfo(ServiceSpecificationInfoBase):
         related_name='service_specification_info',
     )
 
-    class Meta:
+    class Meta(ServiceSpecificationInfoBase.Meta):
         verbose_name = 'Virtual Machine Service Info'
         verbose_name_plural = 'Virtual Machine Service Info'
 
@@ -797,7 +800,7 @@ class ClusterServiceInfo(ServiceSpecificationInfoBase):
         related_name='service_specification_info',
     )
 
-    class Meta:
+    class Meta(ServiceSpecificationInfoBase.Meta):
         verbose_name = 'Cluster Service Info'
         verbose_name_plural = 'Cluster Service Info'
 
@@ -819,7 +822,7 @@ class ClusterGroupServiceInfo(ServiceSpecificationInfoBase):
         related_name='service_specification_info',
     )
 
-    class Meta:
+    class Meta(ServiceSpecificationInfoBase.Meta):
         verbose_name = 'Cluster Group Service Info'
         verbose_name_plural = 'Cluster Group Service Info'
 
@@ -832,6 +835,28 @@ class ClusterGroupServiceInfo(ServiceSpecificationInfoBase):
 
     def get_absolute_url(self):
         return self.cluster_group.get_absolute_url()
+
+
+class VirtualDeviceContextServiceInfo(ServiceSpecificationInfoBase):
+    virtual_device_context = models.OneToOneField(
+        to=VirtualDeviceContext,
+        on_delete=models.CASCADE,
+        related_name='service_specification_info',
+    )
+
+    class Meta(ServiceSpecificationInfoBase.Meta):
+        verbose_name = 'Virtual Device Context Service Info'
+        verbose_name_plural = 'Virtual Device Context Service Info'
+
+    def __str__(self):
+        return str(self.virtual_device_context)
+
+    @property
+    def parent(self):
+        return self.virtual_device_context
+
+    def get_absolute_url(self):
+        return self.virtual_device_context.get_absolute_url()
 
 
 #
@@ -1077,6 +1102,7 @@ class ThreeCFinding(NetBoxModel):
         ThreeCCITypeChoices.CI_VIRTUAL_MACHINE: 'virtualization:virtualmachine',
         ThreeCCITypeChoices.CI_CLUSTER: 'virtualization:cluster',
         ThreeCCITypeChoices.CI_CLUSTER_GROUP: 'virtualization:clustergroup',
+        ThreeCCITypeChoices.CI_VIRTUAL_DEVICE_CONTEXT: 'dcim:virtualdevicecontext',
     }
 
     class Meta:

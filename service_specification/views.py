@@ -2,7 +2,7 @@ import json
 from dataclasses import dataclass
 from datetime import timedelta
 
-from dcim.models import Device
+from dcim.models import Device, VirtualDeviceContext
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
@@ -43,6 +43,7 @@ from .models import (
     ThreeCRule,
     ThreeCSettings,
     ThreeCSnapshot,
+    VirtualDeviceContextServiceInfo,
     VirtualMachineServiceInfo,
 )
 from .three_c import KPI_SUB_METRICS, SUB_METRIC_LABELS, aggregate_breakdown, kpi_scores, threshold_state
@@ -122,7 +123,8 @@ def _rollup_ids(queryset):
 def _make_service_info_views(parent_model, info_model, form_cls, fk_name):
     """Registers a read-only 'Service Specification' tab plus a matching
     edit view directly on `parent_model`'s own detail page (Device,
-    VirtualMachine, Cluster or ClusterGroup — all core NetBox models).
+    VirtualMachine, Cluster, ClusterGroup or VirtualDeviceContext — all core
+    NetBox models).
 
     Plugins can't add real database fields to NetBox's own models, so
     `info_model` (see models.py's ServiceSpecificationInfoBase) is a
@@ -431,11 +433,11 @@ CIFunctionListView, CIFunctionView, CIFunctionEditView, CIFunctionDeleteView = _
         bottom_panels=[
             # Read-only rollups of everything assigned this CI Function.
             # Service links to it directly (a plain FK). Devices/VMs/
-            # Clusters/ClusterGroups have no direct CI Function of their
+            # Clusters/ClusterGroups/VDCs have no direct CI Function of their
             # own any more — it's derived from whichever AppService(s)
             # their own ServiceSpecificationInfo side table (see models.py
             # — plugins can't add real fields to those core models) links
-            # to, so those four traverse: reverse OneToOne accessor ->
+            # to, so those five traverse: reverse OneToOne accessor ->
             # application_services (M2M) -> service_offering ->
             # service (M2M) -> ci_function. .distinct() guards against
             # duplicate rows from that multi-hop M2M traversal.
@@ -496,6 +498,19 @@ CIFunctionListView, CIFunctionView, CIFunctionEditView, CIFunctionDeleteView = _
                     )
                 },
             ),
+            ObjectsTablePanel(
+                model='dcim.virtualdevicecontext',
+                title='Virtual Device Contexts',
+                filters={
+                    'id': lambda ctx: _rollup_ids(
+                        VirtualDeviceContext.objects.filter(
+                            service_specification_info__application_services__service_offering__service__ci_function=ctx[
+                                'object'
+                            ]
+                        ).distinct()
+                    )
+                },
+            ),
             panels.CommentsPanel(),
         ],
     ),
@@ -512,6 +527,15 @@ ClusterServiceSpecificationView, ClusterServiceSpecificationEditView = _make_ser
 )
 ClusterGroupServiceSpecificationView, ClusterGroupServiceSpecificationEditView = _make_service_info_views(
     ClusterGroup, ClusterGroupServiceInfo, forms.ClusterGroupServiceInfoForm, 'cluster_group'
+)
+(
+    VirtualDeviceContextServiceSpecificationView,
+    VirtualDeviceContextServiceSpecificationEditView,
+) = _make_service_info_views(
+    VirtualDeviceContext,
+    VirtualDeviceContextServiceInfo,
+    forms.VirtualDeviceContextServiceInfoForm,
+    'virtual_device_context',
 )
 
 
@@ -914,13 +938,13 @@ class OfferingsTreeView(TemplateView):
         return queryset.filter(tenant_offering_filter(tenant))
 
     @staticmethod
-    def _technical_cis_for(app_service, device, virtual_machine, cluster, cluster_group):
+    def _technical_cis_for(app_service, device, virtual_machine, cluster, cluster_group, virtual_device_context):
         # If any Technical CI filter is set, only that type/instance is
-        # shown for this AppService — the other three types are omitted
+        # shown for this AppService — the other four types are omitted
         # entirely rather than shown unfiltered alongside it.
         # (type label, mdi icon class) per Technical CI kind, for the tree
         # template's org-chart node styling.
-        ci_filter_active = any((device, virtual_machine, cluster, cluster_group))
+        ci_filter_active = any((device, virtual_machine, cluster, cluster_group, virtual_device_context))
         cis = []
         if not ci_filter_active or device:
             qs = Device.objects.filter(service_specification_info__application_services=app_service)
@@ -943,6 +967,12 @@ class OfferingsTreeView(TemplateView):
                 (obj, 'Cluster Group', 'mdi-hexagon-multiple')
                 for obj in (qs.filter(pk=cluster_group.pk) if cluster_group else qs)
             ]
+        if not ci_filter_active or virtual_device_context:
+            qs = VirtualDeviceContext.objects.filter(service_specification_info__application_services=app_service)
+            cis += [
+                (obj, 'Virtual Device Context', 'mdi-layers-outline')
+                for obj in (qs.filter(pk=virtual_device_context.pk) if virtual_device_context else qs)
+            ]
         return cis
 
     def _build_tree(self, filters):
@@ -955,7 +985,8 @@ class OfferingsTreeView(TemplateView):
         virtual_machine = filters.get('virtual_machine')
         cluster = filters.get('cluster')
         cluster_group = filters.get('cluster_group')
-        ci_filter_active = any((device, virtual_machine, cluster, cluster_group))
+        virtual_device_context = filters.get('virtual_device_context')
+        ci_filter_active = any((device, virtual_machine, cluster, cluster_group, virtual_device_context))
 
         portfolios_qs = Portfolio.objects.all()
         if portfolio:
@@ -990,7 +1021,7 @@ class OfferingsTreeView(TemplateView):
                         continue
 
                     technical_cis = self._technical_cis_for(
-                        linked_app_service, device, virtual_machine, cluster, cluster_group
+                        linked_app_service, device, virtual_machine, cluster, cluster_group, virtual_device_context
                     )
                     if ci_filter_active and not technical_cis:
                         continue
@@ -1022,6 +1053,8 @@ def _extend_ci_infra(ci, ci_id, level, *, place, add_edge, take_slot, claim_x, p
 
     Cluster Group: each member Cluster, each in turn centered over its own
     member Devices.
+
+    Virtual Device Context: the Device it runs on, one row down.
 
     Device: up to three labeled category rows (Physical/Logical/
     Virtualization — synthetic pseudo-nodes, no underlying object), each
@@ -1132,6 +1165,9 @@ def _extend_ci_infra(ci, ci_id, level, *, place, add_edge, take_slot, claim_x, p
             add_edge(ci_id, cluster_id)
             for member_id in member_ids:
                 add_edge(cluster_id, member_id)
+
+    elif isinstance(ci, VirtualDeviceContext):
+        add_edge(ci_id, leaf(ci.device, 'device', 'Device', level + 1))
 
     elif isinstance(ci, Device):
         interfaces = list(ci.interfaces.all())

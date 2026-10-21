@@ -9,8 +9,8 @@ router = NetBoxRouter()
 # (e.g. 'portfolios' here <-> 'portfolios/' there) — the whole point is
 # that swapping between the UI and its REST API is just adding/removing
 # "/api" right after the hostname, nothing else in the path changes. The
-# four *-service-info entries have no UI list page of their own (they're
-# only reachable via a tab on their parent Device/VM/Cluster/ClusterGroup),
+# five *-service-info entries have no UI list page of their own (they're
+# only reachable via a tab on their parent Device/VM/Cluster/ClusterGroup/VDC),
 # but are still named as plural collections for consistency with the rest.
 router.register('contracts', views.ContractViewSet)
 router.register('contract-rate-cards', views.ContractRateCardViewSet)
@@ -30,6 +30,7 @@ router.register('device-service-infos', views.DeviceServiceInfoViewSet)
 router.register('virtual-machine-service-infos', views.VirtualMachineServiceInfoViewSet)
 router.register('cluster-service-infos', views.ClusterServiceInfoViewSet)
 router.register('cluster-group-service-infos', views.ClusterGroupServiceInfoViewSet)
+router.register('virtual-device-context-service-infos', views.VirtualDeviceContextServiceInfoViewSet)
 # Read-only-in-practice lookups backing the Service Offering Tree / Product
 # View's Technical CI filter dropdowns (see forms.OfferingsTreeFilterForm).
 # Explicit basenames: the default would be the core model's own name
@@ -41,6 +42,11 @@ router.register(
 router.register('technical-ci/clusters', views.TechnicalCIClusterViewSet, basename='technical-ci-cluster')
 router.register(
     'technical-ci/cluster-groups', views.TechnicalCIClusterGroupViewSet, basename='technical-ci-cluster-group'
+)
+router.register(
+    'technical-ci/virtual-device-contexts',
+    views.TechnicalCIVirtualDeviceContextViewSet,
+    basename='technical-ci-virtual-device-context',
 )
 # 3C: rules and the settings singleton are editable; snapshots and
 # findings are written only by the health job, so read-only here.

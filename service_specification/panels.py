@@ -267,9 +267,9 @@ class AppServiceOrganizationPanel(ObjectAttributesPanel):
 
 
 class ServiceSpecificationInfoPanel(ObjectAttributesPanel):
-    """Shared read-only panel for the Device/VirtualMachine/Cluster/ClusterGroup
+    """Shared read-only panel for the Device/VirtualMachine/Cluster/ClusterGroup/VDC
     'Service Specification' tab (see views.py) — the editable fields are
-    identical across all four side-info models, so one panel class covers
+    identical across all five side-info models, so one panel class covers
     all of them.
 
     The instance rendered here may be unsaved (pk=None) — the tab always

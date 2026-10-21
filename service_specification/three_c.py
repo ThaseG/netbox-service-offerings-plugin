@@ -1,7 +1,7 @@
 """3C (Completeness, Correctness, Compliance) CMDB health engine.
 
 run_health_check() evaluates every in-scope CI (Device, Virtual Machine,
-Cluster, Cluster Group) once and stores the result as a ThreeCSnapshot plus
+Cluster, Cluster Group, Virtual Device Context) once and stores the result as a ThreeCSnapshot plus
 one ThreeCFinding per failing CI per KPI. It's called by the scheduled job
 (jobs.ThreeCHealthJob); nothing here runs on page load.
 
@@ -21,7 +21,7 @@ from collections import defaultdict
 from datetime import timedelta
 
 from dcim.constants import NONCONNECTABLE_IFACE_TYPES
-from dcim.models import Device, DeviceType, Interface
+from dcim.models import Device, DeviceType, Interface, VirtualDeviceContext
 from django.apps import apps
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
@@ -44,6 +44,7 @@ from .models import (
     ThreeCRule,
     ThreeCSettings,
     ThreeCSnapshot,
+    VirtualDeviceContextServiceInfo,
     VirtualMachineServiceInfo,
 )
 
@@ -66,6 +67,7 @@ CI_MODELS = {
     ThreeCCITypeChoices.CI_VIRTUAL_MACHINE: VirtualMachine,
     ThreeCCITypeChoices.CI_CLUSTER: Cluster,
     ThreeCCITypeChoices.CI_CLUSTER_GROUP: ClusterGroup,
+    ThreeCCITypeChoices.CI_VIRTUAL_DEVICE_CONTEXT: VirtualDeviceContext,
 }
 
 # (Service Specification side table, its OneToOne field back to the CI)
@@ -74,15 +76,18 @@ INFO_MODELS = {
     ThreeCCITypeChoices.CI_VIRTUAL_MACHINE: (VirtualMachineServiceInfo, 'virtual_machine'),
     ThreeCCITypeChoices.CI_CLUSTER: (ClusterServiceInfo, 'cluster'),
     ThreeCCITypeChoices.CI_CLUSTER_GROUP: (ClusterGroupServiceInfo, 'cluster_group'),
+    ThreeCCITypeChoices.CI_VIRTUAL_DEVICE_CONTEXT: (VirtualDeviceContextServiceInfo, 'virtual_device_context'),
 }
 
 # Staleness is status-based, not last_updated-based: the collector flips
 # unreachable devices to offline/failed, while healthy devices can go
 # months without any change. VMs and Cluster Groups aren't measured (no
-# collector-driven status / no status at all); Clusters have no 'failed'.
+# collector-driven status / no status at all); Clusters and Virtual Device
+# Contexts have no 'failed'.
 STALE_STATUSES = {
     ThreeCCITypeChoices.CI_DEVICE: ('offline', 'failed'),
     ThreeCCITypeChoices.CI_CLUSTER: ('offline',),
+    ThreeCCITypeChoices.CI_VIRTUAL_DEVICE_CONTEXT: ('offline',),
 }
 
 SUB_REQUIRED = 'required'
@@ -374,7 +379,20 @@ def _uncabled_interfaces():
     return result
 
 
+def _ci_label(ci):
+    # A VDC's own name ("root", "admin", "services") repeats on every device
+    # it's configured on — prefix the device so findings stay unambiguous.
+    if isinstance(ci, VirtualDeviceContext):
+        return f'{ci.device} / {ci.name}'
+    return str(ci)
+
+
 def _duplicate_keys(ci_type, ci):
+    if ci_type == ThreeCCITypeChoices.CI_VIRTUAL_DEVICE_CONTEXT:
+        # NetBox already forbids two VDCs with the same name or identifier on
+        # one Device, and the same name on different Devices is normal
+        # (every Nexus has an "admin" VDC, every FortiGate a "root" VDOM).
+        return
     name = (ci.name or '').strip().lower()
     serial = (getattr(ci, 'serial', '') or '').strip().lower()
     # Clusters are scoped generically; CachedScopeMixin keeps the resolved
@@ -469,6 +487,8 @@ def _ci_queryset(ci_type, rules):
         f'{SERVICE_INFO_ACCESSOR}__application_services',
         f'{SERVICE_INFO_ACCESSOR}__support_group',
     }
+    if ci_type == ThreeCCITypeChoices.CI_VIRTUAL_DEVICE_CONTEXT:
+        prefetch.add('device')  # for _ci_label()
     for rule in rules:
         key = rule.parameter
         if key.startswith(CUSTOM_FIELD_PREFIX):
@@ -615,7 +635,7 @@ def run_health_check(logger=None):
                         kpi=kpi,
                         ci_type=ci_type,
                         ci_id=ci.pk,
-                        ci_name=str(ci)[:255],
+                        ci_name=_ci_label(ci)[:255],
                         tenant_id=tenant_id,
                         support_group=support_group[:500],
                         ci_last_updated=ci.last_updated,

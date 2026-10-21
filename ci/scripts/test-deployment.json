@@ -5108,6 +5108,168 @@
       "tenant": "shell"
     }
   ],
+  "dcim/virtual-device-contexts/": [
+    {
+      "_key": "Munich-FW-01 services",
+      "name": "services",
+      "device": "Munich-FW-01",
+      "identifier": 1,
+      "status": "active",
+      "tenant": "coca-cola"
+    },
+    {
+      "_key": "Berlin-FW-01 services",
+      "name": "services",
+      "device": "Berlin-FW-01",
+      "identifier": 1,
+      "status": "active",
+      "tenant": "cisco"
+    },
+    {
+      "_key": "Cologne-FW-01 services",
+      "name": "services",
+      "device": "Cologne-FW-01",
+      "identifier": 1,
+      "status": "active",
+      "tenant": "sap"
+    },
+    {
+      "_key": "Dusseldorf-FW-01 services",
+      "name": "services",
+      "device": "Dusseldorf-FW-01",
+      "identifier": 1,
+      "status": "active",
+      "tenant": "google"
+    },
+    {
+      "_key": "Dortmund-FW-01 services",
+      "name": "services",
+      "device": "Dortmund-FW-01",
+      "identifier": 1,
+      "status": "active",
+      "tenant": "amazon"
+    },
+    {
+      "_key": "Vienna-FW-01 services",
+      "name": "services",
+      "device": "Vienna-FW-01",
+      "identifier": 1,
+      "status": "active",
+      "tenant": "microsoft"
+    },
+    {
+      "_key": "Amsterdam-FW-01 services",
+      "name": "services",
+      "device": "Amsterdam-FW-01",
+      "identifier": 1,
+      "status": "active",
+      "tenant": "ibm"
+    },
+    {
+      "_key": "Paris-FW-01 services",
+      "name": "services",
+      "device": "Paris-FW-01",
+      "identifier": 1,
+      "status": "active",
+      "tenant": "oracle"
+    },
+    {
+      "_key": "Madrid-FW-01 services",
+      "name": "services",
+      "device": "Madrid-FW-01",
+      "identifier": 1,
+      "status": "active",
+      "tenant": "siemens"
+    },
+    {
+      "_key": "Rome-FW-01 services",
+      "name": "services",
+      "device": "Rome-FW-01",
+      "identifier": 1,
+      "status": "offline",
+      "tenant": "bmw"
+    },
+    {
+      "_key": "Warsaw-FW-01 services",
+      "name": "services",
+      "device": "Warsaw-FW-01",
+      "identifier": 1,
+      "status": "active",
+      "tenant": "volkswagen"
+    },
+    {
+      "_key": "Budapest-FW-01 services",
+      "name": "services",
+      "device": "Budapest-FW-01",
+      "identifier": 1,
+      "status": "active",
+      "tenant": "deutsche-bank"
+    },
+    {
+      "_key": "Stockholm-FW-01 services",
+      "name": "services",
+      "device": "Stockholm-FW-01",
+      "identifier": 1,
+      "status": "active",
+      "tenant": "allianz"
+    },
+    {
+      "_key": "Dublin-FW-01 services",
+      "name": "services",
+      "device": "Dublin-FW-01",
+      "identifier": 1,
+      "status": "active",
+      "tenant": "adidas"
+    },
+    {
+      "_key": "Athens-FW-01 services",
+      "name": "services",
+      "device": "Athens-FW-01",
+      "identifier": 1,
+      "status": "active",
+      "tenant": "puma"
+    },
+    {
+      "_key": "Singapore-FW-01 services",
+      "name": "services",
+      "device": "Singapore-FW-01",
+      "identifier": 1,
+      "status": "active",
+      "tenant": "nike"
+    },
+    {
+      "_key": "Sydney-FW-01 services",
+      "name": "services",
+      "device": "Sydney-FW-01",
+      "identifier": 1,
+      "status": "active",
+      "tenant": "samsung"
+    },
+    {
+      "_key": "Chicago-FW-01 services",
+      "name": "services",
+      "device": "Chicago-FW-01",
+      "identifier": 1,
+      "status": "active",
+      "tenant": "sony"
+    },
+    {
+      "_key": "Seattle-FW-01 services",
+      "name": "services",
+      "device": "Seattle-FW-01",
+      "identifier": 1,
+      "status": "active",
+      "tenant": "toyota"
+    },
+    {
+      "_key": "Miami-FW-01 services",
+      "name": "services",
+      "device": "Miami-FW-01",
+      "identifier": 1,
+      "status": "active",
+      "tenant": "shell"
+    }
+  ],
   "ipam/ip-addresses/": [
     {
       "address": "10.0.0.1/24",
@@ -12225,6 +12387,122 @@
       "application_services": [
         "DNS & DHCP Management - Shell (Application Service)",
         "Virtual Desktop Infrastructure - Shell (Application Service)"
+      ]
+    }
+  ],
+  "plugins/service-specification/virtual-device-context-service-infos/": [
+    {
+      "virtual_device_context": "Munich-FW-01 services",
+      "application_services": [
+        "Managed Email - Coca Cola (Application Service)"
+      ]
+    },
+    {
+      "virtual_device_context": "Berlin-FW-01 services",
+      "application_services": [
+        "Unified Communications - Cisco (Application Service)"
+      ]
+    },
+    {
+      "virtual_device_context": "Cologne-FW-01 services",
+      "application_services": [
+        "Endpoint Management - SAP (Application Service)"
+      ]
+    },
+    {
+      "virtual_device_context": "Dusseldorf-FW-01 services",
+      "application_services": [
+        "Helpdesk Support - Google (Application Service)"
+      ]
+    },
+    {
+      "virtual_device_context": "Dortmund-FW-01 services",
+      "application_services": [
+        "Identity & Access Management - Amazon (Application Service)"
+      ]
+    },
+    {
+      "virtual_device_context": "Vienna-FW-01 services",
+      "application_services": [
+        "Video Conferencing - Microsoft (Application Service)"
+      ]
+    },
+    {
+      "virtual_device_context": "Amsterdam-FW-01 services",
+      "application_services": [
+        "File Sharing & Collaboration - IBM (Application Service)"
+      ]
+    },
+    {
+      "virtual_device_context": "Paris-FW-01 services",
+      "application_services": [
+        "Mobile Device Management - Oracle (Application Service)"
+      ]
+    },
+    {
+      "virtual_device_context": "Madrid-FW-01 services",
+      "application_services": [
+        "Print Services - Siemens (Application Service)"
+      ]
+    },
+    {
+      "virtual_device_context": "Rome-FW-01 services",
+      "application_services": [
+        "Virtual Desktop Infrastructure - BMW (Application Service)"
+      ]
+    },
+    {
+      "virtual_device_context": "Warsaw-FW-01 services",
+      "application_services": [
+        "Cloud Backup - Volkswagen (Application Service)"
+      ]
+    },
+    {
+      "virtual_device_context": "Budapest-FW-01 services",
+      "application_services": [
+        "Disaster Recovery - Deutsche Bank (Application Service)"
+      ]
+    },
+    {
+      "virtual_device_context": "Stockholm-FW-01 services",
+      "application_services": [
+        "Network Security - Allianz (Application Service)"
+      ]
+    },
+    {
+      "virtual_device_context": "Dublin-FW-01 services",
+      "application_services": [
+        "Database Hosting - Adidas (Application Service)"
+      ]
+    },
+    {
+      "virtual_device_context": "Athens-FW-01 services",
+      "application_services": [
+        "Load Balancing - Puma (Application Service)"
+      ]
+    },
+    {
+      "virtual_device_context": "Singapore-FW-01 services",
+      "application_services": [
+        "Container Orchestration - Nike (Application Service)"
+      ]
+    },
+    {
+      "virtual_device_context": "Sydney-FW-01 services",
+      "application_services": [
+        "Data Analytics Platform - Samsung (Application Service)"
+      ]
+    },
+    {
+      "virtual_device_context": "Chicago-FW-01 services",
+      "application_services": [
+        "Storage as a Service - Sony (Application Service)"
+      ]
+    },
+    {
+      "virtual_device_context": "Seattle-FW-01 services",
+      "application_services": [
+        "Monitoring & Observability - Toyota (Application Service)"
       ]
     }
   ],

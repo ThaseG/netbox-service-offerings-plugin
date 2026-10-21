@@ -4,7 +4,8 @@ A [NetBox](https://github.com/netbox-community/netbox) plugin for building a **S
 directly in NetBox. You describe Service Portfolios, Services, Service Offerings, Application Services and
 Contracts, and link them to:
 
-- the infrastructure NetBox already knows about (devices, virtual machines, clusters, cluster groups);
+- the infrastructure NetBox already knows about (devices, virtual machines, clusters, cluster groups, virtual
+  device contexts);
 - the contacts, contact groups and tenants that own, support and buy them.
 
 Reports then show the whole chain, from portfolio down to physical hardware, as a table or as an interactive graph.
@@ -75,22 +76,24 @@ comments, plus the extra fields noted below:
 | **Criticality** | Criticalities | — | AppService (as `service_criticality`) |
 | **Environment** | Environments | — | AppService |
 | **MTAT** | MTATs | `value` (integer), `unit` (Seconds/Minutes/Hours/Days/Weeks/Months/Years) | AppService |
-| **CIFunction** | CI Functions | — | Service. Its detail page lists the Services using it, plus the Devices, Virtual Machines, Clusters and Cluster Groups that inherit it. |
+| **CIFunction** | CI Functions | — | Service. Its detail page lists the Services using it, plus the Devices, Virtual Machines, Clusters, Cluster Groups and Virtual Device Contexts that inherit it. |
 
 All models support NetBox's standard object features: tags, comments (Markdown), custom fields, custom links,
 change logging, journaling and bookmarks.
 
 ### Service Specification on core NetBox objects
 
-`Device`, `VirtualMachine`, `Cluster` and `ClusterGroup` are core NetBox models, and plugins can't add database
-fields to them. Instead, each gets a **Service Specification** tab on its detail page (for example
+`Device`, `VirtualMachine`, `Cluster`, `ClusterGroup` and `VirtualDeviceContext` are core NetBox models, and plugins
+can't add database fields to them. Instead, each gets a **Service Specification** tab on its detail page (for example
 `/dcim/devices/<id>/service-specification/`). The tab is backed by a plugin-owned side table
-(`DeviceServiceInfo`, `VirtualMachineServiceInfo`, `ClusterServiceInfo`, `ClusterGroupServiceInfo`) with a
-one-to-one link to the core object.
+(`DeviceServiceInfo`, `VirtualMachineServiceInfo`, `ClusterServiceInfo`, `ClusterGroupServiceInfo`,
+`VirtualDeviceContextServiceInfo`) with a one-to-one link to the core object.
 
 Each side table holds:
 
-- the `AppService`(s) the object supports (multi-select);
+- the `AppService`(s) the object supports (multi-select). The form only offers Application Services of the object's
+  own tenant (their Service Offering is assigned to that tenant directly or through its tenant group); objects with
+  no tenant, and Cluster Groups, can pick any;
 - a `Lifecycle`;
 - Business Unit, Support Group and Change Group (contact groups only, no individual contacts).
 
@@ -109,7 +112,8 @@ Read-only views under **Service Specification → Reports**:
   tenant, tenant group, service offering, service offering lifecycle, contract and application service. A tenant
   matches offerings assigned to it directly or through its tenant group.
 - **Service View.** An interactive graph of Portfolio → Service → Service Offering → Application Service →
-  Technical CI (the Devices, VMs, Clusters and Cluster Groups linked through their Service Specification tab).
+  Technical CI (the Devices, VMs, Clusters, Cluster Groups and Virtual Device Contexts linked through their Service
+  Specification tab).
   You can zoom, pan and drag nodes sideways, and click any node to open the object.
 - **Product View.** The same graph, extended below each Technical CI into its real infrastructure:
   - **Device:** *Physical* (devices it is cabled to), *Logical* (devices with an IP in the same subnet) and
@@ -117,14 +121,16 @@ Read-only views under **Service Specification → Reports**:
   - **Virtual Machine:** its host server, cluster and cluster group.
   - **Cluster:** its member devices and cluster group.
   - **Cluster Group:** its clusters and their member devices.
+  - **Virtual Device Context:** the device it runs on.
 
 Service View and Product View share one filter form: Customer, Service Portfolio, Service, Service Offering,
-Application Service, Device, Virtual Machine, Cluster and Cluster Group. The dropdowns cascade:
+Application Service, Device, Virtual Machine, Cluster, Cluster Group and Virtual Device Context. The dropdowns
+cascade:
 
 - Picking a **Customer** narrows the Service Offering dropdown.
 - Picking a **Customer** and/or **Service Offering** narrows the Application Service, Device, Virtual Machine,
-  Cluster and Cluster Group dropdowns to objects belonging to that selection.
-- Picking an **Application Service** narrows the four infrastructure dropdowns the same way.
+  Cluster, Cluster Group and Virtual Device Context dropdowns to objects belonging to that selection.
+- Picking an **Application Service** narrows the five infrastructure dropdowns the same way.
 
 The dropdowns match a customer only when it's assigned *directly* to a Service Offering. The graph itself also
 matches offerings assigned through the customer's tenant group.
@@ -209,9 +215,10 @@ you to the same list in the browsable API.
 Two groups of endpoints have no UI list page of their own:
 
 - **Service Specification tab data:** `device-service-infos/`, `virtual-machine-service-infos/`,
-  `cluster-service-infos/` and `cluster-group-service-infos/`.
-- **Technical CI lookups:** `technical-ci/devices/`, `technical-ci/virtual-machines/`, `technical-ci/clusters/`
-  and `technical-ci/cluster-groups/`. These behave like NetBox's own Device/VM/Cluster/Cluster Group lists, with
+  `cluster-service-infos/`, `cluster-group-service-infos/` and `virtual-device-context-service-infos/`.
+- **Technical CI lookups:** `technical-ci/devices/`, `technical-ci/virtual-machines/`, `technical-ci/clusters/`,
+  `technical-ci/cluster-groups/` and `technical-ci/virtual-device-contexts/`. These behave like NetBox's own
+  Device/VM/Cluster/Cluster Group/Virtual Device Context lists, with
   the same results and permissions. They add three filters following the plugin's links: `offering_tenant_id`,
   `service_offering_id` and `app_service_id`. The Service View and Product View filter dropdowns use them.
 
@@ -276,7 +283,8 @@ the REST API by [`ci/scripts/test-deployment.py`](ci/scripts/test-deployment.py)
 each with:
 
 - a site;
-- a firewall cabled to 2 switches, which are cabled to 4 servers (cables belong to the tenant);
+- a firewall cabled to 2 switches, which are cabled to 4 servers (cables belong to the tenant), and a `services`
+  virtual device context (VDOM) on the firewall;
 - 2 clusters in a cluster group, and 6 VMs;
 - Service Offerings, Application Services and Contracts across two Service Portfolios.
 

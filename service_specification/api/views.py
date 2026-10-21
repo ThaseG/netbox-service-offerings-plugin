@@ -1,5 +1,5 @@
 from core.api.serializers import JobSerializer
-from dcim.api.views import DeviceViewSet
+from dcim.api.views import DeviceViewSet, VirtualDeviceContextViewSet
 from netbox.api.viewsets import NetBoxModelViewSet, NetBoxReadOnlyModelViewSet
 from rest_framework import status
 from rest_framework.decorators import action
@@ -120,9 +120,15 @@ class ClusterGroupServiceInfoViewSet(NetBoxModelViewSet):
     filterset_class = filtersets.ClusterGroupServiceInfoFilterSet
 
 
+class VirtualDeviceContextServiceInfoViewSet(NetBoxModelViewSet):
+    queryset = models.VirtualDeviceContextServiceInfo.objects.all()
+    serializer_class = serializers.VirtualDeviceContextServiceInfoSerializer
+    filterset_class = filtersets.VirtualDeviceContextServiceInfoFilterSet
+
+
 #
 # Technical CI dropdown endpoints: NetBox's own Device/VM/Cluster/
-# ClusterGroup API viewsets (same serializers, brief mode, permissions),
+# ClusterGroup/VirtualDeviceContext API viewsets (same serializers, brief mode, permissions),
 # swapped onto filtersets that also understand the plugin's AppService/
 # Service Offering/Customer links — see filtersets.TechnicalCIFilterSetMixin.
 #
@@ -142,6 +148,10 @@ class TechnicalCIClusterViewSet(ClusterViewSet):
 
 class TechnicalCIClusterGroupViewSet(ClusterGroupViewSet):
     filterset_class = filtersets.TechnicalCIClusterGroupFilterSet
+
+
+class TechnicalCIVirtualDeviceContextViewSet(VirtualDeviceContextViewSet):
+    filterset_class = filtersets.TechnicalCIVirtualDeviceContextFilterSet
 
 
 #

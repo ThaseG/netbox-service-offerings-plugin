@@ -23,6 +23,7 @@ from service_specification.models import (
     ThreeCRule,
     ThreeCSettings,
     ThreeCSnapshot,
+    VirtualDeviceContextServiceInfo,
     VirtualMachineServiceInfo,
 )
 
@@ -45,6 +46,7 @@ __all__ = (
     'VirtualMachineServiceInfoSerializer',
     'ClusterServiceInfoSerializer',
     'ClusterGroupServiceInfoSerializer',
+    'VirtualDeviceContextServiceInfoSerializer',
     'ThreeCRuleSerializer',
     'ThreeCSettingsSerializer',
     'ThreeCSnapshotSerializer',
@@ -201,6 +203,13 @@ class ClusterGroupServiceInfoSerializer(_NoDisplayURLMixin, NetBoxModelSerialize
         model = ClusterGroupServiceInfo
         fields = '__all__'
         brief_fields = ('id', 'url', 'display', 'cluster_group')
+
+
+class VirtualDeviceContextServiceInfoSerializer(_NoDisplayURLMixin, NetBoxModelSerializer):
+    class Meta:
+        model = VirtualDeviceContextServiceInfo
+        fields = '__all__'
+        brief_fields = ('id', 'url', 'display', 'virtual_device_context')
 
 
 #

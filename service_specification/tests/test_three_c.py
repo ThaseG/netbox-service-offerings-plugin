@@ -1,4 +1,4 @@
-from dcim.models import Device, DeviceRole, DeviceType, Manufacturer, Site
+from dcim.models import Device, DeviceRole, DeviceType, Manufacturer, Site, VirtualDeviceContext
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.test import TestCase
@@ -90,6 +90,33 @@ class ThreeCRuleTestCase(TestCase):
             parameter='service_info__support_group',
         )
         rule.full_clean()
+
+
+class ThreeCVirtualDeviceContextTestCase(TestCase):
+    def test_offline_vdc_is_stale_and_shared_names_are_not_duplicates(self):
+        site = Site.objects.create(name='Site 1', slug='site-1')
+        manufacturer = Manufacturer.objects.create(name='Manufacturer 1', slug='manufacturer-1')
+        device_type = DeviceType.objects.create(manufacturer=manufacturer, model='Model 1', slug='model-1')
+        role = DeviceRole.objects.create(name='Role 1', slug='role-1')
+        for n in (1, 2):
+            device = Device.objects.create(
+                name=f'fw-{n}', serial=f'SN-{n}', site=site, device_type=device_type, role=role
+            )
+            # Every FortiGate has a "root" VDOM — not a duplicate.
+            VirtualDeviceContext.objects.create(device=device, name='root', status='offline' if n == 2 else 'active')
+
+        snapshot = run_health_check()
+        totals = aggregate_breakdown(snapshot.breakdown, ci_types=['virtualdevicecontext'])
+        self.assertEqual(totals['stale'], [1, 2])
+        self.assertEqual(totals['duplicate'], [0, 2])
+        finding = ThreeCFinding.objects.get(
+            kpi=ThreeCKPIChoices.KPI_CORRECTNESS,
+            ci_type='virtualdevicecontext',
+            ci_name='fw-2 / root',
+            sub_metrics__contains=['stale'],
+        )
+        self.assertIn('Stale: status Offline', finding.failures)
+        self.assertTrue(finding.get_absolute_url().startswith('/dcim/virtual-device-contexts/'))
 
 
 class ThreeCHealthCheckTestCase(TestCase):

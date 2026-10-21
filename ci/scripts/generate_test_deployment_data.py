@@ -343,7 +343,10 @@ CLUSTER_GROUP_MISSING_DESCRIPTION = {'Oracle', 'Puma', 'Toyota'}
 # Servers/Clusters/Cluster Groups are otherwise linked to the Application
 # Services whose VMs they host (see build_ci_assignments); these aren't,
 # and VMs otherwise get a VMware support contract (see build_lifecycle).
-UNMAPPED_TECHNICAL_CIS = {'Rome-SRV-04', 'Chicago-SRV-02', 'Dublin Cluster B', 'sony-infra'}
+UNMAPPED_TECHNICAL_CIS = {'Rome-SRV-04', 'Chicago-SRV-02', 'Dublin Cluster B', 'sony-infra', 'Miami-FW-01 services'}
+# Each Firewall runs a "services" VDOM (a NetBox Virtual Device Context)
+# for its tenant's first Application Service; this one is shut down.
+OFFLINE_VDCS = {'Rome-FW-01 services'}
 VM_MISSING_CONTRACT = {'berlin-vm-02', 'dusseldorf-vm-06', 'madrid-vm-04', 'stockholm-vm-05', 'athens-vm-03'}
 
 # (name, rule_type, ci_type, parameter, condition, value, description)
@@ -518,6 +521,7 @@ def build_tenants_and_infra(data):
     data['virtualization/cluster-groups/'] = []
     data['virtualization/clusters/'] = []
     data['virtualization/virtual-machines/'] = []
+    data['dcim/virtual-device-contexts/'] = []
 
     vms_by_tenant = {}
     network_by_tenant = {}
@@ -559,6 +563,19 @@ def build_tenants_and_infra(data):
             }
         )
         fw_interfaces = [f'{fw_name} internal{n}' for n in (1, 2)]
+        vdc_key = f'{fw_name} services'
+        data['dcim/virtual-device-contexts/'].append(
+            {
+                # '_key': VDC names repeat on every Firewall, so other
+                # entries refer to this one by "<firewall> services".
+                '_key': vdc_key,
+                'name': 'services',
+                'device': fw_name,
+                'identifier': 1,
+                'status': 'offline' if vdc_key in OFFLINE_VDCS else 'active',
+                'tenant': tenant_slug,
+            }
+        )
         for fw_iface in fw_interfaces:
             data['dcim/interfaces/'].append({'name': fw_iface, 'device': fw_name, 'type': INTERFACE_TYPE})
 
@@ -668,6 +685,7 @@ def build_tenants_and_infra(data):
         vms_by_tenant[tenant_slug] = vm_names
         network_by_tenant[tenant_slug] = {
             'firewall': fw_name,
+            'firewall_vdc': vdc_key,
             'switches': switch_names,
             'servers': server_names,
             'clusters': cluster_names,
@@ -876,6 +894,7 @@ def build_ci_assignments(data, vms_by_tenant, tenant_by_offering, network_by_ten
     data['plugins/service-specification/device-service-infos/'] = []
     data['plugins/service-specification/cluster-service-infos/'] = []
     data['plugins/service-specification/cluster-group-service-infos/'] = []
+    data['plugins/service-specification/virtual-device-context-service-infos/'] = []
 
     app_services_by_tenant = {}
     for app_service_name, tenant_slug in tenant_by_offering.items():
@@ -923,6 +942,10 @@ def build_ci_assignments(data, vms_by_tenant, tenant_by_offering, network_by_ten
                 data['plugins/service-specification/cluster-service-infos/'].append(
                     {'cluster': cluster_name, 'application_services': [app_service]}
                 )
+        if network['firewall_vdc'] not in UNMAPPED_TECHNICAL_CIS:
+            data['plugins/service-specification/virtual-device-context-service-infos/'].append(
+                {'virtual_device_context': network['firewall_vdc'], 'application_services': [first_app_service]}
+            )
         if network['cluster_group'] not in UNMAPPED_TECHNICAL_CIS:
             data['plugins/service-specification/cluster-group-service-infos/'].append(
                 {
@@ -1202,6 +1225,7 @@ def main():
         'dcim/devices/',
         'dcim/interfaces/',
         'dcim/cables/',
+        'dcim/virtual-device-contexts/',
         'ipam/ip-addresses/',
         # ...and Virtual Machines now come after Devices too:
         # VirtualMachine.device (see build_tenants_and_infra) references a
@@ -1224,6 +1248,7 @@ def main():
         'plugins/service-specification/device-service-infos/',
         'plugins/service-specification/cluster-service-infos/',
         'plugins/service-specification/cluster-group-service-infos/',
+        'plugins/service-specification/virtual-device-context-service-infos/',
         'plugins/service-specification/virtual-machine-service-infos/',
         'plugins/lifecycle/vendor/',
         'plugins/lifecycle/sku/',

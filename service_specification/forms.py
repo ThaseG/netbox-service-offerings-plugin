@@ -1,4 +1,4 @@
-from dcim.models import Device, Manufacturer
+from dcim.models import Device, Manufacturer, VirtualDeviceContext
 from django import forms
 from django.core.exceptions import ValidationError
 from django.db.models import Q
@@ -35,9 +35,11 @@ from .models import (
     ThreeCRule,
     ThreeCSettings,
     ThreeCSnapshot,
+    VirtualDeviceContextServiceInfo,
     VirtualMachineServiceInfo,
 )
 from .three_c import get_parameter_choices
+from .utils import tenant_offering_filter
 
 __all__ = (
     'ContractForm',
@@ -58,6 +60,7 @@ __all__ = (
     'VirtualMachineServiceInfoForm',
     'ClusterServiceInfoForm',
     'ClusterGroupServiceInfoForm',
+    'VirtualDeviceContextServiceInfoForm',
     'ContractFilterForm',
     'ContractRateCardFilterForm',
     'PortfolioFilterForm',
@@ -832,6 +835,33 @@ class AppServiceForm(PrimaryModelForm):
 #
 
 
+class ServiceInfoFormBase(NetBoxModelForm):
+    """Shared behaviour of the four Service Specification tab forms (see
+    _make_service_info_form below).
+
+    Application Services are limited to the ones belonging to the CI's own
+    Tenant — their Service Offering is for that Tenant directly or via its
+    Tenant Group (utils.tenant_offering_filter) — both in the live dropdown
+    (the API's available_for_tenant_id filter) and in the field's queryset,
+    so a hand-crafted POST can't assign another tenant's Application
+    Service either. A CI with no Tenant (and a Cluster Group, which has no
+    tenant field at all) can pick from every Application Service.
+    """
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        parent = getattr(self.instance, 'parent', None)
+        tenant = getattr(parent, 'tenant', None)
+        if tenant is None:
+            return
+        field = self.fields['application_services']
+        field.queryset = AppService.objects.filter(
+            service_offering__in=ServiceOffering.objects.filter(tenant_offering_filter(tenant))
+        )
+        field.widget.add_query_param('available_for_tenant_id', tenant.pk)
+        field.help_text = f"{field.help_text} Only Application Services of this CI's tenant ({tenant}) are offered."
+
+
 def _make_service_info_form(model):
     # Built via type() rather than a nested `class ServiceInfoForm(...):`
     # statement so Meta.model is present in the class namespace *before*
@@ -859,7 +889,7 @@ def _make_service_info_form(model):
     )
     return type(
         f'{model.__name__}Form',
-        (NetBoxModelForm,),
+        (ServiceInfoFormBase,),
         {
             'application_services': DynamicModelMultipleChoiceField(
                 queryset=AppService.objects.all(),
@@ -900,6 +930,7 @@ DeviceServiceInfoForm = _make_service_info_form(DeviceServiceInfo)
 VirtualMachineServiceInfoForm = _make_service_info_form(VirtualMachineServiceInfo)
 ClusterServiceInfoForm = _make_service_info_form(ClusterServiceInfo)
 ClusterGroupServiceInfoForm = _make_service_info_form(ClusterGroupServiceInfo)
+VirtualDeviceContextServiceInfoForm = _make_service_info_form(VirtualDeviceContextServiceInfo)
 
 
 #
@@ -1249,7 +1280,7 @@ class OfferingsTreeFilterForm(forms.Form):
     down to it, rather than hiding everything else in isolation. There's no
     single combined "Technical CI" field: NetBox's DynamicModelChoiceField
     is bound to one model's API endpoint each, so a Device/VM/Cluster/
-    Cluster Group picker can't be one literal dropdown — these four fields
+    Cluster Group/VDC picker can't be one literal dropdown — these five fields
     are grouped under one "Technical CI" heading in the template instead.
     """
 
@@ -1271,10 +1302,10 @@ class OfferingsTreeFilterForm(forms.Form):
         label='Application Service',
         query_params={'tenant_id': '$tenant', 'service_offering_id': '$service_offering'},
     )
-    # The four Technical CI dropdowns narrow to just the CIs linked (via
+    # The five Technical CI dropdowns narrow to just the CIs linked (via
     # their Service Specification tab's Application Services) to whatever
     # Customer / Service Offering / Application Service is picked above.
-    # NetBox's core Device/VM/Cluster/ClusterGroup API endpoints don't know
+    # NetBox's core Device/VM/Cluster/ClusterGroup/VDC API endpoints don't know
     # about those plugin relations, so these query the plugin's own
     # technical-ci/* endpoints instead (core viewsets with an extended
     # filterset — see filtersets.TechnicalCIFilterSetMixin).
@@ -1300,6 +1331,13 @@ class OfferingsTreeFilterForm(forms.Form):
         queryset=ClusterGroup.objects.all(),
         required=False,
         widget=APISelect(api_url='/api/plugins/service-specification/technical-ci/cluster-groups/'),
+        query_params=TECHNICAL_CI_QUERY_PARAMS,
+    )
+    virtual_device_context = DynamicModelChoiceField(
+        queryset=VirtualDeviceContext.objects.all(),
+        required=False,
+        label='Virtual Device Context',
+        widget=APISelect(api_url='/api/plugins/service-specification/technical-ci/virtual-device-contexts/'),
         query_params=TECHNICAL_CI_QUERY_PARAMS,
     )
 

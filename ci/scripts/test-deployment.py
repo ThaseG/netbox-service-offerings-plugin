@@ -74,6 +74,10 @@ REFERENCE_FIELDS = {
     'dcim/cables/': {
         'tenant': 'tenancy/tenants/',
     },
+    'dcim/virtual-device-contexts/': {
+        'device': 'dcim/devices/',
+        'tenant': 'tenancy/tenants/',
+    },
     'ipam/ip-addresses/': {
         # Generic-FK-style (assigned_object_type/assigned_object_id), same
         # pattern as Cluster's scope_type/scope_id below: assigned_object_type
@@ -172,6 +176,10 @@ REFERENCE_FIELDS = {
     },
     'plugins/service-specification/cluster-group-service-infos/': {
         'cluster_group': 'virtualization/cluster-groups/',
+        'application_services': 'plugins/service-specification/app-services/',
+    },
+    'plugins/service-specification/virtual-device-context-service-infos/': {
+        'virtual_device_context': 'dcim/virtual-device-contexts/',
         'application_services': 'plugins/service-specification/app-services/',
     },
     # Hardware Lifecycle plugin (netbox-lifecycle)
