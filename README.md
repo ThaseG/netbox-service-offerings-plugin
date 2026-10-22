@@ -140,6 +140,7 @@ matches offerings assigned through the customer's tenant group.
 | Plugin Version | NetBox Version | Python Version |
 | --- | --- | --- |
 | 1.0.x | 4.6.x (minimum 4.6.0) | \>= 3.10 |
+| 1.1.x | 4.6.x (minimum 4.6.0) | \>= 3.10 |
 
 The combination actually built and deployed by this repo's CI/CD pipeline is pinned in [`versions.sh`](versions.sh)
 (currently NetBox `v4.6.5`).
