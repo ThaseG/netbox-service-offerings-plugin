@@ -5,6 +5,7 @@ ci/docker/.env
 .env
 *.env.local
 env.txt
+.claude
 
 # Python build artifacts (service_specification/ plugin package)
 __pycache__/
