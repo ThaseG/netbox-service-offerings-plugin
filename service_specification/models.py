@@ -748,6 +748,16 @@ class ServiceSpecificationInfoBase(NetBoxModel):
         # Explicit: the REST API refuses to paginate an unordered queryset.
         ordering = ('pk',)
 
+    def to_objectchange(self, action):
+        # Record the CI as the change's related object (same as NetBox does
+        # for a device's interfaces), so edits to its Service Specification
+        # tab show up in the CI's own Changelog tab, not just this side
+        # table's. Changes to the M2M fields (e.g. application_services) are
+        # folded into this same ObjectChange by NetBox's m2m_changed handler.
+        objectchange = super().to_objectchange(action)
+        objectchange.related_object = self.parent
+        return objectchange
+
 
 class DeviceServiceInfo(ServiceSpecificationInfoBase):
     device = models.OneToOneField(

@@ -1,5 +1,11 @@
+import importlib
+import uuid
+
+from core.models import ObjectChange
 from dcim.models import Device, DeviceRole, DeviceType, Manufacturer, Site, VirtualDeviceContext
+from django.apps import apps
 from django.contrib.auth import get_user_model
+from django.contrib.contenttypes.models import ContentType
 from django.test import TestCase
 from django.urls import reverse
 from tenancy.models import ContactGroup, Tenant, TenantGroup
@@ -134,3 +140,57 @@ class ServiceInfoTenantRestrictionTestCase(TestCase):
         ):
             response = self.client.get(reverse(name, kwargs={'pk': self.vdc.pk}))
             self.assertEqual(response.status_code, 200, name)
+
+
+class ServiceInfoChangelogTestCase(TestCase):
+    """Edits on a CI's Service Specification tab appear in the CI's own
+    Changelog tab (the side-table change is related to the CI)."""
+
+    @classmethod
+    def setUpTestData(cls):
+        # Same fixtures as above, without inheriting (and re-running) its tests.
+        ServiceInfoTenantRestrictionTestCase.setUpTestData.__func__(cls)
+
+    def test_edit_shows_in_ci_changelog(self):
+        user = get_user_model().objects.create_superuser(username='admin', email='admin@example.com', password='x')
+        self.client.force_login(user)
+        url = reverse('dcim:device_service_specification_edit', kwargs={'pk': self.device.pk})
+        data = {
+            'application_services': [self.app_a.pk],
+            'lifecycle': self.lifecycle.pk,
+            'business_unit': [self.contact_group.pk],
+            'support_group': [self.contact_group.pk],
+            'change_group': [self.contact_group.pk],
+        }
+        response = self.client.post(url, data)
+        self.assertEqual(response.status_code, 302)
+
+        device_type = ContentType.objects.get_for_model(Device)
+        change = ObjectChange.objects.filter(
+            changed_object_type=ContentType.objects.get_for_model(DeviceServiceInfo)
+        ).latest('time')
+        self.assertEqual((change.related_object_type, change.related_object_id), (device_type, self.device.pk))
+        self.assertEqual(change.postchange_data['application_services'], [self.app_a.pk])
+
+        changelog = self.client.get(reverse('dcim:device_changelog', kwargs={'pk': self.device.pk}))
+        self.assertContains(changelog, 'Device Service Info')
+
+    def test_migration_backfills_older_changes(self):
+        info = DeviceServiceInfo.objects.create(device=self.device)
+        info_type = ContentType.objects.get_for_model(DeviceServiceInfo)
+        old = ObjectChange.objects.create(
+            user=get_user_model().objects.create_user(username='editor'),
+            request_id=uuid.uuid4(),
+            changed_object_type=info_type,
+            changed_object_id=info.pk,
+            object_repr=str(info),
+            action='update',
+            postchange_data={'device': self.device.pk},
+        )
+        migration = importlib.import_module(
+            'service_specification.migrations.0004_service_info_changelog_related_object'
+        )
+        migration.link_changes_to_ci(apps, None)
+        old.refresh_from_db()
+        self.assertEqual(old.related_object_id, self.device.pk)
+        self.assertEqual(old.related_object_type, ContentType.objects.get_for_model(Device))
